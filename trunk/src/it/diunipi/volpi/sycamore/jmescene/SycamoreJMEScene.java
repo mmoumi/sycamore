@@ -1,0 +1,726 @@
+/*
+ * Copyright (c) 2009-2012 jMonkeyEngine All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met:
+ * 
+ * * Redistributions of source code must retain the above copyright notice, this list of conditions
+ * and the following disclaimer.
+ * 
+ * * Redistributions in binary form must reproduce the above copyright notice, this list of
+ * conditions and the following disclaimer in the documentation and/or other materials provided with
+ * the distribution.
+ * 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors may be used to endorse or
+ * promote products derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+ * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package it.diunipi.volpi.sycamore.jmescene;
+
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.model.Point2D;
+import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.model.SycamoreRobot;
+import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
+import it.diunipi.volpi.sycamore.util.SycamoreUtil;
+
+import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.util.Iterator;
+import java.util.Vector;
+import java.util.concurrent.Callable;
+import java.util.logging.Level;
+
+import com.jme3.app.SimpleApplication;
+import com.jme3.input.ChaseCamera;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.light.PointLight;
+import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Mesh;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.BillboardControl;
+import com.jme3.scene.debug.Arrow;
+import com.jme3.scene.debug.Grid;
+import com.jme3.scene.shape.Quad;
+import com.jme3.texture.Texture;
+import com.jme3.util.SkyFactory;
+import com.jme3.util.TangentBinormalGenerator;
+
+/**
+ * This is the JME application that represents the Sycamore scene. It is an OpenGL application that
+ * draws the robots inside a canvas. The animation is managed by a {@link SycamoreTimer} object.
+ * 
+ * @author Valerio Volpi - vale.v@me.com
+ */
+public class SycamoreJMEScene extends SimpleApplication implements ActionListener
+{
+	/**
+	 * This class checks if contenxt is renderable. Sleeps while it is not, and fires a
+	 * SCENE_3D_READY event while the context become renderable.
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
+	private class ContextChecker extends Thread
+	{
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Thread#run()
+		 */
+		@Override
+		public void run()
+		{
+			super.run();
+
+			while (!context.isRenderable())
+			{
+				try
+				{
+					// sleep a bit
+					Thread.sleep(3000);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
+
+			// context is now renderable. fire the event.
+			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.JME_SCENE_READY.name()));
+		}
+	}
+
+	private SycamoreEngine							appEngine			= null;
+	private TYPE									currentType			= TYPE.TYPE_3D;
+
+	// spatials
+	private Spatial									skyBox				= null;
+	private Geometry								xAxis				= null;
+	private Geometry								yAxis				= null;
+	private Geometry								zAxis				= null;
+	private Node									origin				= null;
+	private Geometry								baricentrumCross	= null;
+	private Node									baricentrum			= null;
+	private Node									robotsNode			= null;
+	private ChaseCamera								chaseCam			= null;
+	private Node									mainNode			= null;
+	private Quaternion								billBoardRotation	= null;
+	private BillboardControl						billboardControl	= null;
+	private Geometry								grid				= null;
+
+	private Vector<java.awt.event.ActionListener>	listeners			= null;
+
+	/**
+	 * Default constructor.
+	 */
+	public SycamoreJMEScene()
+	{
+		this.listeners = new Vector<java.awt.event.ActionListener>();
+		SycamoreSystem.setJmeSceneManager(this);
+	}
+
+	/**
+	 * Init the settings of the app
+	 */
+	private void initSettings()
+	{
+		// setup settings
+		settings.setVSync(true);
+		settings.setFrameRate(30);
+		settings.setAudioRenderer(null);
+
+		if (SycamoreSystem.getLoggerLevel().intValue() > Level.WARNING.intValue())
+		{
+			setDisplayFps(false); // to hide the FPS
+			setDisplayStatView(false); // to hide the statistics
+		}
+	}
+
+	/**
+	 * Attach the 3 axes on the scene.
+	 * 
+	 * @param pos
+	 */
+	private void initCoordinateAxes(Vector3f pos)
+	{
+		Arrow arrow = new Arrow(new Vector3f(3, 0, 0));
+		arrow.setLineWidth(4); // make arrow thicker
+		this.xAxis = getGeometryForShape(arrow, ColorRGBA.Red);
+		this.xAxis.setLocalTranslation(pos);
+		mainNode.attachChild(this.xAxis);
+
+		arrow = new Arrow(new Vector3f(0, 3, 0));
+		arrow.setLineWidth(4); // make arrow thicker
+		this.yAxis = getGeometryForShape(arrow, ColorRGBA.Green);
+		this.yAxis.setLocalTranslation(pos);
+		mainNode.attachChild(this.yAxis);
+
+		arrow = new Arrow(new Vector3f(0, 0, 3));
+		arrow.setLineWidth(4); // make arrow thicker
+		this.zAxis = getGeometryForShape(arrow, ColorRGBA.Blue);
+		this.zAxis.setLocalTranslation(pos);
+		mainNode.attachChild(this.zAxis);
+	}
+
+	/**
+	 * Init the baricentrum geometry
+	 */
+	private void initBaricentrum()
+	{
+		Material mat = new Material(SycamoreSystem.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+
+		mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+		mat.getAdditionalRenderState().setAlphaTest(true);
+		mat.getAdditionalRenderState().setAlphaFallOff(0);
+
+		Texture skyTexture = SycamoreSystem.getAssetManager().loadTexture("it/diunipi/volpi/sycamore/resources/textures/baricentrum.png");
+		mat.setTexture("ColorMap", skyTexture);
+
+		baricentrumCross = new Geometry("Cross", new Quad(1f, 1f));
+		baricentrumCross.center();
+
+		TangentBinormalGenerator.generate(baricentrumCross.getMesh(), true);
+		baricentrumCross.setMaterial(mat);
+		baricentrumCross.setQueueBucket(Bucket.Transparent);
+
+		this.baricentrum.addControl(new BillboardControl());
+	}
+
+	/**
+	 * Given a {@link Shape} object and a color implemented as {@link ColorRGBA} object, returns a
+	 * {@link Geometry} object representing passed shape and colored with passed color. The returned
+	 * {@link Geometry} is ready to be attached on the Sycamore Scene.
+	 * 
+	 * @param shape
+	 * @param color
+	 * @return
+	 */
+	private Geometry getGeometryForShape(Mesh shape, ColorRGBA color)
+	{
+		Geometry g = new Geometry("coordinate axis", shape);
+		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+		mat.getAdditionalRenderState().setWireframe(true);
+		mat.setColor("Color", color);
+		g.setMaterial(mat);
+		return g;
+	}
+
+	/**
+	 * Attaches the grid that represents the floor
+	 * 
+	 * @param pos
+	 * @param size
+	 * @param color
+	 */
+	private void initGrid(int size, ColorRGBA color)
+	{
+		grid = new Geometry("wireframe grid", new Grid(size, size, 2f));
+		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+		mat.getAdditionalRenderState().setWireframe(true);
+		mat.setColor("Color", color);
+		grid.setMaterial(mat);
+		grid.center();
+		mainNode.attachChild(grid);
+	}
+
+	/**
+	 * Rotates the grid along the x axis of an angle equal to passed one.
+	 */
+	private void rotateGrid(float angle)
+	{
+		/* This quaternion stores a 180 degree rolling rotation */
+		Quaternion roll180 = new Quaternion();
+		roll180.fromAngleAxis(angle, new Vector3f(1, 0, 0));
+		grid.setLocalRotation(roll180);
+		grid.center();
+
+		rootNode.updateGeometricState();
+	}
+
+	/**
+	 * Shows/ hides the grid in the scene
+	 * 
+	 * @param visible
+	 */
+	public void setGridVisible(final boolean visible)
+	{
+		this.enqueue(new Callable<Object>()
+		{
+			@Override
+			public Object call() throws Exception
+			{
+				if (visible && !mainNode.hasChild(grid))
+				{
+					mainNode.attachChild(grid);
+					mainNode.updateGeometricState();
+				}
+				else if (!visible && mainNode.hasChild(grid))
+				{
+					mainNode.detachChild(grid);
+					mainNode.updateGeometricState();
+				}
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Shows/ hides the axes in the scene
+	 * 
+	 * @param visible
+	 */
+	public void setAxesVisible(final boolean visible)
+	{
+		this.enqueue(new Callable<Object>()
+		{
+			@Override
+			public Object call() throws Exception
+			{
+				if (visible)
+				{
+					if (!mainNode.hasChild(xAxis))
+					{
+						mainNode.attachChild(xAxis);
+					}
+					if (!mainNode.hasChild(yAxis))
+					{
+						mainNode.attachChild(yAxis);
+					}
+					if (!mainNode.hasChild(zAxis) && currentType == TYPE.TYPE_3D)
+					{
+						mainNode.attachChild(zAxis);
+					}
+					mainNode.updateGeometricState();
+				}
+				else
+				{
+					if (mainNode.hasChild(xAxis))
+					{
+						mainNode.detachChild(xAxis);
+					}
+					if (mainNode.hasChild(yAxis))
+					{
+						mainNode.detachChild(yAxis);
+					}
+					if (mainNode.hasChild(zAxis))
+					{
+						mainNode.detachChild(zAxis);
+					}
+					mainNode.updateGeometricState();
+				}
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Shows/ hides the baricentrum in the scene
+	 * 
+	 * @param visible
+	 */
+	public void setBaricentrumVisible(final boolean visible)
+	{
+		this.enqueue(new Callable<Object>()
+		{
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.util.concurrent.Callable#call()
+			 */
+			@Override
+			public Object call() throws Exception
+			{
+				if (visible && !baricentrum.hasChild(baricentrumCross))
+				{
+					baricentrum.attachChild(baricentrumCross);
+				}
+				else if (!visible && baricentrum.hasChild(baricentrumCross))
+				{
+					baricentrum.detachChild(baricentrumCross);
+				}
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Init the spatials of the scene
+	 */
+	private void initSpatials()
+	{
+		this.mainNode = new Node();
+		rootNode.attachChild(mainNode);
+
+		this.billboardControl = new BillboardControl();
+		this.billBoardRotation = mainNode.getLocalRotation().clone();
+
+		// Create and load the skybox
+		Texture skyTexture = assetManager.loadTexture("it/diunipi/volpi/sycamore/resources/textures/light_gray.png");
+		Vector3f normal = new Vector3f(-1, -1, -1);
+		this.skyBox = SkyFactory.createSky(assetManager, skyTexture, normal, true);
+		mainNode.attachChild(this.skyBox);
+
+		// create the origin
+		this.origin = new Node("Origin node");
+		mainNode.attachChild(origin);
+
+		// create the baricentrum
+		this.baricentrum = new Node("Baricentrum node");
+		mainNode.attachChild(baricentrum);
+
+		// create the robots node
+		this.robotsNode = new Node();
+		mainNode.attachChild(robotsNode);
+
+		// Create and load the 3 axis lines
+		initCoordinateAxes(Vector3f.ZERO);
+		initGrid(200, ColorRGBA.White);
+		initBaricentrum();
+	}
+
+	/**
+	 * Init the lights in the scene
+	 */
+	private void initLights()
+	{
+		PointLight lamp_light1 = new PointLight();
+		lamp_light1.setColor(ColorRGBA.White);
+		lamp_light1.setPosition(new Vector3f(200, 200, 200));
+		rootNode.addLight(lamp_light1);
+
+		PointLight lamp_light2 = new PointLight();
+		lamp_light2.setColor(ColorRGBA.White);
+		lamp_light2.setPosition(new Vector3f(0, -200, 0));
+		rootNode.addLight(lamp_light2);
+
+		PointLight lamp_light3 = new PointLight();
+		lamp_light3.setColor(ColorRGBA.White);
+		lamp_light3.setPosition(new Vector3f(-200, 200, -200));
+		rootNode.addLight(lamp_light3);
+	}
+
+	/**
+	 * Init the camera of the 3D version of the scene
+	 */
+	private void initCamera(Spatial target)
+	{
+		// Disable the default first-person cam!
+		flyCam.setEnabled(false);
+
+		// Enable a chase cam
+		chaseCam = new ChaseCamera(cam, target, inputManager);
+		// Comment this to disable smooth camera motion
+		chaseCam.setSmoothMotion(true);
+		chaseCam.setMinDistance(2);
+		chaseCam.setDefaultDistance(16);
+		chaseCam.setMaxDistance(200);
+	}
+
+	/**
+	 * Put the camera on the origin of the system
+	 */
+	public void cameraOnOrigin()
+	{
+		this.setCameraTarget(origin);
+	}
+
+	/**
+	 * Put the camera on the baricentrum of the system
+	 */
+	public void cameraOnBaricentrum()
+	{
+		this.setCameraTarget(baricentrum);
+	}
+
+	/**
+	 * Set passed node as the target of the camera
+	 * 
+	 * @param node
+	 */
+	private void setCameraTarget(final Node node)
+	{
+		this.enqueue(new Callable<Object>()
+		{
+			@Override
+			public Object call() throws Exception
+			{
+				initCamera(node);
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Update the geometries of the robots
+	 */
+	private void updateRobotsGeometries()
+	{
+		this.robotsNode.detachAllChildren();
+
+		if (appEngine != null)
+		{
+			// update geometries in robots
+			Iterator<SycamoreRobot<Point2D>> iterator = appEngine.getRobots().iterator();
+			while (iterator.hasNext())
+			{
+				SycamoreRobot<Point2D> robot = iterator.next();
+				robotsNode.attachChild(robot.getRobotNode());
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jme3.app.SimpleApplication#simpleInitApp()
+	 */
+	@Override
+	public void simpleInitApp()
+	{
+		SycamoreSystem.setAssetManager(assetManager);
+
+		// init settings of the app
+		initSettings();
+
+		// init lights
+		initLights();
+
+		// inits the spatial elements
+		initSpatials();
+
+		// init orbit camera
+		initCamera(this.origin);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jme3.app.Application#createCanvas()
+	 */
+	@Override
+	public void createCanvas()
+	{
+		super.createCanvas();
+		new ContextChecker().start();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jme3.app.SimpleApplication#simpleUpdate(float)
+	 */
+	@Override
+	public void simpleUpdate(float tpf)
+	{
+		if (appEngine != null)
+		{
+			Vector<SycamoreAbstractPoint> allRobots = new Vector<SycamoreAbstractPoint>();
+
+			// update geometries in robots
+			Iterator<SycamoreRobot<Point2D>> iterator = appEngine.getRobots().iterator();
+			while (iterator.hasNext())
+			{
+				SycamoreRobot<Point2D> robot = iterator.next();
+				simpleUpdate_impl(tpf, robot, allRobots);
+			}
+
+			// update baricentrum
+			SycamoreAbstractPoint baricentrumPoint = SycamoreUtil.computeBaricentrum(allRobots);
+			if (baricentrumPoint != null)
+			{
+				this.baricentrum.setLocalTranslation(baricentrumPoint.toVector3f());
+			}
+			rootNode.updateGeometricState();
+			robotsNode.updateLogicalState(tpf);
+		}
+	}
+
+	/**
+	 * Perform the update operations
+	 * 
+	 * @param tpf
+	 * @param robot
+	 */
+	private void simpleUpdate_impl(float tpf, SycamoreRobot robot, Vector<SycamoreAbstractPoint> allRobots)
+	{
+		Vector3f position = robot.getCurrentPosition().toVector3f();
+
+		Node robotNode = robot.getRobotNode();
+		robotNode.setLocalTranslation(position);
+		robotNode.updateLogicalState(tpf);
+		robotNode.updateGeometricState();
+
+		allRobots.add(robot.getCurrentPosition());
+	}
+
+	/**
+	 * Adds an <code>ActionListener</code> to the button.
+	 * 
+	 * @param listener
+	 *            the <code>ActionListener</code> to be added
+	 */
+	public void addActionListener(java.awt.event.ActionListener listener)
+	{
+		this.listeners.add(listener);
+	}
+
+	/**
+	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
+	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
+	 * 
+	 * @param listener
+	 *            the listener to be removed
+	 */
+	public void removeActionListener(java.awt.event.ActionListener listener)
+	{
+		this.listeners.remove(listener);
+	}
+
+	/**
+	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
+	 * method on all of them.
+	 * 
+	 * @param e
+	 */
+	private void fireActionEvent(ActionEvent e)
+	{
+		for (java.awt.event.ActionListener listener : this.listeners)
+		{
+			listener.actionPerformed(e);
+		}
+	}
+
+	/**
+	 * @return the appEngine
+	 */
+	public SycamoreEngine<?> getAppEngine()
+	{
+		return appEngine;
+	}
+
+	/**
+	 * @param appEngine
+	 *            the appEngine to set
+	 */
+	public void setAppEngine(SycamoreEngine<?> appEngine)
+	{
+		this.appEngine = appEngine;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jme3.input.controls.ActionListener#onAction(java.lang.String, boolean, float)
+	 */
+	@Override
+	public void onAction(String name, boolean isPressed, float tpf)
+	{
+		// Nothing to do
+	}
+
+	/**
+	 * Adds passed robot in the scene
+	 */
+	public void addRobotInScene(final SycamoreRobot<?> robot)
+	{
+		this.enqueue(new Callable<Object>()
+		{
+			@Override
+			public Object call() throws Exception
+			{
+				robotsNode.attachChild(robot.getRobotNode());
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Removes passed robot from the scene
+	 */
+	public void removeRobotFromScene(final SycamoreRobot<?> robot)
+	{
+		this.enqueue(new Callable<Object>()
+		{
+			@Override
+			public Object call() throws Exception
+			{
+				robotsNode.detachChild(robot.getRobotNode());
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Setup the scene to adapt to passed type
+	 * 
+	 * @param type
+	 */
+	public void setupScene(final TYPE type)
+	{
+		if (type != null)
+		{
+			this.enqueue(new Callable<Object>()
+			{
+				@Override
+				public Object call() throws Exception
+				{
+					if (currentType == null || type != currentType)
+					{
+						// store current type
+						currentType = type;
+
+						if (type == TYPE.TYPE_2D)
+						{
+							mainNode.addControl(billboardControl);
+							rotateGrid(FastMath.PI / 2);
+							mainNode.detachChild(zAxis);
+						}
+						else if (type == TYPE.TYPE_3D)
+						{
+							mainNode.removeControl(billboardControl);
+							mainNode.setLocalRotation(billBoardRotation.clone());
+							rotateGrid(0);
+							mainNode.attachChild(zAxis);
+						}
+
+						updateRobotsGeometries();
+					}
+
+					return null;
+				}
+			});
+		}
+		else
+		{
+			System.out.println("Inconsistent types");
+		}
+	}
+
+	/**
+	 * Reset the scene to initial configuration
+	 */
+	public void reset()
+	{
+		this.robotsNode.detachAllChildren();
+		setupScene(TYPE.TYPE_3D);
+	}
+}
