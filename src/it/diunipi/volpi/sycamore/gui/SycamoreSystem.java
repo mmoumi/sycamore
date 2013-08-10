@@ -315,8 +315,11 @@ public class SycamoreSystem
 	}
 
 	/**
-	 * @throws NNotKnownException
+	 * Returns the number of robots in the system, if this value is available. If not available,
+	 * throws a <code>NNotKnownException</code>
 	 * 
+	 * @return
+	 * @throws NNotKnownException
 	 */
 	public static int getN() throws NNotKnownException
 	{
