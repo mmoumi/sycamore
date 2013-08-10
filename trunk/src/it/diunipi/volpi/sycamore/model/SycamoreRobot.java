@@ -767,4 +767,13 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		return timeline;
 	}
+
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.model.SycamoreObservedRobot#getN()
+	 */
+	@Override
+	public int getN() throws NNotKnownException
+	{
+		return SycamoreSystem.getN();
+	}
 }

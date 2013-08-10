@@ -69,4 +69,13 @@ public interface SycamoreObservedRobot<P extends SycamoreAbstractPoint & Computa
 	 * @param p
 	 */
 	public void setDirection(P p);
+	
+	/**
+	 * Returns the number of robots in the system, if this value is available. If not available,
+	 * throws a <code>NNotKnownException</code>
+	 * 
+	 * @return
+	 * @throws NNotKnownException
+	 */
+	public int getN() throws NNotKnownException;
 }
