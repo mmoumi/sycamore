@@ -3,7 +3,7 @@
 
 = Features not yet implemented =
 
-Here follows a list of features that are planned but not yet implemented in Sycamore:
+Here follows a list of features that are planned but not yet implemented in Sycamore. If you have a feature that you would like to see in Sycamore, please use the <a href="https://groups.google.com/forum/#!categories/sycamore-discussion-group/feature-request">Feature Request</a> section in our discussion group.
 
   * The Agreement plugin is not yet supported. All coordinates in the system now are just global coordinates (there is full agreement on axes between robots). The support for this feature will be implemented soon.
   * The Measure plugin does not write its measured values anywhere.
@@ -16,7 +16,7 @@ Here follows a list of features that are planned but not yet implemented in Syca
 
 = Known Bugs =
 
-Here follows a list of known bugs. Please, feel free to let us know if you find a new bug
+Here follows a list of known bugs. Please, feel free to let us know if you find a new bug. Our discussion group has a <a href="https://groups.google.com/forum/#!categories/sycamore-discussion-group/bug-reporting">Bug Reporting</a> section
 
   # The 2D scene has problems with lighting and with camera placement. <hint: A render-to-texture is maybe needed? >
   # When camera is placed on baricentrum, it will never point to origin again. 
