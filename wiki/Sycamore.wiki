@@ -16,6 +16,8 @@ Sycamore is a completely modular system, where you can write your own plugin and
   * Memories
   * Initial conditions
 
+If you want to write your own plugin and integrate it into Sycamore, we recommend to read the <a href= "https://code.google.com/p/sycamore/wiki/PluginWritingGuide">Sycamore plugin writing guide</a>.
+
 = References =
 
 Sycamore uses parts of the following open source projects:
