@@ -1,4 +1,4 @@
-#summary Introduction to Sycamore
+#summary Guide to Sycamore
 
 = Introduction =
 
