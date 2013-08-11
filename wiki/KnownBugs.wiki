@@ -22,3 +22,4 @@ Here follows a list of known bugs. Please, feel free to let us know if you find 
   # When camera is placed on baricentrum, it will never point to origin again. 
   # The 2D scene has problems with camera on baricentrum <hint: a new 2D camera is maybe needed. This will solve also the problem 1 >
   # The pauses added by the scheduler are not perfectly equal to the actual time that a robot spends without moving. This results in a wrong behavior of the animation control slider.
+  # The majority of the menu items do not work
