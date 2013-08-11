@@ -13,6 +13,7 @@ Here follows a list of features that are planned but not yet implemented in Syca
   * The visibility graph is not yet drawn
   * The visual support elements are not implemented yet
   * Save project / load project are still not supported
+  * A preferences pane is missing
 
 = Known Bugs =
 
