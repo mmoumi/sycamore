@@ -25,3 +25,5 @@ Here follows a list of known bugs. Please, feel free to let us know if you find 
   # The pauses added by the scheduler are not perfectly equal to the actual time that a robot spends without moving. This results in a wrong behavior of the animation control slider.
   # The majority of the menu items do not work
   # Dragging in Switch Toggles sometimes does not work
+  # In Follow The Leader algorithm, sometimes none of the robot moves
+  # The animation control slider sometimes generates an Exception
