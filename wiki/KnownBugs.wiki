@@ -27,4 +27,4 @@ Here follows a list of known bugs. Please, feel free to let us know if you find 
   # Dragging in Switch Toggles sometimes does not work
   # In Follow The Leader algorithm, sometimes none of the robot moves
   # The animation control slider sometimes generates an Exception
-  # In NearGathering algorithm, IcePDF does not show the article
+  # In Near Gathering algorithm, IcePDF does not show the article
