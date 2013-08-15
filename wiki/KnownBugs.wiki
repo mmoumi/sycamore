@@ -28,3 +28,5 @@ Here follows a list of known bugs. Please, feel free to let us know if you find 
   # In Follow The Leader algorithm, sometimes none of the robot moves
   # The animation control slider sometimes generates an Exception
   # In Near Gathering algorithm, IcePDF does not show the article
+  # OS X App seems to work only on OS X Mountain Lion, not on other systems
+  # Windows installer does not work. To have Sycamore running in Windows, please run the executable jar file
