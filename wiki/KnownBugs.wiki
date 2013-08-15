@@ -19,14 +19,15 @@ Here follows a list of features that are planned but not yet implemented in Syca
 
 Here follows a list of known bugs. Please, feel free to let us know if you find a new bug. Our discussion group has a <a href="https://groups.google.com/forum/#!categories/sycamore-discussion-group/bug-reporting">Bug Reporting</a> section
 
-  # The 2D scene has problems with lighting and with camera placement. <hint: A render-to-texture is maybe needed? >
-  # When camera is placed on baricentrum, it will never point to origin again. 
-  # The 2D scene has problems with camera on baricentrum <hint: a new 2D camera is maybe needed. This will solve also the problem 1 >
-  # The pauses added by the scheduler are not perfectly equal to the actual time that a robot spends without moving. This results in a wrong behavior of the animation control slider.
-  # The majority of the menu items do not work
-  # Dragging in Switch Toggles sometimes does not work
-  # In Follow The Leader algorithm, sometimes none of the robot moves
-  # The animation control slider sometimes generates an Exception
-  # In Near Gathering algorithm, IcePDF does not show the article
-  # OS X App seems to work only on OS X Mountain Lion, not on other systems
-  # Windows installer does not work. To have Sycamore running in Windows, please run the executable jar file
+  # *<minor>* The 2D scene has problems with lighting and with camera placement. <hint: A render-to-texture is maybe needed? >
+  # *<serious>* When camera is placed on baricentrum, it will never point to origin again. 
+  # *<minor>* The 2D scene has problems with camera on baricentrum <hint: a new 2D camera is maybe needed. This will solve also the problem 1 >
+  # *<serious>* The pauses added by the scheduler are not perfectly equal to the actual time that a robot spends without moving. This results in a wrong behavior of the animation control slider.
+  # *<serious>* The majority of the menu items do not work
+  # *<serious>* Dragging in Switch Toggles sometimes does not work
+  # *<serious>* In Follow The Leader algorithm, sometimes none of the robot moves <hint: it is a problem of the AsynchronousSchedulerPriorityQueue>
+  # *<serious>* The animation control slider sometimes generates an Exception
+  # *<serious>* In Near Gathering algorithm, IcePDF does not show the article
+  # *<grave>* OS X App seems to work only on OS X Mountain Lion, not on other systems
+  # *<grave>* Windows installer does not work. To have Sycamore running in Windows, please run the executable jar file
+  # *<minor>* The 2D scene has Z-fighting problems
