@@ -125,7 +125,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 					final SycamoreRobotLight light = new SycamoreRobotLight(glassColor, getNewLightGeometry(glassColor));
 					lights.add(light);
 
-					if (engine.isRobotsLightsVisible())
+					if (SycamoreSystem.isRobotsLightsVisible())
 					{
 						robotNode.attachChild(light.getLightGeometry());
 					}
@@ -175,7 +175,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	 */
 	private void updateDirectionGeometry()
 	{
-		if (engine.isMovementDirectionsVisible() && getDirection() != null && this.sceneGeometry != null)
+		if (SycamoreSystem.isMovementDirectionsVisible() && getDirection() != null && this.sceneGeometry != null)
 		{
 			float[] angles = this.getCurrentPosition().getRotationAngles(getDirection());
 			final Quaternion rotation = new Quaternion(angles);
@@ -229,7 +229,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 						final SycamoreRobotLight light = new SycamoreRobotLight(glassColor, getNewLightGeometry(glassColor));
 						lights.add(light);
 
-						if (engine.isRobotsLightsVisible())
+						if (SycamoreSystem.isRobotsLightsVisible())
 						{
 							robotNode.attachChild(light.getLightGeometry());
 						}
@@ -375,7 +375,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			public Object call() throws Exception
 			{
 
-				if (engine.isVisibilityRangesVisible() && visibilitytoSet != null)
+				if (SycamoreSystem.isVisibilityRangesVisible() && visibilitytoSet != null)
 				{
 					robotNode.attachChild(visibilitytoSet.getVisibilityRangeGeometry());
 				}
@@ -559,6 +559,9 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 			setCurrentState(ROBOT_STATE.READY_TO_MOVE);
 		}
+		
+		System.out.println("AFTER COMPUTE:");
+		System.out.println(this.toString());
 	}
 
 	/**
@@ -614,7 +617,10 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	@Override
 	public String toString()
 	{
-		return this.getClass().getSimpleName() + " with algorithm " + this.getAlgorithm().toString();
+		String description = "SycamoreRobot " + this.ID + "\n";
+		String timeline = "Timeline: \n" + this.timeline.toString() + "\n";
+		
+		return description + timeline;
 	}
 
 	/**
@@ -655,7 +661,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			@Override
 			public Object call() throws Exception
 			{
-				if (!engine.isRobotsLightsVisible())
+				if (!SycamoreSystem.isRobotsLightsVisible())
 				{
 					for (SycamoreRobotLight light : lights)
 					{
@@ -701,7 +707,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			{
 				if (engine != null && visibility != null)
 				{
-					if (engine.isVisibilityRangesVisible())
+					if (SycamoreSystem.isVisibilityRangesVisible())
 					{
 						robotNode.attachChild(visibility.getVisibilityRangeGeometry());
 					}
@@ -733,7 +739,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			{
 				if (engine != null)
 				{
-					if (engine.isMovementDirectionsVisible())
+					if (SycamoreSystem.isMovementDirectionsVisible())
 					{
 						robotNode.attachChild(directionGeometry);
 					}

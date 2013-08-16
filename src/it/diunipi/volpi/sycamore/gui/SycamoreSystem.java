@@ -33,7 +33,7 @@ public class SycamoreSystem
 {
 	private static final Object							schedulerGuiSynchronizer	= new Object();
 	public static final float							DEFAULT_ROBOT_SPEED			= 0.1f;
-	public static float									schedulerFrequency			= 1.0f / 120.0f;
+	public static float									schedulerFrequency			= 1.0f / 2000.0f;
 
 	private static File									workspace					= null;
 	private static AssetManager							assetManager				= null;
@@ -52,6 +52,17 @@ public class SycamoreSystem
 	private static InitialConditions					initialCondition			= null;
 	private static Memory								memory						= null;
 
+	// visible objects
+	private static boolean								gridVisible					= true;
+	private static boolean								axesVisible					= true;
+	private static boolean								baricentrumVisible			= false;
+	private static boolean								robotsLightsVisible			= true;
+	private static boolean								visibilityRangesVisible		= true;
+	private static boolean								movementDirectionsVisible	= false;
+	private static boolean								visibilityGraphVisible		= false;
+	private static boolean								localCoordinatesVisible		= false;
+	private static boolean								visualElementsVisible		= true;
+	
 	/**
 	 * Initialize the system
 	 */
@@ -347,5 +358,152 @@ public class SycamoreSystem
 	public static File getPluginsResourcesDirectory()
 	{
 		return new File(getPluginsDirectory() + System.getProperty("file.separator") + "Resources");
+	}
+	
+	/**
+	 * @return the gridVisible
+	 */
+	public static boolean isGridVisible()
+	{
+		return gridVisible;
+	}
+	
+	/**
+	 * @param gridVisible the gridVisible to set
+	 */
+	public static void setGridVisible(boolean gridVisible)
+	{
+		SycamoreSystem.gridVisible = gridVisible;
+	}
+	
+	/**
+	 * @return the axesVisible
+	 */
+	public static boolean isAxesVisible()
+	{
+		return axesVisible;
+	}
+	
+	/**
+	 * @param axesVisible the axesVisible to set
+	 */
+	public static void setAxesVisible(boolean axesVisible)
+	{
+		SycamoreSystem.axesVisible = axesVisible;
+	}
+	
+	/**
+	 * @return the baricentrumVisible
+	 */
+	public static boolean isBaricentrumVisible()
+	{
+		return baricentrumVisible;
+	}
+	
+	/**
+	 * @param baricentrumVisible the baricentrumVisible to set
+	 */
+	public static void setBaricentrumVisible(boolean baricentrumVisible)
+	{
+		SycamoreSystem.baricentrumVisible = baricentrumVisible;
+	}
+
+	/**
+	 * @return the visibilityRangesVisible
+	 */
+	public static boolean isVisibilityRangesVisible()
+	{
+		return visibilityRangesVisible;
+	}
+
+	/**
+	 * @param visibilityRangesVisible
+	 *            the visibilityRangesVisible to set
+	 */
+	public static void setVisibilityRangesVisible(boolean visibilityRangesVisible)
+	{
+		SycamoreSystem.visibilityRangesVisible = visibilityRangesVisible;
+	}
+
+	/**
+	 * @return the movementDirectionsVisible
+	 */
+	public static boolean isMovementDirectionsVisible()
+	{
+		return movementDirectionsVisible;
+	}
+
+	/**
+	 * @param movementDirectionsVisible
+	 *            the movementDirectionsVisible to set
+	 */
+	public static void setMovementDirectionsVisible(boolean movementDirectionsVisible)
+	{
+		SycamoreSystem.movementDirectionsVisible = movementDirectionsVisible;
+	}
+
+	/**
+	 * @return the robotsLightsVisible
+	 */
+	public static boolean isRobotsLightsVisible()
+	{
+		return robotsLightsVisible;
+	}
+
+	/**
+	 * @param robotsLightsVisible
+	 *            the robotsLightsVisible to set
+	 */
+	public static void setRobotsLightsVisible(boolean robotsLightsVisible)
+	{
+		SycamoreSystem.robotsLightsVisible = robotsLightsVisible;
+	}
+	
+	/**
+	 * @return the visibilityGraphVisible
+	 */
+	public static boolean isVisibilityGraphVisible()
+	{
+		return visibilityGraphVisible;
+	}
+	
+	/**
+	 * @param visibilityGraphVisible the visibilityGraphVisible to set
+	 */
+	public static void setVisibilityGraphVisible(boolean visibilityGraphVisible)
+	{
+		SycamoreSystem.visibilityGraphVisible = visibilityGraphVisible;
+	}
+	
+	/**
+	 * @return the localCoordinatesVisible
+	 */
+	public static boolean isLocalCoordinatesVisible()
+	{
+		return localCoordinatesVisible;
+	}
+	
+	/**
+	 * @param localCoordinatesVisible the localCoordinatesVisible to set
+	 */
+	public static void setLocalCoordinatesVisible(boolean localCoordinatesVisible)
+	{
+		SycamoreSystem.localCoordinatesVisible = localCoordinatesVisible;
+	}
+	
+	/**
+	 * @return the visualElementsVisible
+	 */
+	public static boolean isVisualElementsVisible()
+	{
+		return visualElementsVisible;
+	}
+	
+	/**
+	 * @param visualElementsVisible the visualElementsVisible to set
+	 */
+	public static void setVisualElementsVisible(boolean visualElementsVisible)
+	{
+		SycamoreSystem.visualElementsVisible = visualElementsVisible;
 	}
 }

@@ -81,11 +81,6 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	private Vector<Measure>						currentMeasures				= null;
 	private HumanPilotScheduler<P>				humanPilotScheduler			= null;
 
-	// visible objects
-	private boolean								robotsLightsVisible			= true;
-	private boolean								visibilityRangesVisible		= true;
-	private boolean								movementDirectionsVisible	= false;
-
 	// auxiliary data
 	private HashMap<SycamoreRobot<P>, Float>	ratioSnapshot				= null;
 	private float								animationSpeedMultiplier	= 10;
@@ -178,20 +173,10 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * @return the robotsLightsVisible
-	 */
-	public boolean isRobotsLightsVisible()
-	{
-		return robotsLightsVisible;
-	}
-
-	/**
 	 * @param selected
 	 */
 	public void setRobotLightsVisible(boolean visible)
 	{
-		this.robotsLightsVisible = visible;
-
 		Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
 		while (iterator.hasNext())
 		{
@@ -577,21 +562,11 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * @return the visibilityRangesVisible
-	 */
-	public boolean isVisibilityRangesVisible()
-	{
-		return visibilityRangesVisible;
-	}
-
-	/**
 	 * @param visibilityRangesVisible
 	 *            the visibilityRangesVisible to set
 	 */
 	public void setVisibilityRangesVisible(boolean visibilityRangesVisible)
 	{
-		this.visibilityRangesVisible = visibilityRangesVisible;
-
 		// update visibility range in robots
 		Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
 		while (iterator.hasNext())
@@ -601,13 +576,6 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 		}
 	}
 
-	/**
-	 * @return the movementDirectionsVisible
-	 */
-	public boolean isMovementDirectionsVisible()
-	{
-		return movementDirectionsVisible;
-	}
 
 	/**
 	 * @param movementDirectionsVisible
@@ -615,8 +583,6 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 */
 	public void setMovementDirectionsVisible(boolean movementDirectionsVisible)
 	{
-		this.movementDirectionsVisible = movementDirectionsVisible;
-
 		// update movement directions in robots
 		Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
 		while (iterator.hasNext())

@@ -75,7 +75,7 @@ public class SycamoreRobot3D extends SycamoreRobot<Point3D>
 		this.robotNode = new Node();
 		this.robotNode.attachChild(sceneGeometry);
 		
-		if (engine.isMovementDirectionsVisible())
+		if (SycamoreSystem.isMovementDirectionsVisible())
 		{
 			this.robotNode.attachChild(this.directionGeometry);
 		}

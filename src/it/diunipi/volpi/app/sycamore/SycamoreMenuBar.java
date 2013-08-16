@@ -3,8 +3,10 @@
  */
 package it.diunipi.volpi.app.sycamore;
 
+import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
+import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -30,47 +32,88 @@ import javax.swing.KeyStroke;
  */
 public abstract class SycamoreMenuBar extends JMenuBar
 {
-	private static final long	serialVersionUID					= 5611549792940856705L;
+	private static final long		serialVersionUID					= 5611549792940856705L;
 
-	private final SycamoreApp	application;
+	private final SycamoreApp		application;
 
-	private JMenu				menu_file							= null;
-	private JMenu				menu_view							= null;
-	private JMenu				menu_help							= null;
+	private JMenu					menu_file							= null;
+	private JMenu					menu_view							= null;
+	private JMenu					menu_help							= null;
 
 	// file menu items
-	private JMenuItem			menuItem_new						= null;
-	private JMenuItem			menuItem_newBatch					= null;
-	private JMenuItem			menuItem_open						= null;
-	private JMenu				menu_openRecent						= null;
-	private JMenuItem			menuItem_closeWindow				= null;
-	private JMenuItem			menuItem_save						= null;
-	private JMenuItem			menuItem_saveAs						= null;
-	private JMenuItem			menuItem_import						= null;
-	private JMenuItem			menuItem_export						= null;
-	private JMenu				menu_switchWorkspace				= null;
+	private JMenuItem				menuItem_new						= null;
+	private JMenuItem				menuItem_newBatch					= null;
+	private JMenuItem				menuItem_open						= null;
+	private JMenu					menu_openRecent						= null;
+	private JMenuItem				menuItem_closeWindow				= null;
+	private JMenuItem				menuItem_save						= null;
+	private JMenuItem				menuItem_saveAs						= null;
+	private JMenuItem				menuItem_import						= null;
+	private JMenuItem				menuItem_export						= null;
+	private JMenu					menu_switchWorkspace				= null;
 
 	// view menu items
-	private JCheckBoxMenuItem	checkBoxmenuItem_visibilityRange	= null;
-	private JCheckBoxMenuItem	checkBoxmenuItem_visibilityGraph	= null;
-	private JCheckBoxMenuItem	checkBoxmenuItem_directions			= null;
-	private JCheckBoxMenuItem	checkBoxmenuItem_localCoords		= null;
-	private JCheckBoxMenuItem	checkBoxmenuItem_baricentrum		= null;
-	private JCheckBoxMenuItem	checkBoxmenuItem_lights				= null;
-	private JCheckBoxMenuItem	checkBoxmenuItem_visualSupports		= null;
+	private JCheckBoxMenuItem		checkBoxmenuItem_grid				= null;
+	private JCheckBoxMenuItem		checkBoxmenuItem_axes				= null;
+	private JCheckBoxMenuItem		checkBoxmenuItem_visibilityRange	= null;
+	private JCheckBoxMenuItem		checkBoxmenuItem_visibilityGraph	= null;
+	private JCheckBoxMenuItem		checkBoxmenuItem_directions			= null;
+	private JCheckBoxMenuItem		checkBoxmenuItem_localCoords		= null;
+	private JCheckBoxMenuItem		checkBoxmenuItem_baricentrum		= null;
+	private JCheckBoxMenuItem		checkBoxmenuItem_lights				= null;
+	private JCheckBoxMenuItem		checkBoxmenuItem_visualSupports		= null;
 
 	// help menu item
-	private JMenuItem			menuItem_help						= null;
+	private JMenuItem				menuItem_help						= null;
 
-	private Vector<String>		oldWorkspaces;
+	private Vector<String>			oldWorkspaces						= null;
+	private Vector<ActionListener>	listeners							= null;
 
 	/**
 	 * Default constructor.
 	 */
 	public SycamoreMenuBar(SycamoreApp application)
 	{
+		this.listeners = new Vector<ActionListener>();
 		this.application = application;
 		fillOldWorkspacesList();
+	}
+
+	/**
+	 * Adds an <code>ActionListener</code> to the button.
+	 * 
+	 * @param listener
+	 *            the <code>ActionListener</code> to be added
+	 */
+	public void addActionListener(java.awt.event.ActionListener listener)
+	{
+		this.listeners.add(listener);
+	}
+
+	/**
+	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
+	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
+	 * 
+	 * @param listener
+	 *            the listener to be removed
+	 */
+	public void removeActionListener(java.awt.event.ActionListener listener)
+	{
+		this.listeners.remove(listener);
+	}
+
+	/**
+	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
+	 * method on all of them.
+	 * 
+	 * @param e
+	 */
+	private void fireActionEvent(ActionEvent e)
+	{
+		for (java.awt.event.ActionListener listener : this.listeners)
+		{
+			listener.actionPerformed(e);
+		}
 	}
 
 	/**
@@ -344,6 +387,51 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	}
 
 	/**
+	 * @return the checkBoxmenuItem_axes
+	 */
+	protected JCheckBoxMenuItem getCheckBoxmenuItem_axes()
+	{
+		if (checkBoxmenuItem_axes == null)
+		{
+			checkBoxmenuItem_axes = new JCheckBoxMenuItem("System coordinate axes");
+			checkBoxmenuItem_axes.setIcon(new ImageIcon("/Users/Vale/Documents/Workspace Tesi/Sycamore-2-0/src/it/diunipi/volpi/sycamore/resources/axes_16x16.png"));
+			checkBoxmenuItem_axes.setSelected(SycamoreSystem.isAxesVisible());
+			checkBoxmenuItem_axes.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(checkBoxmenuItem_axes, 0, SycamoreFiredActionEvents.SHOW_AXES.name()));
+				}
+			});
+		}
+		return checkBoxmenuItem_axes;
+	}
+
+	/**
+	 * @return the checkBoxmenuItem_grid
+	 */
+	protected JCheckBoxMenuItem getCheckBoxmenuItem_grid()
+	{
+		if (checkBoxmenuItem_grid == null)
+		{
+			checkBoxmenuItem_grid = new JCheckBoxMenuItem("3D scene grid");
+			checkBoxmenuItem_grid.setIcon(new ImageIcon("/Users/Vale/Documents/Workspace Tesi/Sycamore-2-0/src/it/diunipi/volpi/sycamore/resources/grid_16x16.png"));
+			checkBoxmenuItem_grid.setSelected(SycamoreSystem.isGridVisible());
+			checkBoxmenuItem_grid.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(checkBoxmenuItem_grid, 0, SycamoreFiredActionEvents.SHOW_GRID.name()));
+				}
+			});
+		}
+		return checkBoxmenuItem_grid;
+	}
+
+	/**
 	 * Return the checkbox menu item for visibility range
 	 * 
 	 * @return
@@ -354,6 +442,16 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		{
 			checkBoxmenuItem_visibilityRange = new JCheckBoxMenuItem("Visibility range");
 			checkBoxmenuItem_visibilityRange.setIcon(new ImageIcon("/Users/Vale/Documents/Workspace Tesi/Sycamore-2-0/src/it/diunipi/volpi/sycamore/resources/radar_16x16.png"));
+			checkBoxmenuItem_visibilityRange.setSelected(SycamoreSystem.isVisibilityRangesVisible());
+			checkBoxmenuItem_visibilityRange.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(checkBoxmenuItem_visibilityRange, 0, SycamoreFiredActionEvents.SHOW_VISIBILITY_RANGE.name()));
+				}
+			});
 		}
 		return checkBoxmenuItem_visibilityRange;
 	}
@@ -369,6 +467,16 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		{
 			checkBoxmenuItem_visibilityGraph = new JCheckBoxMenuItem("Visibility graph");
 			checkBoxmenuItem_visibilityGraph.setIcon(new ImageIcon("/Users/Vale/Documents/Workspace Tesi/Sycamore-2-0/src/it/diunipi/volpi/sycamore/resources/graph_16x16.png"));
+			checkBoxmenuItem_visibilityGraph.setSelected(SycamoreSystem.isVisibilityGraphVisible());
+			checkBoxmenuItem_visibilityGraph.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(checkBoxmenuItem_visibilityGraph, 0, SycamoreFiredActionEvents.SHOW_VISIBILITY_GRAPH.name()));
+				}
+			});
 		}
 		return checkBoxmenuItem_visibilityGraph;
 	}
@@ -382,8 +490,18 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	{
 		if (checkBoxmenuItem_directions == null)
 		{
-			checkBoxmenuItem_directions = new JCheckBoxMenuItem("Directions");
+			checkBoxmenuItem_directions = new JCheckBoxMenuItem("Robots directions");
 			checkBoxmenuItem_directions.setIcon(new ImageIcon("/Users/Vale/Documents/Workspace Tesi/Sycamore-2-0/src/it/diunipi/volpi/sycamore/resources/directions_16x16.png"));
+			checkBoxmenuItem_directions.setSelected(SycamoreSystem.isMovementDirectionsVisible());
+			checkBoxmenuItem_directions.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(checkBoxmenuItem_directions, 0, SycamoreFiredActionEvents.SHOW_MOVEMENT_DIRECTIONS.name()));
+				}
+			});
 		}
 		return checkBoxmenuItem_directions;
 	}
@@ -399,6 +517,16 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		{
 			checkBoxmenuItem_localCoords = new JCheckBoxMenuItem("Local coordinate system");
 			checkBoxmenuItem_localCoords.setIcon(new ImageIcon("/Users/Vale/Documents/Workspace Tesi/Sycamore-2-0/src/it/diunipi/volpi/sycamore/resources/compass_16x16.png"));
+			checkBoxmenuItem_localCoords.setSelected(SycamoreSystem.isLocalCoordinatesVisible());
+			checkBoxmenuItem_localCoords.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(checkBoxmenuItem_localCoords, 0, SycamoreFiredActionEvents.SHOW_LOCAL_COORDINATES.name()));
+				}
+			});
 		}
 		return checkBoxmenuItem_localCoords;
 	}
@@ -414,6 +542,16 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		{
 			checkBoxmenuItem_baricentrum = new JCheckBoxMenuItem("Baricentrum");
 			checkBoxmenuItem_baricentrum.setIcon(new ImageIcon("/Users/Vale/Documents/Workspace Tesi/Sycamore-2-0/src/it/diunipi/volpi/sycamore/resources/plus_16x16.png"));
+			checkBoxmenuItem_baricentrum.setSelected(SycamoreSystem.isBaricentrumVisible());
+			checkBoxmenuItem_baricentrum.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(checkBoxmenuItem_baricentrum, 0, SycamoreFiredActionEvents.SHOW_BARICENTRUM.name()));
+				}
+			});
 		}
 		return checkBoxmenuItem_baricentrum;
 	}
@@ -429,6 +567,16 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		{
 			checkBoxmenuItem_lights = new JCheckBoxMenuItem("Lights");
 			checkBoxmenuItem_lights.setIcon(new ImageIcon("/Users/Vale/Documents/Workspace Tesi/Sycamore-2-0/src/it/diunipi/volpi/sycamore/resources/lamp_16x16.png"));
+			checkBoxmenuItem_lights.setSelected(SycamoreSystem.isRobotsLightsVisible());
+			checkBoxmenuItem_lights.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(checkBoxmenuItem_lights, 0, SycamoreFiredActionEvents.SHOW_LIGHTS.name()));
+				}
+			});
 		}
 		return checkBoxmenuItem_lights;
 	}
@@ -442,8 +590,18 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	{
 		if (checkBoxmenuItem_visualSupports == null)
 		{
-			checkBoxmenuItem_visualSupports = new JCheckBoxMenuItem("Visual supports");
+			checkBoxmenuItem_visualSupports = new JCheckBoxMenuItem("Visual support elements");
 			checkBoxmenuItem_visualSupports.setIcon(new ImageIcon("/Users/Vale/Documents/Workspace Tesi/Sycamore-2-0/src/it/diunipi/volpi/sycamore/resources/eye_16x16.png"));
+			checkBoxmenuItem_visualSupports.setSelected(SycamoreSystem.isVisualElementsVisible());
+			checkBoxmenuItem_visualSupports.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(checkBoxmenuItem_visualSupports, 0, SycamoreFiredActionEvents.SHOW_VISUAL_ELEMENTS.name()));
+				}
+			});
 		}
 		return checkBoxmenuItem_visualSupports;
 	}
@@ -457,7 +615,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	{
 		if (menuItem_help == null)
 		{
-			menuItem_help = new JMenuItem("Aiuto su Sycamore...");
+			menuItem_help = new JMenuItem("Help on Sycamore...");
 		}
 		return menuItem_help;
 	}
@@ -471,4 +629,20 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	 * Setup the preferences menu for a specific environment
 	 */
 	protected abstract void setupPreferencesmenu();
+
+	/**
+	 * Update Gui to reflect changes in engine
+	 */
+	public void updateGui()
+	{
+		getCheckBoxmenuItem_axes().setSelected(SycamoreSystem.isAxesVisible());
+		getCheckBoxmenuItem_grid().setSelected(SycamoreSystem.isGridVisible());
+		getCheckBoxmenuItem_visibilityRange().setSelected(SycamoreSystem.isVisibilityRangesVisible());
+		getCheckBoxmenuItem_visibilityGraph().setSelected(SycamoreSystem.isVisibilityGraphVisible());
+		getCheckBoxmenuItem_directions().setSelected(SycamoreSystem.isMovementDirectionsVisible());
+		getCheckBoxmenuItem_localCoords().setSelected(SycamoreSystem.isLocalCoordinatesVisible());
+		getCheckBoxmenuItem_baricentrum().setSelected(SycamoreSystem.isBaricentrumVisible());
+		getCheckBoxmenuItem_lights().setSelected(SycamoreSystem.isRobotsLightsVisible());
+		getCheckBoxmenuItem_visualSupports().setSelected(SycamoreSystem.isVisualElementsVisible());
+	}
 }

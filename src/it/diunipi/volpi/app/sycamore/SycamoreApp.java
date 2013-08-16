@@ -2,9 +2,9 @@ package it.diunipi.volpi.app.sycamore;
 
 import it.diunipi.volpi.sycamore.gui.SycamoreMainPanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSplashScreen;
-import it.diunipi.volpi.sycamore.gui.SycamoreWorkspaceSelectionPanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSplashScreen.SPLASH_STATES;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.gui.SycamoreWorkspaceSelectionPanel;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
@@ -14,9 +14,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.AbstractButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -149,7 +151,24 @@ public abstract class SycamoreApp extends JFrame
 		gbc_sycamoreMainPanel.gridx = 0;
 		gbc_sycamoreMainPanel.gridy = 0;
 		getContentPane().add(getSycamoreMainPanel(), gbc_sycamoreMainPanel);
+		
+		// call event of main panel
+		getMenuBar_main().addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				getSycamoreMainPanel().updateVisibleElements((AbstractButton) e.getSource(), e.getActionCommand());
+			}
+		});
 	}
+	
+	/**
+	 * Returns the main menu bar
+	 * 
+	 * @return
+	 */
+	protected abstract SycamoreMenuBar getMenuBar_main();
 
 	/**
 	 * @return the sideBarpanel
@@ -172,6 +191,10 @@ public abstract class SycamoreApp extends JFrame
 						splashThread.getSplashScreen().setCurrentSplashState(SPLASH_STATES.DONE);
 						sycamoreMainPanel.setEnabled(true);
 					}
+					else if (e.getActionCommand().equals(SycamoreFiredActionEvents.UPDATE_GUI.name()))
+					{
+						getMenuBar_main().updateGui();
+					}		
 				}
 			});
 		}

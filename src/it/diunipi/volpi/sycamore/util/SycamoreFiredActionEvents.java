@@ -23,8 +23,11 @@ public enum SycamoreFiredActionEvents
 	SHOW_AXES("Show coordinate axes"),
 	SHOW_LIGHTS("Show robot lights"),
 	SHOW_VISIBILITY_RANGE("Show visibility ranges"),
+	SHOW_VISIBILITY_GRAPH("Show visibility graph"),
 	SHOW_BARICENTRUM("Show system baricentrum"),
 	SHOW_MOVEMENT_DIRECTIONS("Show movement directions"),
+	SHOW_VISUAL_ELEMENTS("Show visual support elements"),
+	SHOW_LOCAL_COORDINATES("Show local coordinate systems"),
 	UPDATE_GUI("Update the GUI");
 	
 	private String description = null;

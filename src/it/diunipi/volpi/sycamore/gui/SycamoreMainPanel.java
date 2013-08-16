@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.AbstractButton;
+
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
@@ -206,11 +208,11 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	{
 		// update plugins
 		getSimulationSettingsPanel().updateEngine(newEngine);
-		
-		// set the engine in scheduler threads 
+
+		// set the engine in scheduler threads
 		SycamoreSystem.getSchedulerThread().setEngine(newEngine);
 		SycamoreSystem.getHumanPilotSchedulerThread().setEngine(newEngine);
-		
+
 		// update the animation speed value
 		newEngine.setAnimationSpeedMultiplier(getSycamoreAnimationControlPanel().getAnimationSpeedMultiplier());
 	}
@@ -241,6 +243,11 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
+					if (e.getSource() instanceof AbstractButton)
+					{
+						updateVisibleElements((AbstractButton) e.getSource(), e.getActionCommand());
+					}
+					
 					// forward event
 					fireActionEvent(e);
 				}
@@ -272,8 +279,12 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 		return appEngine;
 	}
 
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#setAppEngine(it.diunipi.volpi.sycamore.engine.SycamoreEngine)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.gui.SycamorePanel#setAppEngine(it.diunipi.volpi.sycamore.engine
+	 * .SycamoreEngine)
 	 */
 	@Override
 	public void setAppEngine(SycamoreEngine appEngine)
@@ -317,7 +328,9 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 		getSimulationViewPanel().setEnabled(enabled);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#updateGui()
 	 */
 	@Override
@@ -416,5 +429,92 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	public void refreshPlugins()
 	{
 		getSimulationSettingsPanel().updateComboboxModels();
+	}
+
+	/**
+	 * @param source
+	 * @param actionCommand
+	 */
+	public void updateVisibleElements(AbstractButton source, String actionCommand)
+	{
+		boolean visible = source.isSelected();
+
+		System.out.println(actionCommand + ": " + visible);
+
+		if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_GRID.name()))
+		{
+			SycamoreSystem.setGridVisible(visible);
+			getSimulationViewPanel().setGridVisible(visible);
+		}
+		else if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_AXES.name()))
+		{
+			SycamoreSystem.setAxesVisible(visible);
+			getSimulationViewPanel().setAxesVisible(visible);
+		}
+		else if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_VISIBILITY_RANGE.name()))
+		{
+			// save visible state
+			SycamoreSystem.setVisibilityRangesVisible(visible);
+
+			// apply to robots
+			if (appEngine != null)
+			{
+				appEngine.setVisibilityRangesVisible(visible);
+			}
+		}
+		else if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_VISIBILITY_GRAPH.name()))
+		{
+			// save visible state
+			SycamoreSystem.setVisibilityGraphVisible(visible);
+			
+			//TODO implement 
+		}
+		else if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_MOVEMENT_DIRECTIONS.name()))
+		{
+			// save visible state
+			SycamoreSystem.setMovementDirectionsVisible(visible);
+			
+			// apply to robots
+			if (appEngine != null)
+			{
+				appEngine.setMovementDirectionsVisible(visible);
+			}
+		}
+		else if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_LOCAL_COORDINATES.name()))
+		{
+			// save visible state
+			SycamoreSystem.setLocalCoordinatesVisible(visible);
+			
+			//TODO implement 
+		}
+		else if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_BARICENTRUM.name()))
+		{
+			SycamoreSystem.setBaricentrumVisible(visible);
+			getSimulationViewPanel().setBaricentrumVisible(visible);
+		}
+		else if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_LIGHTS.name()))
+		{
+			// save visible state
+			SycamoreSystem.setRobotsLightsVisible(visible);
+
+			// apply to robots
+			if (appEngine != null)
+			{
+				appEngine.setRobotLightsVisible(visible);
+			}
+		}
+		else if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_VISUAL_ELEMENTS.name()))
+		{
+			// save visible state
+			SycamoreSystem.setVisualElementsVisible(visible);
+			
+			//TODO implement 
+		}
+		
+		// update buttons
+		getSimulationViewPanel().updateGui();
+		
+		// update menu bar
+		fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.UPDATE_GUI.name()));
 	}
 }
