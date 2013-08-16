@@ -226,9 +226,6 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		button_play.setToolTipText("Play animation");
 		button_play.setSelected(false);
 
-		appEngine.makeRatioSnapshot();
-		getSlider_animationControl().setEnabled(true);
-
 		if (finishSimulation)
 		{
 			appEngine.performMeasuresSimulationEnd();
@@ -236,11 +233,16 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 
 			SycamoreSystem.getSchedulerThread().pause();
 			SycamoreSystem.getHumanPilotSchedulerThread().pause();
+			
+			getSlider_animationControl().setEnabled(false);
 		}
 		else
 		{
 			SycamoreSystem.getSchedulerThread().pause();
 			SycamoreSystem.getHumanPilotSchedulerThread().pause();
+			
+			appEngine.makeRatioSnapshot();
+			getSlider_animationControl().setEnabled(true);
 
 			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.PAUSE_ANIMATION.name()));
 		}
