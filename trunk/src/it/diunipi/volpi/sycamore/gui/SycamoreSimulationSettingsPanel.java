@@ -469,4 +469,15 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 			getLabel_robotsNumber().setText(text);
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
+	 */
+	@Override
+	public void reset()
+	{
+		getComboBox_selectScheduler().setSelectedIndex(-1);
+		getSycamoreRobotsConfigurationPanel().reset();
+		getAdditionalPluginsPanel().reset();
+	}
 }

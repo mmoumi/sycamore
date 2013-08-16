@@ -466,4 +466,28 @@ public class SycamoreSystem {
 	public static void setVisualElementsVisible(boolean visualElementsVisible) {
 		SycamoreSystem.visualElementsVisible = visualElementsVisible;
 	}
+
+	/**
+	 * Reset the system to its initial state
+	 */
+	public static synchronized void reset()
+	{
+		try
+		{
+			// make current scheduler therads return
+			schedulerThread.interrupt();
+			humanPilotSchedulerThread.interrupt();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		// create new scheduler threads
+		schedulerThread = new SycamoreSchedulerThread();
+		schedulerThread.start();
+
+		humanPilotSchedulerThread = new SycamoreHumanPilotSchedulerThread();
+		humanPilotSchedulerThread.start();
+	}
 }

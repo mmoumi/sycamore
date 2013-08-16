@@ -26,22 +26,24 @@ public enum SycamoreFiredActionEvents
 	SHOW_VISIBILITY_GRAPH("Show visibility graph"),
 	SHOW_BARICENTRUM("Show system baricentrum"),
 	SHOW_MOVEMENT_DIRECTIONS("Show movement directions"),
-	SHOW_VISUAL_ELEMENTS("Show visual support elements"),
-	SHOW_LOCAL_COORDINATES("Show local coordinate systems"),
-	UPDATE_GUI("Update the GUI");
-	
-	private String description = null;
-	
+	SHOW_VISUAL_ELEMENTS("Show visual support elements"), 
+	SHOW_LOCAL_COORDINATES("Show local coordinate systems"), 
+	UPDATE_GUI("Update the GUI"), 
+	LOAD_PLUGIN("Load a new plugin");
+
+	private String	description	= null;
+
 	/**
 	 * Constructor.
+	 * 
 	 * @param command
 	 * @param description
 	 */
 	SycamoreFiredActionEvents(String description)
 	{
-		this.description = description; 
+		this.description = description;
 	}
-	
+
 	/**
 	 * @return the description
 	 */

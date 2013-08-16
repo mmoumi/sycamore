@@ -4,8 +4,11 @@ import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.engine.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.plugins.SycamorePlugin;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
+import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.awt.Dimension;
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -14,20 +17,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
-
 /**
  * The panel that contains a table with all loaded plugins
  * 
@@ -312,6 +314,45 @@ public class SycamorePluginsListPanel extends SycamoreTitledRoundedBorderPanel
 	}
 
 	/**
+	 * Lets the user load a new plugin by taking it from the file system
+	 */
+	public void loadPluginFromFileSystem()
+	{
+		// show a file dialog
+		FileDialog dialog = new FileDialog((Frame) null);
+		dialog.setTitle("Select the plugin's JAR file");
+		dialog.setFilenameFilter(new FilenameFilter()
+		{
+			@Override
+			public boolean accept(File dir, String name)
+			{
+				return name.endsWith(".jar");
+			}
+		});
+		dialog.setVisible(true);
+
+		// get the file
+		String file = dialog.getFile();
+		if (file != null)
+		{
+			try
+			{
+				// copy file into workspace
+				String inPath = dialog.getDirectory() + file;
+				String outPath = SycamoreSystem.getPluginsDirectory() + System.getProperty("file.separator") + file;
+				
+				SycamoreUtil.copyFile(new File(inPath), new File(outPath));
+				
+				refreshPlugins();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
 	 * @return the button_newPlugin
 	 */
 	private JButton getButton_newPlugin()
@@ -328,19 +369,7 @@ public class SycamorePluginsListPanel extends SycamoreTitledRoundedBorderPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					JFileChooser fileChoser = new JFileChooser();
-					int returnVal = fileChoser.showOpenDialog(SycamorePluginsListPanel.this.getParent());
-
-					if (returnVal == JFileChooser.APPROVE_OPTION)
-					{
-						File file = fileChoser.getSelectedFile();
-						// This is where a real application would open the file.
-						System.out.println("Opening: " + file.getName() + ".");
-					}
-					else
-					{
-						System.out.println("Open command cancelled by user.");
-					}
+					loadPluginFromFileSystem();
 				}
 			});
 		}
@@ -378,19 +407,27 @@ public class SycamorePluginsListPanel extends SycamoreTitledRoundedBorderPanel
 
 					if (doRefresh)
 					{
-						// refresh plugins and update
-						SycamorePluginManager.getSharedInstance().refreshPlugins();
-						fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.PLUGINS_REFRESHED.name()));
-
-						if (appEngine != null)
-						{
-							fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.SIMULATION_DATA_BAD.name()));
-						}
+						refreshPlugins();
 					}
 				}
 			});
 		}
 		return button_refreshPlugins;
+	}
+
+	/**
+	 * Refresh the loaded plugins
+	 */
+	private void refreshPlugins()
+	{
+		// refresh plugins and update
+		SycamorePluginManager.getSharedInstance().refreshPlugins();
+		fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.PLUGINS_REFRESHED.name()));
+
+		if (appEngine != null)
+		{
+			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.SIMULATION_DATA_BAD.name()));
+		}
 	}
 
 	/**

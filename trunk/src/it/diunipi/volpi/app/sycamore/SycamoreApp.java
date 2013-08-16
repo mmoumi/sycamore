@@ -104,8 +104,7 @@ public abstract class SycamoreApp extends JFrame
 				System.exit(0);
 			}
 		}
-		
-		
+
 		// init system
 		SycamoreSystem.initialize();
 
@@ -121,7 +120,7 @@ public abstract class SycamoreApp extends JFrame
 			}
 		});
 	}
-	
+
 	/**
 	 * Dispose the Sycamore application
 	 */
@@ -151,18 +150,25 @@ public abstract class SycamoreApp extends JFrame
 		gbc_sycamoreMainPanel.gridx = 0;
 		gbc_sycamoreMainPanel.gridy = 0;
 		getContentPane().add(getSycamoreMainPanel(), gbc_sycamoreMainPanel);
-		
+
 		// call event of main panel
 		getMenuBar_main().addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				getSycamoreMainPanel().updateVisibleElements((AbstractButton) e.getSource(), e.getActionCommand());
+				if (e.getActionCommand().equals(SycamoreFiredActionEvents.LOAD_PLUGIN.name()))
+				{
+					getSycamoreMainPanel().loadPluginFromFileSystem();
+				}
+				else
+				{
+					getSycamoreMainPanel().updateVisibleElements((AbstractButton) e.getSource(), e.getActionCommand());
+				}
 			}
 		});
 	}
-	
+
 	/**
 	 * Returns the main menu bar
 	 * 
@@ -194,7 +200,7 @@ public abstract class SycamoreApp extends JFrame
 					else if (e.getActionCommand().equals(SycamoreFiredActionEvents.UPDATE_GUI.name()))
 					{
 						getMenuBar_main().updateGui();
-					}		
+					}
 				}
 			});
 		}
@@ -241,7 +247,7 @@ public abstract class SycamoreApp extends JFrame
 	{
 		getSycamoreMainPanel().updateGui();
 	}
-	
+
 	/**
 	 * Reboot the Application
 	 */
@@ -249,5 +255,14 @@ public abstract class SycamoreApp extends JFrame
 	{
 		disposeApplication();
 		System.exit(0);
+	}
+
+	/**
+	 * Reset the application to its initial state
+	 */
+	public synchronized void reset()
+	{
+		SycamoreSystem.reset();
+		getSycamoreMainPanel().reset();
 	}
 }

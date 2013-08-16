@@ -836,24 +836,27 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 					// checkTypes.
 					PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) comboBox_algorithmSelection.getModel();
 					Algorithm algorithm = (Algorithm) model.getSelectedItem();
-					types.put(comboBox_algorithmSelection, algorithm.getType());
-
-					// check types to update the GUI
-					if (checkTypes())
+					if (algorithm != null)
 					{
-						if (appEngine != null)
-						{
-							// eventually create robots in engine
-							updateRobotsInEngine(0, appEngine);
+						types.put(comboBox_algorithmSelection, algorithm.getType());
 
-							try
+						// check types to update the GUI
+						if (checkTypes())
+						{
+							if (appEngine != null)
 							{
-								// set algorithm in all robots in engine
-								appEngine.createAndSetNewAlgorithmInstance(algorithm, 0);
-							}
-							catch (Exception e1)
-							{
-								e1.printStackTrace();
+								// eventually create robots in engine
+								updateRobotsInEngine(0, appEngine);
+
+								try
+								{
+									// set algorithm in all robots in engine
+									appEngine.createAndSetNewAlgorithmInstance(algorithm, 0);
+								}
+								catch (Exception e1)
+								{
+									e1.printStackTrace();
+								}
 							}
 						}
 					}
@@ -1045,26 +1048,29 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 				// checkTypes.
 				PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) comboBox_additionalAlgorithmSelection.getModel();
 				Algorithm algorithm = (Algorithm) model.getSelectedItem();
-				types.put(comboBox_additionalAlgorithmSelection, algorithm.getType());
-
-				int index = comboBox_additionalAlgorithmSelection.getIndex();
-
-				// check types to update the GUI
-				if (checkTypes())
+				if (algorithm != null)
 				{
-					if (appEngine != null)
-					{
-						// eventually create robots in engine
-						updateRobotsInEngine(index, appEngine);
+					types.put(comboBox_additionalAlgorithmSelection, algorithm.getType());
 
-						try
+					int index = comboBox_additionalAlgorithmSelection.getIndex();
+
+					// check types to update the GUI
+					if (checkTypes())
+					{
+						if (appEngine != null)
 						{
-							// set algorithm in all robots in engine
-							appEngine.createAndSetNewAlgorithmInstance(algorithm, index);
-						}
-						catch (Exception e1)
-						{
-							e1.printStackTrace();
+							// eventually create robots in engine
+							updateRobotsInEngine(index, appEngine);
+
+							try
+							{
+								// set algorithm in all robots in engine
+								appEngine.createAndSetNewAlgorithmInstance(algorithm, index);
+							}
+							catch (Exception e1)
+							{
+								e1.printStackTrace();
+							}
 						}
 					}
 				}
@@ -1183,7 +1189,9 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#updateGui()
 	 */
 	@Override
@@ -1384,5 +1392,51 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 			label_robotsNum.setPreferredSize(new Dimension(90, 16));
 		}
 		return label_robotsNum;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
+	 */
+	@Override
+	public void reset()
+	{
+		types.clear();
+
+		this.removeAll();
+
+		additionalButtons.clear();
+		additionalColorsComboboxes.clear();
+		additionalComboboxes.clear();
+		additionalLightSpinners.clear();
+		additionalSpinners.clear();
+
+		if (button_addRow != null)
+		{
+			button_addRow = null;
+		}
+		if (comboBox_algorithmSelection != null)
+		{
+			comboBox_algorithmSelection = null;
+		}
+		if (comboBox_colorSelection != null)
+		{
+			comboBox_colorSelection = null;
+		}
+		if (spinner_lightsNumber != null)
+		{
+			spinner_lightsNumber = null;
+		}
+		if (spinner_robotsNumber != null)
+		{
+			spinner_robotsNumber = null;
+		}
+
+		this.initialize();
+		this.revalidate();
+		this.repaint();
+		
+		this.updateComboboxModels();
 	}
 }

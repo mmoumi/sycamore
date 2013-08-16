@@ -560,8 +560,8 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			setCurrentState(ROBOT_STATE.READY_TO_MOVE);
 		}
 		
-		System.out.println("AFTER COMPUTE:");
-		System.out.println(this.toString());
+//		System.out.println("AFTER COMPUTE:");
+//		System.out.println(this.toString());
 	}
 
 	/**

@@ -382,4 +382,13 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 		getButton_lights().setSelected(SycamoreSystem.isRobotsLightsVisible());
 		getButton_visuals().setSelected(SycamoreSystem.isVisualElementsVisible());
 	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
+	 */
+	@Override
+	public void reset()
+	{
+		// Nothing to do
+	}
 }

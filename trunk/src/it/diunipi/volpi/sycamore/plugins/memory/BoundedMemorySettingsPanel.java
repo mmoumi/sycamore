@@ -161,4 +161,13 @@ public class BoundedMemorySettingsPanel extends SycamorePanel
 	{
 		// Nothing to do
 	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
+	 */
+	@Override
+	public void reset()
+	{
+		// Nothing to do
+	}
 }

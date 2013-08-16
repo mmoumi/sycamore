@@ -821,4 +821,16 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 		}
 		return switchToggle_multiplicityDetection;
 	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
+	 */
+	@Override
+	public void reset()
+	{
+		getComboBox_visibility().setSelectedIndex(-1);
+		getComboBox_agreement().setSelectedIndex(-1);
+		getComboBox_initialConditions().setSelectedIndex(-1);
+		getComboBox_memory().setSelectedIndex(-1);
+	}
 }

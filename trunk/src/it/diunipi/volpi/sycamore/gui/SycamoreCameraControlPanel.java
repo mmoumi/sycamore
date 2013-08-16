@@ -243,6 +243,15 @@ public class SycamoreCameraControlPanel extends SycamorePanel
 	@Override
 	public void updateGui()
 	{
-
+		// Nothing to do
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
+	 */
+	@Override
+	public void reset()
+	{
+		// Nothing to do
 	}
 }

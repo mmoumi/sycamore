@@ -3,8 +3,8 @@
  */
 package it.diunipi.volpi.sycamore.plugins.humanpilot;
 
-import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.plugins.schedulers.SycamoreSchedulerThread;
 
 /**
  * The thread that manages the scheduler for human pilot. It owns the human pilot scheduler and
@@ -13,99 +13,8 @@ import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
  * 
  * @author Valerio Volpi - vale.v@me.com
  */
-public class SycamoreHumanPilotSchedulerThread extends Thread
+public class SycamoreHumanPilotSchedulerThread extends SycamoreSchedulerThread
 {
-	/**
-	 * The possible states of the scheduler
-	 * 
-	 * @author Vale
-	 */
-	public static enum SCHEDULER_STATE
-	{
-		/**
-		 * Scheduler not started yet
-		 */
-		NOT_STARTED,
-		/**
-		 * Scheduler running
-		 */
-		RUNNING,
-		/**
-		 * Scheduler paused
-		 */
-		PAUSED;
-	}
-
-	private SycamoreEngine	engine	= null;
-	private SCHEDULER_STATE	state	= SCHEDULER_STATE.NOT_STARTED;
-
-	/**
-	 * @param engine
-	 *            the engine to set
-	 */
-	public void setEngine(SycamoreEngine engine)
-	{
-		this.engine = engine;
-	}
-
-	/**
-	 * @return the engine
-	 */
-	public SycamoreEngine getEngine()
-	{
-		return engine;
-	}
-
-	/**
-	 * Check if the thread is in paused state, and in this case starts waiting
-	 */
-	private void checkState()
-	{
-		if (state == SCHEDULER_STATE.PAUSED)
-		{
-			this.doWaitGui();
-		}
-	}
-
-	/**
-	 * Waits until the GUI calls a <code>play()</code> method
-	 */
-	public void doWaitGui()
-	{
-		synchronized (SycamoreSystem.getSchedulerGuiSynchronizer())
-		{
-			try
-			{
-				SycamoreSystem.getSchedulerGuiSynchronizer().wait();
-			}
-			catch (InterruptedException e)
-			{
-				System.err.println("Interrupted thread while sleeping.");
-			}
-		}
-	}
-
-	/**
-	 * Makes the scheduler stop waiting and start performing its iterations
-	 */
-	public void play()
-	{
-		this.state = SCHEDULER_STATE.RUNNING;
-		synchronized (SycamoreSystem.getSchedulerGuiSynchronizer())
-		{
-			SycamoreSystem.getSchedulerGuiSynchronizer().notifyAll();
-		}
-	}
-
-	/**
-	 * @param state
-	 *            the state to set
-	 */
-	public void pause()
-	{
-		this.state = SCHEDULER_STATE.PAUSED;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -114,12 +23,17 @@ public class SycamoreHumanPilotSchedulerThread extends Thread
 	@Override
 	public void run()
 	{
-		super.run();
-
 		// scheduler starts paused. The user will have to press play to start
 		this.pause();
 		while (true)
 		{
+			// eventually return
+			if (state == SCHEDULER_STATE.INTERRUPTED)
+			{
+				System.out.println("Human pilot scheduler returning...");
+				return;
+			}
+			
 			checkState();
 
 			if (engine != null)

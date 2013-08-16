@@ -335,4 +335,14 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	{
 		getPanel_sceneContainer().setBaricentrumVisible(visible);
 	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
+	 */
+	@Override
+	public void reset()
+	{
+		getPanel_sceneContainer().reset();
+		getPanel_sceneControl().reset();
+	}
 }

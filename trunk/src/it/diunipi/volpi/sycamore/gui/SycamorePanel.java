@@ -27,4 +27,9 @@ public abstract class SycamorePanel extends JPanel
 	 * Updates the GUI in order to reflect changes in the engine
 	 */
 	public abstract void updateGui();
+	
+	/**
+	 * Reset this panel to its initial settings
+	 */
+	public abstract void reset();
 }

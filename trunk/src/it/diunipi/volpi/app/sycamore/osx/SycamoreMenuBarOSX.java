@@ -42,7 +42,6 @@ public class SycamoreMenuBarOSX extends SycamoreMenuBar
 		getMenu_file().add(getMenuItem_open());
 		getMenu_file().add(getMenu_openRecent());
 		getMenu_file().add(new JSeparator());
-		getMenu_file().add(getMenuItem_closeWindow());
 		getMenu_file().add(getMenuItem_save());
 		getMenu_file().add(getMenuItem_saveAs());
 		getMenu_file().add(new JSeparator());
