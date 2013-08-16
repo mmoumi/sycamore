@@ -31,3 +31,4 @@ Here follows a list of known bugs. Please, feel free to let us know if you find 
   # *<grave>* OS X App seems to work only on OS X Mountain Lion, not on other systems
   # *<grave>* Windows installer does not work. To have Sycamore running in Windows, please run the executable jar file
   # *<minor>* The 2D scene has Z-fighting problems
+  # *<serious>* AsynchronousScheduler, with "Changes Robot Speed" command enabled, gives problems with limited visibility. Timelines are not updated well
