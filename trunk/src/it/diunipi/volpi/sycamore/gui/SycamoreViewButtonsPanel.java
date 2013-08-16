@@ -28,8 +28,9 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 	private JToggleButton			button_lights		= null;
 	private JToggleButton			button_visuals		= null;
 	private JToggleButton			button_grid			= null;
+	private JToggleButton			button_axes			= null;
+
 	private Vector<ActionListener>	listeners			= null;
-	private JToggleButton			button_axes;
 
 	/**
 	 * Default constructor
@@ -48,7 +49,6 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 		FlowLayout flowLayout = new FlowLayout(FlowLayout.RIGHT, 5, 5);
 		setLayout(flowLayout);
 		add(getButton_axes());
-
 		add(getButton_grid());
 		add(getButton_range());
 		add(getButton_graph());
@@ -109,7 +109,7 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 			button_range.setMinimumSize(new Dimension(45, 45));
 			button_range.setMaximumSize(new Dimension(45, 45));
 			button_range.setPreferredSize(new Dimension(45, 45));
-			button_range.setSelected(true);
+			button_range.setSelected(SycamoreSystem.isVisibilityRangesVisible());
 			button_range.addActionListener(new ActionListener()
 			{
 				@Override
@@ -135,6 +135,15 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 			button_graph.setMinimumSize(new Dimension(45, 45));
 			button_graph.setMaximumSize(new Dimension(45, 45));
 			button_graph.setPreferredSize(new Dimension(45, 45));
+			button_graph.setSelected(SycamoreSystem.isVisibilityGraphVisible());
+			button_graph.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(button_graph, 0, SycamoreFiredActionEvents.SHOW_VISIBILITY_GRAPH.name()));
+				}
+			});
 		}
 		return button_graph;
 	}
@@ -152,6 +161,7 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 			button_dirs.setMinimumSize(new Dimension(45, 45));
 			button_dirs.setMaximumSize(new Dimension(45, 45));
 			button_dirs.setPreferredSize(new Dimension(45, 45));
+			button_dirs.setSelected(SycamoreSystem.isMovementDirectionsVisible());
 			button_dirs.addActionListener(new ActionListener()
 			{
 				@Override
@@ -177,6 +187,15 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 			button_coords.setMinimumSize(new Dimension(45, 45));
 			button_coords.setMaximumSize(new Dimension(45, 45));
 			button_coords.setPreferredSize(new Dimension(45, 45));
+			button_coords.setSelected(SycamoreSystem.isLocalCoordinatesVisible());
+			button_coords.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(button_coords, 0, SycamoreFiredActionEvents.SHOW_LOCAL_COORDINATES.name()));
+				}
+			});
 		}
 		return button_coords;
 	}
@@ -194,7 +213,7 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 			button_baricentrum.setMinimumSize(new Dimension(45, 45));
 			button_baricentrum.setMaximumSize(new Dimension(45, 45));
 			button_baricentrum.setPreferredSize(new Dimension(45, 45));
-			button_baricentrum.setSelected(false);
+			button_baricentrum.setSelected(SycamoreSystem.isBaricentrumVisible());
 			button_baricentrum.addActionListener(new ActionListener()
 			{
 				@Override
@@ -220,7 +239,7 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 			button_lights.setMinimumSize(new Dimension(45, 45));
 			button_lights.setMaximumSize(new Dimension(45, 45));
 			button_lights.setPreferredSize(new Dimension(45, 45));
-			button_lights.setSelected(true);
+			button_lights.setSelected(SycamoreSystem.isRobotsLightsVisible());
 			button_lights.addActionListener(new ActionListener()
 			{
 				@Override
@@ -246,6 +265,15 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 			button_visuals.setMinimumSize(new Dimension(45, 45));
 			button_visuals.setMaximumSize(new Dimension(45, 45));
 			button_visuals.setPreferredSize(new Dimension(45, 45));
+			button_visuals.setSelected(SycamoreSystem.isVisualElementsVisible());
+			button_visuals.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(button_coords, 0, SycamoreFiredActionEvents.SHOW_VISUAL_ELEMENTS.name()));
+				}
+			});
 		}
 		return button_visuals;
 	}
@@ -259,11 +287,11 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 		{
 			button_grid = new JToggleButton();
 			button_grid.setIcon(new ImageIcon(getClass().getResource("/it/diunipi/volpi/sycamore/resources/grid_32x32.png")));
-			button_grid.setToolTipText("View grid");
+			button_grid.setToolTipText("View 3D scene grid");
 			button_grid.setMinimumSize(new Dimension(45, 45));
 			button_grid.setMaximumSize(new Dimension(45, 45));
 			button_grid.setPreferredSize(new Dimension(45, 45));
-			button_grid.setSelected(true);
+			button_grid.setSelected(SycamoreSystem.isGridVisible());
 			button_grid.addActionListener(new ActionListener()
 			{
 				@Override
@@ -289,7 +317,7 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 			button_axes.setMinimumSize(new Dimension(45, 45));
 			button_axes.setMaximumSize(new Dimension(45, 45));
 			button_axes.setPreferredSize(new Dimension(45, 45));
-			button_axes.setSelected(true);
+			button_axes.setSelected(SycamoreSystem.isAxesVisible());
 			button_axes.addActionListener(new ActionListener()
 			{
 				@Override
@@ -313,13 +341,13 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 		super.setEnabled(enabled);
 
 		getButton_axes().setEnabled(enabled);
-		getButton_baricentrum().setEnabled(enabled);
-		getButton_coords().setEnabled(enabled);
-		getButton_dirs().setEnabled(enabled);
-		getButton_graph().setEnabled(enabled);
 		getButton_grid().setEnabled(enabled);
-		getButton_lights().setEnabled(enabled);
 		getButton_range().setEnabled(enabled);
+		getButton_graph().setEnabled(enabled);
+		getButton_dirs().setEnabled(enabled);
+		getButton_coords().setEnabled(enabled);
+		getButton_baricentrum().setEnabled(enabled);
+		getButton_lights().setEnabled(enabled);
 		getButton_visuals().setEnabled(enabled);
 	}
 
@@ -344,6 +372,14 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 	@Override
 	public void updateGui()
 	{
-		// Nothing to do
+		getButton_axes().setSelected(SycamoreSystem.isAxesVisible());
+		getButton_grid().setSelected(SycamoreSystem.isGridVisible());
+		getButton_range().setSelected(SycamoreSystem.isVisibilityRangesVisible());
+		getButton_graph().setSelected(SycamoreSystem.isVisibilityGraphVisible());
+		getButton_dirs().setSelected(SycamoreSystem.isMovementDirectionsVisible());
+		getButton_coords().setSelected(SycamoreSystem.isLocalCoordinatesVisible());
+		getButton_baricentrum().setSelected(SycamoreSystem.isBaricentrumVisible());
+		getButton_lights().setSelected(SycamoreSystem.isRobotsLightsVisible());
+		getButton_visuals().setSelected(SycamoreSystem.isVisualElementsVisible());
 	}
 }

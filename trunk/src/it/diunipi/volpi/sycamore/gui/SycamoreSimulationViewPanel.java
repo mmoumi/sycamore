@@ -16,7 +16,6 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 
 /**
  * The panel that contains the JME scene and the buttons to manage the camera or the visible
@@ -183,42 +182,9 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 			{
 				@Override
 				public void actionPerformed(ActionEvent e)
-				{
-					JToggleButton source = (JToggleButton) e.getSource();
-					if (e.getActionCommand().equals(SycamoreFiredActionEvents.SHOW_GRID.name()))
-					{
-
-						getPanel_sceneContainer().setGridVisible(source.isSelected());
-					}
-					else if (e.getActionCommand().equals(SycamoreFiredActionEvents.SHOW_AXES.name()))
-					{
-						getPanel_sceneContainer().setAxesVisible(source.isSelected());
-					}
-					else if (e.getActionCommand().equals(SycamoreFiredActionEvents.SHOW_BARICENTRUM.name()))
-					{
-						getPanel_sceneContainer().setBaricentrumVisible(source.isSelected());
-					}
-					else if (e.getActionCommand().equals(SycamoreFiredActionEvents.SHOW_LIGHTS.name()))
-					{
-						if (appEngine != null)
-						{
-							appEngine.setRobotLightsVisible(source.isSelected());
-						}
-					}
-					else if (e.getActionCommand().equals(SycamoreFiredActionEvents.SHOW_VISIBILITY_RANGE.name()))
-					{
-						if (appEngine != null)
-						{
-							appEngine.setVisibilityRangesVisible(source.isSelected());
-						}
-					}
-					else if (e.getActionCommand().equals(SycamoreFiredActionEvents.SHOW_MOVEMENT_DIRECTIONS.name()))
-					{
-						if (appEngine != null)
-						{
-							appEngine.setMovementDirectionsVisible(source.isSelected());
-						}
-					}
+				{								
+					// just forward the event
+					fireActionEvent(e);
 				}
 			});
 		}
@@ -344,5 +310,29 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 			panel_border.add(getPanel_sceneContainer(), gbc_panel_sceneContainer);
 		}
 		return panel_border;
+	}
+
+	/**
+	 * @param visible
+	 */
+	public void setGridVisible(boolean visible)
+	{
+		getPanel_sceneContainer().setGridVisible(visible);
+	}
+
+	/**
+	 * @param visible
+	 */
+	public void setAxesVisible(boolean visible)
+	{
+		getPanel_sceneContainer().setAxesVisible(visible);
+	}
+
+	/**
+	 * @param visible
+	 */
+	public void setBaricentrumVisible(boolean visible)
+	{
+		getPanel_sceneContainer().setBaricentrumVisible(visible);
 	}
 }

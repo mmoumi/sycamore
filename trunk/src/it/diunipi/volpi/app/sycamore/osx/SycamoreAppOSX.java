@@ -73,7 +73,8 @@ public class SycamoreAppOSX extends SycamoreApp
 	 * 
 	 * @return
 	 */
-	private SycamoreMenuBarOSX getMenuBar_main()
+	@Override
+	protected SycamoreMenuBarOSX getMenuBar_main()
 	{
 		if (menuBar_main == null)
 		{

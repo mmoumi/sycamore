@@ -57,12 +57,12 @@ public class SycamoreAppWindows extends SycamoreApp
 		setJMenuBar(getMenuBar_main());
 	}
 
-	/**
-	 * Returns the main menu bar
-	 * 
-	 * @return
+
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.app.sycamore.SycamoreApp#getMenuBar_main()
 	 */
-	private SycamoreMenuBarWindows getMenuBar_main()
+	@Override
+	protected SycamoreMenuBarWindows getMenuBar_main()
 	{
 		if (menuBar_main == null)
 		{

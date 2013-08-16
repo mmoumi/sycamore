@@ -52,6 +52,8 @@ public class SycamoreMenuBarOSX extends SycamoreMenuBar
 		getMenu_file().add(getMenu_switchWorkspace());
 
 		// add menu items under View menu
+		getMenu_view().add(getCheckBoxmenuItem_axes());
+		getMenu_view().add(getCheckBoxmenuItem_grid());
 		getMenu_view().add(getCheckBoxmenuItem_visibilityRange());
 		getMenu_view().add(getCheckBoxmenuItem_visibilityGraph());
 		getMenu_view().add(getCheckBoxmenuItem_directions());
