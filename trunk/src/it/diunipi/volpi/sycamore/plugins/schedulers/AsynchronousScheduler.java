@@ -187,17 +187,6 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginName()
-	 */
-	@Override
-	public String getPluginName()
-	{
-		return "AsynchronousScheduler";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SchedulerImpl#runLoop_pre()
 	 */
 	@Override

@@ -159,13 +159,4 @@ public class AsynchronousSchedulerPriorityQueue<P extends SycamoreAbstractPoint 
 			}
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.plugins.schedulers.AsynchronousScheduler#getPluginName()
-	 */
-	@Override
-	public String getPluginName()
-	{
-		return "AsynchronousSchedulerPriorityQueue";
-	}
 }

@@ -123,8 +123,10 @@ public class SycamoreUtil
 	 */
 	public static long getRandomLong(long start, long end)
 	{
-		Random r = new Random();
-		return r.nextInt((int) (end - start)) + start;
+		int startInt = (int) start;
+		int endInt = (int) end;
+
+		return getRandomInt(startInt, endInt);
 	}
 
 	/**
