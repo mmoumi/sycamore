@@ -127,7 +127,7 @@ public abstract class SchedulerImpl<P extends SycamoreAbstractPoint & Computable
 		{
 			SycamoreRobot<P> robot = iterator.next();
 
-			float delta = SycamoreSystem.getSchedulerFrequency() * appEngine.getAnimationSpeedMultiplier() * robot.getTimelineDuration();
+			float delta = SycamoreSystem.getSchedulerFrequency() * appEngine.getAnimationSpeedMultiplier() * (1.0f / robot.getTimelineDuration());
 
 			if (robot.isMoving())
 			{
