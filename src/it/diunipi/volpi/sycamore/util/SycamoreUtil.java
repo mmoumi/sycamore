@@ -13,6 +13,11 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +43,7 @@ public class SycamoreUtil
 		public RandomFairnessmanager()
 		{
 			PropertyManager.getSharedInstance().putProperty(ApplicationProperties.FAIRNESS_COUNT.getName(), 10);
-			
+
 			this.counter = new HashMap<Long, Integer>();
 		}
 
@@ -115,7 +120,7 @@ public class SycamoreUtil
 		Random r = new Random();
 		return r.nextInt(end - start) + start;
 	}
-	
+
 	/**
 	 * @param i
 	 * @param size
@@ -167,7 +172,7 @@ public class SycamoreUtil
 		if (objects.size() > 0)
 		{
 			// generate the number of objects to be selected
-			int number = random.nextInt(objects.size() +1);
+			int number = random.nextInt(objects.size() + 1);
 
 			// randomly select number objects
 			for (int i = 0; i < number; i++)
@@ -198,7 +203,7 @@ public class SycamoreUtil
 		if (objects.size() > 0)
 		{
 			// generate the number of objects to be selected
-			int number = random.nextInt(objects.size() +1);
+			int number = random.nextInt(objects.size() + 1);
 
 			// randomly select number objects
 			for (int i = 0; i < number; i++)
@@ -237,7 +242,7 @@ public class SycamoreUtil
 
 		return ret;
 	}
-	
+
 	/**
 	 * @param point1
 	 * @param point2
@@ -321,6 +326,40 @@ public class SycamoreUtil
 		return new Color(red, green, blue, alpha);
 	}
 
+	public static void copyFile(File sourceFile, File destFile) throws IOException {
+	    if(!destFile.exists()) {
+	        destFile.createNewFile();
+	    }
+
+	    FileInputStream fis = null;
+	    FileOutputStream fos = null;
+	    FileChannel source = null;
+	    FileChannel destination = null;
+
+	    try {
+	        fis = new FileInputStream(sourceFile);
+	        source = fis.getChannel();
+	        
+	        
+	        fos = new FileOutputStream(destFile);
+	        destination = fos.getChannel();
+	        
+	        destination.transferFrom(source, 0, source.size());
+	    }
+		finally
+		{
+	        if(source != null) {
+	            source.close();
+	        }
+	        if(destination != null) {
+	            destination.close();
+	        }
+	        
+	        fis.close();
+	        fos.close();
+	    }
+	}
+	
 	/**
 	 * @param points
 	 * @return

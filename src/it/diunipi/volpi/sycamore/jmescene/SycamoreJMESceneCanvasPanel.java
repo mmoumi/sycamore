@@ -325,4 +325,13 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	{
 		scene.setBaricentrumVisible(visible);
 	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
+	 */
+	@Override
+	public void reset()
+	{
+		this.resetJMEScene();
+	}
 }

@@ -144,9 +144,9 @@ public abstract class SchedulerImpl<P extends SycamoreAbstractPoint & Computable
 			else
 			{
 				robot.addPause(SycamoreSystem.getSchedulerFrequency() * appEngine.getAnimationSpeedMultiplier());
-				
-				System.out.println("AFTER ADD PAUSE:");
-				System.out.println(robot.toString());
+//				
+//				System.out.println("AFTER ADD PAUSE:");
+//				System.out.println(robot.toString());
 			}
 		}
 	}

@@ -483,6 +483,8 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		button_play.setIcon(new ImageIcon(url));
 		button_play.setToolTipText("Play animation");
 		button_play.setSelected(false);
+		
+		getSlider_animationControl().setEnabled(true);
 	}
 
 	/**
@@ -495,5 +497,21 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		int value = slider_animationSpeed.getValue();
 		float multiplier = (float) value / 5f;
 		return multiplier;
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
+	 */
+	@Override
+	public void reset()
+	{
+		// in pause, show play icon
+		URL url = getClass().getResource("/it/diunipi/volpi/sycamore/resources/play_50x50.png");
+		getButton_play().setIcon(new ImageIcon(url));
+		getButton_play().setToolTipText("Play animation");
+		getButton_play().setSelected(false);	
+		
+		getSlider_animationControl().setValue(100);
+		getSlider_animationControl().setEnabled(true);
 	}
 }

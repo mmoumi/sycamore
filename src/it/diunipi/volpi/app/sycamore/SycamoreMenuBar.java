@@ -184,6 +184,23 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		{
 			menuItem_new = new JMenuItem("New simulation");
 			menuItem_new.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+			menuItem_new.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					String pt1 = "<html><body><p>Do you want to save the current project before starting a new simulation?<br>";
+					String pt2 = "All unsaved data will be lost.</p></body></html>";
+					String s = pt1 + pt2;
+
+					int retVal = JOptionPane.showOptionDialog(null, s, "Save project?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+					if (retVal == JOptionPane.YES_OPTION)
+					{
+						// TODO save
+					}		
+					application.reset();
+				}
+			});
 		}
 		return menuItem_new;
 	}
@@ -285,8 +302,16 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	{
 		if (menuItem_import == null)
 		{
-			menuItem_import = new JMenuItem("Import new plugins...");
+			menuItem_import = new JMenuItem("Import a new plugin...");
 			menuItem_import.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, (java.awt.event.InputEvent.SHIFT_MASK | (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))));
+			menuItem_import.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.LOAD_PLUGIN.name()));
+				}
+			});
 		}
 		return menuItem_import;
 	}

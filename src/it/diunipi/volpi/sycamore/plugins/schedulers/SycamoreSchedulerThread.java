@@ -30,12 +30,16 @@ public class SycamoreSchedulerThread extends Thread
 		/**
 		 * Scheduler paused
 		 */
-		PAUSED;
+		PAUSED,
+		/**
+		 * Scheduler interrupted
+		 */
+		INTERRUPTED;
 	}
 
-	private SycamoreEngine	engine			= null;
-	private int				roundCounter	= 0;
-	private SCHEDULER_STATE	state			= SCHEDULER_STATE.NOT_STARTED;
+	protected SycamoreEngine	engine			= null;
+	protected int				roundCounter	= 0;
+	protected SCHEDULER_STATE	state			= SCHEDULER_STATE.NOT_STARTED;
 
 	/**
 	 * @param engine
@@ -57,7 +61,7 @@ public class SycamoreSchedulerThread extends Thread
 	/**
 	 * Check if the thread is in paused state, and in this case starts waiting
 	 */
-	private void checkState()
+	protected void checkState()
 	{
 		if (state == SCHEDULER_STATE.PAUSED)
 		{
@@ -107,20 +111,41 @@ public class SycamoreSchedulerThread extends Thread
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see java.lang.Thread#interrupt()
+	 */
+	@Override
+	public void interrupt()
+	{
+		if (this.state == SCHEDULER_STATE.PAUSED)
+		{
+			play();
+		}
+
+		this.state = SCHEDULER_STATE.INTERRUPTED;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Thread#run()
 	 */
 	@Override
 	public void run()
 	{
-		super.run();
-
 		// scheduler starts paused. The user will have to press play to start
 		this.pause();
 		while (true)
 		{
+			// eventually return
+			if (state == SCHEDULER_STATE.INTERRUPTED)
+			{
+				System.out.println("Scheduler returning...");
+				return;
+			}
+
 			// check the state, if is paused or not
 			checkState();
-			
+
 			if (engine != null && engine.getCurrentScheduler() != null)
 			{
 				if (engine.isSimulationFinished())
@@ -131,7 +156,7 @@ public class SycamoreSchedulerThread extends Thread
 				else
 				{
 					SchedulerImpl schedulerImpl = (SchedulerImpl) engine.getCurrentScheduler();
-					
+
 					if (roundCounter == 0)
 					{
 						// manage the runloop start
@@ -143,11 +168,11 @@ public class SycamoreSchedulerThread extends Thread
 					// runloop iteration
 					schedulerImpl.runLoopIteration();
 					schedulerImpl.updateTimelines();
-					
+
 					engine.performMeasuresSimulationStep();
 
 					roundCounter++;
-					
+
 					// sleep to have fixed frequency
 					try
 					{
@@ -170,9 +195,12 @@ public class SycamoreSchedulerThread extends Thread
 		if (engine != null)
 		{
 			SchedulerImpl schedulerImpl = (SchedulerImpl) engine.getCurrentScheduler();
-			schedulerImpl.runLoop_post();
-			schedulerImpl.updateTimelines();
-			
+			if (schedulerImpl != null)
+			{
+				schedulerImpl.runLoop_post();
+				schedulerImpl.updateTimelines();
+			}
+
 			engine.performMeasuresSimulationEnd();
 			engine.manageSimulationFinished(false);
 		}

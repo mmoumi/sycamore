@@ -517,4 +517,34 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 		// update menu bar
 		fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.UPDATE_GUI.name()));
 	}
+
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
+	 */
+	@Override
+	public synchronized void reset()
+	{
+		// set everywhere a null enegine
+		setAppEngine(null);	
+		SycamoreSystem.getSchedulerThread().setEngine(null);
+		SycamoreSystem.getHumanPilotSchedulerThread().setEngine(null);
+		
+		getSimulationSettingsPanel().reset();
+		getSimulationViewPanel().reset();
+		getSycamoreAnimationControlPanel().reset();
+		
+		getPluginsPanel().setEnabled(true);
+		getSimulationSettingsPanel().setEnabled(true);
+		getReportPanel().setEnabled(true);
+		
+		updateGui();
+	}
+
+	/**
+	 * Lets the user load a new plugin by taking it from the file system
+	 */
+	public void loadPluginFromFileSystem()
+	{
+		getPluginsPanel().loadPluginFromFileSystem();
+	}
 }

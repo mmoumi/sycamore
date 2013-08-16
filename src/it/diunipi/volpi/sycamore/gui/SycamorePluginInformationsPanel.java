@@ -466,4 +466,13 @@ public class SycamorePluginInformationsPanel extends SycamorePanel
 		}
 		return button_viewArticle;
 	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
+	 */
+	@Override
+	public void reset()
+	{
+		// Nothing to do
+	}
 }

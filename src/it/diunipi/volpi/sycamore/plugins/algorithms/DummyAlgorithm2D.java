@@ -25,7 +25,7 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 {
 	private final Vector<Point2D>	points	= new Vector<Point2D>();
 	private int						count	= 0;
-	private static final int		ROUNDS	= 9;
+	private static final int		ROUNDS	= 10000;
 
 	/**
 	 * Default constructor.
@@ -107,6 +107,7 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 		{
 			Point2D ret = points.elementAt(count);
 			count++;
+			
 			return ret;
 		}
 		else
