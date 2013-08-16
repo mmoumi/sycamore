@@ -127,7 +127,7 @@ public abstract class SchedulerImpl<P extends SycamoreAbstractPoint & Computable
 		{
 			SycamoreRobot<P> robot = iterator.next();
 
-			float delta = SycamoreSystem.getSchedulerFrequency() * appEngine.getAnimationSpeedMultiplier() * (1.0f / robot.getTimelineDuration());
+			float delta = SycamoreSystem.getSchedulerFrequency() * appEngine.getAnimationSpeedMultiplier() * robot.getTimelineDuration();
 
 			if (robot.isMoving())
 			{
@@ -144,6 +144,9 @@ public abstract class SchedulerImpl<P extends SycamoreAbstractPoint & Computable
 			else
 			{
 				robot.addPause(SycamoreSystem.getSchedulerFrequency() * appEngine.getAnimationSpeedMultiplier());
+				
+				System.out.println("AFTER ADD PAUSE:");
+				System.out.println(robot.toString());
 			}
 		}
 	}
