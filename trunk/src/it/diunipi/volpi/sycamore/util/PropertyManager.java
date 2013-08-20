@@ -50,6 +50,8 @@ public class PropertyManager
 	 */
 	private void loadProperties()
 	{
+		this.putDefaultsProperties();
+		
 		try
 		{
 			ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(propertyPath + System.getProperty("file.separator") + propertyFileName));
@@ -60,8 +62,7 @@ public class PropertyManager
 		}
 		catch (Exception e)
 		{
-			// if no property file exists, the defaults are put
-			this.putDefaultsProperties();
+			System.err.println("No properties file found. Fallback to default values...");
 		}
 	}
 
@@ -77,7 +78,7 @@ public class PropertyManager
 			// default workspace is not loaded, but is asked
 			if (prop != ApplicationProperties.WORKSPACE_DIR)
 			{
-				this.properties.put(prop.getName(), prop.getDefaultValue());
+				this.properties.put(prop.name(), prop.getDefaultValue());
 			}
 		}
 	}
@@ -133,7 +134,12 @@ public class PropertyManager
 	public int getIntegerProperty(String name)
 	{
 		String val = this.properties.get(name);
-		return Integer.parseInt(val);
+		if (val != null)
+		{
+			return Integer.parseInt(val);
+		}
+		else
+			return -1;
 	}
 
 	/**
@@ -143,7 +149,12 @@ public class PropertyManager
 	public float getFloatProperty(String name)
 	{
 		String val = this.properties.get(name);
-		return Float.parseFloat(val);
+		if (val != null)
+		{
+			return Float.parseFloat(val);
+		}
+		else
+			return 1.0f/0.0f;
 	}
 
 	/**
@@ -153,7 +164,12 @@ public class PropertyManager
 	public double getDoubleProperty(String name)
 	{
 		String val = this.properties.get(name);
-		return Double.parseDouble(val);
+		if (val != null)
+		{
+			return Double.parseDouble(val);
+		}
+		else
+			return 1.0f/0.0f;
 	}
 
 	/**
@@ -163,7 +179,12 @@ public class PropertyManager
 	public boolean getBooleanProperty(String name)
 	{
 		String val = this.properties.get(name);
-		return Boolean.parseBoolean(val);
+		if (val != null)
+		{
+			return Boolean.parseBoolean(val);
+		}
+		else
+			return false;
 	}
 
 	/**

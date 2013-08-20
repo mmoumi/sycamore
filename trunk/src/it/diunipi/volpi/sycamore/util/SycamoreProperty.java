@@ -12,9 +12,9 @@ import java.io.Serializable;
 public interface SycamoreProperty extends Serializable
 {
 	/**
-	 * @return the name
+	 * @return the description
 	 */
-	public String getName();
+	public String getDescription();
 	
 	/**
 	 * @return
