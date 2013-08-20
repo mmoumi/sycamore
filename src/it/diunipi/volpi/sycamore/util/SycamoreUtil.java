@@ -42,7 +42,7 @@ public class SycamoreUtil
 		 */
 		public RandomFairnessmanager()
 		{
-			PropertyManager.getSharedInstance().putProperty(ApplicationProperties.FAIRNESS_COUNT.getName(), 10);
+			PropertyManager.getSharedInstance().putProperty(ApplicationProperties.FAIRNESS_COUNT.name(), 10);
 
 			this.counter = new HashMap<Long, Integer>();
 		}
@@ -69,7 +69,7 @@ public class SycamoreUtil
 		public boolean checkFairness(Long id)
 		{
 			Integer count = this.counter.get(id);
-			if (count != null && count == PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.FAIRNESS_COUNT.getName()))
+			if (count != null && count == PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.FAIRNESS_COUNT.name()))
 			{
 				this.counter.remove(id);
 				return true;
@@ -100,6 +100,16 @@ public class SycamoreUtil
 	public static float getRandomFloat(float start, float end)
 	{
 		return (float) (Math.random() * (end - start) + start);
+	}
+
+	/**
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public static double getRandomDouble(double start, double end)
+	{
+		return Math.random() * (end - start) + start;
 	}
 
 	/**
@@ -326,40 +336,44 @@ public class SycamoreUtil
 		return new Color(red, green, blue, alpha);
 	}
 
-	public static void copyFile(File sourceFile, File destFile) throws IOException {
-	    if(!destFile.exists()) {
-	        destFile.createNewFile();
-	    }
+	public static void copyFile(File sourceFile, File destFile) throws IOException
+	{
+		if (!destFile.exists())
+		{
+			destFile.createNewFile();
+		}
 
-	    FileInputStream fis = null;
-	    FileOutputStream fos = null;
-	    FileChannel source = null;
-	    FileChannel destination = null;
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		FileChannel source = null;
+		FileChannel destination = null;
 
-	    try {
-	        fis = new FileInputStream(sourceFile);
-	        source = fis.getChannel();
-	        
-	        
-	        fos = new FileOutputStream(destFile);
-	        destination = fos.getChannel();
-	        
-	        destination.transferFrom(source, 0, source.size());
-	    }
+		try
+		{
+			fis = new FileInputStream(sourceFile);
+			source = fis.getChannel();
+
+			fos = new FileOutputStream(destFile);
+			destination = fos.getChannel();
+
+			destination.transferFrom(source, 0, source.size());
+		}
 		finally
 		{
-	        if(source != null) {
-	            source.close();
-	        }
-	        if(destination != null) {
-	            destination.close();
-	        }
-	        
-	        fis.close();
-	        fos.close();
-	    }
+			if (source != null)
+			{
+				source.close();
+			}
+			if (destination != null)
+			{
+				destination.close();
+			}
+
+			fis.close();
+			fos.close();
+		}
 	}
-	
+
 	/**
 	 * @param points
 	 * @return
