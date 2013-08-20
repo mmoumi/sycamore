@@ -57,7 +57,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 				mat.setFloat("Shininess", 50);
 
 				sphere = new Geometry("Sphere", new Sphere(25, 25, 1));
-				sphere.setLocalScale(visibilityRange);
+				sphere.setLocalScale(getVisibilityRange());
 				sphere.center();
 
 				sphere.setModelBound(new BoundingSphere());
@@ -95,7 +95,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 	{
 		// if the distance between the point and center is less than the radius, the point is
 		// inside the circle
-		if (point1.distanceTo(point2) < visibilityRange)
+		if (point1.distanceTo(point2) < getVisibilityRange())
 		{
 			return true;
 		}
@@ -114,7 +114,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 	public Point3D getPointInside(Point3D center)
 	{
 		// get a random radius and a random angle
-		float radius = SycamoreUtil.getRandomFloat(0, (visibilityRange / 2));
+		float radius = SycamoreUtil.getRandomFloat(0, (getVisibilityRange() / 2));
 
 		float phi = (float) (Math.random() * Math.PI);
 		float theta = (float) (Math.random() * Math.PI * 2f);
@@ -171,7 +171,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 	{
 		if (settingPanel == null)
 		{
-			settingPanel = new VisibilitySettingsPanel(this);
+			settingPanel = new VisibilitySettingsPanel();
 		}
 		return settingPanel;
 	}
@@ -238,7 +238,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 			@Override
 			public Object call() throws Exception
 			{
-				sphere.setLocalScale(visibilityRange);
+				sphere.setLocalScale(getVisibilityRange());
 				sphere.center();
 				sphere.updateGeometricState();
 				return null;

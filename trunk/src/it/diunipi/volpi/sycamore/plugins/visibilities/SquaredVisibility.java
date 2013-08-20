@@ -55,7 +55,7 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 				mat.setTexture("ColorMap", skyTexture);
 
 				square = new Geometry("Cylinder", new Quad(1, 1));
-				square.setLocalScale(visibilityRange);
+				square.setLocalScale(getVisibilityRange());
 				square.center();
 
 				Vector3f translation = square.getLocalTranslation();
@@ -82,6 +82,8 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public boolean isPointVisible(Point2D point1, Point2D point2)
 	{
+		float visibilityRange = getVisibilityRange();
+		
 		// build a square around point1
 		float x = point1.x - (visibilityRange / 2);
 		float y = point1.y + (visibilityRange / 2);
@@ -103,6 +105,8 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public Point2D getPointInside(Point2D center)
 	{	
+		float visibilityRange = getVisibilityRange();
+		
 		float startX = center.x - (visibilityRange / 2);
 		float endX = center.x + (visibilityRange / 2);
 		float startY = center.y - (visibilityRange / 2);
@@ -189,7 +193,7 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 	{
 		if (settingPanel == null)
 		{
-			settingPanel = new VisibilitySettingsPanel(this);
+			settingPanel = new VisibilitySettingsPanel();
 		}
 		return settingPanel;
 	}
@@ -234,9 +238,9 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 			@Override
 			public Object call() throws Exception
 			{
-				square.setLocalScale(visibilityRange);
+				square.setLocalScale(getVisibilityRange());
 
-				float translationFactor = visibilityRange / 2;
+				float translationFactor = getVisibilityRange() / 2;
 				square.setLocalTranslation(-translationFactor, -translationFactor, 0.5f);
 				square.updateGeometricState();
 				return null;

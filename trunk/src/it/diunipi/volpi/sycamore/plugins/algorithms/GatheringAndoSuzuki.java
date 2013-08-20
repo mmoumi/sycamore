@@ -185,7 +185,7 @@ public class GatheringAndoSuzuki extends AlgorithmImpl<Point2D>
 	@Override
 	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> callee)
 	{
-		Point2D executingRobotPosition = callee.getCurrentPosition();
+		Point2D executingRobotPosition = callee.getLocalPosition();
 
 		// no observations
 		if (observations.isEmpty())

@@ -47,7 +47,7 @@ public class RotatingRobot2D extends AlgorithmImpl<Point2D>
 
 			callee.setDirection(p);
 			
-			return callee.getCurrentPosition();
+			return callee.getLocalPosition();
 		}
 	}
 

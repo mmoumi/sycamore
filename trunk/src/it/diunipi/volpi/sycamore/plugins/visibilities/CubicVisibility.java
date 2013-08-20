@@ -57,7 +57,7 @@ public class CubicVisibility extends VisibilityImpl<Point3D>
 				mat.setFloat("Shininess", 50);
 
 				cube = new Geometry("Cube", new Box(1, 1, 1));
-				cube.setLocalScale(visibilityRange);
+				cube.setLocalScale(getVisibilityRange());
 				cube.center();
 				cube.setModelBound(new BoundingSphere());
 				cube.updateModelBound();
@@ -81,6 +81,8 @@ public class CubicVisibility extends VisibilityImpl<Point3D>
 	@Override
 	public boolean isPointVisible(Point3D point1, Point3D point2)
 	{
+		float visibilityRange = getVisibilityRange();
+		
 		// build a cube around point1
 		float x = point1.x - (visibilityRange / 2);
 		float y = point1.y - (visibilityRange / 2);
@@ -106,6 +108,8 @@ public class CubicVisibility extends VisibilityImpl<Point3D>
 	@Override
 	public Point3D getPointInside(Point3D center)
 	{
+		float visibilityRange = getVisibilityRange();
+		
 		float startX = center.x - (visibilityRange / 2);
 		float endX = center.x + (visibilityRange / 2);
 		float startY = center.y - (visibilityRange / 2);
@@ -174,7 +178,7 @@ public class CubicVisibility extends VisibilityImpl<Point3D>
 	{
 		if (settingPanel == null)
 		{
-			settingPanel = new VisibilitySettingsPanel(this);
+			settingPanel = new VisibilitySettingsPanel();
 		}
 		return settingPanel;
 	}
@@ -241,7 +245,7 @@ public class CubicVisibility extends VisibilityImpl<Point3D>
 			@Override
 			public Object call() throws Exception
 			{
-				cube.setLocalScale(visibilityRange);
+				cube.setLocalScale(getVisibilityRange());
 				cube.center();
 				cube.updateGeometricState();
 				return null;

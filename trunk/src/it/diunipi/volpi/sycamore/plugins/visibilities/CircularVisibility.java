@@ -54,7 +54,7 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 				mat.setTexture("ColorMap", skyTexture);
 
 				cylinder = new Geometry("Cylinder", new Quad(1, 1));
-				cylinder.setLocalScale(visibilityRange);
+				cylinder.setLocalScale(getVisibilityRange());
 				cylinder.center();
 				cylinder.setModelBound(new BoundingBox());
 				cylinder.updateModelBound();
@@ -86,9 +86,9 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 			@Override
 			public Object call() throws Exception
 			{
-				cylinder.setLocalScale(visibilityRange);
+				cylinder.setLocalScale(getVisibilityRange());
 
-				float translationFactor = visibilityRange / 2;
+				float translationFactor = getVisibilityRange() / 2;
 				cylinder.setLocalTranslation(-translationFactor, -translationFactor, 0.5f);
 				cylinder.updateGeometricState();
 				return null;
@@ -119,7 +119,7 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 	{
 		// if the distance between the point and center is less than the radius, the point is
 		// inside the circle
-		float circleRadius = visibilityRange / 2;
+		float circleRadius = getVisibilityRange() / 2;
 		if (point1.distanceTo(point2) < circleRadius)
 		{
 			return true;
@@ -139,7 +139,7 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 	public Point2D getPointInside(Point2D center)
 	{
 		// get a random radius and a random angle
-		float radius = SycamoreUtil.getRandomFloat(0, (visibilityRange / 2));
+		float radius = SycamoreUtil.getRandomFloat(0, (getVisibilityRange() / 2));
 		double angle = Math.random() * Math.PI * 2;
 
 		double x = center.x + (Math.cos(angle) * radius);
@@ -192,7 +192,7 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 	{
 		if (settingPanel == null)
 		{
-			settingPanel = new VisibilitySettingsPanel(this);
+			settingPanel = new VisibilitySettingsPanel();
 		}
 		return settingPanel;
 	}

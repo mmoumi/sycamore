@@ -50,7 +50,7 @@ public class VisibilityGraphConnected3D extends InitialConditionsImpl<Point3D>
 				Visibility<Point3D> visibilty = chosen.getVisibility();
 				if (visibilty != null)
 				{
-					return visibilty.getPointInside(chosen.getCurrentPosition());
+					return visibilty.getPointInside(chosen.getLocalPosition());
 				}
 			}
 		}

@@ -27,7 +27,6 @@ import java.awt.Font;
 public class VisibilitySettingsPanel extends SycamorePanel
 {
 	private static final long	serialVersionUID		= -7346984457971790162L;
-	private final Visibility	visibility;
 
 	private SycamoreEngine		appEngine				= null;
 	private JLabel				label_visibilityRange	= null;
@@ -37,9 +36,8 @@ public class VisibilitySettingsPanel extends SycamorePanel
 	/**
 	 * Default constructor
 	 */
-	public VisibilitySettingsPanel(Visibility visibility)
+	public VisibilitySettingsPanel()
 	{
-		this.visibility = visibility;
 		initialize();
 	}
 
@@ -100,11 +98,11 @@ public class VisibilitySettingsPanel extends SycamorePanel
 				public void stateChanged(ChangeEvent e)
 				{
 					float value = slider_visibilityRange.getValue();
-					if (visibility != null && appEngine != null)
+					VisibilityImpl.setVisibilityRange(value);
+					getLabel_visibilityRange().setText("Visibility range size (global coordinates units): " + VisibilityImpl.getVisibilityRange());
+
+					if (appEngine != null)
 					{
-						getLabel_visibilityRange().setText("Visibility range size (global coordinates units): " + VisibilityImpl.getVisibilityRange());
-						VisibilityImpl.setVisibilityRange(value);
-						
 						appEngine.updateVisibilityRange();
 					}
 				}
@@ -171,8 +169,10 @@ public class VisibilitySettingsPanel extends SycamorePanel
 	{
 		// Nothing to do
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
 	 */
 	@Override

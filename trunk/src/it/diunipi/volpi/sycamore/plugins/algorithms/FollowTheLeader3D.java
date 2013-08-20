@@ -38,7 +38,7 @@ public class FollowTheLeader3D extends AlgorithmImpl<Point3D>
 				if (observation.isHumanPilot())
 				{
 					Point3D dest = observation.getRobotPosition();
-					Point3D pos = callee.getCurrentPosition();
+					Point3D pos = callee.getLocalPosition();
 					if (dest.compareTo(pos) == 0)
 					{
 						callee.turnLightOn(ColorRGBA.Yellow);

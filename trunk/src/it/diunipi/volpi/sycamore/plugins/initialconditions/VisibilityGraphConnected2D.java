@@ -50,7 +50,7 @@ public class VisibilityGraphConnected2D extends InitialConditionsImpl<Point2D>
 				Visibility<Point2D> visibilty = chosen.getVisibility();
 				if (visibilty != null)
 				{
-					return visibilty.getPointInside(chosen.getCurrentPosition());
+					return visibilty.getPointInside(chosen.getLocalPosition());
 				}
 			}
 		}
