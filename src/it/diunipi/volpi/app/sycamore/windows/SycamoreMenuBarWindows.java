@@ -74,4 +74,13 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 	{
 		
 	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.app.sycamore.SycamoreMenuBar#setupAboutMenu()
+	 */
+	@Override
+	protected void setupAboutMenu()
+	{
+		
+	}
 }

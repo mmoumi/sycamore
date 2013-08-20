@@ -12,7 +12,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -30,7 +29,6 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	private SycamoreCameraControlPanel	panel_sceneControl		= null;
 	private SycamoreJMESceneCanvasPanel	panel_sceneContainer	= null;
 	private SycamoreEngine				appEngine				= null;
-	private Vector<ActionListener>		listeners				= null;
 	private JPanel						panel_border			= null;
 
 	/**
@@ -38,7 +36,6 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	 */
 	public SycamoreSimulationViewPanel()
 	{
-		this.listeners = new Vector<ActionListener>();
 		initialize();
 	}
 
@@ -104,43 +101,6 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	public void resetJMEScene()
 	{
 		getPanel_sceneContainer().resetJMEScene();
-	}
-
-	/**
-	 * Adds an <code>ActionListener</code> to the button.
-	 * 
-	 * @param l
-	 *            the <code>ActionListener</code> to be added
-	 */
-	public void addActionListener(ActionListener listener)
-	{
-		this.listeners.add(listener);
-	}
-
-	/**
-	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
-	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
-	 * 
-	 * @param l
-	 *            the listener to be removed
-	 */
-	public void removeActionListener(ActionListener listener)
-	{
-		this.listeners.remove(listener);
-	}
-
-	/**
-	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
-	 * method on all of them.
-	 * 
-	 * @param e
-	 */
-	private void fireActionEvent(ActionEvent e)
-	{
-		for (ActionListener listener : this.listeners)
-		{
-			listener.actionPerformed(e);
-		}
 	}
 
 	/**
@@ -334,6 +294,30 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	public void setBaricentrumVisible(boolean visible)
 	{
 		getPanel_sceneContainer().setBaricentrumVisible(visible);
+	}
+	
+	/**
+	 * @param visible
+	 */
+	public void setLocalCoordinatesVisible(boolean visible)
+	{
+		getPanel_sceneContainer().setLocalCoordinatesVisible(visible);
+	}
+
+	/**
+	 * 
+	 */
+	public void manageAgreementChange()
+	{
+		getPanel_sceneContainer().manageAgreementChange();
+	}
+	
+	/**
+	 * 
+	 */
+	public void updateAgreementsGraphics()
+	{
+		getPanel_sceneContainer().updateAgreementsGraphics();
 	}
 	
 	/* (non-Javadoc)
