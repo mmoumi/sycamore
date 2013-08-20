@@ -15,8 +15,8 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import com.jme3.math.ColorRGBA;
 
 /**
- * A dummy 2D algorithm. It makes the robots perform simple and predefinite movements for the purpose
- * of testing.
+ * A dummy 2D algorithm. It makes the robots perform simple and predefinite movements for the
+ * purpose of testing.
  * 
  * @author Valerio Volpi - vale.v@me.com
  */
@@ -32,6 +32,15 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 	 */
 	public DummyAlgorithm2D()
 	{
+		points.add(new Point2D(0, 0));
+		points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
+		points.add(new Point2D(3, 0));
+		points.add(new Point2D(0, 0));
+		points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
+		points.add(new Point2D(0, 3));
+		points.add(new Point2D(0, 0));
+		points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
+
 		for (int i = 0; i < ROUNDS; i++)
 		{
 			Point2D point = (i % 2 == 0 ? new Point2D(0, 0) : SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
@@ -107,7 +116,7 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 		{
 			Point2D ret = points.elementAt(count);
 			count++;
-			
+
 			return ret;
 		}
 		else
