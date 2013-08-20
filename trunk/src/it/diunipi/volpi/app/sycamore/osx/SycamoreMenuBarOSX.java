@@ -4,7 +4,9 @@ import it.diunipi.volpi.app.sycamore.SycamoreMenuBar;
 
 import javax.swing.JSeparator;
 
+import com.apple.eawt.AppEvent.AboutEvent;
 import com.apple.eawt.AppEvent.PreferencesEvent;
+import com.apple.eawt.AboutHandler;
 import com.apple.eawt.Application;
 import com.apple.eawt.PreferencesHandler;
 
@@ -33,8 +35,9 @@ public class SycamoreMenuBarOSX extends SycamoreMenuBar
 	@Override
 	protected void setupMenuBar()
 	{
-		// add the preferences menu
+		// add the preferences menu and the about menu
 		this.setupPreferencesmenu();
+		this.setupAboutMenu();
 
 		// add menu items under File menu
 		getMenu_file().add(getMenuItem_new());
@@ -82,7 +85,24 @@ public class SycamoreMenuBarOSX extends SycamoreMenuBar
 			@Override
 			public void handlePreferences(PreferencesEvent arg0)
 			{
-				// TODO Auto-generated method stub
+				System.out.println("Preferences clicked");
+			}
+		});
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.app.sycamore.SycamoreMenuBar#setupAboutMenu()
+	 */
+	@Override
+	protected void setupAboutMenu()
+	{
+		Application app = Application.getApplication();
+		app.setAboutHandler(new AboutHandler()
+		{
+			@Override
+			public void handleAbout(AboutEvent arg0)
+			{
+				System.out.println("About clicked");
 			}
 		});
 	}

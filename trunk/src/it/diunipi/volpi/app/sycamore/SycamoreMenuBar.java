@@ -3,7 +3,10 @@
  */
 package it.diunipi.volpi.app.sycamore;
 
+import it.diunipi.volpi.sycamore.gui.SycamorePluginsExportingPanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.plugins.SycamorePluginExporter;
+import it.diunipi.volpi.sycamore.plugins.SycamorePluginExporter.EXPORT_MODE;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
@@ -325,7 +328,25 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	{
 		if (menuItem_export == null)
 		{
-			menuItem_export = new JMenuItem("Export...");
+			menuItem_export = new JMenuItem("Export plugins...");
+			menuItem_export.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					SycamorePluginsExportingPanel pluginsExportingPanel = new SycamorePluginsExportingPanel();
+					
+					int result = JOptionPane.showOptionDialog(null, pluginsExportingPanel, "Export plugins to another location of the File System", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+					if (result == JOptionPane.OK_OPTION)
+					{
+						File[] filesToExport = pluginsExportingPanel.getFilesToExport();
+						File exportDir= new File(pluginsExportingPanel.getExportingPath());
+						EXPORT_MODE mode = pluginsExportingPanel.getExportMode();
+						
+						new SycamorePluginExporter().exportPlugins(filesToExport, exportDir, mode);
+					}
+				}
+			});
 		}
 		return menuItem_export;
 	}
@@ -349,7 +370,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 					@Override
 					public void actionPerformed(ActionEvent e)
 					{
-						PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR.getName(), path);
+						PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR.name(), path);
 						confirmReboot();
 					}
 				});
@@ -373,14 +394,14 @@ public abstract class SycamoreMenuBar extends JMenuBar
 					if (returnVal == JFileChooser.APPROVE_OPTION)
 					{
 						// save old workspace
-						String oldWorkspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.getName());
+						String oldWorkspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name());
 
 						int index = oldWorkspaces.size();
 						PropertyManager.getSharedInstance().putProperty("OLD_WORKSPACE_" + index, oldWorkspace);
 
 						// store new workspace
 						File file = fileChoser.getSelectedFile();
-						PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR.getName(), file.getAbsolutePath());
+						PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR.name(), file.getAbsolutePath());
 
 						// eventually reboot
 						confirmReboot();
@@ -398,7 +419,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	 */
 	private void confirmReboot()
 	{
-		String pt1 = "<html><body><p>You choose: " + PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.getName()) + "<br>";
+		String pt1 = "<html><body><p>You choose: " + PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name()) + "<br>";
 		String pt2 = "The new workspace will be effective on next Sycamore execution.</p>";
 		String pt3 = "Do you want to exit now?</p></body></html>";
 
@@ -654,6 +675,11 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	 * Setup the preferences menu for a specific environment
 	 */
 	protected abstract void setupPreferencesmenu();
+	
+	/**
+	 * Setup the about menu for a specific environment
+	 */
+	protected abstract void setupAboutMenu();
 
 	/**
 	 * Update Gui to reflect changes in engine
