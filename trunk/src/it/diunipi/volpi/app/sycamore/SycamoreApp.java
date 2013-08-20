@@ -44,6 +44,7 @@ public abstract class SycamoreApp extends JFrame
 		public SplashThread()
 		{
 			splashScreen = new SycamoreSplashScreen();
+			splashScreen.setAlwaysOnTop(true);
 		}
 
 		/**
@@ -77,7 +78,8 @@ public abstract class SycamoreApp extends JFrame
 	 */
 	public SycamoreApp()
 	{
-		setMinimumSize(new Dimension(850, 500));
+		setMinimumSize(new Dimension(400, 300));
+		
 		// performs the operations preliminary to initialization
 		initialize_pre();
 
@@ -95,7 +97,7 @@ public abstract class SycamoreApp extends JFrame
 	protected void initialize_pre()
 	{
 		// try loading workspace path
-		String workspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.getName());
+		String workspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name());
 		if (workspace == null)
 		{
 			int retVal = JOptionPane.showOptionDialog(this, new SycamoreWorkspaceSelectionPanel(), "Select workspace", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
@@ -115,6 +117,7 @@ public abstract class SycamoreApp extends JFrame
 			@Override
 			public void windowClosed(WindowEvent e)
 			{
+				saveApplicationState();
 				disposeApplication();
 				System.exit(0);
 			}
@@ -129,6 +132,17 @@ public abstract class SycamoreApp extends JFrame
 		// stop 3D scene on window closing
 		getSycamoreMainPanel().disposeJMEScene();
 		PropertyManager.getSharedInstance().dispose();
+	}
+	
+	/**
+	 * Save the current state of the application
+	 */
+	private void saveApplicationState()
+	{
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_X.name(), getBounds().x);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_Y.name(), getBounds().y);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_WIDTH.name(), getBounds().width);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_HEIGHT.name(), getBounds().height);
 	}
 
 	/**
@@ -212,8 +226,15 @@ public abstract class SycamoreApp extends JFrame
 	 */
 	protected void initialize_post()
 	{
-		setSize(new Dimension(1280, 800));
-		setVisible(true);
+		// window bounds
+		int x = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_X.name());
+		int y = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_Y.name());
+		int width = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_WIDTH.name());
+		int height = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_HEIGHT.name());
+		
+		setBounds(x, y, width, height);
+		
+		SycamoreSystem.setMainFrame(this);
 
 		// show splash screen over GUI panel
 		this.splashThread = new SplashThread();
@@ -227,17 +248,27 @@ public abstract class SycamoreApp extends JFrame
 		try
 		{
 			// Sleep a bit to let the splash screen initialize
-			Thread.sleep(200);
+			Thread.sleep(800);
 		}
 		catch (InterruptedException e)
 		{
 			e.printStackTrace();
 		}
-
+		
+		setVisible(true);
+				
+		try
+		{
+			// Sleep a bit to let the splash screen initialize
+			Thread.sleep(1000);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		
 		// set splash screen state
 		splashThread.getSplashScreen().setCurrentSplashState(SPLASH_STATES.PREPARING_3D);
-
-		SycamoreSystem.setMainFrame(this);
 	}
 
 	/**
