@@ -27,8 +27,13 @@ public enum SycamoreFiredActionEvents
 	SHOW_BARICENTRUM("Show system baricentrum"),
 	SHOW_MOVEMENT_DIRECTIONS("Show movement directions"),
 	SHOW_VISUAL_ELEMENTS("Show visual support elements"), 
-	SHOW_LOCAL_COORDINATES("Show local coordinate systems"), 
+	SHOW_LOCAL_COORDINATES("Show local coordinate systems"),
+	SELECTED_VISIBILITY_CHANGED("Selected visibility changed"),
+	SELECTED_AGREEMENT_CHANGED("Selected agreement changed"),
+	SELECTED_INITIAL_CONDITION_CHANGED("Selected initial condition changed"),
+	SELECTED_MEMORY_CHANGED("Selected memory changed"),
 	UPDATE_GUI("Update the GUI"), 
+	UPDATE_AGREEMENTS_GRAPHICS("Update the agreements graphics"), 
 	LOAD_PLUGIN("Load a new plugin");
 
 	private String	description	= null;
