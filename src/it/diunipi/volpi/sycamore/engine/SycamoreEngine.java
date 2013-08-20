@@ -4,9 +4,9 @@ import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.model.ComputablePoint;
 import it.diunipi.volpi.sycamore.model.Observation;
 import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
-import it.diunipi.volpi.sycamore.model.SycamoreObservedRobot;
 import it.diunipi.volpi.sycamore.model.SycamoreRobot;
 import it.diunipi.volpi.sycamore.model.SycamoreRobotMatrix;
+import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.plugins.humanpilot.HumanPilotScheduler;
 import it.diunipi.volpi.sycamore.plugins.initialconditions.InitialConditions;
@@ -71,7 +71,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 			return shortDescription;
 		}
 	}
-	
+
 	// robots
 	protected SycamoreRobotMatrix<P>			robots						= null;
 
@@ -247,9 +247,17 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * @return The positions of all the robots in the system
 	 * @throws TimelineNotAccessibleException
 	 */
-	public Observation<P> getObservation(SycamoreRobot<P> callee)
+	public Observation<P> getObservation(SycamoreRobot<P> robot, SycamoreRobot<P> callee)
 	{
-		return new Observation<P>(callee.getCurrentPosition(), callee.getLights(), callee.getAlgorithm().isHumanPilot());
+		P position = robot.getGlobalPosition();
+	
+		// translate position to callee's local coords
+		if (callee.getAgreement() != null)
+		{
+			position = callee.getAgreement().toLocalCoordinates(position);
+		}
+		
+		return new Observation<P>(position, robot.getLights(), robot.getAlgorithm().isHumanPilot());
 	}
 
 	/**
@@ -282,7 +290,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * @throws TimelineNotAccessibleException
 	 *             if someone tries to access a timeline without permissions.
 	 */
-	public Vector<Observation<P>> getObservations(SycamoreObservedRobot<P> callee)
+	public Vector<Observation<P>> getObservations(SycamoreRobot<P> callee)
 	{
 		Vector<Observation<P>> observations = new Vector<Observation<P>>();
 
@@ -292,7 +300,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 			SycamoreRobot<P> robot = iterator.next();
 
 			// ask the robot for the obsevation.
-			Observation<P> observation = this.getObservation(robot);
+			Observation<P> observation = this.getObservation(robot, callee);
 
 			if (observation != null && robot != callee)
 			{
@@ -309,7 +317,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 		}
 		else
 		{
-			return visibility.filter(observations, callee.getCurrentPosition());
+			return visibility.filter(observations, callee.getLocalPosition());
 		}
 	}
 
@@ -399,13 +407,20 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 */
 	public void creatAndSetNewSchedulerInstance(Scheduler scheduler) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
 	{
-		// create a new instance of the scheduler
-		Class<? extends Scheduler> schedulerClass = scheduler.getClass();
-		Constructor<?> constructor = schedulerClass.getConstructors()[0];
-		SchedulerImpl<P> newInstance = (SchedulerImpl<P>) constructor.newInstance();
+		if (scheduler != null)
+		{
+			// create a new instance of the scheduler
+			Class<? extends Scheduler> schedulerClass = scheduler.getClass();
+			Constructor<?> constructor = schedulerClass.getConstructors()[0];
+			SchedulerImpl<P> newInstance = (SchedulerImpl<P>) constructor.newInstance();
 
-		newInstance.setAppEngine(this);
-		this.setCurrentScheduler(newInstance);
+			newInstance.setAppEngine(this);
+			this.setCurrentScheduler(newInstance);
+		}
+		else
+		{
+			this.setCurrentScheduler(null);
+		}
 	}
 
 	/**
@@ -460,6 +475,19 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * @throws InvocationTargetException
 	 */
 	public abstract void createAndSetNewAlgorithmInstance(Algorithm<P> algorithm, int index) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
+
+	/**
+	 * Creates a new agreement instance using passed interface, and sets such instance as the
+	 * agreement in all the robots in the engine. This agreement will be applied also the newly
+	 * created robots, since this moment.
+	 * 
+	 * @param agreement
+	 * @throws IllegalArgumentException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	public abstract void createAndSetNewAgreementInstance(Agreement<P> agreement) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
 
 	/**
 	 * Returns true if this engine is valid. An engine is valid if there is at least a robot, and if
@@ -575,7 +603,6 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 			robot.updateVisibilityRangesVisible();
 		}
 	}
-
 
 	/**
 	 * @param movementDirectionsVisible

@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.util.Vector;
 import java.util.concurrent.Callable;
 
 import javax.swing.SwingUtilities;
@@ -35,14 +34,12 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	private int						width				= 640;
 	private int						height				= 480;
 	private SycamoreEngine			appEngine			= null;
-	private Vector<ActionListener>	listeners			= null;
 
 	/**
 	 * Default constructor.
 	 */
 	public SycamoreJMESceneCanvasPanel()
 	{
-		this.listeners = new Vector<ActionListener>();
 		initialize();
 	}
 
@@ -221,43 +218,6 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	}
 
 	/**
-	 * Adds an <code>ActionListener</code> to the button.
-	 * 
-	 * @param listener
-	 *            the <code>ActionListener</code> to be added
-	 */
-	public void addActionListener(ActionListener listener)
-	{
-		this.listeners.add(listener);
-	}
-
-	/**
-	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
-	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
-	 * 
-	 * @param listener
-	 *            the listener to be removed
-	 */
-	public void removeActionListener(ActionListener listener)
-	{
-		this.listeners.remove(listener);
-	}
-
-	/**
-	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
-	 * method on all of them.
-	 * 
-	 * @param e
-	 */
-	private void fireActionEvent(ActionEvent e)
-	{
-		for (ActionListener listener : this.listeners)
-		{
-			listener.actionPerformed(e);
-		}
-	}
-
-	/**
 	 * Returns the current app engine
 	 * 
 	 * @return
@@ -309,7 +269,7 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	/**
 	 * Shows/ hides the axes in the JME scene
 	 * 
-	 * @param selected
+	 * @param visible
 	 */
 	public void setAxesVisible(boolean visible)
 	{
@@ -319,11 +279,37 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	/**
 	 * Shows/ hides the baricentrum in the JME scene
 	 * 
-	 * @param selected
+	 * @param visible
 	 */
 	public void setBaricentrumVisible(boolean visible)
 	{
 		scene.setBaricentrumVisible(visible);
+	}
+	
+	/**
+	 * Shows/ hides the local coordinates axes in the JME scene
+	 * 
+	 * @param visible
+	 */
+	public void setLocalCoordinatesVisible(boolean visible)
+	{
+		scene.setLocalCoordinatesVisible(visible);
+	}
+
+	/**
+	 * 
+	 */
+	public void manageAgreementChange()
+	{
+		scene.manageAgreementChange();
+	}
+	
+	/**
+	 * 
+	 */
+	public void updateAgreementsGraphics()
+	{
+		scene.updateAgreementsGraphics();
 	}
 	
 	/* (non-Javadoc)

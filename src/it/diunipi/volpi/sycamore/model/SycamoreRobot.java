@@ -4,6 +4,8 @@ import it.diunipi.volpi.sycamore.animation.SycamoreAnimatedObject;
 import it.diunipi.volpi.sycamore.animation.Timeline;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
+import it.diunipi.volpi.sycamore.plugins.agreements.AgreementImpl;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.plugins.memory.Memory;
 import it.diunipi.volpi.sycamore.plugins.memory.SycamoreSystemMemory;
@@ -58,6 +60,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	protected Algorithm<P>						algorithm			= null;
 	protected Visibility<P>						visibility			= null;
 	protected Memory<P>							memory				= null;
+	protected Agreement<P>						agreement			= null;
 
 	// JME data
 	protected Node								robotNode			= null;
@@ -139,6 +142,18 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		SecureRandom random = new SecureRandom();
 		this.ID = random.nextLong();
 	}
+	
+	public P getGlobalPosition()
+	{
+		if (this.agreement != null)
+		{
+			return this.agreement.toGlobalCoordinates(getLocalPosition());
+		}
+		else
+		{
+			return this.getLocalPosition();
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -177,7 +192,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		if (SycamoreSystem.isMovementDirectionsVisible() && getDirection() != null && this.sceneGeometry != null)
 		{
-			float[] angles = this.getCurrentPosition().getRotationAngles(getDirection());
+			float[] angles = this.getLocalPosition().getRotationAngles(getDirection());
 			final Quaternion rotation = new Quaternion(angles);
 
 			SycamoreSystem.enqueueToJME(new Callable<Object>()
@@ -324,6 +339,14 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		return lights;
 	}
+	
+	/**
+	 * @return the agreement
+	 */
+	public Agreement<P> getAgreement()
+	{
+		return agreement;
+	}
 
 	/**
 	 * @param algorithm
@@ -393,6 +416,16 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		memory.setSystemMemory(systemMemory);
 		this.memory = memory;
+	}
+
+	/**
+	 * @param agreement
+	 *            the agreement to set
+	 */
+	public void setAgreement(AgreementImpl<P> agreement)
+	{
+		this.agreement = agreement;
+		this.agreement.setOwner(this);
 	}
 
 	/*
@@ -507,7 +540,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			setCurrentState(ROBOT_STATE.LOOKING);
 
 			this.snapshot = engine.getObservations(this);
-			this.systemMemory.addSelfPosition(getCurrentPosition());
+			this.systemMemory.addSelfPosition(getLocalPosition());
 			this.systemMemory.addSnapshot(snapshot);
 
 			setCurrentState(ROBOT_STATE.READY_TO_COMPUTE);
@@ -531,7 +564,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 			// if destination is not null, add it to the timeline
 			if (destination != null)
-			{
+			{				
 				P lastPoint = timeline.getLastPoint();
 				float distance = lastPoint.distanceTo(destination);
 
@@ -559,9 +592,6 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 			setCurrentState(ROBOT_STATE.READY_TO_MOVE);
 		}
-		
-//		System.out.println("AFTER COMPUTE:");
-//		System.out.println(this.toString());
 	}
 
 	/**
@@ -619,7 +649,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		String description = "SycamoreRobot " + this.ID + "\n";
 		String timeline = "Timeline: \n" + this.timeline.toString() + "\n";
-		
+
 		return description + timeline;
 	}
 
@@ -774,7 +804,9 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		return timeline;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.model.SycamoreObservedRobot#getN()
 	 */
 	@Override

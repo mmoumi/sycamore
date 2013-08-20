@@ -7,6 +7,8 @@ import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.model.Point3D;
 import it.diunipi.volpi.sycamore.model.SycamoreRobot;
 import it.diunipi.volpi.sycamore.model.SycamoreRobot3D;
+import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
+import it.diunipi.volpi.sycamore.plugins.agreements.AgreementImpl;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.plugins.algorithms.AlgorithmImpl;
 import it.diunipi.volpi.sycamore.plugins.initialconditions.InitialConditions;
@@ -227,6 +229,42 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 
 			InitialConditions<Point3D> newInstance = (InitialConditions<Point3D>) constructor.newInstance();
 			this.initialConditions = newInstance;
+		}
+		else
+		{
+			this.initialConditions = null;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreEngine#createAndSetNewAgreementInstance(it.diunipi.volpi.sycamore.plugins.agreements.Agreement)
+	 */
+	@Override
+	public void createAndSetNewAgreementInstance(Agreement<Point3D> agreement) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+	{
+		Constructor<?> constructor = null;
+		if (agreement != null)
+		{
+			// create a new instance of the agreement
+			Class<? extends Agreement> agreementClass = agreement.getClass();
+			constructor = agreementClass.getConstructors()[0];
+		}
+
+		// set visibility range in robots
+		Iterator<SycamoreRobot<Point3D>> iterator = this.robots.iterator();
+		while (iterator.hasNext())
+		{
+			SycamoreRobot<Point3D> robot = iterator.next();
+			if (constructor != null)
+			{
+				// assign memory to each robot
+				AgreementImpl<Point3D> newInstance = (AgreementImpl<Point3D>) constructor.newInstance();
+				robot.setAgreement(newInstance);
+			}
+			else
+			{
+				robot.setAgreement(null);
+			}
 		}
 	}
 

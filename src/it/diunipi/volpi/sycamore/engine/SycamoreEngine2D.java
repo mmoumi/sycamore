@@ -7,6 +7,8 @@ import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.model.Point2D;
 import it.diunipi.volpi.sycamore.model.SycamoreRobot;
 import it.diunipi.volpi.sycamore.model.SycamoreRobot2D;
+import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
+import it.diunipi.volpi.sycamore.plugins.agreements.AgreementImpl;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.plugins.algorithms.AlgorithmImpl;
 import it.diunipi.volpi.sycamore.plugins.initialconditions.InitialConditions;
@@ -111,6 +113,20 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 					e.printStackTrace();
 				}
 			}
+			
+			// check if some agreement plugins have to be added
+			Agreement agreement = SycamoreSystem.getAgreement();
+			if (agreement != null && agreement.getType() == TYPE.TYPE_2D)
+			{
+				try
+				{
+					createAndSetNewAgreementInstance(agreement);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
 
 			return robot;
 		}
@@ -126,7 +142,7 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 	@Override
 	public void createAndSetNewAlgorithmInstance(Algorithm<Point2D> algorithm, int index) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
 	{
-		// create a new instance of the scheduler
+		// create a new instance of the algorithm
 		Class<? extends Algorithm> algorithmClass = algorithm.getClass();
 		Constructor<?> constructor = algorithmClass.getConstructors()[0];
 
@@ -153,7 +169,7 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 		Constructor<?> constructor = null;
 		if (visibility != null)
 		{
-			// create a new instance of the scheduler
+			// create a new instance of the visibility
 			Class<? extends Visibility> visibilityClass = visibility.getClass();
 			constructor = visibilityClass.getConstructors()[0];
 		}
@@ -189,7 +205,7 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 		Constructor<?> constructor = null;
 		if (memory != null)
 		{
-			// create a new instance of the scheduler
+			// create a new instance of the memory
 			Class<? extends Memory> memoryClass = memory.getClass();
 			constructor = memoryClass.getConstructors()[0];
 		}
@@ -226,12 +242,52 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 		Constructor<?> constructor = null;
 		if (initialConditions != null)
 		{
-			// create a new instance of the scheduler
+			// create a new instance of the InitialConditions
 			Class<? extends InitialConditions> initialConditionsClass = initialConditions.getClass();
 			constructor = initialConditionsClass.getConstructors()[0];
 
 			InitialConditions<Point2D> newInstance = (InitialConditions<Point2D>) constructor.newInstance();
 			this.initialConditions = newInstance;
+		}
+		else
+		{
+			this.initialConditions = null;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine#createAndSetNewAgreementInstance(it.diunipi
+	 * .volpi.sycamore.plugins.agreements.Agreement)
+	 */
+	@Override
+	public void createAndSetNewAgreementInstance(Agreement<Point2D> agreement) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+	{
+		Constructor<?> constructor = null;
+		if (agreement != null)
+		{
+			// create a new instance of the agreement
+			Class<? extends Agreement> agreementClass = agreement.getClass();
+			constructor = agreementClass.getConstructors()[0];
+		}
+
+		// set visibility range in robots
+		Iterator<SycamoreRobot<Point2D>> iterator = this.robots.iterator();
+		while (iterator.hasNext())
+		{
+			SycamoreRobot<Point2D> robot = iterator.next();
+			if (constructor != null)
+			{
+				// assign memory to each robot
+				AgreementImpl<Point2D> newInstance = (AgreementImpl<Point2D>) constructor.newInstance();
+				robot.setAgreement(newInstance);
+			}
+			else
+			{
+				robot.setAgreement(null);
+			}
 		}
 	}
 

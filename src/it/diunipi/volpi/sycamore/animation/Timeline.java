@@ -286,6 +286,24 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 			return null;
 		}
 	}
+	
+	/**
+	 * Returns the time corresponding to the keyframe at passed index
+	 * 
+	 * @param index
+	 * @return
+	 */
+	public synchronized float getTimeAtIndex(int index)
+	{
+		if (!this.keyframes.isEmpty() && index >= 0 && index < this.keyframes.size())
+		{
+			return keyframes.get(index).getTime();
+		}
+		else
+		{
+			return 0;
+		}
+	}
 
 	/**
 	 * Returns a list of the keyframes that are not pause keyframes.
