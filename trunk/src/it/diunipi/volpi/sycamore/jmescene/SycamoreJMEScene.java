@@ -32,6 +32,7 @@ import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.model.Point2D;
 import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.model.SycamoreRobot;
+import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
@@ -51,6 +52,7 @@ import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
@@ -121,6 +123,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	private Geometry								baricentrumCross	= null;
 	private Node									baricentrum			= null;
 	private Node									robotsNode			= null;
+	private Node									localAxesNode		= null;
 	private ChaseCamera								chaseCam			= null;
 	private Node									mainNode			= null;
 	private Quaternion								billBoardRotation	= null;
@@ -363,6 +366,111 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	}
 
 	/**
+	 * Shows/ hides the local coordinates axes in the JME scene
+	 * 
+	 * @param visible
+	 */
+	public void setLocalCoordinatesVisible(final boolean visible)
+	{
+		this.enqueue(new Callable<Object>()
+		{
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.util.concurrent.Callable#call()
+			 */
+			@Override
+			public Object call() throws Exception
+			{
+				if (visible && appEngine != null)
+				{
+					mainNode.attachChild(localAxesNode);
+
+					Iterator<SycamoreRobot> iterator = appEngine.getRobots().iterator();
+					while (iterator.hasNext())
+					{
+						SycamoreRobot robot = iterator.next();
+						Agreement agreement = robot.getAgreement();
+
+						if (agreement != null)
+						{
+							// attach local coordinates node
+							Node axesNode = agreement.getAxesNode();
+
+							axesNode.setLocalTranslation(agreement.getLocalTranslation());
+							axesNode.setLocalRotation(agreement.getLocalRotation());
+							axesNode.setLocalScale(agreement.getLocalScale());
+
+							localAxesNode.attachChild(axesNode);
+						}
+					}
+
+					mainNode.updateGeometricState();
+				}
+				else
+				{
+					mainNode.detachChild(localAxesNode);
+					mainNode.updateGeometricState();
+				}
+
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * 
+	 */
+	public void manageAgreementChange()
+	{
+		localAxesNode.detachAllChildren();
+		if (SycamoreSystem.isLocalCoordinatesVisible())
+		{
+			this.setLocalCoordinatesVisible(true);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void updateAgreementsGraphics()
+	{
+		this.enqueue(new Callable<Object>()
+		{
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.util.concurrent.Callable#call()
+			 */
+			@Override
+			public Object call() throws Exception
+			{
+				if (appEngine != null)
+				{
+					Iterator<SycamoreRobot> iterator = appEngine.getRobots().iterator();
+					while (iterator.hasNext())
+					{
+						SycamoreRobot robot = iterator.next();
+						Agreement agreement = robot.getAgreement();
+
+						if (agreement != null && !agreement.isDynamic())
+						{
+							// attach local coordinates node
+							Node axesNode = agreement.getAxesNode();
+
+							axesNode.setLocalTranslation(agreement.getLocalTranslation());
+							axesNode.setLocalRotation(agreement.getLocalRotation());
+							axesNode.setLocalScale(agreement.getLocalScale());
+						}
+					}
+				}
+
+				return null;
+			}
+		});
+	}
+
+	/**
 	 * Init the spatials of the scene
 	 */
 	private void initSpatials()
@@ -388,13 +496,21 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		mainNode.attachChild(baricentrum);
 
 		// create the robots node
-		this.robotsNode = new Node();
+		this.robotsNode = new Node("Robots node");
 		mainNode.attachChild(robotsNode);
+
+		// create the local axes node
+		this.localAxesNode = new Node("Local axes node");
+		mainNode.attachChild(localAxesNode);
 
 		// Create and load the 3 axis lines
 		initCoordinateAxes(Vector3f.ZERO);
 		initGrid(200, ColorRGBA.White);
 		initBaricentrum();
+
+		setGridVisible(SycamoreSystem.isGridVisible());
+		setAxesVisible(SycamoreSystem.isAxesVisible());
+		setBaricentrumVisible(SycamoreSystem.isBaricentrumVisible());
 	}
 
 	/**
@@ -562,14 +678,35 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	 */
 	private void simpleUpdate_impl(float tpf, SycamoreRobot robot, Vector<SycamoreAbstractPoint> allRobots)
 	{
-		Vector3f position = robot.getCurrentPosition().toVector3f();
+		Vector3f position = robot.getLocalPosition().toVector3f();
+
+		Vector3f translation = Vector3f.ZERO;
+		Vector3f scale = new Vector3f(1, 1, 1);
+		Quaternion rotation = Quaternion.ZERO;
 
 		Node robotNode = robot.getRobotNode();
-		robotNode.setLocalTranslation(position);
+		Agreement agreement = robot.getAgreement();
+		if (agreement != null)
+		{
+			translation = agreement.getLocalTranslation();
+			scale = agreement.getLocalScale();
+			rotation = agreement.getLocalRotation();
+		}
+
+		robotNode.setLocalRotation(rotation);
+		robotNode.setLocalScale(scale);
+		robotNode.setLocalTranslation(translation);
+
+		Transform transform = robotNode.getLocalTransform();
+		Transform positionTransform = new Transform(position);
+
+		positionTransform.combineWithParent(transform);
+		robotNode.setLocalTransform(positionTransform);
+
 		robotNode.updateLogicalState(tpf);
 		robotNode.updateGeometricState();
 
-		allRobots.add(robot.getCurrentPosition());
+		allRobots.add(robot.getLocalPosition());
 	}
 
 	/**
@@ -648,6 +785,27 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 			public Object call() throws Exception
 			{
 				robotsNode.attachChild(robot.getRobotNode());
+
+				Agreement agreement = robot.getAgreement();
+				if (SycamoreSystem.isLocalCoordinatesVisible() && agreement != null)
+				{
+					// attach local coordinates node
+					Node axesNode = agreement.getAxesNode();
+
+					if (agreement.isDynamic())
+					{
+						robot.getRobotNode().attachChild(axesNode);
+					}
+					else
+					{
+						axesNode.setLocalTranslation(agreement.getLocalTranslation());
+						axesNode.setLocalRotation(agreement.getLocalRotation());
+						axesNode.setLocalScale(agreement.getLocalScale());
+
+						localAxesNode.attachChild(axesNode);
+						localAxesNode.updateGeometricState();
+					}
+				}
 				return null;
 			}
 		});

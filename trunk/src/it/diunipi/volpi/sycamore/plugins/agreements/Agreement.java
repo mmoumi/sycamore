@@ -3,14 +3,20 @@
  */
 package it.diunipi.volpi.sycamore.plugins.agreements;
 
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
+
+import it.diunipi.volpi.sycamore.model.ComputablePoint;
 import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.model.SycamoreRobot;
 import it.diunipi.volpi.sycamore.plugins.SycamoreTypedPlugin;
 
 /**
  * @author Vale
  * 
  */
-public interface Agreement<P extends SycamoreAbstractPoint> extends SycamoreTypedPlugin
+public interface Agreement<P extends SycamoreAbstractPoint & ComputablePoint<P>> extends SycamoreTypedPlugin
 {
 	/**
 	 * @param point
@@ -23,4 +29,34 @@ public interface Agreement<P extends SycamoreAbstractPoint> extends SycamoreType
 	 * @return
 	 */
 	public P toGlobalCoordinates(P point);
+
+	/**
+	 * @param owner
+	 */
+	public void setOwner(SycamoreRobot<P> owner);
+
+	/**
+	 * @return
+	 */
+	public Vector3f getLocalTranslation();
+
+	/**
+	 * @return
+	 */
+	public Quaternion getLocalRotation();
+
+	/**
+	 * @return
+	 */
+	public Vector3f getLocalScale();
+
+	/**
+	 * @return
+	 */
+	public Node getAxesNode();
+
+	/**
+	 * @return
+	 */
+	public boolean isDynamic();
 }

@@ -108,7 +108,7 @@ public abstract class SycamoreAnimatedObject<P extends SycamoreAbstractPoint & C
 	 * @return
 	 * @throws TimelineNotAccessibleException
 	 */
-	public P getCurrentPosition()
+	public P getLocalPosition()
 	{
 		try
 		{

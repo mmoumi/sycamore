@@ -20,12 +20,12 @@ import com.jme3.math.ColorRGBA;
 public interface SycamoreObservedRobot<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 {
 	/**
-	 * Returns the current position of this robot
+	 * Returns the current local position of this robot
 	 * 
 	 * @return
 	 * @throws TimelineNotAccessibleException
 	 */
-	public P getCurrentPosition();
+	public P getLocalPosition();
 
 	/**
 	 * Returns the robots's visibility

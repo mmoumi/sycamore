@@ -4,13 +4,14 @@
 package it.diunipi.volpi.sycamore.plugins.agreements;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.model.ComputablePoint;
 import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
 
 /**
  * @author Vale
  *
  */
-public abstract class AgreementImpl<P extends SycamoreAbstractPoint> implements Agreement<P>
+public abstract class AgreementImpl<P extends SycamoreAbstractPoint & ComputablePoint<P>> implements Agreement<P>
 {
 	/* (non-Javadoc)
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getShortDescription()
@@ -37,6 +38,17 @@ public abstract class AgreementImpl<P extends SycamoreAbstractPoint> implements 
 	public final String getPluginClassDescription()
 	{
 		return "Agreement";
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginName()
+	 */
+	@Override
+	public String getPluginName()
+	{
+		return getClass().getSimpleName();
 	}
 	
 	/* (non-Javadoc)
