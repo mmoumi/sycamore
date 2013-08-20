@@ -117,6 +117,16 @@ public class SycamorePluginInformationsPanel extends SycamorePanel
 				gbc_panel.gridy = 0;
 
 				SycamorePanel settingPanel = plugin.getPanel_settings();
+				settingPanel.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+						// Forward event
+						fireActionEvent(e);
+					}
+				});
+				
 				getPanel_settingsContainer().add(settingPanel, gbc_panel);
 			}
 			else

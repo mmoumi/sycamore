@@ -19,7 +19,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -30,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
+
 /**
  * The panel that contains a table with all loaded plugins
  * 
@@ -178,7 +178,7 @@ public class SycamorePluginsListPanel extends SycamoreTitledRoundedBorderPanel
 		}
 
 		/**
-		 * REturn the plugin at passed row
+		 * Return the plugin at passed row
 		 * 
 		 * @param rowIndex
 		 * @return
@@ -193,14 +193,13 @@ public class SycamorePluginsListPanel extends SycamoreTitledRoundedBorderPanel
 		}
 	}
 
-	private static final long		serialVersionUID			= -3336314826620173106L;
-	private JXTable					table_loadedPlugins			= null;
-	private SycamoreEngine			appEngine					= null;
-	private JButton					button_newPlugin			= null;
-	private JButton					button_refreshPlugins		= null;
-	private JScrollPane				scrollPane_tableContainer	= null;
-	private PluginsTableModel		tableModel					= null;
-	private Vector<ActionListener>	listeners					= null;
+	private static final long	serialVersionUID			= -3336314826620173106L;
+	private JXTable				table_loadedPlugins			= null;
+	private SycamoreEngine		appEngine					= null;
+	private JButton				button_newPlugin			= null;
+	private JButton				button_refreshPlugins		= null;
+	private JScrollPane			scrollPane_tableContainer	= null;
+	private PluginsTableModel	tableModel					= null;
 
 	/**
 	 * Default contructor
@@ -209,7 +208,6 @@ public class SycamorePluginsListPanel extends SycamoreTitledRoundedBorderPanel
 	{
 		setPreferredSize(new Dimension(250, 250));
 		setMinimumSize(new Dimension(200, 55));
-		this.listeners = new Vector<ActionListener>();
 		initialize();
 	}
 
@@ -287,6 +285,15 @@ public class SycamorePluginsListPanel extends SycamoreTitledRoundedBorderPanel
 							SycamorePlugin plugin = model.getValueAt(row);
 							SycamorePluginInformationsPanel settingPanel = new SycamorePluginInformationsPanel(plugin);
 							settingPanel.setAppEngine(appEngine);
+							settingPanel.addActionListener(new ActionListener()
+							{
+								@Override
+								public void actionPerformed(ActionEvent e)
+								{
+									// Forward event
+									fireActionEvent(e);
+								}
+							});
 
 							ImageIcon icon = new ImageIcon(getClass().getResource("/it/diunipi/volpi/sycamore/resources/settings_64x64.png"));
 							JOptionPane.showMessageDialog(SycamorePluginsListPanel.this.getParent(), settingPanel, "Settings for plugin " + plugin.getPluginName(), JOptionPane.INFORMATION_MESSAGE,
@@ -340,9 +347,9 @@ public class SycamorePluginsListPanel extends SycamoreTitledRoundedBorderPanel
 				// copy file into workspace
 				String inPath = dialog.getDirectory() + file;
 				String outPath = SycamoreSystem.getPluginsDirectory() + System.getProperty("file.separator") + file;
-				
+
 				SycamoreUtil.copyFile(new File(inPath), new File(outPath));
-				
+
 				refreshPlugins();
 			}
 			catch (Exception e)
@@ -448,43 +455,6 @@ public class SycamorePluginsListPanel extends SycamoreTitledRoundedBorderPanel
 	public void setAppEngine(SycamoreEngine appEngine)
 	{
 		this.appEngine = appEngine;
-	}
-
-	/**
-	 * Adds an <code>ActionListener</code> to the button.
-	 * 
-	 * @param l
-	 *            the <code>ActionListener</code> to be added
-	 */
-	public void addActionListener(ActionListener listener)
-	{
-		this.listeners.add(listener);
-	}
-
-	/**
-	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
-	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
-	 * 
-	 * @param l
-	 *            the listener to be removed
-	 */
-	public void removeActionListener(ActionListener listener)
-	{
-		this.listeners.remove(listener);
-	}
-
-	/**
-	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
-	 * method on all of them.
-	 * 
-	 * @param e
-	 */
-	private void fireActionEvent(ActionEvent e)
-	{
-		for (ActionListener listener : this.listeners)
-		{
-			listener.actionPerformed(e);
-		}
 	}
 
 	/*
