@@ -86,7 +86,8 @@ public class AsynchronousSchedulerPriorityQueue<P extends SycamoreAbstractPoint 
 		{
 			if (isFair())
 			{
-				return SycamoreUtil.getRandomLong(0, (long) (SycamoreSystem.getSchedulerFrequency() * 1000 * PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.FAIRNESS_COUNT.getName())));
+				int fairnessCount = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.FAIRNESS_COUNT.name());
+				return SycamoreUtil.getRandomLong(0, (long) (SycamoreSystem.getSchedulerFrequency() * 1000 * fairnessCount));
 			}
 			else
 			{
@@ -145,7 +146,10 @@ public class AsynchronousSchedulerPriorityQueue<P extends SycamoreAbstractPoint 
 			{
 				if (!robot.isFinished())
 				{
+					// call next and save robot for speed and destination changes
 					robot.nextOperation();
+					destinationModified.put(robot, false);
+					speedModified.put(robot, false);
 				}
 			}
 			
