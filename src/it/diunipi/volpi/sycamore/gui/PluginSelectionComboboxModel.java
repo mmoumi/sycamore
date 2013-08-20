@@ -34,7 +34,7 @@ public class PluginSelectionComboboxModel<P extends SycamorePlugin> extends Defa
 	@Override
 	public int getSize()
 	{
-		return this.plugins.size();
+		return this.plugins.size() + 1;
 	}
 
 	/*
@@ -45,6 +45,13 @@ public class PluginSelectionComboboxModel<P extends SycamorePlugin> extends Defa
 	@Override
 	public Object getElementAt(int index)
 	{
-		return this.plugins.get(index);
+		if (index == 0)
+		{
+			return null;
+		}
+		else
+		{
+			return this.plugins.get(index - 1);
+		}
 	}
 }

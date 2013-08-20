@@ -340,7 +340,6 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	private Vector<AdditionalSpinner>	additionalLightSpinners		= null;
 	private Vector<AdditionalSpinner>	additionalSpinners			= null;
 	private Vector<AdditionalButton>	additionalButtons			= null;
-	private Vector<ActionListener>		listeners					= null;
 
 	private HashMap<JComboBox, TYPE>	types						= null;
 	private JLabel						label_algorithm				= null;
@@ -358,7 +357,6 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		this.additionalLightSpinners = new Vector<AdditionalSpinner>();
 		this.additionalSpinners = new Vector<AdditionalSpinner>();
 		this.additionalButtons = new Vector<AdditionalButton>();
-		this.listeners = new Vector<ActionListener>();
 
 		// the types hashmap contains the type of the algorithm selected in each combobox. If a
 		// combobox has no selected item, it does not contain that combobox.
@@ -441,43 +439,6 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		gbc_button_addRow.gridx = 4;
 		gbc_button_addRow.gridy = 1;
 		add(getButton_addRow(), gbc_button_addRow);
-	}
-
-	/**
-	 * Adds an <code>ActionListener</code> to the button.
-	 * 
-	 * @param listener
-	 *            the <code>ActionListener</code> to be added
-	 */
-	public void addActionListener(ActionListener listener)
-	{
-		this.listeners.add(listener);
-	}
-
-	/**
-	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
-	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
-	 * 
-	 * @param listener
-	 *            the listener to be removed
-	 */
-	public void removeActionListener(ActionListener listener)
-	{
-		this.listeners.remove(listener);
-	}
-
-	/**
-	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
-	 * method on all of them.
-	 * 
-	 * @param e
-	 */
-	private void fireActionEvent(ActionEvent e)
-	{
-		for (ActionListener listener : this.listeners)
-		{
-			listener.actionPerformed(e);
-		}
 	}
 
 	/**
@@ -836,28 +797,35 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 					// checkTypes.
 					PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) comboBox_algorithmSelection.getModel();
 					Algorithm algorithm = (Algorithm) model.getSelectedItem();
+
 					if (algorithm != null)
 					{
 						types.put(comboBox_algorithmSelection, algorithm.getType());
 
 						// check types to update the GUI
-						if (checkTypes())
+						if (checkTypes() && appEngine != null)
 						{
-							if (appEngine != null)
-							{
-								// eventually create robots in engine
-								updateRobotsInEngine(0, appEngine);
+							// eventually create robots in engine
+							updateRobotsInEngine(0, appEngine);
 
-								try
-								{
-									// set algorithm in all robots in engine
-									appEngine.createAndSetNewAlgorithmInstance(algorithm, 0);
-								}
-								catch (Exception e1)
-								{
-									e1.printStackTrace();
-								}
+							try
+							{
+								// set algorithm in all robots in engine
+								appEngine.createAndSetNewAlgorithmInstance(algorithm, 0);
 							}
+							catch (Exception e1)
+							{
+								e1.printStackTrace();
+							}
+
+						}
+					}
+					else
+					{
+						types.remove(comboBox_algorithmSelection);
+						if (appEngine != null)
+						{
+							updateRobotsInEngine(0, appEngine);
 						}
 					}
 				}
@@ -1048,11 +1016,11 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 				// checkTypes.
 				PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) comboBox_additionalAlgorithmSelection.getModel();
 				Algorithm algorithm = (Algorithm) model.getSelectedItem();
+				int index = comboBox_additionalAlgorithmSelection.getIndex();
+				
 				if (algorithm != null)
 				{
 					types.put(comboBox_additionalAlgorithmSelection, algorithm.getType());
-
-					int index = comboBox_additionalAlgorithmSelection.getIndex();
 
 					// check types to update the GUI
 					if (checkTypes())
@@ -1072,6 +1040,15 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 								e1.printStackTrace();
 							}
 						}
+					}
+				}
+				else
+				{
+					types.remove(comboBox_algorithmSelection);
+					
+					if (appEngine != null)
+					{
+						updateRobotsInEngine(index, appEngine);
 					}
 				}
 			}
@@ -1270,6 +1247,26 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 					e.printStackTrace();
 				}
 			}
+			else
+			{
+				// one of these vector will be empty, the other will not
+				Vector<SycamoreRobot> robots = appEngine.getRobots().getRobotRow(index);
+				Vector<SycamoreRobot> humanPilotRobots = appEngine.getRobots().getHumanPilotRow(index);
+				
+				// remove robots
+				for (SycamoreRobot robot : robots)
+				{
+					fireActionEvent(new ActionEvent(robot, 0, SycamoreFiredActionEvents.REMOVE_ROBOT_FROM_SCENE.name()));
+				}
+				robots.removeAllElements();
+				
+				// remove human pilot robots
+				for (SycamoreRobot humanPilotRobot : humanPilotRobots)
+				{
+					fireActionEvent(new ActionEvent(humanPilotRobot, 0, SycamoreFiredActionEvents.REMOVE_ROBOT_FROM_SCENE.name()));
+				}
+				humanPilotRobots.removeAllElements();
+			}
 		}
 	}
 
@@ -1326,7 +1323,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	/**
 	 * Updates the combo box models
 	 */
-	public void updateComboboxModels()
+	public void updateModels()
 	{
 		// apply a PluginSelectionComboboxModel with generics for Algorithms to this combobox
 		ArrayList<Algorithm> algorithms = SycamorePluginManager.getSharedInstance().getLoadedAlgorithms();
@@ -1436,7 +1433,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		this.initialize();
 		this.revalidate();
 		this.repaint();
-		
-		this.updateComboboxModels();
+
+		this.updateModels();
 	}
 }

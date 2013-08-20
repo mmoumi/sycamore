@@ -14,7 +14,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -42,7 +41,6 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	private JScrollPane							scrollPane_robotsConfigurationsContainer	= null;
 	private JButton								button_otherPlugins							= null;
 	private SycamoreAdditionalPluginsPanel		additionalPluginsPanel						= null;
-	private Vector<ActionListener>				listeners									= null;
 	private JLabel								label_robotsNumber							= null;
 	private JButton								button_manageRobots							= null;
 	private JLabel								label_pluginsInfo							= null;
@@ -52,7 +50,6 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	 */
 	public SycamoreSimulationSettingsPanel()
 	{
-		this.listeners = new Vector<ActionListener>();
 		initialize();
 	}
 
@@ -81,13 +78,13 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		gbc_label_selectScheduler.gridx = 0;
 		gbc_label_selectScheduler.gridy = 0;
 		getPanel_contentContainer().add(getLabel_selectScheduler(), gbc_label_selectScheduler);
-
 		GridBagConstraints gbc_comboBox_selectScheduler = new GridBagConstraints();
 		gbc_comboBox_selectScheduler.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox_selectScheduler.insets = new Insets(5, 5, 5, 7);
 		gbc_comboBox_selectScheduler.gridx = 0;
 		gbc_comboBox_selectScheduler.gridy = 1;
 		getPanel_contentContainer().add(getComboBox_selectScheduler(), gbc_comboBox_selectScheduler);
+				
 		GridBagConstraints gbc_label_robotsNumber = new GridBagConstraints();
 		gbc_label_robotsNumber.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_label_robotsNumber.insets = new Insets(5, 5, 5, 5);
@@ -100,6 +97,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		gbc_button_manageRobots.gridx = 0;
 		gbc_button_manageRobots.gridy = 3;
 		getPanel_contentContainer().add(getButton_manageRobots(), gbc_button_manageRobots);
+		
 		GridBagConstraints gbc_label_pluginsInfo = new GridBagConstraints();
 		gbc_label_pluginsInfo.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_label_pluginsInfo.insets = new Insets(5, 5, 5, 5);
@@ -113,43 +111,6 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		gbc_button_otherPlugins.gridx = 0;
 		gbc_button_otherPlugins.gridy = 5;
 		getPanel_contentContainer().add(getButton_otherPlugins(), gbc_button_otherPlugins);
-	}
-
-	/**
-	 * Adds an <code>ActionListener</code> to the button.
-	 * 
-	 * @param listener
-	 *            the <code>ActionListener</code> to be added
-	 */
-	public void addActionListener(ActionListener listener)
-	{
-		this.listeners.add(listener);
-	}
-
-	/**
-	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
-	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
-	 * 
-	 * @param listener
-	 *            the listener to be removed
-	 */
-	public void removeActionListener(ActionListener listener)
-	{
-		this.listeners.remove(listener);
-	}
-
-	/**
-	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
-	 * method on all of them.
-	 * 
-	 * @param e
-	 */
-	private void fireActionEvent(ActionEvent e)
-	{
-		for (ActionListener listener : this.listeners)
-		{
-			listener.actionPerformed(e);
-		}
 	}
 
 	/**
@@ -174,12 +135,6 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 			comboBox_selectScheduler = new JComboBox();
 
 			// apply a PluginSelectionComboboxModel with generics for Schedulers to this combobox
-			// ArrayList<Scheduler> schedulers =
-			// SycamorePluginManager.getSharedInstance().getLoadedSchedulers();
-			// PluginSelectionComboboxModel<Scheduler> schedulerModel = new
-			// PluginSelectionComboboxModel<Scheduler>(schedulers);
-			//
-			// comboBox_selectScheduler.setModel(schedulerModel);
 			comboBox_selectScheduler.addActionListener(new ActionListener()
 			{
 				@Override
@@ -291,7 +246,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	{
 		if (label_pluginsInfo == null)
 		{
-			label_pluginsInfo = new JLabel("You can tune the other system capabilities:");
+			label_pluginsInfo = new JLabel("Tune some system capabilities:");
 		}
 		return label_pluginsInfo;
 	}
@@ -329,6 +284,15 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		if (additionalPluginsPanel == null)
 		{
 			additionalPluginsPanel = new SycamoreAdditionalPluginsPanel();
+			additionalPluginsPanel.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					// forward action event
+					fireActionEvent(e);
+				}
+			});
 		}
 		return additionalPluginsPanel;
 	}
@@ -376,7 +340,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	 */
 	public void managePluginsChanged()
 	{
-		updateComboboxModels();
+		updateModels();
 	}
 	
 	/* (non-Javadoc)
@@ -436,15 +400,16 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	/**
 	 * Update the combo box models
 	 */
-	public void updateComboboxModels()
+	public void updateModels()
 	{
 		// apply a PluginSelectionComboboxModel with generics for Schedulers to this combobox
 		ArrayList<Scheduler> schedulers = SycamorePluginManager.getSharedInstance().getLoadedSchedulers();
 		PluginSelectionComboboxModel<Scheduler> schedulerModel = new PluginSelectionComboboxModel<Scheduler>(schedulers);
-
 		getComboBox_selectScheduler().setModel(schedulerModel);
 		
-		getSycamoreRobotsConfigurationPanel().updateComboboxModels();
+		// update models in the 2 sub-panels
+		getSycamoreRobotsConfigurationPanel().updateModels();
+		getAdditionalPluginsPanel().updateModels();
 	}
 	
 	/**

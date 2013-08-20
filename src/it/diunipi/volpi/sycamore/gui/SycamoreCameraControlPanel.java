@@ -9,7 +9,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -88,14 +87,12 @@ public class SycamoreCameraControlPanel extends SycamorePanel
 	private JComboBox				comboBox_cameraPosition	= null;
 	private JLabel					label_camera			= null;
 	private SycamoreEngine			appEngine				= null;
-	private Vector<ActionListener>	listeners				= null;
 
 	/**
 	 * Default constructor
 	 */
 	public SycamoreCameraControlPanel()
 	{
-		this.listeners = new Vector<ActionListener>();
 		initialize();
 	}
 
@@ -121,43 +118,6 @@ public class SycamoreCameraControlPanel extends SycamorePanel
 		gbc_comboBox.gridx = 1;
 		gbc_comboBox.gridy = 0;
 		add(getComboBox_cameraPosition(), gbc_comboBox);
-	}
-
-	/**
-	 * Adds an <code>ActionListener</code> to the button.
-	 * 
-	 * @param l
-	 *            the <code>ActionListener</code> to be added
-	 */
-	public void addActionListener(ActionListener listener)
-	{
-		this.listeners.add(listener);
-	}
-
-	/**
-	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
-	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
-	 * 
-	 * @param l
-	 *            the listener to be removed
-	 */
-	public void removeActionListener(ActionListener listener)
-	{
-		this.listeners.remove(listener);
-	}
-
-	/**
-	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
-	 * method on all of them.
-	 * 
-	 * @param e
-	 */
-	private void fireActionEvent(ActionEvent e)
-	{
-		for (ActionListener listener : this.listeners)
-		{
-			listener.actionPerformed(e);
-		}
 	}
 
 	/**

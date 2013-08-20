@@ -13,7 +13,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,7 +39,6 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	private JLabel						label_animationSpeed				= null;
 	private JSlider						slider_animationSpeed				= null;
 	private SycamoreEngine				appEngine							= null;
-	private Vector<ActionListener>		actionListeners						= null;
 
 	/**
 	 * Default constructor
@@ -106,53 +104,6 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		gbc_slider_animationSpeed.gridx = 4;
 		gbc_slider_animationSpeed.gridy = 1;
 		add(getSlider_animationSpeed(), gbc_slider_animationSpeed);
-	}
-
-	/**
-	 * Adds passed ActionListener to the vector used for firing events
-	 * 
-	 * @param the
-	 *            ActionListener to add
-	 */
-	public void addActionListener(ActionListener al)
-	{
-		if (this.actionListeners == null)
-		{
-			this.actionListeners = new Vector<ActionListener>();
-		}
-
-		this.actionListeners.add(al);
-	}
-
-	/**
-	 * Removes passed ActionListener from the vector used for firing events
-	 * 
-	 * @param the
-	 *            ActionListener to remove
-	 */
-	public void removeActionListener(ActionListener al)
-	{
-		if (!(this.actionListeners == null))
-		{
-			this.actionListeners.remove(al);
-		}
-	}
-
-	/**
-	 * Fires an ActionEvent to every listener that registered itself for reciving events from this
-	 * 
-	 * @param the
-	 *            event to fire
-	 */
-	private void fireActionEvent(ActionEvent evt)
-	{
-		if (this.actionListeners != null)
-		{
-			for (int i = 0; i < this.actionListeners.size(); i++)
-			{
-				this.actionListeners.elementAt(i).actionPerformed(evt);
-			}
-		}
 	}
 
 	/**

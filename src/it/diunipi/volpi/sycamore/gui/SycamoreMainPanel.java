@@ -13,7 +13,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
 
 import javax.swing.AbstractButton;
 
@@ -35,14 +34,12 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	private SycamoreSimulationViewPanel		simulationViewPanel				= null;
 	private SycamoreAnimationControlPanel	sycamoreAnimationControlPanel	= null;
 	private SycamoreEngine					appEngine						= null;
-	private Vector<ActionListener>			listeners						= null;
 
 	/**
 	 * Default constructor
 	 */
 	public SycamoreMainPanel()
 	{
-		this.listeners = new Vector<ActionListener>();
 		initialize();
 	}
 
@@ -89,43 +86,6 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	public void disposeJMEScene()
 	{
 		getSimulationViewPanel().disposeJMEScene();
-	}
-
-	/**
-	 * Adds an <code>ActionListener</code> to the button.
-	 * 
-	 * @param listener
-	 *            the <code>ActionListener</code> to be added
-	 */
-	public void addActionListener(ActionListener listener)
-	{
-		this.listeners.add(listener);
-	}
-
-	/**
-	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
-	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
-	 * 
-	 * @param listener
-	 *            the listener to be removed
-	 */
-	public void removeActionListener(ActionListener listener)
-	{
-		this.listeners.remove(listener);
-	}
-
-	/**
-	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
-	 * method on all of them.
-	 * 
-	 * @param e
-	 */
-	private void fireActionEvent(ActionEvent e)
-	{
-		for (ActionListener listener : this.listeners)
-		{
-			listener.actionPerformed(e);
-		}
 	}
 
 	/**
@@ -387,6 +347,14 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 			TYPE type = getSimulationSettingsPanel().getChosenType();
 			getSimulationViewPanel().setupScene(type);
 		}
+		else if (e.getActionCommand().equals(SycamoreFiredActionEvents.SELECTED_AGREEMENT_CHANGED.name()))
+		{
+			getSimulationViewPanel().manageAgreementChange();
+		}
+		else if (e.getActionCommand().equals(SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()))
+		{
+			getSimulationViewPanel().updateAgreementsGraphics();
+		}
 		else if (e.getActionCommand().equals(SycamoreFiredActionEvents.SIMULATION_DATA_GOOD.name()))
 		{
 			TYPE type = getSimulationSettingsPanel().getChosenType();
@@ -411,6 +379,8 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 				setAppEngine(newEngine);
 				updateEngine(newEngine);
 
+				// refresh agreemet axes
+				getSimulationViewPanel().manageAgreementChange();
 				updateGui();
 			}
 		}
@@ -428,7 +398,7 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	 */
 	public void refreshPlugins()
 	{
-		getSimulationSettingsPanel().updateComboboxModels();
+		getSimulationSettingsPanel().updateModels();
 	}
 
 	/**
@@ -439,15 +409,15 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	{
 		boolean visible = source.isSelected();
 
-		System.out.println(actionCommand + ": " + visible);
-
 		if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_GRID.name()))
 		{
+			// save visible state
 			SycamoreSystem.setGridVisible(visible);
 			getSimulationViewPanel().setGridVisible(visible);
 		}
 		else if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_AXES.name()))
 		{
+			// save visible state
 			SycamoreSystem.setAxesVisible(visible);
 			getSimulationViewPanel().setAxesVisible(visible);
 		}
@@ -484,11 +454,11 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 		{
 			// save visible state
 			SycamoreSystem.setLocalCoordinatesVisible(visible);
-			
-			//TODO implement 
+			getSimulationViewPanel().setLocalCoordinatesVisible(visible);
 		}
 		else if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_BARICENTRUM.name()))
 		{
+			// save visible state
 			SycamoreSystem.setBaricentrumVisible(visible);
 			getSimulationViewPanel().setBaricentrumVisible(visible);
 		}

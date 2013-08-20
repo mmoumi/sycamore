@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
@@ -30,14 +29,11 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 	private JToggleButton			button_grid			= null;
 	private JToggleButton			button_axes			= null;
 
-	private Vector<ActionListener>	listeners			= null;
-
 	/**
 	 * Default constructor
 	 */
 	public SycamoreViewButtonsPanel()
 	{
-		this.listeners = new Vector<ActionListener>();
 		initialize();
 	}
 
@@ -57,43 +53,6 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 		add(getButton_baricentrum());
 		add(getButton_lights());
 		add(getButton_visuals());
-	}
-
-	/**
-	 * Adds an <code>ActionListener</code> to the button.
-	 * 
-	 * @param listener
-	 *            the <code>ActionListener</code> to be added
-	 */
-	public void addActionListener(java.awt.event.ActionListener listener)
-	{
-		this.listeners.add(listener);
-	}
-
-	/**
-	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
-	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
-	 * 
-	 * @param listener
-	 *            the listener to be removed
-	 */
-	public void removeActionListener(java.awt.event.ActionListener listener)
-	{
-		this.listeners.remove(listener);
-	}
-
-	/**
-	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
-	 * method on all of them.
-	 * 
-	 * @param e
-	 */
-	private void fireActionEvent(ActionEvent e)
-	{
-		for (java.awt.event.ActionListener listener : this.listeners)
-		{
-			listener.actionPerformed(e);
-		}
 	}
 
 	/**
@@ -271,7 +230,7 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					fireActionEvent(new ActionEvent(button_coords, 0, SycamoreFiredActionEvents.SHOW_VISUAL_ELEMENTS.name()));
+					fireActionEvent(new ActionEvent(button_visuals, 0, SycamoreFiredActionEvents.SHOW_VISUAL_ELEMENTS.name()));
 				}
 			});
 		}
