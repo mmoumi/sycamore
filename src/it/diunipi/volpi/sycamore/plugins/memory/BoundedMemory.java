@@ -21,27 +21,25 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 	{
 		MEMORY_SIZE("Memory size", "" + 10);
 
-		private String	name			= null;
+		private String	description			= null;
 		private String	defaultValue	= null;
 
 		/**
 		 * 
 		 */
-		BoundedMemoryProperties(String name, String defaultValue)
+		BoundedMemoryProperties(String description, String defaultValue)
 		{
-			this.name = name;
+			this.description = description;
 			this.defaultValue = defaultValue;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getName()
+		/* (non-Javadoc)
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
 		 */
 		@Override
-		public String getName()
+		public String getDescription()
 		{
-			return name;
+			return description;
 		}
 
 		/*
@@ -57,22 +55,6 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 	}
 
 	private static BoundedMemorySettingsPanel	panel_settings	= null;
-
-	/**
-	 * 
-	 */
-	public BoundedMemory()
-	{
-		try
-		{
-			// attempt to read the size property. If not present, put the default.
-			PropertyManager.getSharedInstance().getIntegerProperty(BoundedMemoryProperties.MEMORY_SIZE.getName());
-		}
-		catch (NumberFormatException e)
-		{
-			PropertyManager.getSharedInstance().putProperty(BoundedMemoryProperties.MEMORY_SIZE.getName(), BoundedMemoryProperties.MEMORY_SIZE.getDefaultValue());
-		}
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -149,7 +131,13 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 	 */
 	protected static int getMemorySize()
 	{
-		return PropertyManager.getSharedInstance().getIntegerProperty(BoundedMemoryProperties.MEMORY_SIZE.getName());
+		int size = PropertyManager.getSharedInstance().getIntegerProperty(BoundedMemoryProperties.MEMORY_SIZE.name());
+		if (size < 0)
+		{
+			size = Integer.parseInt(BoundedMemoryProperties.MEMORY_SIZE.getDefaultValue());
+		}
+		
+		return size;
 	}
 
 	/**
@@ -158,7 +146,7 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 	 */
 	protected static void setMemorySize(int memorySize)
 	{
-		PropertyManager.getSharedInstance().putProperty(BoundedMemoryProperties.MEMORY_SIZE.getName(), memorySize);
+		PropertyManager.getSharedInstance().putProperty(BoundedMemoryProperties.MEMORY_SIZE.name(), memorySize);
 	}
 
 }
