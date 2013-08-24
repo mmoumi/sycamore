@@ -680,29 +680,34 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	{
 		Vector3f position = robot.getLocalPosition().toVector3f();
 
-		Vector3f translation = Vector3f.ZERO;
-		Vector3f scale = new Vector3f(1, 1, 1);
-		Quaternion rotation = Quaternion.ZERO;
-
 		Node robotNode = robot.getRobotNode();
+		
 		Agreement agreement = robot.getAgreement();
 		if (agreement != null)
 		{
+			Vector3f translation = Vector3f.ZERO;
+			Vector3f scale = new Vector3f(1, 1, 1);
+			Quaternion rotation = Quaternion.ZERO;
+			
 			translation = agreement.getLocalTranslation();
 			scale = agreement.getLocalScale();
 			rotation = agreement.getLocalRotation();
+			
+			robotNode.setLocalRotation(rotation);
+			robotNode.setLocalScale(scale);
+			robotNode.setLocalTranslation(translation);
+			
+			Transform transform = robotNode.getLocalTransform();
+			Transform positionTransform = new Transform(position);
+
+			positionTransform.combineWithParent(transform);
+			robotNode.setLocalTransform(positionTransform);
 		}
-
-		robotNode.setLocalRotation(rotation);
-		robotNode.setLocalScale(scale);
-		robotNode.setLocalTranslation(translation);
-
-		Transform transform = robotNode.getLocalTransform();
-		Transform positionTransform = new Transform(position);
-
-		positionTransform.combineWithParent(transform);
-		robotNode.setLocalTransform(positionTransform);
-
+		else
+		{
+			robotNode.setLocalTranslation(position);
+		}
+		
 		robotNode.updateLogicalState(tpf);
 		robotNode.updateGeometricState();
 
