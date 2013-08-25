@@ -38,23 +38,30 @@ public class SycamoreRobot2D extends SycamoreRobot<Point2D>
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see it.diunipi.volpi.sycamore.model.SycamoreRobot#createNewLightInstance()
+	 */
+	@Override
+	protected SycamoreRobotLight<Point2D> createNewLightInstance()
+	{
+		return new SycamoreRobotLight2D(glassColor, getNewLightGeometry(glassColor));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.model.SycamoreRobot#setupGeometry()
 	 */
 	@Override
 	protected void setupGeometry()
 	{
-		Material mat = new Material(SycamoreSystem.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+		Material mat = new Material(SycamoreSystem.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 
 		if (color == null)
 		{
 			color = ColorRGBA.Red;
 		}
 
-		mat.setBoolean("UseMaterialColors", true);
-		mat.setColor("Ambient", color);
-		mat.setColor("Diffuse", color);
-		mat.setColor("Specular", ColorRGBA.White);
-		mat.setFloat("Shininess", 50);
+		mat.setColor("Color", color);
 
 		this.sceneGeometry = new Geometry("Robot", new Cylinder(25, 25, geometrySize, 0, true));
 		TangentBinormalGenerator.generate(this.sceneGeometry.getMesh(), true);
@@ -87,13 +94,8 @@ public class SycamoreRobot2D extends SycamoreRobot<Point2D>
 	@Override
 	protected Geometry getNewLightGeometry(ColorRGBA color)
 	{
-		Material mat = new Material(SycamoreSystem.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-
-		mat.setBoolean("UseMaterialColors", true);
-		mat.setColor("Ambient", color);
-		mat.setColor("Diffuse", color);
-		mat.setColor("Specular", color);
-		mat.setFloat("Shininess", 50);
+		Material mat = new Material(SycamoreSystem.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+		mat.setColor("Color", color);
 
 		Geometry lightGeometry = new Geometry("Light", new Cylinder(25, 25, lightSize, 0, true));
 
