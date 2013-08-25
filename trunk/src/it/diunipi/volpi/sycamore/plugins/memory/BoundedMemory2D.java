@@ -3,8 +3,8 @@
  */
 package it.diunipi.volpi.sycamore.plugins.memory;
 
+import it.diunipi.volpi.sycamore.engine.Point2D;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
-import it.diunipi.volpi.sycamore.model.Point2D;
 
 import java.util.Vector;
 

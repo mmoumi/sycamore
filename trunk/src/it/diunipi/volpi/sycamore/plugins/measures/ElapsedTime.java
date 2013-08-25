@@ -3,8 +3,8 @@
  */
 package it.diunipi.volpi.sycamore.plugins.measures;
 
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

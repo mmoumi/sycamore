@@ -3,11 +3,11 @@
  */
 package it.diunipi.volpi.sycamore.plugins.visibilities;
 
+import it.diunipi.volpi.sycamore.engine.Observation;
+import it.diunipi.volpi.sycamore.engine.Point2D;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.model.Observation;
-import it.diunipi.volpi.sycamore.model.Point2D;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.Vector;

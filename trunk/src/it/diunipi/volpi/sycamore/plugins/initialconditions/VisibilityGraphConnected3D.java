@@ -3,11 +3,11 @@
  */
 package it.diunipi.volpi.sycamore.plugins.initialconditions;
 
+import it.diunipi.volpi.sycamore.engine.Point3D;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
-import it.diunipi.volpi.sycamore.model.Point3D;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot;
-import it.diunipi.volpi.sycamore.model.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 

@@ -3,10 +3,10 @@
  */
 package it.diunipi.volpi.sycamore.plugins.schedulers;
 
+import it.diunipi.volpi.sycamore.engine.ComputablePoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.model.ComputablePoint;
-import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;

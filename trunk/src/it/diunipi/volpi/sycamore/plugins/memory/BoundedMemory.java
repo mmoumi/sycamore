@@ -3,9 +3,9 @@
  */
 package it.diunipi.volpi.sycamore.plugins.memory;
 
+import it.diunipi.volpi.sycamore.engine.ComputablePoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
-import it.diunipi.volpi.sycamore.model.ComputablePoint;
-import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 import net.xeoh.plugins.base.annotations.PluginImplementation;

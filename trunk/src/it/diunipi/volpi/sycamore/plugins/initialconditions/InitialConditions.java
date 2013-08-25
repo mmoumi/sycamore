@@ -3,9 +3,9 @@
  */
 package it.diunipi.volpi.sycamore.plugins.initialconditions;
 
-import it.diunipi.volpi.sycamore.model.ComputablePoint;
-import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
-import it.diunipi.volpi.sycamore.model.SycamoreRobotMatrix;
+import it.diunipi.volpi.sycamore.engine.ComputablePoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.plugins.SycamoreTypedPlugin;
 
 /**
