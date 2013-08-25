@@ -4,9 +4,6 @@
 package it.diunipi.volpi.sycamore.engine;
 
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.model.Point3D;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot3D;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.agreements.AgreementImpl;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
@@ -68,8 +65,14 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 	public SycamoreRobot<Point3D> createAndAddNewRobotInstance(boolean isHumanPilot, int index, ColorRGBA color, int maxLights)
 	{
 		{
+			float speed = SycamoreSystem.DEFAULT_ROBOT_SPEED;
+			if (isHumanPilot)
+			{
+				speed = speed / 2.0f;
+			}
+			
 			// create a new oblivious robot
-			SycamoreRobot3D robot = new SycamoreRobot3D(this, computeStartingPoint(), color, maxLights);
+			SycamoreRobot3D robot = new SycamoreRobot3D(this, computeStartingPoint(), speed, color, maxLights);
 
 			if (isHumanPilot)
 			{
