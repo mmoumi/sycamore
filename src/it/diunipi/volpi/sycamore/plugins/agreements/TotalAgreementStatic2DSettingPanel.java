@@ -170,6 +170,7 @@ public class TotalAgreementStatic2DSettingPanel extends SycamorePanel
 			spinner_translation_x.setMinimumSize(new Dimension(80, 27));
 			spinner_translation_x.setPreferredSize(new Dimension(80, 27));
 			spinner_translation_x.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 0.1d));
+			spinner_translation_x.setValue(TotalAgreementStatic2D.getTranslationX());
 			spinner_translation_x.addChangeListener(new ChangeListener()
 			{
 				@Override
@@ -195,6 +196,7 @@ public class TotalAgreementStatic2DSettingPanel extends SycamorePanel
 			spinner_translation_y.setMinimumSize(new Dimension(80, 27));
 			spinner_translation_y.setPreferredSize(new Dimension(80, 27));
 			spinner_translation_y.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 0.1d));
+			spinner_translation_y.setValue(TotalAgreementStatic2D.getTranslationY());
 			spinner_translation_y.addChangeListener(new ChangeListener()
 			{
 				@Override
@@ -307,7 +309,7 @@ public class TotalAgreementStatic2DSettingPanel extends SycamorePanel
 			spinner_rotation.setMaximumSize(new Dimension(80, 27));
 			spinner_rotation.setMinimumSize(new Dimension(80, 27));
 			spinner_rotation.setPreferredSize(new Dimension(80, 27));
-			spinner_rotation.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 0.1d));
+			spinner_rotation.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 1));
 			spinner_rotation.setValue(TotalAgreementStatic2D.getRotation());
 			spinner_rotation.addChangeListener(new ChangeListener()
 			{
