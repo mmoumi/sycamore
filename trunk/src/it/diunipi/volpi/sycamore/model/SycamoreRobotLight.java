@@ -3,11 +3,6 @@
  */
 package it.diunipi.volpi.sycamore.model;
 
-import java.util.concurrent.Callable;
-
-import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 
@@ -17,10 +12,10 @@ import com.jme3.scene.Geometry;
  * 
  * @author Valerio Volpi - vale.v@me.com
  */
-public class SycamoreRobotLight
+public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 {
-	private ColorRGBA		color;
-	private final Geometry	lightGeometry;
+	protected ColorRGBA		color;
+	protected final Geometry	lightGeometry;
 
 	/**
 	 * Default constructor.
@@ -37,32 +32,7 @@ public class SycamoreRobotLight
 	 * @param color
 	 *            the color to set
 	 */
-	public void setColor(final ColorRGBA color)
-	{
-		this.color = color;
-		final Geometry geom = this.getLightGeometry();
-		if (geom != null)
-		{
-			SycamoreSystem.enqueueToJME(new Callable<Object>()
-			{
-				/*
-				 * (non-Javadoc)
-				 * 
-				 * @see java.util.concurrent.Callable#call()
-				 */
-				@Override
-				public Object call() throws Exception
-				{
-					Material mat = geom.getMaterial();
-					mat.setColor("Ambient", color);
-					mat.setColor("Diffuse", color);
-					mat.setColor("Specular", ColorRGBA.White);
-
-					return null;
-				}
-			});
-		}
-	}
+	public abstract void setColor(final ColorRGBA color);
 
 	/**
 	 * @return the color
