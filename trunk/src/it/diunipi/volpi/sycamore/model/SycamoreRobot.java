@@ -52,7 +52,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 	// utility data
 	private final SycamoreSystemMemory<P>		systemMemory;
-	private final Vector<SycamoreRobotLight>	lights;
+	private final Vector<SycamoreRobotLight<P>>	lights;
 	private final long							ID;
 
 	// model data
@@ -97,12 +97,13 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		this.engine = engine;
 		this.maxLights = maxLights;
 		this.systemMemory = new SycamoreSystemMemory<P>();
-		this.lights = new Vector<SycamoreRobotLight>();
+		this.lights = new Vector<SycamoreRobotLight<P>>();
 
 		this.speed = speed;
 
 		// setup timeline
 		this.timeline = new Timeline<P>();
+		
 		this.startingPosition = startingPosition;
 		this.timeline.addKeyframe(startingPosition);
 		this.setCurrentRatio(0);
@@ -125,7 +126,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 				// add default black lights
 				for (int i = 0; i < maxLights; i++)
 				{
-					final SycamoreRobotLight light = new SycamoreRobotLight(glassColor, getNewLightGeometry(glassColor));
+					final SycamoreRobotLight light = createNewLightInstance();
 					lights.add(light);
 
 					if (SycamoreSystem.isRobotsLightsVisible())
@@ -143,6 +144,8 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		this.ID = random.nextLong();
 	}
 	
+	protected abstract SycamoreRobotLight<P> createNewLightInstance();
+
 	public P getGlobalPosition()
 	{
 		if (this.agreement != null)
@@ -241,7 +244,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 					// add missing off lights
 					for (int i = 0; i < lightsNum; i++)
 					{
-						final SycamoreRobotLight light = new SycamoreRobotLight(glassColor, getNewLightGeometry(glassColor));
+						final SycamoreRobotLight light = createNewLightInstance();
 						lights.add(light);
 
 						if (SycamoreSystem.isRobotsLightsVisible())
@@ -335,11 +338,11 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	 * @see it.diunipi.volpi.sycamore.model.SycamoreObservedRobot#getLights()
 	 */
 	@Override
-	public Vector<SycamoreRobotLight> getLights()
+	public Vector<SycamoreRobotLight<P>> getLights()
 	{
 		return lights;
 	}
-	
+
 	/**
 	 * @return the agreement
 	 */
@@ -425,7 +428,10 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	public void setAgreement(AgreementImpl<P> agreement)
 	{
 		this.agreement = agreement;
-		this.agreement.setOwner(this);
+		if (agreement != null)
+		{
+			this.agreement.setOwner(this);
+		}
 	}
 
 	/*
@@ -564,7 +570,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 			// if destination is not null, add it to the timeline
 			if (destination != null)
-			{				
+			{
 				P lastPoint = timeline.getLastPoint();
 				float distance = lastPoint.distanceTo(destination);
 

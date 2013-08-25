@@ -46,7 +46,7 @@ public interface SycamoreObservedRobot<P extends SycamoreAbstractPoint & Computa
 	 * 
 	 * @return the lights
 	 */
-	public Vector<SycamoreRobotLight> getLights();
+	public Vector<SycamoreRobotLight<P>> getLights();
 
 	/**
 	 * Turns on a light using passed color. If all the lights of the robot are already on, a

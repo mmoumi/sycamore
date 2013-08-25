@@ -8,10 +8,10 @@ import java.util.Vector;
  * 
  * @author Valerio Volpi - vale.v@me.com
  */
-public class Observation<P extends SycamoreAbstractPoint>
+public class Observation<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 {
 	private final P								robotPosition;
-	private final Vector<SycamoreRobotLight>	robotLights;
+	private final Vector<SycamoreRobotLight<P>>	robotLights;
 	private final boolean						humanPilot;
 
 	/**
@@ -21,7 +21,7 @@ public class Observation<P extends SycamoreAbstractPoint>
 	 * @param p_types
 	 * @param p_light
 	 */
-	public Observation(final P robotPosition, final Vector<SycamoreRobotLight> robotLights, final boolean humanPilot)
+	public Observation(final P robotPosition, final Vector<SycamoreRobotLight<P>> robotLights, final boolean humanPilot)
 	{
 		this.robotPosition = robotPosition;
 		this.robotLights = robotLights;
@@ -39,7 +39,7 @@ public class Observation<P extends SycamoreAbstractPoint>
 	/**
 	 * @return
 	 */
-	public Iterator<SycamoreRobotLight> getLightsIterator()
+	public Iterator<SycamoreRobotLight<P>> getLightsIterator()
 	{
 		return robotLights.iterator();
 	}
