@@ -35,11 +35,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 {
 	private enum TotalStaticAgreementProperties implements SycamoreProperty
 	{
-		TRANSLATION_X("Translation X", "" + 0.0), 
-		TRANSLATION_Y("Translation Y", "" + 0.0), 
-		SCALE_X("Scale X", "" + 1.0), 
-		SCALE_Y("Scale Y", "" + 1.0), 
-		ROTATION("Rotation", "" + 0.0);
+		TRANSLATION_X("Translation X", "" + 0.0), TRANSLATION_Y("Translation Y", "" + 0.0), SCALE_X("Scale X", "" + 1.0), SCALE_Y("Scale Y", "" + 1.0), ROTATION("Rotation", "" + 0.0);
 
 		private String	description		= null;
 		private String	defaultValue	= null;
@@ -79,7 +75,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 	// node is static because it is the same for all the robots
 	private static Node							axesNode		= new Node("Axes node");
 
-	private TotalStaticAgreementSettingPanel	panel_settings	= null;
+	private TotalAgreementStatic2DSettingPanel	panel_settings	= null;
 
 	/**
 	 * Default constructor
@@ -131,7 +127,14 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
 
-		computeTransform().transform(sourcePoint, destPoint);
+		try
+		{
+			computeTransform().inverseTransform(sourcePoint, destPoint);
+		}
+		catch (NoninvertibleTransformException e)
+		{
+			e.printStackTrace();
+		}
 
 		return SycamoreUtil.convertPoint2D(destPoint);
 	}
@@ -148,16 +151,9 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 	{
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
-		
-		try
-		{
-			computeTransform().inverseTransform(sourcePoint, destPoint);
-		}
-		catch (NoninvertibleTransformException e)
-		{
-			e.printStackTrace();
-		}
-		
+
+		computeTransform().transform(sourcePoint, destPoint);
+
 		return SycamoreUtil.convertPoint2D(destPoint);
 	}
 
@@ -222,7 +218,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 		{
 			translationX = Double.parseDouble(TotalStaticAgreementProperties.TRANSLATION_X.getDefaultValue());
 		}
-		
+
 		return translationX;
 	}
 
@@ -245,7 +241,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 		{
 			translationY = Double.parseDouble(TotalStaticAgreementProperties.TRANSLATION_Y.getDefaultValue());
 		}
-		
+
 		return translationY;
 	}
 
@@ -268,7 +264,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 		{
 			scaleX = Double.parseDouble(TotalStaticAgreementProperties.SCALE_X.getDefaultValue());
 		}
-		
+
 		return scaleX;
 	}
 
@@ -291,7 +287,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 		{
 			scaleY = Double.parseDouble(TotalStaticAgreementProperties.SCALE_Y.getDefaultValue());
 		}
-		
+
 		return scaleY;
 	}
 
@@ -314,7 +310,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 		{
 			rotation = Double.parseDouble(TotalStaticAgreementProperties.ROTATION.getDefaultValue());
 		}
-		
+
 		return rotation;
 	}
 
@@ -392,17 +388,80 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 	{
 		if (panel_settings == null)
 		{
-			panel_settings = new TotalStaticAgreementSettingPanel();
+			panel_settings = new TotalAgreementStatic2DSettingPanel();
 		}
 		return panel_settings;
 	}
-	
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.plugins.agreements.Agreement#setOwner(it.diunipi.volpi.sycamore.model.SycamoreRobot)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.plugins.agreements.Agreement#setOwner(it.diunipi.volpi.sycamore
+	 * .model.SycamoreRobot)
 	 */
 	@Override
 	public void setOwner(SycamoreRobot<Point2D> owner)
 	{
 		// Nothing to do
+	}
+
+	public static void main(String[] args)
+	{
+		TotalAgreementStatic2D agreement = new TotalAgreementStatic2D();
+
+		TotalAgreementStatic2D.setTranslationX(1);
+		TotalAgreementStatic2D.setTranslationY(1);
+		TotalAgreementStatic2D.setScaleX(1);
+		TotalAgreementStatic2D.setScaleY(1);
+		TotalAgreementStatic2D.setRotation(0);
+
+		Point2D p1 = new Point2D(0, 0);
+		Point2D p2 = agreement.toLocalCoordinates(p1);
+		Point2D p3 = agreement.toGlobalCoordinates(p2);
+
+		System.out.println(p1 + " expressed in global coordinates");
+		System.out.println("local: " + p2 + " -> global: " + p3);
+		System.out.println();
+		
+		p1 = new Point2D(1, 0);
+		p2 = agreement.toLocalCoordinates(p1);
+		p3 = agreement.toGlobalCoordinates(p2);
+
+		System.out.println(p1 + " expressed in global coordinates");
+		System.out.println("local: " + p2 + " -> global: " + p3);
+		System.out.println();
+		
+		p1 = new Point2D(0, 1);
+		p2 = agreement.toLocalCoordinates(p1);
+		p3 = agreement.toGlobalCoordinates(p2);
+
+		System.out.println(p1 + " expressed in global coordinates");
+		System.out.println("local: " + p2 + " -> global: " + p3);
+		System.out.println();
+		
+		p1 = new Point2D(0, 0);
+		p2 = agreement.toGlobalCoordinates(p1);
+		p3 = agreement.toLocalCoordinates(p2);
+
+		System.out.println(p1 + " expressed in local coordinates");
+		System.out.println("global: " + p2 + " -> local: " + p3);
+		System.out.println();
+		
+		p1 = new Point2D(1, 0);
+		p2 = agreement.toGlobalCoordinates(p1);
+		p3 = agreement.toLocalCoordinates(p2);
+
+		System.out.println(p1 + " expressed in local coordinates");
+		System.out.println("global: " + p2 + " -> local: " + p3);
+		System.out.println();
+		
+		p1 = new Point2D(0, 1);
+		p2 = agreement.toGlobalCoordinates(p1);
+		p3 = agreement.toLocalCoordinates(p2);
+
+		System.out.println(p1 + " expressed in local coordinates");
+		System.out.println("global: " + p2 + " -> local: " + p3);
+		System.out.println();
 	}
 }
