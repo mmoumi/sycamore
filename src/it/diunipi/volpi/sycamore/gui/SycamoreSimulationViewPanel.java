@@ -1,9 +1,9 @@
 package it.diunipi.volpi.sycamore.gui;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.jmescene.SycamoreJMESceneCanvasPanel;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 
 import java.awt.Color;

@@ -4,7 +4,7 @@ import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine2D;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine3D;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 
 import java.awt.Dimension;
