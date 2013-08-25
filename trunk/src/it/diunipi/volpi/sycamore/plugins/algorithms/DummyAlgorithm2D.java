@@ -25,7 +25,7 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 {
 	private final Vector<Point2D>	points	= new Vector<Point2D>();
 	private int						count	= 0;
-	private static final int		ROUNDS	= 6;
+	private static final int		ROUNDS	= 12;
 
 	/**
 	 * Default constructor.
