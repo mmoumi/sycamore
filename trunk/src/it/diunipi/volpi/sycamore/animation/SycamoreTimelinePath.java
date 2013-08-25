@@ -1,6 +1,6 @@
 package it.diunipi.volpi.sycamore.animation;
 
-import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 
 import java.util.Vector;
 
