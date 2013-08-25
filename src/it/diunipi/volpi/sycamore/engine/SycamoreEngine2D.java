@@ -4,9 +4,6 @@
 package it.diunipi.volpi.sycamore.engine;
 
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.model.Point2D;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot2D;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.agreements.AgreementImpl;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;

@@ -1,11 +1,6 @@
 package it.diunipi.volpi.sycamore.engine;
 
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.model.ComputablePoint;
-import it.diunipi.volpi.sycamore.model.Observation;
-import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot;
-import it.diunipi.volpi.sycamore.model.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.plugins.humanpilot.HumanPilotScheduler;
