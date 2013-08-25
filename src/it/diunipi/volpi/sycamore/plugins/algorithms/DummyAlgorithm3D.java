@@ -1,28 +1,52 @@
 package it.diunipi.volpi.sycamore.plugins.algorithms;
 
+import it.diunipi.volpi.sycamore.engine.Observation;
+import it.diunipi.volpi.sycamore.engine.Point3D;
+import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
+import it.diunipi.volpi.sycamore.engine.TooManyLightsException;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
-import it.diunipi.volpi.sycamore.model.Observation;
-import it.diunipi.volpi.sycamore.model.Point3D;
-import it.diunipi.volpi.sycamore.model.SycamoreObservedRobot;
-import it.diunipi.volpi.sycamore.plugins.memory.Memory;
-import it.diunipi.volpi.sycamore.plugins.memory.RequestedDataNotInMemoryException;
+import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.Vector;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
+import com.jme3.math.ColorRGBA;
+
 /**
- * A dummy 3D algorithm. It makes the robots perform simple and predefinite movements for the purpose
- * of testing.
+ * A dummy 3D algorithm. It makes the robots perform simple and predefinite movements for the
+ * purpose of testing.
  * 
  * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class DummyAlgorithm3D extends AlgorithmImpl<Point3D>
 {
-	private int	roundCounter	= 0;
-	private int	roundsTotal		= 10;
+	private final Vector<Point3D>	points	= new Vector<Point3D>();
+	private int						count	= 0;
+	private static final int		ROUNDS	= 11;
+
+	/**
+	 * Default constructor.
+	 */
+	public DummyAlgorithm3D()
+	{
+		for (int i = 0; i < ROUNDS; i++)
+		{
+			points.add(new Point3D(0, 0, 0));
+			points.add(SycamoreUtil.getRandomPoint3D(-10, 10, -10, 10, -10, 10));
+			points.add(new Point3D(3, 0, 0));
+			points.add(new Point3D(0, 0, 0));
+			points.add(SycamoreUtil.getRandomPoint3D(-10, 10, -10, 10, -10, 10));
+			points.add(new Point3D(0, 3, 0));
+			points.add(new Point3D(0, 0, 0));
+			points.add(SycamoreUtil.getRandomPoint3D(-10, 10, -10, 10, -10, 10));
+			points.add(new Point3D(0, 0, 3));
+			points.add(new Point3D(0, 0, 0));
+			points.add(SycamoreUtil.getRandomPoint3D(-10, 10, -10, 10, -10, 10));
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -88,36 +112,27 @@ public class DummyAlgorithm3D extends AlgorithmImpl<Point3D>
 	@Override
 	public Point3D compute(Vector<Observation<Point3D>> observations, SycamoreObservedRobot<Point3D> callee)
 	{
-		int multiplier = (roundCounter % 2 == 0 ? 1 : -2);
-		int pos = roundCounter * multiplier;
-		Point3D ret = new Point3D(pos, pos, pos);
-
-		roundCounter++;
-		if (roundCounter == roundsTotal)
+		if (count < ROUNDS)
 		{
+			Point3D ret = points.elementAt(count);
+			count++;
+
+			return ret;
+		}
+		else
+		{
+			try
+			{
+				callee.turnLightOn(ColorRGBA.Yellow);
+			}
+			catch (TooManyLightsException e)
+			{
+				e.printStackTrace();
+			}
+
 			setFinished(true);
 			return null;
 		}
-
-		// print memory
-		Memory<Point3D> memory = callee.getMemory();
-		if (memory != null)
-		{
-			for (int i = 0; i < memory.getMemoryLimit(); i++)
-			{
-				try
-				{
-					System.out.println("PAST POS " + i + ": " + memory.getPastSelfPosition(i));
-					System.out.println("PAST SNAP " + i + ": " + memory.getPastSnapshot(i));
-				}
-				catch (RequestedDataNotInMemoryException e)
-				{
-					System.out.println("Memory does not contain step " + i);
-				}
-			}
-		}
-
-		return ret;
 	}
 
 	/*
@@ -129,7 +144,7 @@ public class DummyAlgorithm3D extends AlgorithmImpl<Point3D>
 	public void reset()
 	{
 		super.reset();
-		roundCounter = 0;
+		count = 0;
 
 	}
 

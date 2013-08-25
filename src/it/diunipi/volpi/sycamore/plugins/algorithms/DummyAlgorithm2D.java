@@ -1,11 +1,11 @@
 package it.diunipi.volpi.sycamore.plugins.algorithms;
 
+import it.diunipi.volpi.sycamore.engine.Observation;
+import it.diunipi.volpi.sycamore.engine.Point2D;
+import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
+import it.diunipi.volpi.sycamore.engine.TooManyLightsException;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
-import it.diunipi.volpi.sycamore.model.Observation;
-import it.diunipi.volpi.sycamore.model.Point2D;
-import it.diunipi.volpi.sycamore.model.SycamoreObservedRobot;
-import it.diunipi.volpi.sycamore.model.TooManyLightsException;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.Vector;
@@ -32,9 +32,7 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 	 */
 	public DummyAlgorithm2D()
 	{
-		int steps = ROUNDS / 3;
-		
-		for (int i = 0; i < steps; i++)
+		for (int i = 0; i < ROUNDS; i++)
 		{
 			points.add(new Point2D(0, 0));
 			points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
