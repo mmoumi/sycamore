@@ -1,7 +1,7 @@
 package it.diunipi.volpi.sycamore.animation;
 
-import it.diunipi.volpi.sycamore.model.ComputablePoint;
-import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.engine.ComputablePoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 
 /**
  * This class represents a generic animated object. Any animated object has its own timeline and
