@@ -3,9 +3,9 @@
  */
 package it.diunipi.volpi.sycamore.gui;
 
+import it.diunipi.volpi.sycamore.engine.NNotKnownException;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.jmescene.SycamoreJMEScene;
-import it.diunipi.volpi.sycamore.model.NNotKnownException;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.humanpilot.SycamoreHumanPilotSchedulerThread;
 import it.diunipi.volpi.sycamore.plugins.initialconditions.InitialConditions;
