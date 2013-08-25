@@ -18,6 +18,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
+import com.jme3.material.RenderState.FaceCullMode;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
@@ -49,6 +50,7 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 				mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 				mat.getAdditionalRenderState().setAlphaTest(true);
 				mat.getAdditionalRenderState().setAlphaFallOff(0);
+				mat.getAdditionalRenderState().setFaceCullMode(FaceCullMode.Off);
 
 				Texture skyTexture = SycamoreSystem.getAssetManager().loadTexture("it/diunipi/volpi/sycamore/resources/textures/circle.png");
 				mat.setTexture("ColorMap", skyTexture);

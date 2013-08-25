@@ -18,6 +18,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import com.jme3.bounding.BoundingSphere;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
+import com.jme3.material.RenderState.FaceCullMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
@@ -50,6 +51,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 				mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 				mat.getAdditionalRenderState().setAlphaTest(true);
 				mat.getAdditionalRenderState().setAlphaFallOff(0);
+				mat.getAdditionalRenderState().setFaceCullMode(FaceCullMode.Off);
 				mat.setBoolean("UseMaterialColors", true);
 				mat.setColor("Ambient", color);
 				mat.setColor("Diffuse", color);
