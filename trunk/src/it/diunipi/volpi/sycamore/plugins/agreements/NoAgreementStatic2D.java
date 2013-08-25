@@ -36,8 +36,8 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 
 	private double translationX = SycamoreUtil.getRandomDouble(-2.0, 2.0);
 	private double translationY = SycamoreUtil.getRandomDouble(-2.0, 2.0);
-	private double scaleX = SycamoreUtil.getRandomDouble(0.2, 1.0);
-	private double scaleY = SycamoreUtil.getRandomDouble(0.2, 1.0);
+	private double scaleX = (SycamoreUtil.getRandomBoolan() ? 1 : -1);
+	private double scaleY = (SycamoreUtil.getRandomBoolan() ? 1 : -1); 
 	private double rotation = SycamoreUtil.getRandomDouble(0, 365);
 	
 	/**
@@ -90,8 +90,15 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
 
-		computeTransform().transform(sourcePoint, destPoint);
-
+		try
+		{
+			computeTransform().inverseTransform(sourcePoint, destPoint);
+		}
+		catch (NoninvertibleTransformException e)
+		{
+			e.printStackTrace();
+		}
+		
 		return SycamoreUtil.convertPoint2D(destPoint);
 	}
 
@@ -108,14 +115,7 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
 
-		try
-		{
-			computeTransform().inverseTransform(sourcePoint, destPoint);
-		}
-		catch (NoninvertibleTransformException e)
-		{
-			e.printStackTrace();
-		}
+		computeTransform().transform(sourcePoint, destPoint);
 
 		return SycamoreUtil.convertPoint2D(destPoint);
 	}
@@ -244,5 +244,36 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 	public void setOwner(SycamoreRobot<Point2D> owner)
 	{
 		// Nothing to do
+	}
+	
+	public static void main(String[] args)
+	{
+		NoAgreementStatic2D agreement1 = new NoAgreementStatic2D();
+		NoAgreementStatic2D agreement2 = new NoAgreementStatic2D();
+
+		Point2D p1 = new Point2D(0, 0);
+		Point2D p2 = agreement1.toGlobalCoordinates(p1);
+		Point2D p3 = agreement2.toLocalCoordinates(p2);
+		Point2D p4 = agreement2.toGlobalCoordinates(p3);
+
+		System.out.println(p1 + " expressed in local coordinates with agreement 1");
+		System.out.println("global (agr1): " + p2 + " -> local (agr2): " + p3 + " -> global (agr2): " + p4);
+		System.out.println();
+		
+		p1 = new Point2D(1, 0);
+		p2 = agreement1.toGlobalCoordinates(p1);
+		p3 = agreement2.toLocalCoordinates(p2);
+
+		System.out.println(p1 + " expressed in local coordinates");
+		System.out.println("global: " + p2 + " -> local: " + p3);
+		System.out.println();
+		
+		p1 = new Point2D(0, 1);
+		p2 = agreement1.toGlobalCoordinates(p1);
+		p3 = agreement2.toLocalCoordinates(p2);
+
+		System.out.println(p1 + " expressed in local coordinates");
+		System.out.println("global: " + p2 + " -> local: " + p3);
+		System.out.println();
 	}
 }

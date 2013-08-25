@@ -612,8 +612,6 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	@Override
 	public void simpleInitApp()
 	{
-		SycamoreSystem.setAssetManager(assetManager);
-
 		// init settings of the app
 		initSettings();
 
@@ -692,7 +690,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 			translation = agreement.getLocalTranslation();
 			scale = agreement.getLocalScale();
 			rotation = agreement.getLocalRotation();
-			
+
 			robotNode.setLocalRotation(rotation);
 			robotNode.setLocalScale(scale);
 			robotNode.setLocalTranslation(translation);
@@ -827,6 +825,12 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 			public Object call() throws Exception
 			{
 				robotsNode.detachChild(robot.getRobotNode());
+				
+				Agreement agreement = robot.getAgreement();
+				if (agreement != null && !agreement.isDynamic())
+				{
+					localAxesNode.detachChild(agreement.getAxesNode());
+				}
 				return null;
 			}
 		});
