@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.renderer.RenderManager;
 
 /**
  * This class represents the system and contains all data that is accessible everywhere
@@ -36,7 +37,6 @@ public class SycamoreSystem
 	public static float									schedulerFrequency			= 1.0f / 640.0f;
 
 	private static File									workspace					= null;
-	private static AssetManager							assetManager				= null;
 	private static Level								loggerLevel					= Level.SEVERE;
 
 	private static SycamoreEngine						engine						= null;
@@ -136,14 +136,13 @@ public class SycamoreSystem
 	{
 		return schedulerGuiSynchronizer;
 	}
-
+	
 	/**
-	 * @param assetManager
-	 *            the assetManager to set
+	 * @return
 	 */
-	public static void setAssetManager(AssetManager assetManager)
+	public static RenderManager getRenderManager()
 	{
-		SycamoreSystem.assetManager = assetManager;
+		return jmeSceneManager.getRenderManager();
 	}
 
 	/**
@@ -151,7 +150,7 @@ public class SycamoreSystem
 	 */
 	public static AssetManager getAssetManager()
 	{
-		return assetManager;
+		return jmeSceneManager.getAssetManager();
 	}
 
 	/**
@@ -201,7 +200,10 @@ public class SycamoreSystem
 	 */
 	public static void enqueueToJME(Callable<Object> callable)
 	{
-		jmeSceneManager.enqueue(callable);
+		if (jmeSceneManager != null)
+		{
+			jmeSceneManager.enqueue(callable);
+		}
 	}
 
 	/**
@@ -371,7 +373,7 @@ public class SycamoreSystem
 	 */
 	public static boolean isAxesVisible()
 	{
-		 return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.AXES_VISIBLE.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.AXES_VISIBLE.name());
 	}
 
 	/**
@@ -388,7 +390,7 @@ public class SycamoreSystem
 	 */
 	public static boolean isBaricentrumVisible()
 	{
-	 return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.BARICENTRUM_VISIBLE.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.BARICENTRUM_VISIBLE.name());
 	}
 
 	/**
