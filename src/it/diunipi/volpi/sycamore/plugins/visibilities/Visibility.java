@@ -3,6 +3,7 @@
  */
 package it.diunipi.volpi.sycamore.plugins.visibilities;
 
+import it.diunipi.volpi.sycamore.model.ComputablePoint;
 import it.diunipi.volpi.sycamore.model.Observation;
 import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.plugins.SycamoreTypedPlugin;
@@ -15,7 +16,7 @@ import com.jme3.scene.Geometry;
  * @author Vale
  *
  */
-public interface Visibility<P extends SycamoreAbstractPoint> extends SycamoreTypedPlugin
+public interface Visibility<P extends SycamoreAbstractPoint & ComputablePoint<P>> extends SycamoreTypedPlugin
 {
 	/**
 	 * @param center
