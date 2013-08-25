@@ -1,9 +1,9 @@
 package it.diunipi.volpi.sycamore.jmescene;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
