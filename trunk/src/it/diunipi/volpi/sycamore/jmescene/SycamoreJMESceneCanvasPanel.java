@@ -1,8 +1,8 @@
 package it.diunipi.volpi.sycamore.jmescene;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
-import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 
 import java.awt.BorderLayout;
@@ -27,13 +27,13 @@ import com.jme3.system.JmeCanvasContext;
  */
 public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 {
-	private static final long		serialVersionUID	= 4905756826517506842L;
-	private JmeCanvasContext		context				= null;
-	private Canvas					canvas				= null;
-	private SycamoreJMEScene		scene				= null;
-	private int						width				= 640;
-	private int						height				= 480;
-	private SycamoreEngine			appEngine			= null;
+	private static final long	serialVersionUID	= 4905756826517506842L;
+	private JmeCanvasContext	context				= null;
+	private Canvas				canvas				= null;
+	private SycamoreJMEScene	scene				= null;
+	private int					width				= 640;
+	private int					height				= 480;
+	private SycamoreEngine		appEngine			= null;
 
 	/**
 	 * Default constructor.
@@ -105,7 +105,7 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 			}
 		});
 	}
-	
+
 	/**
 	 * Stop the JME Scene
 	 */
@@ -113,7 +113,7 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	{
 		scene.stop(true);
 	}
-	
+
 	/**
 	 * Reset the JME Scene
 	 */
@@ -137,7 +137,7 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	{
 		scene.removeRobotFromScene(robot);
 	}
-	
+
 	/**
 	 * Put the camera on the origin of the system
 	 */
@@ -145,7 +145,7 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	{
 		scene.cameraOnOrigin();
 	}
-	
+
 	/**
 	 * Put the camera on the baricentrum of the system
 	 */
@@ -173,7 +173,7 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 				fireActionEvent(e);
 			}
 		});
-		
+
 		// setup
 		scene.setPauseOnLostFocus(false);
 		scene.setSettings(settings);
@@ -227,8 +227,12 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 		return appEngine;
 	}
 
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#setAppEngine(it.diunipi.volpi.sycamore.engine.SycamoreEngine)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.gui.SycamorePanel#setAppEngine(it.diunipi.volpi.sycamore.engine
+	 * .SycamoreEngine)
 	 */
 	@Override
 	public void setAppEngine(SycamoreEngine appEngine)
@@ -237,7 +241,9 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 		scene.setAppEngine(appEngine);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#updateGui()
 	 */
 	@Override
@@ -285,7 +291,7 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	{
 		scene.setBaricentrumVisible(visible);
 	}
-	
+
 	/**
 	 * Shows/ hides the local coordinates axes in the JME scene
 	 * 
@@ -303,7 +309,7 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	{
 		scene.manageAgreementChange();
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -311,8 +317,10 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	{
 		scene.updateAgreementsGraphics();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
 	 */
 	@Override

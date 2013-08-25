@@ -29,8 +29,8 @@ package it.diunipi.volpi.sycamore.jmescene;
 import it.diunipi.volpi.sycamore.engine.Point2D;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
-import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
@@ -42,6 +42,8 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
+
+import javax.swing.JOptionPane;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.ChaseCamera;
@@ -640,6 +642,27 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see com.jme3.app.Application#handleError(java.lang.String, java.lang.Throwable)
+	 */
+	@Override
+	public void handleError(String errMsg, Throwable t)
+	{
+		super.handleError(errMsg, t);
+		
+		String pt1 = "<html><body><p>Error. Unable to create 3D scene.<br>";
+		String pt2 = "Please, check that your machine meets the minimum system requirements<br>";
+		String pt3 = "and that OpenGL acceleration is enabled.<br>";
+		String pt4 = "If you need some support you can check <a href='http://code.google.com/p/sycamore'>http://code.google.com/p/sycamore</a></p></body></html>"; 
+
+		String s = pt1 + pt2 + pt3 + pt4;
+		
+		JOptionPane.showMessageDialog(null, s, "Unable to create 3D scene", JOptionPane.ERROR_MESSAGE);
+		System.exit(-1);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jme3.app.SimpleApplication#simpleUpdate(float)
 	 */
 	@Override
@@ -679,14 +702,14 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		Vector3f position = robot.getLocalPosition().toVector3f();
 
 		Node robotNode = robot.getRobotNode();
-		
+
 		Agreement agreement = robot.getAgreement();
 		if (agreement != null)
 		{
 			Vector3f translation = Vector3f.ZERO;
 			Vector3f scale = new Vector3f(1, 1, 1);
 			Quaternion rotation = Quaternion.ZERO;
-			
+
 			translation = agreement.getLocalTranslation();
 			scale = agreement.getLocalScale();
 			rotation = agreement.getLocalRotation();
@@ -694,7 +717,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 			robotNode.setLocalRotation(rotation);
 			robotNode.setLocalScale(scale);
 			robotNode.setLocalTranslation(translation);
-			
+
 			Transform transform = robotNode.getLocalTransform();
 			Transform positionTransform = new Transform(position);
 
@@ -705,7 +728,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		{
 			robotNode.setLocalTranslation(position);
 		}
-		
+
 		robotNode.updateLogicalState(tpf);
 		robotNode.updateGeometricState();
 
@@ -825,7 +848,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 			public Object call() throws Exception
 			{
 				robotsNode.detachChild(robot.getRobotNode());
-				
+
 				Agreement agreement = robot.getAgreement();
 				if (agreement != null && !agreement.isDynamic())
 				{
