@@ -120,7 +120,7 @@ public class SycamoreWorkspaceSelectionPanel extends JPanel
 			text_description.setMargin(new Insets(2, 2, 2, 2));
 			text_description.setOpaque(false);
 			text_description
-					.setText("Before starting, it is required that you choose a workspace directory. The workspace is the place where the files that Sycamore needs to ork are stored. The workspace contains plugins, preferences and more inportant files. You will be able to change the workspace at any time by using the \"Switch workspace\" menu.");
+					.setText("Before starting, it is required that you choose a workspace directory. The workspace is the place where the files that Sycamore needs to work are stored. The workspace contains plugins, preferences and more inportant files. You will be able to change the workspace at any time by using the \"Switch workspace\" menu.");
 		}
 		return text_description;
 	}
