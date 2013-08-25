@@ -3,10 +3,10 @@
  */
 package it.diunipi.volpi.sycamore.util;
 
-import it.diunipi.volpi.sycamore.model.ComputablePoint;
-import it.diunipi.volpi.sycamore.model.Point2D;
-import it.diunipi.volpi.sycamore.model.Point3D;
-import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.engine.ComputablePoint;
+import it.diunipi.volpi.sycamore.engine.Point2D;
+import it.diunipi.volpi.sycamore.engine.Point3D;
+import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 
 import java.awt.Color;
 import java.awt.geom.Line2D;
@@ -26,6 +26,8 @@ import java.util.Set;
 import java.util.Vector;
 
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
 
 /**
  * @author Valerio Volpi - volpiv@cli.di.unipi.it
@@ -557,5 +559,22 @@ public class SycamoreUtil
 		}
 
 		return false;
+	}
+
+	/**
+	 * @return
+	 */
+	public static boolean getRandomBoolan()
+	{
+		return new Random().nextBoolean();
+	}
+
+	/**
+	 * @param scale
+	 * @return
+	 */
+	public static Vector3f vectorAbs(Vector3f vec)
+	{
+		return new Vector3f(FastMath.abs(vec.x), FastMath.abs(vec.y), FastMath.abs(vec.z));
 	}
 }
