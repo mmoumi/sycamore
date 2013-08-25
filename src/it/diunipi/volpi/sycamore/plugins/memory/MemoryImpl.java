@@ -3,9 +3,9 @@
  */
 package it.diunipi.volpi.sycamore.plugins.memory;
 
+import it.diunipi.volpi.sycamore.engine.ComputablePoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
-import it.diunipi.volpi.sycamore.model.ComputablePoint;
-import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
 
 /**
  * @author Vale

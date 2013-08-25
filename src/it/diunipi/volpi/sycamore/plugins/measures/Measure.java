@@ -1,6 +1,6 @@
 package it.diunipi.volpi.sycamore.plugins.measures;
 
-import it.diunipi.volpi.sycamore.model.SycamoreRobot;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.plugins.SycamorePlugin;
 
 

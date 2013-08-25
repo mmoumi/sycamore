@@ -1,7 +1,7 @@
 package it.diunipi.volpi.sycamore.plugins.schedulers;
 
-import it.diunipi.volpi.sycamore.model.ComputablePoint;
-import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.engine.ComputablePoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.plugins.SycamorePlugin;
 
 public interface Scheduler<P extends SycamoreAbstractPoint & ComputablePoint<P>> extends SycamorePlugin

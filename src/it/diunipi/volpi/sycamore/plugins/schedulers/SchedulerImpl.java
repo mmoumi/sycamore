@@ -1,11 +1,11 @@
 package it.diunipi.volpi.sycamore.plugins.schedulers;
 
+import it.diunipi.volpi.sycamore.engine.ComputablePoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot.ROBOT_STATE;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.model.ComputablePoint;
-import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot;
-import it.diunipi.volpi.sycamore.model.SycamoreRobot.ROBOT_STATE;
 
 import java.util.Iterator;
 import java.util.Vector;

@@ -3,9 +3,9 @@
  */
 package it.diunipi.volpi.sycamore.plugins.visibilities;
 
+import it.diunipi.volpi.sycamore.engine.ComputablePoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
-import it.diunipi.volpi.sycamore.model.ComputablePoint;
-import it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 
@@ -58,7 +58,7 @@ public abstract class VisibilityImpl<P extends SycamoreAbstractPoint & Computabl
 	public static float getVisibilityRange()
 	{
 		float size = PropertyManager.getSharedInstance().getFloatProperty(VisibilityProperties.VISIBILITY_RANGE_SIZE.name());
-		if (size < 0)
+		if (Float.isInfinite(size))
 		{
 			size = Float.parseFloat(VisibilityProperties.VISIBILITY_RANGE_SIZE.getDefaultValue());
 		}
