@@ -25,26 +25,25 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 {
 	private final Vector<Point2D>	points	= new Vector<Point2D>();
 	private int						count	= 0;
-	private static final int		ROUNDS	= 10000;
+	private static final int		ROUNDS	= 6;
 
 	/**
 	 * Default constructor.
 	 */
 	public DummyAlgorithm2D()
 	{
-		points.add(new Point2D(0, 0));
-		points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
-		points.add(new Point2D(3, 0));
-		points.add(new Point2D(0, 0));
-		points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
-		points.add(new Point2D(0, 3));
-		points.add(new Point2D(0, 0));
-		points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
-
-		for (int i = 0; i < ROUNDS; i++)
+		int steps = ROUNDS / 3;
+		
+		for (int i = 0; i < steps; i++)
 		{
-			Point2D point = (i % 2 == 0 ? new Point2D(0, 0) : SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
-			points.add(point);
+			points.add(new Point2D(0, 0));
+			points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
+			points.add(new Point2D(3, 0));
+			points.add(new Point2D(0, 0));
+			points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
+			points.add(new Point2D(0, 3));
+			points.add(new Point2D(0, 0));
+			points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
 		}
 	}
 

@@ -36,6 +36,15 @@ public class SycamoreRobot3D extends SycamoreRobot<Point3D>
 	{
 		super(engine, startingPosition, color, maxLights);
 	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.model.SycamoreRobot#createNewLightInstance()
+	 */
+	@Override
+	protected SycamoreRobotLight<Point3D> createNewLightInstance()
+	{
+		return new SycamoreRobotLight3D(glassColor, getNewLightGeometry(glassColor));
+	}
 
 	/*
 	 * (non-Javadoc)
