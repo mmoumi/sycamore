@@ -244,4 +244,12 @@ public class PropertyManager
 		return sharedInstance;
 	}
 
+	/**
+	 * @return
+	 */
+	public String getPropertyFilePath()
+	{
+		return propertyPath + propertyFileName;
+	}
+
 }

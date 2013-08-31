@@ -1,7 +1,9 @@
 package it.diunipi.volpi.app.sycamore.osx;
 
 import it.diunipi.volpi.app.sycamore.SycamoreMenuBar;
+import it.diunipi.volpi.sycamore.gui.SycamoreInfoPanel;
 
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 
 import com.apple.eawt.AppEvent.AboutEvent;
@@ -85,7 +87,7 @@ public class SycamoreMenuBarOSX extends SycamoreMenuBar
 			@Override
 			public void handlePreferences(PreferencesEvent arg0)
 			{
-				System.out.println("Preferences clicked");
+				
 			}
 		});
 	}
@@ -102,7 +104,7 @@ public class SycamoreMenuBarOSX extends SycamoreMenuBar
 			@Override
 			public void handleAbout(AboutEvent arg0)
 			{
-				System.out.println("About clicked");
+				JOptionPane.showMessageDialog(null, new SycamoreInfoPanel());
 			}
 		});
 	}
