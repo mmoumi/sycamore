@@ -3,6 +3,7 @@ package it.diunipi.volpi.app.sycamore.osx;
 import it.diunipi.volpi.app.sycamore.SycamoreMenuBar;
 import it.diunipi.volpi.sycamore.gui.SycamoreInfoPanel;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 
@@ -104,7 +105,8 @@ public class SycamoreMenuBarOSX extends SycamoreMenuBar
 			@Override
 			public void handleAbout(AboutEvent arg0)
 			{
-				JOptionPane.showMessageDialog(null, new SycamoreInfoPanel());
+				ImageIcon icon = new ImageIcon(getClass().getResource("/it/diunipi/volpi/sycamore/resources/sycamore_64x64.png"));
+				JOptionPane.showMessageDialog(null, new SycamoreInfoPanel(), "About Sycamore", JOptionPane.INFORMATION_MESSAGE, icon);
 			}
 		});
 	}
