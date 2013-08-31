@@ -38,12 +38,16 @@ import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
+
+import org.lwjgl.Sys;
+import org.lwjgl.opengl.GL11;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.ChaseCamera;
@@ -132,6 +136,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	private BillboardControl						billboardControl	= null;
 	private Geometry								grid				= null;
 
+	private HashMap<String, String>					caps				= null;
 	private Vector<java.awt.event.ActionListener>	listeners			= null;
 
 	/**
@@ -141,6 +146,40 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	{
 		this.listeners = new Vector<java.awt.event.ActionListener>();
 		SycamoreSystem.setJmeSceneManager(this);
+		
+		setupSystemCaps();
+	}
+	
+	/**
+	 * 
+	 */
+	private void setupSystemCaps()
+	{
+		this.caps = new HashMap<String, String>();
+		this.enqueue(new Callable<Object>()
+		{
+			/* (non-Javadoc)
+			 * @see java.util.concurrent.Callable#call()
+			 */
+			@Override
+			public Object call() throws Exception
+			{
+				caps.put("txt_opengl_version", GL11.glGetString(GL11.GL_VERSION));
+				caps.put("txt_gfx_vendor", GL11.glGetString(GL11.GL_VENDOR));
+				caps.put("txt_renderer", GL11.glGetString(GL11.GL_RENDERER));
+				caps.put("txt_lwjgl_version", Sys.getVersion());
+				
+				return null;
+			}
+		});
+	}
+	
+	/**
+	 * @return the caps
+	 */
+	public HashMap<String, String> getCaps()
+	{
+		return caps;
 	}
 
 	/**
@@ -648,14 +687,14 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	public void handleError(String errMsg, Throwable t)
 	{
 		super.handleError(errMsg, t);
-		
+
 		String pt1 = "<html><body><p>Error. Unable to create 3D scene.<br>";
 		String pt2 = "Please, check that your machine meets the minimum system requirements<br>";
 		String pt3 = "and that OpenGL acceleration is enabled.<br>";
-		String pt4 = "If you need some support you can check <a href='http://code.google.com/p/sycamore'>http://code.google.com/p/sycamore</a></p></body></html>"; 
+		String pt4 = "If you need some support you can check <a href='http://code.google.com/p/sycamore'>http://code.google.com/p/sycamore</a></p></body></html>";
 
 		String s = pt1 + pt2 + pt3 + pt4;
-		
+
 		JOptionPane.showMessageDialog(null, s, "Unable to create 3D scene", JOptionPane.ERROR_MESSAGE);
 		System.exit(-1);
 	}

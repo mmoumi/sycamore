@@ -17,6 +17,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.AbstractButton;
 import javax.swing.JFrame;
@@ -295,5 +299,38 @@ public abstract class SycamoreApp extends JFrame
 	{
 		SycamoreSystem.reset();
 		getSycamoreMainPanel().reset();
+	}
+
+	/**
+	 * @return
+	 */
+	public static String getVersion()
+	{
+		return "2.0 beta 2";
+	}
+
+	/**
+	 * @return
+	 */
+	public static String getBuildNumber()
+	{
+		return "20130827";
+	}
+
+	/**
+	 * @return
+	 */
+	public static Date getBuildDate()
+	{
+		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+		try
+		{
+			return format.parse("27/08/2013");
+		}
+		catch (ParseException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

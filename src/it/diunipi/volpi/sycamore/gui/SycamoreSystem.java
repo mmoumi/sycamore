@@ -16,6 +16,7 @@ import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +25,7 @@ import javax.swing.JFrame;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.renderer.RenderManager;
+import com.jme3.system.JmeContext;
 
 /**
  * This class represents the system and contains all data that is accessible everywhere
@@ -151,6 +153,22 @@ public class SycamoreSystem
 	public static AssetManager getAssetManager()
 	{
 		return jmeSceneManager.getAssetManager();
+	}
+	
+	/**
+	 * @return
+	 */
+	public static HashMap<String, String> getSystemCaps()
+	{
+		return jmeSceneManager.getCaps();
+	}
+	
+	/**
+	 * @return
+	 */
+	public static JmeContext getContext()
+	{
+		return jmeSceneManager.getContext();
 	}
 
 	/**
