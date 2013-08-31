@@ -110,8 +110,9 @@ public class SycamoreSplashScreen extends JWindow
 	{
 		if (label_icon == null)
 		{
-			label_icon = new JLabel("Sycamore");
-			label_icon.setFont(new Font("Lucida Grande", Font.ITALIC, 64));
+			label_icon = new JLabel();
+			label_icon.setOpaque(false);
+			label_icon.setIcon(new ImageIcon(getClass().getResource("/it/diunipi/volpi/sycamore/resources/splash.png")));
 		}
 		return label_icon;
 	}
