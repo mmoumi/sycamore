@@ -35,7 +35,6 @@ import com.jme3.system.JmeContext;
 public class SycamoreSystem
 {
 	private static final Object							schedulerGuiSynchronizer	= new Object();
-	public static final float							DEFAULT_ROBOT_SPEED			= 0.1f;
 	public static float									schedulerFrequency			= 1.0f / 640.0f;
 
 	private static File									workspace					= null;
@@ -46,8 +45,6 @@ public class SycamoreSystem
 	private static SycamoreHumanPilotSchedulerThread	humanPilotSchedulerThread	= null;
 	private static SycamoreJMEScene						jmeSceneManager				= null;
 	private static JFrame								mainFrame					= null;
-
-	private static final float							epsilon						= 0.001f;
 
 	private static Visibility							visibility					= null;
 	private static Agreement							agreement					= null;
@@ -263,7 +260,7 @@ public class SycamoreSystem
 	 */
 	public static float getEpsilon()
 	{
-		return epsilon;
+		return PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.EPSILON.name());
 	}
 
 	/**

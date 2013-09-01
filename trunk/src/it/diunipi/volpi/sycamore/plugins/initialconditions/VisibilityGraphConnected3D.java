@@ -9,6 +9,8 @@ import it.diunipi.volpi.sycamore.engine.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
+import it.diunipi.volpi.sycamore.util.ApplicationProperties;
+import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.Iterator;
@@ -55,7 +57,15 @@ public class VisibilityGraphConnected3D extends InitialConditionsImpl<Point3D>
 			}
 		}
 
-		return SycamoreUtil.getRandomPoint3D(-5, 5, -5, 5, -5, 5);
+		int minX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_X.name());
+		int maxX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_X.name());
+		int minY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Y.name());
+		int maxY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Y.name());
+		int minZ = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Z.name());
+		int maxZ = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Z.name());
+
+		
+		return SycamoreUtil.getRandomPoint3D(minX, maxX, minY, maxY, minZ, maxZ);
 	}
 
 	/*

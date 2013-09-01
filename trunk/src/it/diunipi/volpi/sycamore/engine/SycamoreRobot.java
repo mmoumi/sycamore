@@ -9,6 +9,8 @@ import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.plugins.memory.Memory;
 import it.diunipi.volpi.sycamore.plugins.memory.SycamoreSystemMemory;
 import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
+import it.diunipi.volpi.sycamore.util.ApplicationProperties;
+import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SubsetFairnessSupporter;
 
 import java.security.SecureRandom;
@@ -83,7 +85,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	 */
 	public SycamoreRobot(SycamoreEngine<P> engine, P startingPosition, ColorRGBA color, int maxLights)
 	{
-		this(engine, startingPosition, SycamoreSystem.DEFAULT_ROBOT_SPEED, color, maxLights);
+		this(engine, startingPosition, PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED.name()), color, maxLights);
 	}
 
 	/**

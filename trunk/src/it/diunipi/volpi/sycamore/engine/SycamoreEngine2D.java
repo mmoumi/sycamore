@@ -13,6 +13,8 @@ import it.diunipi.volpi.sycamore.plugins.memory.Memory;
 import it.diunipi.volpi.sycamore.plugins.memory.MemoryImpl;
 import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
 import it.diunipi.volpi.sycamore.plugins.visibilities.VisibilityImpl;
+import it.diunipi.volpi.sycamore.util.ApplicationProperties;
+import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.lang.reflect.Constructor;
@@ -65,7 +67,7 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 	public SycamoreRobot<Point2D> createAndAddNewRobotInstance(boolean isHumanPilot, int index, ColorRGBA color, int maxLights)
 	{
 		{
-			float speed = SycamoreSystem.DEFAULT_ROBOT_SPEED;
+			float speed = PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED.name());
 			if (isHumanPilot)
 			{
 				speed = speed / 2.0f;
@@ -110,7 +112,7 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 					e.printStackTrace();
 				}
 			}
-			
+
 			// check if some agreement plugins have to be added
 			Agreement agreement = SycamoreSystem.getAgreement();
 			if (agreement != null && agreement.getType() == TYPE.TYPE_2D)
@@ -309,7 +311,12 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 	{
 		if (initialConditions == null)
 		{
-			return SycamoreUtil.getRandomPoint2D(-5, 5, -5, 5);
+			int minX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_X.name());
+			int maxX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_X.name());
+			int minY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Y.name());
+			int maxY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Y.name());
+
+			return SycamoreUtil.getRandomPoint2D(minX, maxX, minY, maxY);
 		}
 		else
 		{

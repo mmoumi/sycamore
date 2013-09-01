@@ -13,6 +13,8 @@ import it.diunipi.volpi.sycamore.plugins.memory.Memory;
 import it.diunipi.volpi.sycamore.plugins.memory.MemoryImpl;
 import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
 import it.diunipi.volpi.sycamore.plugins.visibilities.VisibilityImpl;
+import it.diunipi.volpi.sycamore.util.ApplicationProperties;
+import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.lang.reflect.Constructor;
@@ -65,7 +67,7 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 	public SycamoreRobot<Point3D> createAndAddNewRobotInstance(boolean isHumanPilot, int index, ColorRGBA color, int maxLights)
 	{
 		{
-			float speed = SycamoreSystem.DEFAULT_ROBOT_SPEED;
+			float speed = PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED.name());
 			if (isHumanPilot)
 			{
 				speed = speed / 2.0f;
@@ -292,7 +294,15 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 	{
 		if (initialConditions == null)
 		{
-			return SycamoreUtil.getRandomPoint3D(-5, 5, -5, 5, -5, 5);
+			int minX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_X.name());
+			int maxX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_X.name());
+			int minY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Y.name());
+			int maxY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Y.name());
+			int minZ = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Z.name());
+			int maxZ = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Z.name());
+
+			
+			return SycamoreUtil.getRandomPoint3D(minX, maxX, minY, maxY, minZ, maxZ);
 		}
 		else
 		{
