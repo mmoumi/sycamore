@@ -43,7 +43,6 @@ import com.jme3.system.JmeSystem;
 public class SycamoreInfoPanel extends JPanel
 {
 	private static final long			serialVersionUID	= 4200554499440035361L;
-	private JLabel						label_icon;
 	private JLabel						label_title;
 	private JTextPane					textPane_info;
 	private JLabel						label_version;
@@ -74,40 +73,35 @@ public class SycamoreInfoPanel extends JPanel
 		setPreferredSize(new Dimension(1024, 640));
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]
-		{ 0, 0, 0, 0, 0 };
+		{ 0, 0, 0, 0 };
 		gridBagLayout.rowHeights = new int[]
 		{ 0, 0, 0, 0, 0 };
 		gridBagLayout.columnWeights = new double[]
-		{ 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		{ 1.0, 0.0, 1.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[]
 		{ 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
-		GridBagConstraints gbc_label_icon = new GridBagConstraints();
-		gbc_label_icon.insets = new Insets(5, 5, 5, 5);
-		gbc_label_icon.gridx = 1;
-		gbc_label_icon.gridy = 0;
-		add(getLabel_icon(), gbc_label_icon);
 		GridBagConstraints gbc_label_title = new GridBagConstraints();
 		gbc_label_title.insets = new Insets(5, 2, 5, 5);
-		gbc_label_title.gridx = 2;
+		gbc_label_title.gridx = 1;
 		gbc_label_title.gridy = 0;
 		add(getLabel_title(), gbc_label_title);
 		GridBagConstraints gbc_label_version = new GridBagConstraints();
-		gbc_label_version.gridwidth = 4;
-		gbc_label_version.insets = new Insets(0, 0, 5, 5);
+		gbc_label_version.gridwidth = 3;
+		gbc_label_version.insets = new Insets(0, 0, 5, 0);
 		gbc_label_version.gridx = 0;
 		gbc_label_version.gridy = 1;
 		add(getLabel_version(), gbc_label_version);
 		GridBagConstraints gbc_sycamoreMemoryStatusPanel_memoryStatus = new GridBagConstraints();
 		GridBagConstraints gbc_scrollPane_info = new GridBagConstraints();
 		gbc_scrollPane_info.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane_info.gridwidth = 4;
-		gbc_scrollPane_info.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane_info.gridwidth = 3;
+		gbc_scrollPane_info.insets = new Insets(0, 0, 5, 0);
 		gbc_scrollPane_info.gridx = 0;
 		gbc_scrollPane_info.gridy = 2;
 		add(getScrollPane_info(), gbc_scrollPane_info);
-		gbc_sycamoreMemoryStatusPanel_memoryStatus.gridwidth = 4;
-		gbc_sycamoreMemoryStatusPanel_memoryStatus.insets = new Insets(5, 5, 0, 5);
+		gbc_sycamoreMemoryStatusPanel_memoryStatus.gridwidth = 3;
+		gbc_sycamoreMemoryStatusPanel_memoryStatus.insets = new Insets(5, 5, 0, 0);
 		gbc_sycamoreMemoryStatusPanel_memoryStatus.fill = GridBagConstraints.BOTH;
 		gbc_sycamoreMemoryStatusPanel_memoryStatus.gridx = 0;
 		gbc_sycamoreMemoryStatusPanel_memoryStatus.gridy = 3;
@@ -148,20 +142,6 @@ public class SycamoreInfoPanel extends JPanel
 		StyleConstants.setFontSize(attr, fontsize);
 		StyleConstants.setForeground(attr, normalcol);
 		infoStyles.insertElementAt(attr, TEXT_NORMAL);
-	}
-
-	/**
-	 * @return
-	 */
-	private JLabel getLabel_icon()
-	{
-		if (label_icon == null)
-		{
-			label_icon = new JLabel();
-			label_icon.setPreferredSize(new Dimension(64, 64));
-			label_icon.setIcon(new ImageIcon(getClass().getResource("/it/diunipi/volpi/sycamore/resources/sycamore_64x64.png")));
-		}
-		return label_icon;
 	}
 
 	/**
@@ -261,7 +241,7 @@ public class SycamoreInfoPanel extends JPanel
 		String txt_Workspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name());
 		String txt_Properties = PropertyManager.getSharedInstance().getPropertyFilePath();
 		String txt_Developer = "Valerio Volpi";
-		String txt_Contacts = "valecapannoli@gmail.com, vale.v@me.com, prencipe@di.unipi.it";
+		String txt_Contacts = "vale.v@me.com, prencipe@di.unipi.it";
 		String txt_Webpage = "http://code.google.com/p/sycamore";
 
 		// System infos
@@ -303,7 +283,7 @@ public class SycamoreInfoPanel extends JPanel
 		String txt_java_vendor = properties.getProperty("java.vendor");
 
 		final HashMap<String, String> caps = SycamoreSystem.getSystemCaps();
-		
+
 		// get 3D caps
 		String txt_jme_version = JmeSystem.getFullName();
 		String txt_lwjgl_version = caps.get("txt_lwjgl_version");
@@ -312,7 +292,6 @@ public class SycamoreInfoPanel extends JPanel
 		String txt_gfx_vendor = caps.get("txt_gfx_vendor");
 		String txt_renderer = caps.get("txt_renderer");
 
-		
 		String txt_gfx_capabilities = capabilities.toString();
 
 		// Credits
@@ -362,6 +341,20 @@ public class SycamoreInfoPanel extends JPanel
 			doc.insertString(doc.getLength(), title_gfx_vendor + tab + tab + txt_gfx_vendor + newLine, normalStyle);
 			doc.insertString(doc.getLength(), title_renderer + tab + tab + tab + txt_renderer + newLine, normalStyle);
 			doc.insertString(doc.getLength(), title_gfx_capabilities + newLine + txt_gfx_capabilities + newLine, normalStyle);
+			doc.insertString(doc.getLength(), newLine, normalStyle);
+
+			// licensing info
+			doc.insertString(doc.getLength(), "Licensing" + newLine, headerStyle);
+			doc.insertString(doc.getLength(), newLine, normalStyle);
+			doc.insertString(doc.getLength(), "This application may include licensed work from the following projects:" + newLine, highlightStyle);
+			doc.insertString(doc.getLength(), "jMonkeyEngine 3" + tab + tab + tab + "http://http://hub.jmonkeyengine.org/wiki/doku.php/bsd_license" + newLine, normalStyle);
+			doc.insertString(doc.getLength(), "SwingX" + tab + tab + tab + tab + "http://java.net/projects/swingx/" + newLine, normalStyle);
+			doc.insertString(doc.getLength(), "LWJGL" + tab + tab + tab + tab + "http://www.lwjgl.org/license.php" + newLine, normalStyle);
+			doc.insertString(doc.getLength(), "JSPF" + tab + tab + tab + tab + "http://code.google.com/p/jspf/" + newLine, normalStyle);
+			doc.insertString(doc.getLength(), newLine, normalStyle);
+			doc.insertString(doc.getLength(), newLine, normalStyle);
+			doc.insertString(doc.getLength(), "Sycamore is distributed under GPLv3 license:" + newLine, highlightStyle);
+			doc.insertString(doc.getLength(), "Find it at http://www.gnu.org/licenses/gpl.html" + newLine, highlightStyle);
 		}
 		catch (Exception e)
 		{
