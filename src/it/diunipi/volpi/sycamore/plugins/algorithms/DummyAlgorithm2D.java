@@ -6,6 +6,8 @@ import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
 import it.diunipi.volpi.sycamore.engine.TooManyLightsException;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
+import it.diunipi.volpi.sycamore.util.ApplicationProperties;
+import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.Vector;
@@ -32,16 +34,21 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 	 */
 	public DummyAlgorithm2D()
 	{
+		int minX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_X.name());
+		int maxX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_X.name());
+		int minY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Y.name());
+		int maxY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Y.name());
+		
 		for (int i = 0; i < ROUNDS; i++)
-		{
+		{		
 			points.add(new Point2D(0, 0));
-			points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
+			points.add(SycamoreUtil.getRandomPoint2D(minX, maxX, minY, maxY));
 			points.add(new Point2D(3, 0));
 			points.add(new Point2D(0, 0));
-			points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
+			points.add(SycamoreUtil.getRandomPoint2D(minX, maxX, minY, maxY));
 			points.add(new Point2D(0, 3));
 			points.add(new Point2D(0, 0));
-			points.add(SycamoreUtil.getRandomPoint2D(-10, 10, -10, 10));
+			points.add(SycamoreUtil.getRandomPoint2D(minX, maxX, minY, maxY));
 		}
 	}
 

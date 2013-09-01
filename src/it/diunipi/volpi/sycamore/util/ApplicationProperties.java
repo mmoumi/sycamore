@@ -23,7 +23,15 @@ public enum ApplicationProperties implements SycamoreProperty
 	LOCAL_COORDINATE_SYSTEMS_VISIBLE("Grid in 3D scene is visible", false + ""),
 	VISUAL_ELEMENTS_VISIBLE("Grid in 3D scene is visible", true + ""),	
 	N_KNOWN("n is known to robots", true + ""),
-	FAIRNESS_COUNT("Fairness count", 10 + ""), 
+	FAIRNESS_COUNT("Fairness count", 10 + ""),
+	EPSILON("Epsilon value", 0.0001 + ""),
+	DEFAULT_ROBOT_SPEED("Default robot speed", 0.1 + ""),
+	INITIAL_POSITION_MIN_X("Initial position min x", -10 + ""),
+	INITIAL_POSITION_MAX_X("Initial position max x", 10 + ""),
+	INITIAL_POSITION_MIN_Y("Initial position min y", -10 + ""),
+	INITIAL_POSITION_MAX_Y("Initial position max y", 10 + ""),
+	INITIAL_POSITION_MIN_Z("Initial position min z", -10 + ""),
+	INITIAL_POSITION_MAX_Z("Initial position max z", 10 + ""),
 	WORKSPACE_DIR("Workspace dir", System.getProperty("user.home") + System.getProperty("file.separator") + "Documents"
 			+ System.getProperty("file.separator") + "Sycamore");
 
