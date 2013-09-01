@@ -51,7 +51,7 @@ public class PropertyManager
 	private void loadProperties()
 	{
 		this.putDefaultsProperties();
-		
+
 		try
 		{
 			ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(propertyPath + System.getProperty("file.separator") + propertyFileName));
@@ -124,7 +124,26 @@ public class PropertyManager
 	 */
 	public String getProperty(String name)
 	{
-		return this.properties.get(name);
+		String val = this.properties.get(name);
+		if (val != null)
+		{
+			return val;
+		}
+		else
+		{
+			// look in default app properties
+			ApplicationProperties[] appProperties = ApplicationProperties.values();
+			for (int i = 0; i < appProperties.length; i++)
+			{
+				if (appProperties[i].name().equals(name))
+				{
+					return appProperties[i].getDefaultValue();
+				}
+			}
+
+			// return no value
+			return null;
+		}
 	}
 
 	/**
@@ -136,10 +155,24 @@ public class PropertyManager
 		String val = this.properties.get(name);
 		if (val != null)
 		{
+			// look in properties
 			return Integer.parseInt(val);
 		}
 		else
+		{
+			// look in default app properties
+			ApplicationProperties[] appProperties = ApplicationProperties.values();
+			for (int i = 0; i < appProperties.length; i++)
+			{
+				if (appProperties[i].name().equals(name))
+				{
+					return Integer.parseInt(appProperties[i].getDefaultValue());
+				}
+			}
+
+			// return no value
 			return -1;
+		}
 	}
 
 	/**
@@ -154,7 +187,19 @@ public class PropertyManager
 			return Float.parseFloat(val);
 		}
 		else
-			return 1.0f/0.0f;
+		{
+			// look in default app properties
+			ApplicationProperties[] appProperties = ApplicationProperties.values();
+			for (int i = 0; i < appProperties.length; i++)
+			{
+				if (appProperties[i].name().equals(name))
+				{
+					return Float.parseFloat(appProperties[i].getDefaultValue());
+				}
+			}
+
+			return 1.0f / 0.0f;
+		}
 	}
 
 	/**
@@ -169,7 +214,19 @@ public class PropertyManager
 			return Double.parseDouble(val);
 		}
 		else
-			return 1.0f/0.0f;
+		{
+			// look in default app properties
+			ApplicationProperties[] appProperties = ApplicationProperties.values();
+			for (int i = 0; i < appProperties.length; i++)
+			{
+				if (appProperties[i].name().equals(name))
+				{
+					return Double.parseDouble(appProperties[i].getDefaultValue());
+				}
+			}
+
+			return 1.0f / 0.0f;
+		}
 	}
 
 	/**
@@ -184,7 +241,19 @@ public class PropertyManager
 			return Boolean.parseBoolean(val);
 		}
 		else
+		{
+			// look in default app properties
+			ApplicationProperties[] appProperties = ApplicationProperties.values();
+			for (int i = 0; i < appProperties.length; i++)
+			{
+				if (appProperties[i].name().equals(name))
+				{
+					return Boolean.parseBoolean(appProperties[i].getDefaultValue());
+				}
+			}
+
 			return false;
+		}
 	}
 
 	/**
