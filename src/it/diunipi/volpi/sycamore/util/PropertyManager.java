@@ -34,7 +34,8 @@ public class PropertyManager
 		}
 		else if (OS.contains("Windows"))
 		{
-			propertyPath = System.getProperty("user.home") + "\\Documents\\Sycamore\\Preferences";
+			propertyPath = System.getenv("APPDATA") + "\\Sycamore\\";
+			// propertyPath = System.getProperty("user.home") + "\\Documents\\Sycamore\\Preferences\\";
 		}
 		else
 		{
