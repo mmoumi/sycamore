@@ -69,6 +69,7 @@ import com.jme3.scene.control.BillboardControl;
 import com.jme3.scene.debug.Arrow;
 import com.jme3.scene.debug.Grid;
 import com.jme3.scene.shape.Quad;
+import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 import com.jme3.util.TangentBinormalGenerator;
@@ -191,6 +192,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		settings.setVSync(true);
 		settings.setFrameRate(30);
 		settings.setAudioRenderer(null);
+		settings.setRenderer(AppSettings.LWJGL_OPENGL1);
 
 		if (SycamoreSystem.getLoggerLevel().intValue() > Level.WARNING.intValue())
 		{
