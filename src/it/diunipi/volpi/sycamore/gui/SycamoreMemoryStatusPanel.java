@@ -63,7 +63,7 @@ public class SycamoreMemoryStatusPanel extends JPanel
 		gbc_button_GC.gridx = 1;
 		gbc_button_GC.gridy = 1;
 		add(getButton_GC(), gbc_button_GC);
-		
+
 		setupIndicator();
 	}
 
@@ -77,19 +77,31 @@ public class SycamoreMemoryStatusPanel extends JPanel
 			@Override
 			public void run()
 			{
-				Runtime runtime = Runtime.getRuntime();
-				
-				long mbTotal = runtime.totalMemory() / (1024 * 1024);
-				long mbFree = runtime.freeMemory() / (1024 * 1024);
-				long mbUsed = mbTotal - mbFree;
+				while (true)
+				{
+					Runtime runtime = Runtime.getRuntime();
 
-				getLabel_memory().setText("Total memory: " + mbTotal + " MB - Used memory: " + mbUsed + " MB - Free memory: " + mbFree + " MB");
+					long mbTotal = runtime.totalMemory() / (1024 * 1024);
+					long mbFree = runtime.freeMemory() / (1024 * 1024);
+					long mbUsed = mbTotal - mbFree;
 
-				getProgressBar_indicator().setMaximum((int) mbTotal);
-				getProgressBar_indicator().setValue((int) mbUsed);
+					getLabel_memory().setText("Total memory: " + mbTotal + " MB - Used memory: " + mbUsed + " MB - Free memory: " + mbFree + " MB");
+
+					getProgressBar_indicator().setMaximum((int) mbTotal);
+					getProgressBar_indicator().setValue((int) mbUsed);
+					
+					try
+					{
+						Thread.sleep(5000);
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
 			}
 		});
-		
+
 		thread.start();
 	}
 
@@ -126,7 +138,7 @@ public class SycamoreMemoryStatusPanel extends JPanel
 		{
 			button_GC = new JButton("GARBAGE COLLECTOR");
 			button_GC.addActionListener(new ActionListener()
-			{	
+			{
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
