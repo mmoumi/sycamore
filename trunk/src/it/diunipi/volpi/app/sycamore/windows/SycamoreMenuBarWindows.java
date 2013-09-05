@@ -37,15 +37,17 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 		getMenu_file().add(getMenuItem_open());
 		getMenu_file().add(getMenu_openRecent());
 		getMenu_file().add(new JSeparator());
-		getMenu_file().add(getMenuItem_closeWindow());
 		getMenu_file().add(getMenuItem_save());
 		getMenu_file().add(getMenuItem_saveAs());
-		getMenu_file().add(new JSeparator());
+
+		// add menu items under Edit menu
 		getMenu_file().add(getMenuItem_Import());
 		getMenu_file().add(getMenuItem_Export());
 		getMenu_file().add(new JSeparator());
 		getMenu_file().add(getMenu_switchWorkspace());
-
+		getMenu_file().add(new JSeparator());
+		getMenu_file().add(getMenuItem_preferences());
+		
 		// add menu items under View menu
 		getMenu_view().add(getCheckBoxmenuItem_axes());
 		getMenu_view().add(getCheckBoxmenuItem_grid());
@@ -59,9 +61,11 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 
 		// add menu items under Help menu
 		getMenu_help().add(getMenuItem_help());
+		getMenu_help().add(getMenuItem_about());
 
 		// add menus to menubar
 		this.add(getMenu_file());
+		this.add(getMenu_edit());
 		this.add(getMenu_view());
 		this.add(getMenu_help());
 	}

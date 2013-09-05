@@ -3,7 +3,9 @@
  */
 package it.diunipi.volpi.app.sycamore;
 
+import it.diunipi.volpi.sycamore.gui.SycamoreInfoPanel;
 import it.diunipi.volpi.sycamore.gui.SycamorePluginsExportingPanel;
+import it.diunipi.volpi.sycamore.gui.SycamorePrefsPane;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.plugins.SycamorePluginExporter;
 import it.diunipi.volpi.sycamore.plugins.SycamorePluginExporter.EXPORT_MODE;
@@ -41,9 +43,10 @@ public abstract class SycamoreMenuBar extends JMenuBar
 
 	private JMenu					menu_file							= null;
 	private JMenu					menu_view							= null;
+	private JMenu					menu_edit							= null;
 	private JMenu					menu_help							= null;
 
-	// file menu items
+	// file and edit menu items
 	private JMenuItem				menuItem_new						= null;
 	private JMenuItem				menuItem_newBatch					= null;
 	private JMenuItem				menuItem_open						= null;
@@ -54,6 +57,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	private JMenuItem				menuItem_import						= null;
 	private JMenuItem				menuItem_export						= null;
 	private JMenu					menu_switchWorkspace				= null;
+	private JMenuItem				menuItem_preferences				= null;
 
 	// view menu items
 	private JCheckBoxMenuItem		checkBoxmenuItem_grid				= null;
@@ -68,6 +72,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 
 	// help menu item
 	private JMenuItem				menuItem_help						= null;
+	private JMenuItem				menuItem_about						= null;
 
 	private Vector<String>			oldWorkspaces						= null;
 	private Vector<ActionListener>	listeners							= null;
@@ -163,6 +168,20 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	}
 
 	/**
+	 * Returns the edit menu
+	 * 
+	 * @return the menu_edit
+	 */
+	protected JMenu getMenu_edit()
+	{
+		if (menu_edit == null)
+		{
+			menu_edit = new JMenu("Edit");
+		}
+		return menu_edit;
+	}
+
+	/**
 	 * Returns the help menu
 	 * 
 	 * @return
@@ -200,7 +219,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 					if (retVal == JOptionPane.YES_OPTION)
 					{
 						// TODO save
-					}		
+					}
 					application.reset();
 				}
 			});
@@ -335,14 +354,15 @@ public abstract class SycamoreMenuBar extends JMenuBar
 				public void actionPerformed(ActionEvent e)
 				{
 					SycamorePluginsExportingPanel pluginsExportingPanel = new SycamorePluginsExportingPanel();
-					
-					int result = JOptionPane.showOptionDialog(null, pluginsExportingPanel, "Export plugins to another location of the File System", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+
+					int result = JOptionPane.showOptionDialog(null, pluginsExportingPanel, "Export plugins to another location of the File System", JOptionPane.OK_CANCEL_OPTION,
+							JOptionPane.PLAIN_MESSAGE, null, null, null);
 					if (result == JOptionPane.OK_OPTION)
 					{
 						File[] filesToExport = pluginsExportingPanel.getFilesToExport();
-						File exportDir= new File(pluginsExportingPanel.getExportingPath());
+						File exportDir = new File(pluginsExportingPanel.getExportingPath());
 						EXPORT_MODE mode = pluginsExportingPanel.getExportMode();
-						
+
 						new SycamorePluginExporter().exportPlugins(filesToExport, exportDir, mode);
 					}
 				}
@@ -430,6 +450,28 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		{
 			application.reboot();
 		}
+	}
+	
+	/**
+	 * @return the menuItem_preferences
+	 */
+	protected JMenuItem getMenuItem_preferences()
+	{
+		if (menuItem_preferences == null)
+		{
+			menuItem_preferences = new JMenuItem("Preferences");
+			menuItem_preferences.addActionListener(new ActionListener()
+			{
+				
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					ImageIcon icon = new ImageIcon(getClass().getResource("/it/diunipi/volpi/sycamore/resources/settings_64x64.png"));
+					JOptionPane.showMessageDialog(null, new SycamorePrefsPane(), "Sycamore preferences", JOptionPane.INFORMATION_MESSAGE, icon);
+				}
+			});
+		}
+		return menuItem_preferences;
 	}
 
 	/**
@@ -665,6 +707,29 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		}
 		return menuItem_help;
 	}
+	
+	/**
+	 * Return the menuitem for about menu item
+	 * 
+	 * @return the menuItem_about
+	 */
+	protected JMenuItem getMenuItem_about()
+	{
+		if (menuItem_about == null)
+		{
+			menuItem_about = new JMenuItem("About Sycamore...");
+			menuItem_about.addActionListener(new ActionListener()
+			{			
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					ImageIcon icon = new ImageIcon(getClass().getResource("/it/diunipi/volpi/sycamore/resources/sycamore_64x64.png"));
+					JOptionPane.showMessageDialog(null, new SycamoreInfoPanel(), "About Sycamore", JOptionPane.INFORMATION_MESSAGE, icon);
+				}
+			});
+		}
+		return menuItem_about;
+	}
 
 	/**
 	 * Setup the concrete menu bar for a specific environment
@@ -675,7 +740,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	 * Setup the preferences menu for a specific environment
 	 */
 	protected abstract void setupPreferencesmenu();
-	
+
 	/**
 	 * Setup the about menu for a specific environment
 	 */
