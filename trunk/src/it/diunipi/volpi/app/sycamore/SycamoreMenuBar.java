@@ -462,7 +462,6 @@ public abstract class SycamoreMenuBar extends JMenuBar
 			menuItem_preferences = new JMenuItem("Preferences");
 			menuItem_preferences.addActionListener(new ActionListener()
 			{
-				
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
