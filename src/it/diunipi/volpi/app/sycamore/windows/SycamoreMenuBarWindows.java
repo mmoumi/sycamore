@@ -41,12 +41,12 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 		getMenu_file().add(getMenuItem_saveAs());
 
 		// add menu items under Edit menu
-		getMenu_file().add(getMenuItem_Import());
-		getMenu_file().add(getMenuItem_Export());
-		getMenu_file().add(new JSeparator());
-		getMenu_file().add(getMenu_switchWorkspace());
-		getMenu_file().add(new JSeparator());
-		getMenu_file().add(getMenuItem_preferences());
+		getMenu_edit().add(getMenuItem_Import());
+		getMenu_edit().add(getMenuItem_Export());
+		getMenu_edit().add(new JSeparator());
+		getMenu_edit().add(getMenu_switchWorkspace());
+		getMenu_edit().add(new JSeparator());
+		getMenu_edit().add(getMenuItem_preferences());
 		
 		// add menu items under View menu
 		getMenu_view().add(getCheckBoxmenuItem_axes());
@@ -76,7 +76,7 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 	@Override
 	protected void setupPreferencesmenu()
 	{
-		
+		// Not supported
 	}
 	
 	/* (non-Javadoc)
@@ -85,6 +85,6 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 	@Override
 	protected void setupAboutMenu()
 	{
-		
+		// Not supported
 	}
 }
