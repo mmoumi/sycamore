@@ -39,7 +39,7 @@ public class PropertyManager
 		}
 		else
 		{
-			propertyPath = "/usr/local/lib/Sycamore";
+			propertyPath = System.getProperty("user.home") + "/.config/Sycamore/";
 		}
 
 		this.properties = new HashMap<String, String>();
