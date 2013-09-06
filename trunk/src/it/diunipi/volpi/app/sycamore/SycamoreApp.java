@@ -83,7 +83,7 @@ public abstract class SycamoreApp extends JFrame
 	public SycamoreApp()
 	{
 		setMinimumSize(new Dimension(400, 300));
-		
+
 		// performs the operations preliminary to initialization
 		initialize_pre();
 
@@ -121,11 +121,19 @@ public abstract class SycamoreApp extends JFrame
 			@Override
 			public void windowClosed(WindowEvent e)
 			{
-				saveApplicationState();
-				disposeApplication();
-				System.exit(0);
+				closeApplication();
 			}
 		});
+	}
+
+	/**
+	 * Close application
+	 */
+	public void closeApplication()
+	{
+		saveApplicationState();
+		disposeApplication();
+		System.exit(0);
 	}
 
 	/**
@@ -137,7 +145,7 @@ public abstract class SycamoreApp extends JFrame
 		getSycamoreMainPanel().disposeJMEScene();
 		PropertyManager.getSharedInstance().dispose();
 	}
-	
+
 	/**
 	 * Save the current state of the application
 	 */
@@ -235,9 +243,9 @@ public abstract class SycamoreApp extends JFrame
 		int y = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_Y.name());
 		int width = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_WIDTH.name());
 		int height = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_HEIGHT.name());
-		
+
 		setBounds(x, y, width, height);
-		
+
 		SycamoreSystem.setMainFrame(this);
 
 		// show splash screen over GUI panel
@@ -258,9 +266,9 @@ public abstract class SycamoreApp extends JFrame
 		{
 			e.printStackTrace();
 		}
-		
+
 		setVisible(true);
-				
+
 		try
 		{
 			// Sleep a bit to let the splash screen initialize
@@ -270,7 +278,7 @@ public abstract class SycamoreApp extends JFrame
 		{
 			e.printStackTrace();
 		}
-		
+
 		// set splash screen state
 		splashThread.getSplashScreen().setCurrentSplashState(SPLASH_STATES.PREPARING_3D);
 	}
