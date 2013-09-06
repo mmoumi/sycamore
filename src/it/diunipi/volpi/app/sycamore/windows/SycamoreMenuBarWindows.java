@@ -39,6 +39,8 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 		getMenu_file().add(new JSeparator());
 		getMenu_file().add(getMenuItem_save());
 		getMenu_file().add(getMenuItem_saveAs());
+		getMenu_file().add(new JSeparator());
+		getMenu_file().add(getMenuItem_exit());
 
 		// add menu items under Edit menu
 		getMenu_edit().add(getMenuItem_Import());
@@ -61,6 +63,7 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 
 		// add menu items under Help menu
 		getMenu_help().add(getMenuItem_help());
+		getMenu_help().add(new JSeparator());
 		getMenu_help().add(getMenuItem_about());
 
 		// add menus to menubar

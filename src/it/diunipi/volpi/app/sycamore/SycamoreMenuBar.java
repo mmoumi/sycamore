@@ -52,6 +52,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	private JMenuItem				menuItem_open						= null;
 	private JMenu					menu_openRecent						= null;
 	private JMenuItem				menuItem_closeWindow				= null;
+	private JMenuItem				menuItem_exit						= null;
 	private JMenuItem				menuItem_save						= null;
 	private JMenuItem				menuItem_saveAs						= null;
 	private JMenuItem				menuItem_import						= null;
@@ -285,6 +286,27 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		}
 		return menuItem_closeWindow;
 	}
+	
+	/**
+	 * @return the menuItem_exit
+	 */
+	protected JMenuItem getMenuItem_exit()
+	{
+		if (menuItem_exit == null)
+		{
+			menuItem_exit = new JMenuItem("Exit from Sycamore");
+			menuItem_exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+			menuItem_exit.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					application.closeApplication();
+				}
+			});
+		}
+		return menuItem_exit;
+	}
 
 	/**
 	 * Return the menuitem for Save menu
@@ -451,7 +473,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 			application.reboot();
 		}
 	}
-	
+
 	/**
 	 * @return the menuItem_preferences
 	 */
@@ -706,7 +728,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		}
 		return menuItem_help;
 	}
-	
+
 	/**
 	 * Return the menuitem for about menu item
 	 * 
@@ -718,7 +740,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		{
 			menuItem_about = new JMenuItem("About Sycamore...");
 			menuItem_about.addActionListener(new ActionListener()
-			{			
+			{
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
