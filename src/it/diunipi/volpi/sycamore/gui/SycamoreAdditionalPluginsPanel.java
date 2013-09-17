@@ -21,8 +21,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 import javax.swing.JComboBox;
@@ -799,13 +797,13 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 			switchToggle_nKnown.setMaximumSize(new Dimension(71, 25));
 			switchToggle_nKnown.setPreferredSize(new Dimension(71, 25));
 			switchToggle_nKnown.setSelected(SycamoreSystem.isNKnown());
-			switchToggle_nKnown.addItemListener(new ItemListener()
+			switchToggle_nKnown.addActionListener(new ActionListener()
 			{
 				@Override
-				public void itemStateChanged(ItemEvent e)
+				public void actionPerformed(ActionEvent e)
 				{
-					boolean selected = !switchToggle_nKnown.isSelected();
-					SycamoreSystem.setNKnown(selected);
+					boolean selected = switchToggle_nKnown.isSelected();
+					SycamoreSystem.setNKnown(selected);	
 				}
 			});
 		}
@@ -836,15 +834,8 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 			switchToggle_multiplicityDetection.setMinimumSize(new Dimension(71, 25));
 			switchToggle_multiplicityDetection.setPreferredSize(new Dimension(71, 25));
 			switchToggle_multiplicityDetection.setSelected(true);
-			switchToggle_multiplicityDetection.addItemListener(new ItemListener()
-			{
-				@Override
-				public void itemStateChanged(ItemEvent e)
-				{
-					boolean selected = !switchToggle_multiplicityDetection.isSelected();
-					System.out.println("Selected " + selected);
-				}
-			});
+			switchToggle_multiplicityDetection.setEnabled(false);
+			switchToggle_multiplicityDetection.setToolTipText("Coming soon...");
 		}
 		return switchToggle_multiplicityDetection;
 	}
