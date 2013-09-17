@@ -6,6 +6,8 @@ package it.diunipi.volpi.sycamore.plugins.agreements;
 import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.util.PropertyManager;
+import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 
 /**
  * @author Vale
@@ -13,6 +15,59 @@ import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
  */
 public abstract class AgreementImpl<P extends SycamoreAbstractPoint & ComputablePoint<P>> implements Agreement<P>
 {
+	private enum AgreementProperties implements SycamoreProperty
+	{
+		FIX_MEASURE_UNIT("Fix measure unit", true + "");
+
+		private String	description			= null;
+		private String	defaultValue	= null;
+
+		/**
+		 * Default constructor.
+		 */
+		AgreementProperties(String description, String defaultValue)
+		{
+			this.description = description;
+			this.defaultValue = defaultValue;
+		}
+
+		/* (non-Javadoc)
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
+		 */
+		@Override
+		public String getDescription()
+		{
+			return description;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDefaultValue()
+		 */
+		@Override
+		public String getDefaultValue()
+		{
+			return defaultValue;
+		}
+	}
+	
+	/**
+	 * @return the fixMeasureUnit
+	 */
+	public static boolean isFixMeasureUnit()
+	{
+		return PropertyManager.getSharedInstance().getBooleanProperty(AgreementProperties.FIX_MEASURE_UNIT.name());
+	}
+	
+	/**
+	 * @param fixMeasureUnit the fixMeasureUnit to set
+	 */
+	public static void setFixMeasureUnit(boolean fixMeasureUnit)
+	{
+		PropertyManager.getSharedInstance().putProperty(AgreementProperties.FIX_MEASURE_UNIT.name(), fixMeasureUnit);
+	}
+	
 	/* (non-Javadoc)
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getShortDescription()
 	 */

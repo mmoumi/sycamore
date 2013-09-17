@@ -4,8 +4,8 @@
 package it.diunipi.volpi.sycamore.plugins.agreements;
 
 import it.diunipi.volpi.sycamore.engine.Point2D;
-import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
@@ -31,11 +31,12 @@ import com.jme3.scene.debug.Arrow;
  * 
  */
 @PluginImplementation
-public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
+public class Chirality2D extends AgreementImpl<Point2D>
 {
-	private enum TotalStaticAgreementProperties implements SycamoreProperty
+	private enum ConsistentCompass2DProperties implements SycamoreProperty
 	{
-		TRANSLATION_X("Translation X", "" + 0.0), TRANSLATION_Y("Translation Y", "" + 0.0), SCALE_X("Scale X", "" + 1.0), SCALE_Y("Scale Y", "" + 1.0), ROTATION("Rotation", "" + 0.0);
+		CHIRALITY_2D_FLIP_X("FlipX", false + ""), 
+		CHIRALITY_2D_FLIP_Y("FlipY", false + "");
 
 		private String	description		= null;
 		private String	defaultValue	= null;
@@ -43,7 +44,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 		/**
 		 * 
 		 */
-		TotalStaticAgreementProperties(String description, String defaultValue)
+		ConsistentCompass2DProperties(String description, String defaultValue)
 		{
 			this.description = description;
 			this.defaultValue = defaultValue;
@@ -73,14 +74,20 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 	}
 
 	// node is static because it is the same for all the robots
-	private static Node							axesNode		= new Node("Axes node");
+	private Node					axesNode		= new Node("Axes node");
 
-	private TotalAgreementStatic2DSettingPanel	panel_settings	= null;
+	private double					translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+	private double					translationY	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+
+	private double					scaleFactor		= SycamoreUtil.getRandomDouble(0.5, 4);
+	private double					rotation		= SycamoreUtil.getRandomDouble(0, 365);
+
+	private Chirality2DSettingsPanel	panel_settings	= null;
 
 	/**
 	 * Default constructor
 	 */
-	public TotalAgreementStatic2D()
+	public Chirality2D()
 	{
 		SycamoreSystem.enqueueToJME(new Callable<Object>()
 		{
@@ -165,7 +172,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 	@Override
 	public Vector3f getLocalTranslation()
 	{
-		return new Vector3f((float) getTranslationX(), (float) getTranslationY(), 0);
+		return new Vector3f((float) translationX, (float) translationY, 0);
 	}
 
 	/*
@@ -178,7 +185,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 	{
 		float angleX = 0;
 		float angleY = 0;
-		float angleZ = (float) Math.toRadians(getRotation());
+		float angleZ = (float) Math.toRadians(rotation);
 
 		return new Quaternion(new float[]
 		{ angleX, angleY, angleZ });
@@ -201,126 +208,91 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 	private AffineTransform computeTransform()
 	{
 		AffineTransform transform = new AffineTransform();
-		transform.translate(getTranslationX(), getTranslationY());
-		transform.rotate(Math.toRadians(getRotation()));
+		transform.translate(translationX, translationY);
+		transform.rotate(Math.toRadians(rotation));
 		transform.scale(getScaleX(), getScaleY());
 
 		return transform;
 	}
 
 	/**
-	 * @return the translationX
+	 * @return
 	 */
-	public static double getTranslationX()
+	private int getSignumX()
 	{
-		double translationX = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.TRANSLATION_X.name());
-		if (Double.isInfinite(translationX))
-		{
-			translationX = Double.parseDouble(TotalStaticAgreementProperties.TRANSLATION_X.getDefaultValue());
-		}
-
-		return translationX;
+		return (isFlipX() ? -1 : 1);
 	}
-
+	
 	/**
-	 * @param translationX
-	 *            the translationX to set
+	 * @return
 	 */
-	public static void setTranslationX(double translationX)
+	private int getSignumY()
 	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.TRANSLATION_X.name(), translationX);
-	}
-
-	/**
-	 * @return the translationY
-	 */
-	public static double getTranslationY()
-	{
-		double translationY = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.TRANSLATION_Y.name());
-		if (Double.isInfinite(translationY))
-		{
-			translationY = Double.parseDouble(TotalStaticAgreementProperties.TRANSLATION_Y.getDefaultValue());
-		}
-
-		return translationY;
-	}
-
-	/**
-	 * @param translationY
-	 *            the translationY to set
-	 */
-	public static void setTranslationY(double translationY)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.TRANSLATION_Y.name(), translationY);
+		return (isFlipY() ? -1 : 1);
 	}
 
 	/**
 	 * @return the scaleX
 	 */
-	public static double getScaleX()
+	public double getScaleX()
 	{
-		double scaleX = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.SCALE_X.name());
-		if (Double.isInfinite(scaleX))
+		if (AgreementImpl.isFixMeasureUnit())
 		{
-			scaleX = Double.parseDouble(TotalStaticAgreementProperties.SCALE_X.getDefaultValue());
+			return getSignumX();
 		}
-
-		return scaleX;
-	}
-
-	/**
-	 * @param scaleX
-	 *            the scaleX to set
-	 */
-	public static void setScaleX(double scaleX)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.SCALE_X.name(), scaleX);
+		else
+		{
+			return scaleFactor * (getSignumX());
+		}
 	}
 
 	/**
 	 * @return the scaleY
 	 */
-	public static double getScaleY()
+	public double getScaleY()
 	{
-		double scaleY = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.SCALE_Y.name());
-		if (Double.isInfinite(scaleY))
+		if (AgreementImpl.isFixMeasureUnit())
 		{
-			scaleY = Double.parseDouble(TotalStaticAgreementProperties.SCALE_Y.getDefaultValue());
+			return getSignumY();
 		}
-
-		return scaleY;
-	}
-
-	/**
-	 * @param scaleY
-	 *            the scaleY to set
-	 */
-	public static void setScaleY(double scaleY)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.SCALE_Y.name(), scaleY);
+		else
+		{
+			return scaleFactor * (getSignumY());
+		}
 	}
 
 	/**
 	 * @return the rotation
 	 */
-	public static double getRotation()
+	public static boolean isFlipX()
 	{
-		double rotation = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.ROTATION.name());
-		if (Double.isInfinite(rotation))
-		{
-			rotation = Double.parseDouble(TotalStaticAgreementProperties.ROTATION.getDefaultValue());
-		}
-
-		return rotation;
+		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_X.name());
 	}
 
 	/**
 	 * @param rotation
 	 *            the rotation to set
 	 */
-	public static void setRotation(double rotation)
+	public static void setFlipX(Boolean flipX)
 	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.ROTATION.name(), rotation);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_X.name(), flipX);
+	}
+
+	/**
+	 * @return the rotation
+	 */
+	public static boolean isFlipY()
+	{
+		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_Y.name());
+	}
+
+	/**
+	 * @param rotation
+	 *            the rotation to set
+	 */
+	public static void setFlipY(Boolean flipY)
+	{
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_Y.name(), flipY);
 	}
 
 	/*
@@ -364,7 +336,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Total static agreement in 2D. The local coordinates systems are static";
+		return "Consistent compass in 2D. North, south, west, east are the same for all the robots.";
 	}
 
 	/*
@@ -375,7 +347,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Total agreement in 2D. The local coordinates systems are static, so they don't change during the simulation";
+		return "Consistent compass in 2D. Each robot has its own coordinates system with its own origin, but the directions for north, south, west and east cardinal points are the same for all the robots.";
 	}
 
 	/*
@@ -388,7 +360,7 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 	{
 		if (panel_settings == null)
 		{
-			panel_settings = new TotalAgreementStatic2DSettingPanel();
+			panel_settings = new Chirality2DSettingsPanel();
 		}
 		return panel_settings;
 	}
@@ -404,64 +376,5 @@ public class TotalAgreementStatic2D extends StaticAgreement<Point2D>
 	public void setOwner(SycamoreRobot<Point2D> owner)
 	{
 		// Nothing to do
-	}
-
-	public static void main(String[] args)
-	{
-		TotalAgreementStatic2D agreement = new TotalAgreementStatic2D();
-
-		TotalAgreementStatic2D.setTranslationX(1);
-		TotalAgreementStatic2D.setTranslationY(1);
-		TotalAgreementStatic2D.setScaleX(1);
-		TotalAgreementStatic2D.setScaleY(1);
-		TotalAgreementStatic2D.setRotation(0);
-
-		Point2D p1 = new Point2D(0, 0);
-		Point2D p2 = agreement.toLocalCoordinates(p1);
-		Point2D p3 = agreement.toGlobalCoordinates(p2);
-
-		System.out.println(p1 + " expressed in global coordinates");
-		System.out.println("local: " + p2 + " -> global: " + p3);
-		System.out.println();
-		
-		p1 = new Point2D(1, 0);
-		p2 = agreement.toLocalCoordinates(p1);
-		p3 = agreement.toGlobalCoordinates(p2);
-
-		System.out.println(p1 + " expressed in global coordinates");
-		System.out.println("local: " + p2 + " -> global: " + p3);
-		System.out.println();
-		
-		p1 = new Point2D(0, 1);
-		p2 = agreement.toLocalCoordinates(p1);
-		p3 = agreement.toGlobalCoordinates(p2);
-
-		System.out.println(p1 + " expressed in global coordinates");
-		System.out.println("local: " + p2 + " -> global: " + p3);
-		System.out.println();
-		
-		p1 = new Point2D(0, 0);
-		p2 = agreement.toGlobalCoordinates(p1);
-		p3 = agreement.toLocalCoordinates(p2);
-
-		System.out.println(p1 + " expressed in local coordinates");
-		System.out.println("global: " + p2 + " -> local: " + p3);
-		System.out.println();
-		
-		p1 = new Point2D(1, 0);
-		p2 = agreement.toGlobalCoordinates(p1);
-		p3 = agreement.toLocalCoordinates(p2);
-
-		System.out.println(p1 + " expressed in local coordinates");
-		System.out.println("global: " + p2 + " -> local: " + p3);
-		System.out.println();
-		
-		p1 = new Point2D(0, 1);
-		p2 = agreement.toGlobalCoordinates(p1);
-		p3 = agreement.toLocalCoordinates(p2);
-
-		System.out.println(p1 + " expressed in local coordinates");
-		System.out.println("global: " + p2 + " -> local: " + p3);
-		System.out.println();
 	}
 }

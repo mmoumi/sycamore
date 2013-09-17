@@ -54,9 +54,4 @@ public interface Agreement<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	 * @return
 	 */
 	public Node getAxesNode();
-
-	/**
-	 * @return
-	 */
-	public boolean isDynamic();
 }

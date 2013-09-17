@@ -4,7 +4,6 @@
 package it.diunipi.volpi.sycamore.plugins.agreements;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
-import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 
 import java.awt.Dimension;
@@ -25,7 +24,7 @@ import javax.swing.event.ChangeListener;
  * @author Vale
  * 
  */
-public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
+public class AbsoluteAgreement3DSettingPanel extends AgreementSettingsPanel
 {
 	private static final long	serialVersionUID	= 7587684962080577106L;
 	private JPanel				panel_settings;
@@ -49,10 +48,14 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 	private JSpinner			spinner_rotation_y;
 	private JSpinner			spinner_rotation_z;
 
+	private double				storeScaleX			= 0;
+	private double				storeScaleY			= 0;
+	private double				storeScaleZ			= 0;
+
 	/**
 	 * Default constructor.
 	 */
-	public TotalAgreementStatic3DSettingPanel()
+	public AbsoluteAgreement3DSettingPanel()
 	{
 		initialize();
 	}
@@ -62,21 +65,11 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 	 */
 	private void initialize()
 	{
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]
-		{ 0, 0 };
-		gridBagLayout.rowHeights = new int[]
-		{ 0, 0 };
-		gridBagLayout.columnWeights = new double[]
-		{ 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[]
-		{ 1.0, Double.MIN_VALUE };
-		setLayout(gridBagLayout);
 		GridBagConstraints gbc_panel_settings = new GridBagConstraints();
 		gbc_panel_settings.fill = GridBagConstraints.BOTH;
 		gbc_panel_settings.gridx = 0;
-		gbc_panel_settings.gridy = 0;
-		add(getPanel_settings(), gbc_panel_settings);
+		gbc_panel_settings.gridy = 1;
+		panel_container.add(getPanel_settings(), gbc_panel_settings);
 	}
 
 	/*
@@ -100,7 +93,32 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 	@Override
 	public void updateGui()
 	{
-		// Nothing to do
+		super.updateGui();
+
+		if (AgreementImpl.isFixMeasureUnit())
+		{
+			storeScaleX = AbsoluteAgreement3D.getScaleX();
+			storeScaleY = AbsoluteAgreement3D.getScaleY();
+			storeScaleZ = AbsoluteAgreement3D.getScaleZ();
+
+			getSpinner_scale_x().setValue(new Double(1.0));
+			getSpinner_scale_y().setValue(new Double(1.0));
+			getSpinner_scale_z().setValue(new Double(1.0));
+
+			getSpinner_scale_x().setEnabled(false);
+			getSpinner_scale_y().setEnabled(false);
+			getSpinner_scale_z().setEnabled(false);
+		}
+		else
+		{
+			getSpinner_scale_x().setValue(storeScaleX);
+			getSpinner_scale_y().setValue(storeScaleY);
+			getSpinner_scale_z().setValue(storeScaleZ);
+
+			getSpinner_scale_x().setEnabled(true);
+			getSpinner_scale_y().setEnabled(true);
+			getSpinner_scale_z().setEnabled(true);
+		}
 	}
 
 	/*
@@ -165,7 +183,7 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 		}
 		return label_translation_y;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -190,14 +208,14 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 			spinner_translation_x.setMinimumSize(new Dimension(80, 27));
 			spinner_translation_x.setPreferredSize(new Dimension(80, 27));
 			spinner_translation_x.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 0.1d));
-			spinner_translation_x.setValue(TotalAgreementStatic3D.getTranslationX());
+			spinner_translation_x.setValue(AbsoluteAgreement3D.getTranslationX());
 			spinner_translation_x.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					TotalAgreementStatic3D.setTranslationX((Double) spinner_translation_x.getValue());
-					fireActionEvent(new ActionEvent(TotalAgreementStatic3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					AbsoluteAgreement3D.setTranslationX((Double) spinner_translation_x.getValue());
+					fireActionEvent(new ActionEvent(AbsoluteAgreement3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
@@ -216,14 +234,14 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 			spinner_translation_y.setMinimumSize(new Dimension(80, 27));
 			spinner_translation_y.setPreferredSize(new Dimension(80, 27));
 			spinner_translation_y.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 0.1d));
-			spinner_translation_y.setValue(TotalAgreementStatic3D.getTranslationY());
+			spinner_translation_y.setValue(AbsoluteAgreement3D.getTranslationY());
 			spinner_translation_y.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					TotalAgreementStatic3D.setTranslationY((Double) spinner_translation_y.getValue());
-					fireActionEvent(new ActionEvent(TotalAgreementStatic3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					AbsoluteAgreement3D.setTranslationY((Double) spinner_translation_y.getValue());
+					fireActionEvent(new ActionEvent(AbsoluteAgreement3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
@@ -242,14 +260,14 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 			spinner_translation_z.setMinimumSize(new Dimension(80, 27));
 			spinner_translation_z.setPreferredSize(new Dimension(80, 27));
 			spinner_translation_z.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 0.1d));
-			spinner_translation_z.setValue(TotalAgreementStatic3D.getTranslationZ());
+			spinner_translation_z.setValue(AbsoluteAgreement3D.getTranslationZ());
 			spinner_translation_z.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					TotalAgreementStatic3D.setTranslationZ((Double) spinner_translation_z.getValue());
-					fireActionEvent(new ActionEvent(TotalAgreementStatic3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					AbsoluteAgreement3D.setTranslationZ((Double) spinner_translation_z.getValue());
+					fireActionEvent(new ActionEvent(AbsoluteAgreement3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
@@ -278,7 +296,7 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 			label_scale_y = new JLabel("Scale Y:");
 		}
 		return label_scale_y;
-	}	
+	}
 
 	/**
 	 * @return
@@ -304,14 +322,15 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 			spinner_scale_x.setMinimumSize(new Dimension(80, 27));
 			spinner_scale_x.setPreferredSize(new Dimension(80, 27));
 			spinner_scale_x.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 0.1d));
-			spinner_scale_x.setValue(TotalAgreementStatic2D.getScaleX());
+			spinner_scale_x.setValue(AgreementImpl.isFixMeasureUnit() ? 1.0 : AbsoluteAgreement3D.getScaleX());
+			spinner_scale_x.setEnabled(!AgreementImpl.isFixMeasureUnit());
 			spinner_scale_x.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					TotalAgreementStatic3D.setScaleX((Double) spinner_scale_x.getValue());
-					fireActionEvent(new ActionEvent(TotalAgreementStatic3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					AbsoluteAgreement3D.setScaleX((Double) spinner_scale_x.getValue());
+					fireActionEvent(new ActionEvent(AbsoluteAgreement3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
@@ -330,14 +349,15 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 			spinner_scale_y.setMinimumSize(new Dimension(80, 27));
 			spinner_scale_y.setPreferredSize(new Dimension(80, 27));
 			spinner_scale_y.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 0.1d));
-			spinner_scale_y.setValue(TotalAgreementStatic2D.getScaleY());
+			spinner_scale_y.setValue(AgreementImpl.isFixMeasureUnit() ? 1.0 : AbsoluteAgreement3D.getScaleY());
+			spinner_scale_y.setEnabled(!AgreementImpl.isFixMeasureUnit());
 			spinner_scale_y.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					TotalAgreementStatic3D.setScaleY((Double) spinner_scale_y.getValue());
-					fireActionEvent(new ActionEvent(TotalAgreementStatic3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					AbsoluteAgreement3D.setScaleY((Double) spinner_scale_y.getValue());
+					fireActionEvent(new ActionEvent(AbsoluteAgreement3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
@@ -356,20 +376,21 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 			spinner_scale_z.setMinimumSize(new Dimension(80, 27));
 			spinner_scale_z.setPreferredSize(new Dimension(80, 27));
 			spinner_scale_z.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 0.1d));
-			spinner_scale_z.setValue(TotalAgreementStatic3D.getScaleZ());
+			spinner_scale_z.setValue(AgreementImpl.isFixMeasureUnit() ? 1.0 : AbsoluteAgreement3D.getScaleZ());
+			spinner_scale_z.setEnabled(!AgreementImpl.isFixMeasureUnit());
 			spinner_scale_z.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					TotalAgreementStatic3D.setScaleZ((Double) spinner_scale_z.getValue());
-					fireActionEvent(new ActionEvent(TotalAgreementStatic3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					AbsoluteAgreement3D.setScaleZ((Double) spinner_scale_z.getValue());
+					fireActionEvent(new ActionEvent(AbsoluteAgreement3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
 		return spinner_scale_z;
 	}
-	
+
 	/**
 	 * @return label_rotation
 	 */
@@ -381,7 +402,7 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 		}
 		return label_rotation_x;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -405,7 +426,7 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 		}
 		return label_rotation_z;
 	}
-	
+
 	/**
 	 * @return spinner_rotation
 	 */
@@ -418,14 +439,14 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 			spinner_rotation_x.setMinimumSize(new Dimension(80, 27));
 			spinner_rotation_x.setPreferredSize(new Dimension(80, 27));
 			spinner_rotation_x.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 1));
-			spinner_rotation_x.setValue(TotalAgreementStatic3D.getRotationX());
+			spinner_rotation_x.setValue(AbsoluteAgreement3D.getRotationX());
 			spinner_rotation_x.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					TotalAgreementStatic3D.setRotationX((Double) spinner_rotation_x.getValue());
-					fireActionEvent(new ActionEvent(TotalAgreementStatic3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					AbsoluteAgreement3D.setRotationX((Double) spinner_rotation_x.getValue());
+					fireActionEvent(new ActionEvent(AbsoluteAgreement3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
@@ -444,14 +465,14 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 			spinner_rotation_y.setMinimumSize(new Dimension(80, 27));
 			spinner_rotation_y.setPreferredSize(new Dimension(80, 27));
 			spinner_rotation_y.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 1));
-			spinner_rotation_y.setValue(TotalAgreementStatic3D.getRotationY());
+			spinner_rotation_y.setValue(AbsoluteAgreement3D.getRotationY());
 			spinner_rotation_y.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					TotalAgreementStatic3D.setRotationY((Double) spinner_rotation_y.getValue());
-					fireActionEvent(new ActionEvent(TotalAgreementStatic3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					AbsoluteAgreement3D.setRotationY((Double) spinner_rotation_y.getValue());
+					fireActionEvent(new ActionEvent(AbsoluteAgreement3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
@@ -470,14 +491,14 @@ public class TotalAgreementStatic3DSettingPanel extends SycamorePanel
 			spinner_rotation_z.setMinimumSize(new Dimension(80, 27));
 			spinner_rotation_z.setPreferredSize(new Dimension(80, 27));
 			spinner_rotation_z.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 1));
-			spinner_rotation_z.setValue(TotalAgreementStatic3D.getRotationZ());
+			spinner_rotation_z.setValue(AbsoluteAgreement3D.getRotationZ());
 			spinner_rotation_z.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					TotalAgreementStatic3D.setRotationZ((Double) spinner_rotation_z.getValue());
-					fireActionEvent(new ActionEvent(TotalAgreementStatic3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					AbsoluteAgreement3D.setRotationZ((Double) spinner_rotation_z.getValue());
+					fireActionEvent(new ActionEvent(AbsoluteAgreement3DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
