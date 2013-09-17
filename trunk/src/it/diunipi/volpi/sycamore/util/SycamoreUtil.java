@@ -312,7 +312,14 @@ public class SycamoreUtil
 	 */
 	public static java.awt.geom.Point2D.Float convertPoint2D(Point2D point)
 	{
-		return new java.awt.geom.Point2D.Float(point.x, point.y);
+		if (point != null)
+		{
+			return new java.awt.geom.Point2D.Float(point.x, point.y);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -322,6 +329,87 @@ public class SycamoreUtil
 	public static Point2D convertPoint2D(java.awt.geom.Point2D point)
 	{
 		return new Point2D((float) point.getX(), (float) point.getY());
+	}
+
+	/**
+	 * @param src
+	 * @param swap
+	 * @return
+	 */
+	public static Point2D shufflePoint2D(Point2D src, boolean swap)
+	{
+		if (swap)
+		{
+			return new Point2D(src.y, src.x);
+		}
+		else
+			return src;
+	}
+
+	/**
+	 * @param src
+	 * @param swap
+	 * @return
+	 */
+	public static Point3D shufflePoint3D(Point3D src, boolean swapXY, boolean swapXZ, boolean swapYZ)
+	{
+		float x = src.x;
+		float y = src.y;
+		float z = src.z;
+
+		if (swapXY)
+		{
+			float tmp = x;
+			x = y;
+			y = tmp;
+		}
+		if (swapXZ)
+		{
+			float tmp = x;
+			x = z;
+			z = tmp;
+		}
+		if (swapYZ)
+		{
+			float tmp = y;
+			y = z;
+			z = tmp;
+		}
+
+		return new Point3D(x, y, z);
+	}
+
+	/**
+	 * @param src
+	 * @param swap
+	 * @return
+	 */
+	public static Point3D shuffleInversePoint3D(Point3D src, boolean swapXY, boolean swapXZ, boolean swapYZ)
+	{
+		float x = src.x;
+		float y = src.y;
+		float z = src.z;
+
+		if (swapYZ)
+		{
+			float tmp = y;
+			y = z;
+			z = tmp;
+		}
+		if (swapXZ)
+		{
+			float tmp = x;
+			x = z;
+			z = tmp;
+		}
+		if (swapXY)
+		{
+			float tmp = x;
+			x = y;
+			y = tmp;
+		}
+
+		return new Point3D(x, y, z);
 	}
 
 	/**
