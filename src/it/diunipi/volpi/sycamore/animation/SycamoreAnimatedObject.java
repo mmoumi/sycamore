@@ -3,6 +3,12 @@ package it.diunipi.volpi.sycamore.animation;
 import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 /**
  * This class represents a generic animated object. Any animated object has its own timeline and
  * defines some operations and policies to access it.
@@ -118,5 +124,38 @@ public abstract class SycamoreAnimatedObject<P extends SycamoreAbstractPoint & C
 		{
 			return startingPosition;
 		}
+	}
+	
+	/**
+	 * Encode this object to XML format. The encoded Element will contain all data necessary to
+	 * re-create and object that is equal to this one.
+	 * 
+	 * @return an XML Element containing the XML description of this object.
+	 */
+	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	{
+		// create element
+		Element element = document.createElement("SycamoreAnimatedObject");
+		
+		// children
+		Element startingPositionElem = document.createElement("startingPosition");
+		startingPositionElem.appendChild(startingPosition.encode(factory, builder, document));
+		
+		Element timelineElem = document.createElement("timeline");
+		timelineElem.appendChild(timeline.encode(factory, builder, document));
+		
+		Element currentRatioElem = document.createElement("currentRatio");
+		currentRatioElem.appendChild(document.createTextNode(currentRatio + ""));
+		
+		Element directionElem = document.createElement("direction");
+		directionElem.appendChild(direction.encode(factory, builder, document));
+		
+		// append children
+		element.appendChild(startingPositionElem);
+		element.appendChild(timelineElem);
+		element.appendChild(currentRatioElem);
+		element.appendChild(directionElem);
+		
+		return element;
 	}
 }

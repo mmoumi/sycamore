@@ -3,6 +3,13 @@ package it.diunipi.volpi.sycamore.animation;
 import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 /**
  * This class represents a keyframe. It contains informations that are interpolated by the timeline
  * to determine intermediate positions along paths.
@@ -155,8 +162,8 @@ public class Keyframe<P extends SycamoreAbstractPoint & ComputablePoint<P>> impl
 	/**
 	 * Given a keyframe and a ratio, computes the P object that represents the position interpolated
 	 * using the informations contained in this keyframe and in passed keyframe. The path is
-	 * supposed to be linear and the speed uniform. The passed ratio is supposed to be
-	 * included in the interval consisting of the ratios of this keyframe and of passed keyframe.
+	 * supposed to be linear and the speed uniform. The passed ratio is supposed to be included in
+	 * the interval consisting of the ratios of this keyframe and of passed keyframe.
 	 * 
 	 * @param nextKeyframe
 	 * @param time
@@ -180,5 +187,46 @@ public class Keyframe<P extends SycamoreAbstractPoint & ComputablePoint<P>> impl
 		}
 		else
 			return null;
+	}
+
+	/**
+	 * Encode this object to XML format. The encoded Element will contain all data necessary to
+	 * re-create and object that is equal to this one.
+	 * 
+	 * @return an XML Element containing the XML description of this object.
+	 */
+	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	{
+		// create element
+		Element element = document.createElement("Keyframe");
+
+		// children
+		Element positionElem = document.createElement("position");
+		positionElem.appendChild(position.encode(factory, builder, document));
+
+		Element timeElem = document.createElement("time");
+		timeElem.appendChild(document.createTextNode(time + ""));
+
+		Element pauseElem = document.createElement("pause");
+		pauseElem.appendChild(document.createTextNode(pause + ""));
+
+		// append children
+		element.appendChild(positionElem);
+		element.appendChild(timeElem);
+		element.appendChild(pauseElem);
+
+		return element;
+	}
+
+	/**
+	 * @param element
+	 */
+	public void decode(Element element)
+	{
+		NodeList kyframes = element.getElementsByTagName("Keyframe");
+		for (int i = 0; i < kyframes.getLength(); i++)
+		{
+			System.out.println(kyframes.item(i).getNodeName());
+		}
 	}
 }
