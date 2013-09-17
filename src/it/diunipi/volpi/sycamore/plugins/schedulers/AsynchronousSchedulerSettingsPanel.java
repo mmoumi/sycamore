@@ -4,20 +4,19 @@
 package it.diunipi.volpi.sycamore.plugins.schedulers;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
+import it.diunipi.volpi.sycamore.gui.SwitchToggle;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import javax.swing.JLabel;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import it.diunipi.volpi.sycamore.gui.SwitchToggle;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  * @author Vale
@@ -226,12 +225,12 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 			switchToggle_continuous.setMaximumSize(new Dimension(71, 25));
 			switchToggle_continuous.setMinimumSize(new Dimension(71, 25));
 			switchToggle_continuous.setPreferredSize(new Dimension(71, 25));
-			switchToggle_continuous.addItemListener(new ItemListener()
+			switchToggle_continuous.addActionListener(new ActionListener()
 			{
 				@Override
-				public void itemStateChanged(ItemEvent e)
+				public void actionPerformed(ActionEvent e)
 				{
-					boolean selected = !switchToggle_continuous.isSelected();
+					boolean selected = switchToggle_continuous.isSelected();
 					AsynchronousScheduler.setContinuous(selected);
 					
 					if (selected)
@@ -259,12 +258,12 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 			switchToggle_rigid.setMaximumSize(new Dimension(71, 25));
 			switchToggle_rigid.setMinimumSize(new Dimension(71, 25));
 			switchToggle_rigid.setPreferredSize(new Dimension(71, 25));
-			switchToggle_rigid.addItemListener(new ItemListener()
+			switchToggle_rigid.addActionListener(new ActionListener()
 			{
 				@Override
-				public void itemStateChanged(ItemEvent e)
+				public void actionPerformed(ActionEvent e)
 				{
-					boolean selected = !switchToggle_rigid.isSelected();
+					boolean selected = switchToggle_rigid.isSelected();
 					AsynchronousScheduler.setRigid(selected);
 				}
 			});
@@ -283,12 +282,12 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 			switchToggle_changeSpeed.setMaximumSize(new Dimension(71, 25));
 			switchToggle_changeSpeed.setMinimumSize(new Dimension(71, 25));
 			switchToggle_changeSpeed.setPreferredSize(new Dimension(71, 25));
-			switchToggle_changeSpeed.addItemListener(new ItemListener()
+			switchToggle_changeSpeed.addActionListener(new ActionListener()
 			{
 				@Override
-				public void itemStateChanged(ItemEvent e)
+				public void actionPerformed(ActionEvent e)
 				{
-					boolean selected = !switchToggle_changeSpeed.isSelected();
+					boolean selected = switchToggle_changeSpeed.isSelected();
 					AsynchronousScheduler.setChangesRobotSpeed(selected);
 				}
 			});
@@ -308,12 +307,12 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 			switchToggle_fair.setMinimumSize(new Dimension(71, 25));
 			switchToggle_fair.setPreferredSize(new Dimension(71, 25));
 			switchToggle_fair.setEnabled(!AsynchronousScheduler.isContinuous());
-			switchToggle_fair.addItemListener(new ItemListener()
+			switchToggle_fair.addActionListener(new ActionListener()
 			{
 				@Override
-				public void itemStateChanged(ItemEvent e)
+				public void actionPerformed(ActionEvent e)
 				{
-					boolean selected = !switchToggle_fair.isSelected();
+					boolean selected = switchToggle_fair.isSelected();
 					AsynchronousScheduler.setFair(selected);
 				}
 			});
