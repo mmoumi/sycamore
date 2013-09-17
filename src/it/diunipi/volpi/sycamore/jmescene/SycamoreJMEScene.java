@@ -45,9 +45,13 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.ChaseCamera;
@@ -147,10 +151,10 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	{
 		this.listeners = new Vector<java.awt.event.ActionListener>();
 		SycamoreSystem.setJmeSceneManager(this);
-		
+
 		setupSystemCaps();
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -159,7 +163,9 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		this.caps = new HashMap<String, String>();
 		this.enqueue(new Callable<Object>()
 		{
-			/* (non-Javadoc)
+			/*
+			 * (non-Javadoc)
+			 * 
 			 * @see java.util.concurrent.Callable#call()
 			 */
 			@Override
@@ -169,12 +175,12 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 				caps.put("txt_gfx_vendor", GL11.glGetString(GL11.GL_VENDOR));
 				caps.put("txt_renderer", GL11.glGetString(GL11.GL_RENDERER));
 				caps.put("txt_lwjgl_version", Sys.getVersion());
-				
+
 				return null;
 			}
 		});
 	}
-	
+
 	/**
 	 * @return the caps
 	 */
@@ -471,6 +477,8 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		{
 			this.setLocalCoordinatesVisible(true);
 		}
+
+		updateAgreementsGraphics();
 	}
 
 	/**
@@ -496,7 +504,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 						SycamoreRobot robot = iterator.next();
 						Agreement agreement = robot.getAgreement();
 
-						if (agreement != null && !agreement.isDynamic())
+						if (agreement != null)
 						{
 							// attach local coordinates node
 							Node axesNode = agreement.getAxesNode();
@@ -504,6 +512,12 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 							axesNode.setLocalTranslation(agreement.getLocalTranslation());
 							axesNode.setLocalRotation(agreement.getLocalRotation());
 							axesNode.setLocalScale(agreement.getLocalScale());
+						}
+						else
+						{
+							robot.getRobotNode().setLocalRotation(Quaternion.IDENTITY);
+							robot.getRobotNode().setLocalScale(1, 1, 1);
+							robot.getRobotNode().setLocalTranslation(0, 0, 0);
 						}
 					}
 				}
@@ -859,19 +873,12 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 					// attach local coordinates node
 					Node axesNode = agreement.getAxesNode();
 
-					if (agreement.isDynamic())
-					{
-						robot.getRobotNode().attachChild(axesNode);
-					}
-					else
-					{
-						axesNode.setLocalTranslation(agreement.getLocalTranslation());
-						axesNode.setLocalRotation(agreement.getLocalRotation());
-						axesNode.setLocalScale(agreement.getLocalScale());
+					axesNode.setLocalTranslation(agreement.getLocalTranslation());
+					axesNode.setLocalRotation(agreement.getLocalRotation());
+					axesNode.setLocalScale(agreement.getLocalScale());
 
-						localAxesNode.attachChild(axesNode);
-						localAxesNode.updateGeometricState();
-					}
+					localAxesNode.attachChild(axesNode);
+					localAxesNode.updateGeometricState();
 				}
 				return null;
 			}
@@ -891,7 +898,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 				robotsNode.detachChild(robot.getRobotNode());
 
 				Agreement agreement = robot.getAgreement();
-				if (agreement != null && !agreement.isDynamic())
+				if (agreement != null)
 				{
 					localAxesNode.detachChild(agreement.getAxesNode());
 				}
@@ -930,7 +937,10 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 							mainNode.removeControl(billboardControl);
 							mainNode.setLocalRotation(billBoardRotation.clone());
 							rotateGrid(0);
-							mainNode.attachChild(zAxis);
+							if (SycamoreSystem.isAxesVisible())
+							{
+								mainNode.attachChild(zAxis);
+							}
 						}
 
 						updateRobotsGeometries();
@@ -953,5 +963,39 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	{
 		this.robotsNode.detachAllChildren();
 		setupScene(TYPE.TYPE_3D);
+	}
+
+	/**
+	 * @param color
+	 * @param factory
+	 * @param builder
+	 * @param document
+	 * @return
+	 */
+	public static Element encodeColorRGBA(ColorRGBA color, DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	{
+		// create element
+		Element element = document.createElement("colorRGBA");
+
+		// children
+		Element rElem = document.createElement("r");
+		rElem.appendChild(document.createTextNode(color.r + ""));
+
+		Element gElem = document.createElement("g");
+		gElem.appendChild(document.createTextNode(color.g + ""));
+
+		Element bElem = document.createElement("b");
+		bElem.appendChild(document.createTextNode(color.b + ""));
+
+		Element aElem = document.createElement("a");
+		aElem.appendChild(document.createTextNode(color.a + ""));
+
+		// append children
+		element.appendChild(rElem);
+		element.appendChild(gElem);
+		element.appendChild(bElem);
+		element.appendChild(aElem);
+
+		return element;
 	}
 }
