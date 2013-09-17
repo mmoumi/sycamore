@@ -1,5 +1,7 @@
 package it.diunipi.volpi.sycamore.gui;
 
+import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -16,10 +18,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.util.Vector;
 
 import javax.swing.GrayFilter;
 import javax.swing.ImageIcon;
-import javax.swing.JToggleButton;
+import javax.swing.JComponent;
 
 /**
  * A iOS-like swith toggle.
@@ -28,15 +31,16 @@ import javax.swing.JToggleButton;
  * 
  * @see https://weblogs.java.net/blog/campbell/archive/2006/07/java_2d_tricker.html
  */
-public class SwitchToggle extends JToggleButton implements ActionListener, Runnable, MouseMotionListener, MouseListener, HierarchyListener
+public class SwitchToggle extends JComponent implements Runnable, MouseMotionListener, MouseListener, HierarchyListener
 {
-	private static final long	serialVersionUID	= -1934864426879149371L;
-	private Image				bgImage				= new ImageIcon(getClass().getResource("/it/diunipi/volpi/sycamore/resources/bg.png")).getImage();
+	private static final long		serialVersionUID	= -1934864426879149371L;
+	private Image					bgImage				= new ImageIcon(getClass().getResource("/it/diunipi/volpi/sycamore/resources/bg.png")).getImage();
 
-	int							buttonX				= 0;
-	int							deltaX				= 0;
-	boolean						selected			= true;
-	boolean						drag				= true;
+	int								buttonX				= 0;
+	int								deltaX				= 0;
+	boolean							selected			= true;
+	boolean							drag				= true;
+	private Vector<ActionListener>	listeners			= null;
 
 	/**
 	 * Default constructor.
@@ -46,12 +50,59 @@ public class SwitchToggle extends JToggleButton implements ActionListener, Runna
 		super();
 
 		buttonX = -1 * (this.getWidth() - this.getHeight());
-		this.addActionListener(this);
 		this.addMouseMotionListener(this);
 		this.addMouseListener(this);
 		this.addHierarchyListener(this);
 	}
-	
+
+	/**
+	 * Adds an <code>ActionListener</code> to the button.
+	 * 
+	 * @param listener
+	 *            the <code>ActionListener</code> to be added
+	 */
+	public void addActionListener(ActionListener listener)
+	{
+		if (this.listeners == null)
+		{
+			this.listeners = new Vector<ActionListener>();
+		}
+		this.listeners.add(listener);
+	}
+
+	/**
+	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
+	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
+	 * 
+	 * @param listener
+	 *            the listener to be removed
+	 */
+	public void removeActionListener(ActionListener listener)
+	{
+		if (this.listeners == null)
+		{
+			this.listeners = new Vector<ActionListener>();
+		}
+		this.listeners.remove(listener);
+	}
+
+	/**
+	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
+	 * method on all of them.
+	 * 
+	 * @param e
+	 */
+	protected void fireActionEvent(ActionEvent e)
+	{
+		if (this.listeners != null)
+		{
+			for (ActionListener listener : this.listeners)
+			{
+				listener.actionPerformed(e);
+			}
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -70,6 +121,8 @@ public class SwitchToggle extends JToggleButton implements ActionListener, Runna
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
+
+		fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.SWITCH_TOGGLE_SELECTED.name()));
 		new Thread(this).start();
 	}
 
@@ -130,21 +183,6 @@ public class SwitchToggle extends JToggleButton implements ActionListener, Runna
 			g.drawImage(img, 0, 0, null);
 		}
 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		if (!drag)
-		{
-			selected = !selected;
-			new Thread(this).start();
-		}
 	}
 
 	/*
@@ -239,6 +277,10 @@ public class SwitchToggle extends JToggleButton implements ActionListener, Runna
 	@Override
 	public void mouseClicked(MouseEvent arg0)
 	{
+		if (!drag)
+		{
+			setSelected(!selected);
+		}
 	}
 
 	/*
@@ -259,6 +301,7 @@ public class SwitchToggle extends JToggleButton implements ActionListener, Runna
 	@Override
 	public void mouseExited(MouseEvent arg0)
 	{
+		//mouseReleased(arg0);
 	}
 
 	/*

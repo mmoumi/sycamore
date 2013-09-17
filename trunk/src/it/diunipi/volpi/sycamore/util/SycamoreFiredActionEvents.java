@@ -34,7 +34,8 @@ public enum SycamoreFiredActionEvents
 	SELECTED_MEMORY_CHANGED("Selected memory changed"),
 	UPDATE_GUI("Update the GUI"), 
 	UPDATE_AGREEMENTS_GRAPHICS("Update the agreements graphics"), 
-	LOAD_PLUGIN("Load a new plugin");
+	LOAD_PLUGIN("Load a new plugin"), 
+	SWITCH_TOGGLE_SELECTED("Switch toggle selected");
 
 	private String	description	= null;
 
