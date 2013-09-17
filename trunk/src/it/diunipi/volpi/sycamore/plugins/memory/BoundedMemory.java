@@ -19,7 +19,7 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 {
 	private enum BoundedMemoryProperties implements SycamoreProperty
 	{
-		MEMORY_SIZE("Memory size", "" + 10);
+		BOUNDED_MEMORY_SIZE("Memory size", "" + 10);
 
 		private String	description			= null;
 		private String	defaultValue	= null;
@@ -131,10 +131,10 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 	 */
 	protected static int getMemorySize()
 	{
-		int size = PropertyManager.getSharedInstance().getIntegerProperty(BoundedMemoryProperties.MEMORY_SIZE.name());
+		int size = PropertyManager.getSharedInstance().getIntegerProperty(BoundedMemoryProperties.BOUNDED_MEMORY_SIZE.name());
 		if (size < 0)
 		{
-			size = Integer.parseInt(BoundedMemoryProperties.MEMORY_SIZE.getDefaultValue());
+			size = Integer.parseInt(BoundedMemoryProperties.BOUNDED_MEMORY_SIZE.getDefaultValue());
 		}
 		
 		return size;
@@ -146,7 +146,7 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 	 */
 	protected static void setMemorySize(int memorySize)
 	{
-		PropertyManager.getSharedInstance().putProperty(BoundedMemoryProperties.MEMORY_SIZE.name(), memorySize);
+		PropertyManager.getSharedInstance().putProperty(BoundedMemoryProperties.BOUNDED_MEMORY_SIZE.name(), memorySize);
 	}
 
 }
