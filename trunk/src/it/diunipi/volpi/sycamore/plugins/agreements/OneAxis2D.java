@@ -4,10 +4,12 @@
 package it.diunipi.volpi.sycamore.plugins.agreements;
 
 import it.diunipi.volpi.sycamore.engine.Point2D;
-import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.util.PropertyManager;
+import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.awt.geom.AffineTransform;
@@ -29,21 +31,63 @@ import com.jme3.scene.debug.Arrow;
  * 
  */
 @PluginImplementation
-public class NoAgreementStatic2D extends StaticAgreement<Point2D>
+public class OneAxis2D extends AgreementImpl<Point2D>
 {
-	// node is static because it is the same for all the robots
-	private Node	axesNode	= new Node("Axes node");
+	private enum OneAxis2DProperties implements SycamoreProperty
+	{
+		ONE_AXIS_2D_AXIS("Axis", "X"), ONE_AXIS_2D_ROTATION("Rotation", "" + 0.0);
 
-	private double translationX = SycamoreUtil.getRandomDouble(-2.0, 2.0);
-	private double translationY = SycamoreUtil.getRandomDouble(-2.0, 2.0);
-	private double scaleX = (SycamoreUtil.getRandomBoolan() ? 1 : -1);
-	private double scaleY = (SycamoreUtil.getRandomBoolan() ? 1 : -1); 
-	private double rotation = SycamoreUtil.getRandomDouble(0, 365);
-	
+		private String	description		= null;
+		private String	defaultValue	= null;
+
+		/**
+		 * 
+		 */
+		OneAxis2DProperties(String description, String defaultValue)
+		{
+			this.description = description;
+			this.defaultValue = defaultValue;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
+		 */
+		@Override
+		public String getDescription()
+		{
+			return description;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDefaultValue()
+		 */
+		@Override
+		public String getDefaultValue()
+		{
+			return defaultValue;
+		}
+	}
+
+	// node is static because it is the same for all the robots
+	private Node					axesNode		= new Node("Axes node");
+
+	private double					translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+	private double					translationY	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+
+	private double					scaleFactor		= SycamoreUtil.getRandomDouble(0.5, 4);
+	private int						scaleXSignum	= SycamoreUtil.getRandomBoolan() ? 1 : -1;
+	private int						scaleYSignum	= SycamoreUtil.getRandomBoolan() ? 1 : -1;
+
+	private OneAxis2DSettingsPanel	panel_settings	= null;
+
 	/**
 	 * Default constructor
 	 */
-	public NoAgreementStatic2D()
+	public OneAxis2D()
 	{
 		SycamoreSystem.enqueueToJME(new Callable<Object>()
 		{
@@ -98,7 +142,7 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 		{
 			e.printStackTrace();
 		}
-		
+
 		return SycamoreUtil.convertPoint2D(destPoint);
 	}
 
@@ -141,7 +185,7 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 	{
 		float angleX = 0;
 		float angleY = 0;
-		float angleZ = (float) Math.toRadians(rotation);
+		float angleZ = (float) Math.toRadians(getRotation());
 
 		return new Quaternion(new float[]
 		{ angleX, angleY, angleZ });
@@ -155,7 +199,7 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 	@Override
 	public Vector3f getLocalScale()
 	{
-		return new Vector3f((float) scaleX, (float) scaleY, 0);
+		return new Vector3f((float) getScaleX(), (float) getScaleY(), 0);
 	}
 
 	/**
@@ -165,10 +209,102 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 	{
 		AffineTransform transform = new AffineTransform();
 		transform.translate(translationX, translationY);
-		transform.rotate(Math.toRadians(rotation));
-		transform.scale(scaleX, scaleY);
+		transform.rotate(Math.toRadians(getRotation()));
+		transform.scale(getScaleX(), getScaleY());
 
 		return transform;
+	}
+
+	/**
+	 * @return
+	 */
+	private int getSignumX()
+	{
+		return (getAxis().equals("X") ? 1 : scaleXSignum);
+	}
+
+	/**
+	 * @return
+	 */
+	private int getSignumY()
+	{
+		return (getAxis().equals("Y") ? 1 : scaleYSignum);
+	}
+
+	/**
+	 * @return the scaleX
+	 */
+	public double getScaleX()
+	{
+		if (AgreementImpl.isFixMeasureUnit())
+		{
+			return getSignumX();
+		}
+		else
+		{
+			return scaleFactor * (getSignumX());
+		}
+	}
+
+	/**
+	 * @return the scaleY
+	 */
+	public double getScaleY()
+	{
+		if (AgreementImpl.isFixMeasureUnit())
+		{
+			return getSignumY();
+		}
+		else
+		{
+			return scaleFactor * (getSignumY());
+		}
+	}
+
+	/**
+	 * @param rotation
+	 *            the rotation to set
+	 */
+	public static void setAxis(String axis)
+	{
+		PropertyManager.getSharedInstance().putProperty(OneAxis2DProperties.ONE_AXIS_2D_AXIS.name(), axis);
+	}
+
+	/**
+	 * @return the rotation
+	 */
+	public static String getAxis()
+	{
+		String axis = PropertyManager.getSharedInstance().getProperty(OneAxis2DProperties.ONE_AXIS_2D_AXIS.name());
+		if (axis == null)
+		{
+			axis = "X";
+		}
+
+		return axis;
+	}
+
+	/**
+	 * @return the rotation
+	 */
+	public static double getRotation()
+	{
+		double rotation = PropertyManager.getSharedInstance().getDoubleProperty(OneAxis2DProperties.ONE_AXIS_2D_ROTATION.name());
+		if (Double.isInfinite(rotation))
+		{
+			rotation = Double.parseDouble(OneAxis2DProperties.ONE_AXIS_2D_ROTATION.getDefaultValue());
+		}
+
+		return rotation;
+	}
+
+	/**
+	 * @param rotation
+	 *            the rotation to set
+	 */
+	public static void setRotation(double rotation)
+	{
+		PropertyManager.getSharedInstance().putProperty(OneAxis2DProperties.ONE_AXIS_2D_ROTATION.name(), rotation);
 	}
 
 	/*
@@ -179,7 +315,7 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 	@Override
 	public Node getAxesNode()
 	{
-		return this.axesNode;
+		return axesNode;
 	}
 
 	/*
@@ -212,7 +348,7 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "No agreement static in 2D. The local coordinates systems are static";
+		return "Agreement on one axis in 2D. Only north and south or east and west are agreed.";
 	}
 
 	/*
@@ -223,7 +359,7 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "No agreement in 2D. The local coordinates systems are static, so they don't change during the simulation";
+		return "Agreement on one axis in 2D. Each robot has its own coordinates system with its own origin, but the direction of one axis is agreed. This means that only two cardinal points are agreed: either north and south or east and west. The orientation of the other two cardinal points could be different from one robot to another.";
 	}
 
 	/*
@@ -234,46 +370,23 @@ public class NoAgreementStatic2D extends StaticAgreement<Point2D>
 	@Override
 	public SycamorePanel getPanel_settings()
 	{
-		return null;
+		if (panel_settings == null)
+		{
+			panel_settings = new OneAxis2DSettingsPanel();
+		}
+		return panel_settings;
 	}
-	
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.plugins.agreements.Agreement#setOwner(it.diunipi.volpi.sycamore.model.SycamoreRobot)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.plugins.agreements.Agreement#setOwner(it.diunipi.volpi.sycamore
+	 * .model.SycamoreRobot)
 	 */
 	@Override
 	public void setOwner(SycamoreRobot<Point2D> owner)
 	{
 		// Nothing to do
-	}
-	
-	public static void main(String[] args)
-	{
-		NoAgreementStatic2D agreement1 = new NoAgreementStatic2D();
-		NoAgreementStatic2D agreement2 = new NoAgreementStatic2D();
-
-		Point2D p1 = new Point2D(0, 0);
-		Point2D p2 = agreement1.toGlobalCoordinates(p1);
-		Point2D p3 = agreement2.toLocalCoordinates(p2);
-		Point2D p4 = agreement2.toGlobalCoordinates(p3);
-
-		System.out.println(p1 + " expressed in local coordinates with agreement 1");
-		System.out.println("global (agr1): " + p2 + " -> local (agr2): " + p3 + " -> global (agr2): " + p4);
-		System.out.println();
-		
-		p1 = new Point2D(1, 0);
-		p2 = agreement1.toGlobalCoordinates(p1);
-		p3 = agreement2.toLocalCoordinates(p2);
-
-		System.out.println(p1 + " expressed in local coordinates");
-		System.out.println("global: " + p2 + " -> local: " + p3);
-		System.out.println();
-		
-		p1 = new Point2D(0, 1);
-		p2 = agreement1.toGlobalCoordinates(p1);
-		p3 = agreement2.toLocalCoordinates(p2);
-
-		System.out.println(p1 + " expressed in local coordinates");
-		System.out.println("global: " + p2 + " -> local: " + p3);
-		System.out.println();
 	}
 }

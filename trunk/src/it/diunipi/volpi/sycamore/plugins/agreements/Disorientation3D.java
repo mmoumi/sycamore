@@ -4,12 +4,11 @@
 package it.diunipi.volpi.sycamore.plugins.agreements;
 
 import it.diunipi.volpi.sycamore.engine.Point3D;
-import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.util.PropertyManager;
-import it.diunipi.volpi.sycamore.util.SycamoreProperty;
+import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.concurrent.Callable;
 
@@ -29,56 +28,30 @@ import com.jme3.scene.debug.Arrow;
  * 
  */
 @PluginImplementation
-public class TotalAgreementStatic3D extends StaticAgreement<Point3D>
+public class Disorientation3D extends AgreementImpl<Point3D>
 {
-	private enum TotalStaticAgreementProperties implements SycamoreProperty
-	{
-		TRANSLATION_X("Translation X", "" + 0.0), TRANSLATION_Y("Translation Y", "" + 0.0), TRANSLATION_Z("Translation Z", "" + 0.0), SCALE_X("Scale X", "" + 1.0), SCALE_Y("Scale Y", "" + 1.0), SCALE_Z(
-				"Scale Y", "" + 1.0), ROTATION_X("Rotation X", "" + 0.0), ROTATION_Y("Rotation Y", "" + 0.0), ROTATION_Z("Rotation Z", "" + 0.0);
-
-		private String	description		= null;
-		private String	defaultValue	= null;
-
-		/**
-		 * 
-		 */
-		TotalStaticAgreementProperties(String description, String defaultValue)
-		{
-			this.description = description;
-			this.defaultValue = defaultValue;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
-		 */
-		@Override
-		public String getDescription()
-		{
-			return description;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDefaultValue()
-		 */
-		@Override
-		public String getDefaultValue()
-		{
-			return defaultValue;
-		}
-	}
-
 	// node is static because it is the same for all the robots
-	private static Node							axesNode		= new Node("Axes node");
-	private TotalAgreementStatic3DSettingPanel	panel_settings	= null;
+	private Node					axesNode		= new Node("Axes node");
+
+	private double					translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+	private double					translationY	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+	private double					translationZ	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+
+	private double					scaleFactor		= SycamoreUtil.getRandomDouble(0.5, 4);
+	private int						scaleXSignum	= SycamoreUtil.getRandomBoolan() ? 1 : -1;
+	private int						scaleYSignum	= SycamoreUtil.getRandomBoolan() ? 1 : -1;
+	private int						scaleZSignum	= SycamoreUtil.getRandomBoolan() ? 1 : -1;
+	
+	private double					rotationX		= SycamoreUtil.getRandomDouble(0, 365);
+	private double					rotationY		= SycamoreUtil.getRandomDouble(0, 365);
+	private double					rotationZ		= SycamoreUtil.getRandomDouble(0, 365);
+
+	private AgreementSettingsPanel	panel_settings	= null;
 
 	/**
 	 * Default constructor
 	 */
-	public TotalAgreementStatic3D()
+	public Disorientation3D()
 	{
 		SycamoreSystem.enqueueToJME(new Callable<Object>()
 		{
@@ -104,7 +77,7 @@ public class TotalAgreementStatic3D extends StaticAgreement<Point3D>
 				yAxis.setMaterial(matY);
 				yAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(yAxis);
-				
+
 				Arrow arrowZ = new Arrow(new Vector3f(0, 0, 2));
 				arrowZ.setLineWidth(4); // make arrow thicker
 				Geometry zAxis = new Geometry("Z coordinate axis", arrowZ);
@@ -134,7 +107,7 @@ public class TotalAgreementStatic3D extends StaticAgreement<Point3D>
 	{
 		Vector3f ret = Vector3f.ZERO;
 		computeTransform().transformInverseVector(point.toVector3f(), ret);
-		
+
 		return new Point3D(ret);
 	}
 
@@ -150,7 +123,7 @@ public class TotalAgreementStatic3D extends StaticAgreement<Point3D>
 	{
 		Vector3f ret = Vector3f.ZERO;
 		computeTransform().transformVector(point.toVector3f(), ret);
-		
+
 		return new Point3D(ret);
 	}
 
@@ -162,7 +135,7 @@ public class TotalAgreementStatic3D extends StaticAgreement<Point3D>
 	@Override
 	public Vector3f getLocalTranslation()
 	{
-		return new Vector3f((float) getTranslationX(), (float) getTranslationY(), (float) getTranslationZ());
+		return new Vector3f((float) translationX, (float) translationY, (float) translationZ);
 	}
 
 	/*
@@ -173,9 +146,9 @@ public class TotalAgreementStatic3D extends StaticAgreement<Point3D>
 	@Override
 	public Quaternion getLocalRotation()
 	{
-		float angleX = (float) Math.toRadians(getRotationX());
-		float angleY = (float) Math.toRadians(getRotationY());
-		float angleZ = (float) Math.toRadians(getRotationZ());
+		float angleX = (float) Math.toRadians(rotationX);
+		float angleY = (float) Math.toRadians(rotationY);
+		float angleZ = (float) Math.toRadians(rotationZ);
 
 		return new Quaternion(new float[]
 		{ angleX, angleY, angleZ });
@@ -205,212 +178,50 @@ public class TotalAgreementStatic3D extends StaticAgreement<Point3D>
 	}
 
 	/**
-	 * @return the translationX
-	 */
-	public static double getTranslationX()
-	{
-		double translationX = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.TRANSLATION_X.name());
-		if (Double.isInfinite(translationX))
-		{
-			translationX = Double.parseDouble(TotalStaticAgreementProperties.TRANSLATION_X.getDefaultValue());
-		}
-
-		return translationX;
-	}
-
-	/**
-	 * @param translationX
-	 *            the translationX to set
-	 */
-	public static void setTranslationX(double translationX)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.TRANSLATION_X.name(), translationX);
-	}
-
-	/**
-	 * @return the translationY
-	 */
-	public static double getTranslationY()
-	{
-		double translationY = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.TRANSLATION_Y.name());
-		if (Double.isInfinite(translationY))
-		{
-			translationY = Double.parseDouble(TotalStaticAgreementProperties.TRANSLATION_Y.getDefaultValue());
-		}
-
-		return translationY;
-	}
-
-	/**
-	 * @param translationY
-	 *            the translationY to set
-	 */
-	public static void setTranslationY(double translationY)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.TRANSLATION_Y.name(), translationY);
-	}
-
-	/**
-	 * @return the translationY
-	 */
-	public static double getTranslationZ()
-	{
-		double translationZ = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.TRANSLATION_Z.name());
-		if (Double.isInfinite(translationZ))
-		{
-			translationZ = Double.parseDouble(TotalStaticAgreementProperties.TRANSLATION_Z.getDefaultValue());
-		}
-
-		return translationZ;
-	}
-
-	/**
-	 * @param translationY
-	 *            the translationY to set
-	 */
-	public static void setTranslationZ(double translationZ)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.TRANSLATION_Z.name(), translationZ);
-	}
-
-	/**
 	 * @return the scaleX
 	 */
-	public static double getScaleX()
+	public double getScaleX()
 	{
-		double scaleX = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.SCALE_X.name());
-		if (Double.isInfinite(scaleX))
+		if (AgreementImpl.isFixMeasureUnit())
 		{
-			scaleX = Double.parseDouble(TotalStaticAgreementProperties.SCALE_X.getDefaultValue());
+			return scaleXSignum;
 		}
-
-		return scaleX;
-	}
-
-	/**
-	 * @param scaleX
-	 *            the scaleX to set
-	 */
-	public static void setScaleX(double scaleX)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.SCALE_X.name(), scaleX);
+		else
+		{
+			return scaleFactor * scaleXSignum;
+		}
 	}
 
 	/**
 	 * @return the scaleY
 	 */
-	public static double getScaleY()
+	public double getScaleY()
 	{
-		double scaleY = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.SCALE_Y.name());
-		if (Double.isInfinite(scaleY))
+		if (AgreementImpl.isFixMeasureUnit())
 		{
-			scaleY = Double.parseDouble(TotalStaticAgreementProperties.SCALE_Y.getDefaultValue());
+			return scaleYSignum;
 		}
-
-		return scaleY;
-	}
-
-	/**
-	 * @param scaleY
-	 *            the scaleY to set
-	 */
-	public static void setScaleZ(double scaleZ)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.SCALE_Z.name(), scaleZ);
+		else
+		{
+			return scaleFactor * scaleYSignum;
+		}
 	}
 
 	/**
 	 * @return the scaleY
 	 */
-	public static double getScaleZ()
+	public double getScaleZ()
 	{
-		double scaleZ = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.SCALE_Z.name());
-		if (Double.isInfinite(scaleZ))
+		if (AgreementImpl.isFixMeasureUnit())
 		{
-			scaleZ = Double.parseDouble(TotalStaticAgreementProperties.SCALE_Z.getDefaultValue());
+			return scaleZSignum;
 		}
-
-		return scaleZ;
-	}
-
-	/**
-	 * @param scaleY
-	 *            the scaleY to set
-	 */
-	public static void setScaleY(double scaleY)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.SCALE_Y.name(), scaleY);
-	}
-
-	/**
-	 * @return the rotation
-	 */
-	public static double getRotationX()
-	{
-		double rotationX = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.ROTATION_X.name());
-		if (Double.isInfinite(rotationX))
+		else
 		{
-			rotationX = Double.parseDouble(TotalStaticAgreementProperties.ROTATION_X.getDefaultValue());
+			return scaleFactor * scaleZSignum;
 		}
-
-		return rotationX;
 	}
-
-	/**
-	 * @param rotation
-	 *            the rotation to set
-	 */
-	public static void setRotationX(double rotationX)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.ROTATION_X.name(), rotationX);
-	}
-
-	/**
-	 * @return the rotation
-	 */
-	public static double getRotationY()
-	{
-		double rotationY = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.ROTATION_Y.name());
-		if (Double.isInfinite(rotationY))
-		{
-			rotationY = Double.parseDouble(TotalStaticAgreementProperties.ROTATION_Y.getDefaultValue());
-		}
-
-		return rotationY;
-	}
-
-	/**
-	 * @param rotation
-	 *            the rotation to set
-	 */
-	public static void setRotationY(double rotationY)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.ROTATION_Y.name(), rotationY);
-	}
-
-	/**
-	 * @return the rotation
-	 */
-	public static double getRotationZ()
-	{
-		double rotationZ = PropertyManager.getSharedInstance().getDoubleProperty(TotalStaticAgreementProperties.ROTATION_Z.name());
-		if (Double.isInfinite(rotationZ))
-		{
-			rotationZ = Double.parseDouble(TotalStaticAgreementProperties.ROTATION_Z.getDefaultValue());
-		}
-
-		return rotationZ;
-	}
-
-	/**
-	 * @param rotation
-	 *            the rotation to set
-	 */
-	public static void setRotationZ(double rotationZ)
-	{
-		PropertyManager.getSharedInstance().putProperty(TotalStaticAgreementProperties.ROTATION_Z.name(), rotationZ);
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -452,7 +263,7 @@ public class TotalAgreementStatic3D extends StaticAgreement<Point3D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Total static agreement in 3D. The local coordinates systems are static";
+		return "Complete disorientation in 3D.";
 	}
 
 	/*
@@ -463,7 +274,7 @@ public class TotalAgreementStatic3D extends StaticAgreement<Point3D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Total agreement in 3D. The local coordinates systems are static, so they don't change during the simulation";
+		return "Complete disorientation in 3D. Each robot has a unique local coordinates system, that has its own origin. The orientation of the axes can be different from one robot to another, as well as the measure unit and the axes themselves. There could be several rotation factors, still differents from one robot to another, and the axes may also be shuffled.";
 	}
 
 	/*
@@ -476,7 +287,7 @@ public class TotalAgreementStatic3D extends StaticAgreement<Point3D>
 	{
 		if (panel_settings == null)
 		{
-			panel_settings = new TotalAgreementStatic3DSettingPanel();
+			panel_settings = new AgreementSettingsPanel();
 		}
 		return panel_settings;
 	}
@@ -496,17 +307,17 @@ public class TotalAgreementStatic3D extends StaticAgreement<Point3D>
 
 	public static void main(String[] args)
 	{
-		TotalAgreementStatic3D agreement = new TotalAgreementStatic3D();
+		AbsoluteAgreement3D agreement = new AbsoluteAgreement3D();
 
-		TotalAgreementStatic3D.setTranslationX(1);
-		TotalAgreementStatic3D.setTranslationY(1);
-		TotalAgreementStatic3D.setTranslationZ(1);
-		TotalAgreementStatic3D.setScaleX(1);
-		TotalAgreementStatic3D.setScaleY(1);
-		TotalAgreementStatic3D.setScaleZ(1);
-		TotalAgreementStatic3D.setRotationX(0);
-		TotalAgreementStatic3D.setRotationY(0);
-		TotalAgreementStatic3D.setRotationZ(0);
+		AbsoluteAgreement3D.setTranslationX(1);
+		AbsoluteAgreement3D.setTranslationY(1);
+		AbsoluteAgreement3D.setTranslationZ(1);
+		AbsoluteAgreement3D.setScaleX(1);
+		AbsoluteAgreement3D.setScaleY(1);
+		AbsoluteAgreement3D.setScaleZ(1);
+		AbsoluteAgreement3D.setRotationX(0);
+		AbsoluteAgreement3D.setRotationY(0);
+		AbsoluteAgreement3D.setRotationZ(0);
 
 		Point3D p1 = new Point3D(0, 0, 0);
 		Point3D p2 = agreement.toLocalCoordinates(p1);
