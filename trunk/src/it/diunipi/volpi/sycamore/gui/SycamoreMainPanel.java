@@ -138,7 +138,7 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	 * @param type
 	 * @return
 	 */
-	protected SycamoreEngine initEngine(TYPE type)
+	public SycamoreEngine initEngine(TYPE type)
 	{
 		if (type != null)
 		{

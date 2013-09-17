@@ -147,7 +147,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 					{
 						try
 						{
-							appEngine.creatAndSetNewSchedulerInstance(scheduler);
+							appEngine.createAndSetNewSchedulerInstance(scheduler);
 							fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.UPDATE_GUI.name()));
 						}
 						catch (Exception e1)
@@ -385,7 +385,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 				if (scheduler != null)
 				{
 					// create, set and start new scheduler
-					newEngine.creatAndSetNewSchedulerInstance(scheduler);
+					newEngine.createAndSetNewSchedulerInstance(scheduler);
 				}
 
 				getSycamoreRobotsConfigurationPanel().updateEngine(newEngine);
