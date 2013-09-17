@@ -123,6 +123,15 @@ public class PropertyManager
 	 * @param name
 	 * @return
 	 */
+	public String getProperty(String name, boolean skipFallback)
+	{
+		return this.properties.get(name);
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
 	public String getProperty(String name)
 	{
 		String val = this.properties.get(name);
@@ -151,6 +160,15 @@ public class PropertyManager
 	 * @param name
 	 * @return
 	 */
+	public int getIntegerProperty(String name, boolean skipFallback)
+	{
+		return Integer.parseInt(this.properties.get(name));
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
 	public int getIntegerProperty(String name)
 	{
 		String val = this.properties.get(name);
@@ -174,6 +192,15 @@ public class PropertyManager
 			// return no value
 			return -1;
 		}
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public float getFloatProperty(String name, boolean skipFallback)
+	{
+		return Float.parseFloat(this.properties.get(name));
 	}
 
 	/**
@@ -202,6 +229,15 @@ public class PropertyManager
 			return 1.0f / 0.0f;
 		}
 	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public double getDoubleProperty(String name, boolean skipFallback)
+	{
+		return Double.parseDouble(this.properties.get(name));
+	}
 
 	/**
 	 * @param name
@@ -228,6 +264,15 @@ public class PropertyManager
 
 			return 1.0f / 0.0f;
 		}
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public boolean getBooleanProperty(String name, boolean skipFallback)
+	{
+		return Boolean.parseBoolean(this.properties.get(name));
 	}
 
 	/**
