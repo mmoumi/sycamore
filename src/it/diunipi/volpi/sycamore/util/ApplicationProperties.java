@@ -3,16 +3,18 @@
  */
 package it.diunipi.volpi.sycamore.util;
 
+import java.awt.Toolkit;
+
 /**
  * @author Vale
  * 
  */
 public enum ApplicationProperties implements SycamoreProperty
 {
-	WINDOW_X("X position of the app window", 0 + ""),
-	WINDOW_Y("Y position of the app window", 0 + ""),
-	WINDOW_WIDTH("Width of the app window", 1024 + ""),
-	WINDOW_HEIGHT("Height of the app window", 600 + ""),
+	WINDOW_X("X position of the app window", 40 + ""),
+	WINDOW_Y("Y position of the app window", 40 + ""),
+	WINDOW_WIDTH("Width of the app window", ((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 80) + ""),
+	WINDOW_HEIGHT("Height of the app window", ((int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 100) + ""),
 	GRID_VISIBLE("Grid in 3D scene is visible", true + ""),
 	AXES_VISIBLE("Grid in 3D scene is visible", true + ""),
 	BARICENTRUM_VISIBLE("Grid in 3D scene is visible", false + ""),
