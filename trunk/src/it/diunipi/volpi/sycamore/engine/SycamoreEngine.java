@@ -17,10 +17,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.Callable;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import com.jme3.math.ColorRGBA;
 
@@ -72,8 +80,8 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 
 	// plugins
 	protected InitialConditions<P>				initialConditions			= null;
-	private Scheduler<P>						currentScheduler			= null;
-	private Vector<Measure>						currentMeasures				= null;
+	private Scheduler<P>						scheduler					= null;
+	private Vector<Measure>						measures					= null;
 	private HumanPilotScheduler<P>				humanPilotScheduler			= null;
 
 	// auxiliary data
@@ -91,7 +99,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 		this.humanPilotScheduler = new HumanPilotScheduler<P>();
 		this.humanPilotScheduler.setAppEngine(this);
 
-		this.currentMeasures = new Vector<Measure>();
+		this.measures = new Vector<Measure>();
 		this.listeners = new Vector<ActionListener>();
 
 		this.ratioSnapshot = new HashMap<SycamoreRobot<P>, Float>();
@@ -193,7 +201,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 */
 	public Scheduler<P> getCurrentScheduler()
 	{
-		return currentScheduler;
+		return scheduler;
 	}
 
 	/**
@@ -202,7 +210,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 */
 	protected void setCurrentScheduler(Scheduler<P> currentScheduler)
 	{
-		this.currentScheduler = currentScheduler;
+		this.scheduler = currentScheduler;
 	}
 
 	/**
@@ -210,7 +218,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 */
 	public Vector<Measure> getCurrentMeasures()
 	{
-		return currentMeasures;
+		return measures;
 	}
 
 	/**
@@ -219,7 +227,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 */
 	protected void setCurrentMeasures(Vector<Measure> currentMeasures)
 	{
-		this.currentMeasures = currentMeasures;
+		this.measures = currentMeasures;
 	}
 
 	/**
@@ -245,13 +253,13 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	public Observation<P> getObservation(SycamoreRobot<P> robot, SycamoreRobot<P> callee)
 	{
 		P position = robot.getGlobalPosition();
-	
+
 		// translate position to callee's local coords
 		if (callee.getAgreement() != null)
 		{
 			position = callee.getAgreement().toLocalCoordinates(position);
 		}
-		
+
 		return new Observation<P>(position, robot.getLights(), robot.getAlgorithm().isHumanPilot());
 	}
 
@@ -294,12 +302,15 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 		{
 			SycamoreRobot<P> robot = iterator.next();
 
-			// ask the robot for the obsevation.
-			Observation<P> observation = this.getObservation(robot, callee);
-
-			if (observation != null && robot != callee)
+			if (robot != callee)
 			{
-				observations.add(observation);
+				// ask the robot for the obsevation.
+				Observation<P> observation = this.getObservation(robot, callee);
+
+				if (observation != null)
+				{
+					observations.add(observation);
+				}
 			}
 		}
 
@@ -323,8 +334,8 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	{
 		this.robots.clear();
 
-		this.currentMeasures.clear();
-		this.currentScheduler = null;
+		this.measures.clear();
+		this.scheduler = null;
 	}
 
 	/**
@@ -400,7 +411,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public void creatAndSetNewSchedulerInstance(Scheduler scheduler) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+	public void createAndSetNewSchedulerInstance(Scheduler scheduler) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
 	{
 		if (scheduler != null)
 		{
@@ -492,7 +503,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 */
 	public boolean isValid()
 	{
-		if (currentScheduler != null)
+		if (scheduler != null)
 		{
 			return true;
 		}
@@ -541,7 +552,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 */
 	public void performMeasuresSimulationStart()
 	{
-		for (Measure measure : this.currentMeasures)
+		for (Measure measure : this.measures)
 		{
 			Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
 			while (iterator.hasNext())
@@ -557,7 +568,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 */
 	public void performMeasuresSimulationStep()
 	{
-		for (Measure measure : this.currentMeasures)
+		for (Measure measure : this.measures)
 		{
 			Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
 			while (iterator.hasNext())
@@ -573,7 +584,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 */
 	public void performMeasuresSimulationEnd()
 	{
-		for (Measure measure : this.currentMeasures)
+		for (Measure measure : this.measures)
 		{
 			Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
 			while (iterator.hasNext())
@@ -726,5 +737,143 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 				robot.setCurrentRatio(newRatio);
 			}
 		}
+	}
+
+	/**
+	 * Encode this object to XML format. The encoded Element will contain all data necessary to
+	 * re-create and object that is equal to this one.
+	 * 
+	 * @return an XML Element containing the XML description of this object.
+	 */
+	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	{
+		// create element
+		Element element = document.createElement("SycamoreEngine");
+
+		// children
+		Element robotsElem = document.createElement("robots");
+		robotsElem.appendChild(robots.encode(factory, builder, document));
+
+		Element animationSpeedMultiplierElem = document.createElement("animationSpeedMultiplier");
+		animationSpeedMultiplierElem.appendChild(document.createTextNode(animationSpeedMultiplier + ""));
+
+		// append children
+		element.appendChild(robotsElem);
+		element.appendChild(animationSpeedMultiplierElem);
+
+		// the following children could be null
+		if (initialConditions != null)
+		{
+			Element initialConditionsElem = document.createElement("initialConditions");
+			initialConditionsElem.appendChild(document.createTextNode(initialConditions.getPluginName() + ""));
+			element.appendChild(initialConditionsElem);
+		}
+
+		if (scheduler != null)
+		{
+			Element schedulerElem = document.createElement("scheduler");
+			schedulerElem.appendChild(document.createTextNode(scheduler.getPluginName() + ""));
+			element.appendChild(schedulerElem);
+		}
+
+		Element measuresElem = document.createElement("measures");
+		for (int i = 0; i < measures.size(); i++)
+		{
+			Measure measure = measures.elementAt(i);
+			Element measureElem = document.createElement("measure");
+			measureElem.appendChild(document.createTextNode(measure.getPluginName() + ""));
+			element.appendChild(measureElem);
+		}
+		element.appendChild(measuresElem);
+
+		return element;
+	}
+
+	/**
+	 * Decode the fields in this engine by taking them from passed XML element
+	 * 
+	 * @param documentElement
+	 */
+	public boolean decode(Element element)
+	{
+		NodeList nodes = element.getElementsByTagName("SycamoreEngine");
+
+		// if there is at least a SycamoreEngine node, decode it
+		if (nodes.getLength() > 0)
+		{
+			// decode fields
+			if (!this.robots.decode(element))
+			{
+				return false;
+			}
+
+			// get values
+			NodeList animationSpeedMultiplier = element.getElementsByTagName("animationSpeedMultiplier");
+			if (animationSpeedMultiplier.getLength() > 0)
+			{
+				Element animationSpeedMultiplierElem = (Element) animationSpeedMultiplier.item(0);
+				this.animationSpeedMultiplier = Float.parseFloat(animationSpeedMultiplierElem.getTextContent());
+			}
+
+			// initial conditions
+			NodeList initialConditions = element.getElementsByTagName("initialConditions");
+			if (initialConditions.getLength() > 0)
+			{
+				Element initialConditionsElem = (Element) initialConditions.item(0);
+				String initialConditionsName = initialConditionsElem.getTextContent();
+
+				// get loaded plugins
+				ArrayList<InitialConditions> loaded = SycamorePluginManager.getSharedInstance().getLoadedInitialConditions();
+				for (InitialConditions plugin : loaded)
+				{
+					if (plugin.getPluginName().equals(initialConditionsName))
+					{
+						try
+						{
+							// create the new
+							this.createAndSetNewInitialConditionsInstance(plugin);
+							break;
+						}
+						catch (Exception e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							return false;
+						}
+					}
+				}
+			}
+
+			// scheduler
+			NodeList scheduler = element.getElementsByTagName("scheduler");
+			if (scheduler.getLength() > 0)
+			{
+				Element schedulerElem = (Element) scheduler.item(0);
+				String schedulerName = schedulerElem.getTextContent();
+
+				// get loaded plugins
+				ArrayList<Scheduler> loaded = SycamorePluginManager.getSharedInstance().getLoadedSchedulers();
+				for (Scheduler plugin : loaded)
+				{
+					if (plugin.getPluginName().equals(schedulerName))
+					{
+						try
+						{
+							// create the new
+							this.createAndSetNewSchedulerInstance(plugin);
+							break;
+						}
+						catch (Exception e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							return false;
+						}
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 }

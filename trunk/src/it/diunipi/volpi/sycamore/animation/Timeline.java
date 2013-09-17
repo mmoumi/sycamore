@@ -7,6 +7,12 @@ import it.diunipi.volpi.sycamore.util.SortedList;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 /**
  * This class represents a timeline. It contains a certain number of keyframes, stored at a fixed
  * ratio. The user can query the timeline giving a intermediate ratio, and it obtains the position
@@ -286,7 +292,7 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Returns the time corresponding to the keyframe at passed index
 	 * 
@@ -546,5 +552,34 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	{
 		this.keyframes.removeAllElements();
 		duration = 0;
+	}
+
+	/**
+	 * Encode this object to XML format. The encoded Element will contain all data necessary to
+	 * re-create and object that is equal to this one.
+	 * 
+	 * @return an XML Element containing the XML description of this object.
+	 */
+	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	{
+		// create element
+		Element element = document.createElement("Timeline");
+
+		// children
+		Element keyframesElem = document.createElement("keyframes");
+		for (int i = 0; i < keyframes.size(); i++)
+		{
+			Keyframe<P> keyframe = keyframes.get(i);
+			keyframesElem.appendChild(keyframe.encode(factory, builder, document));
+		}
+
+		Element durationElem = document.createElement("duration");
+		durationElem.appendChild(document.createTextNode(duration + ""));
+
+		// append children
+		element.appendChild(keyframesElem);
+		element.appendChild(durationElem);
+
+		return element;
 	}
 }

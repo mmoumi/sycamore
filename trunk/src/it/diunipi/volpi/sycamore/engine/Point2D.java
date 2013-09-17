@@ -1,5 +1,11 @@
 package it.diunipi.volpi.sycamore.engine;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 
 import com.jme3.math.Vector3f;
@@ -250,5 +256,29 @@ public class Point2D extends SycamoreAbstractPoint implements Comparable<Point2D
 		ret[2] = angle;
 		
 		return ret;
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#encode(javax.xml.parsers.DocumentBuilderFactory, javax.xml.parsers.DocumentBuilder, org.w3c.dom.Document)
+	 */
+	@Override
+	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	{
+		// create element
+		Element element = document.createElement("Point2D");
+		
+		// children
+		
+		Element xElem = document.createElement("x");
+		xElem.appendChild(document.createTextNode(x + ""));
+		
+		Element yElem = document.createElement("y");
+		yElem.appendChild(document.createTextNode(y + ""));
+		
+		// append children
+		element.appendChild(xElem);
+		element.appendChild(yElem);
+		
+		return element;
 	}
 }

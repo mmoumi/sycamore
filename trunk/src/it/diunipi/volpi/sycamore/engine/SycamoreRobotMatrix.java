@@ -6,6 +6,13 @@ package it.diunipi.volpi.sycamore.engine;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 /**
  * This class is a data structure to store robots. It can store both the normal robots and the human
  * pilot robots. The robots are divided into the two sets yet described, and they are then stored in
@@ -606,5 +613,99 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 	private synchronized Vector<Vector<SycamoreRobot<P>>> getHumanPilotRobots()
 	{
 		return humanPilotRobots;
+	}
+	
+	/**
+	 * Encode this object to XML format. The encoded Element will contain all data necessary to
+	 * re-create and object that is equal to this one.
+	 * 
+	 * @return an XML Element containing the XML description of this object.
+	 */
+	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	{
+		// create element
+		Element element = document.createElement("SycamoreRobotMatrix");
+
+		// children
+		Element robotsElem = document.createElement("robots");
+		for (int i = 0; i < robots.size(); i++)
+		{
+			Vector<SycamoreRobot<P>> robotsList = robots.elementAt(i);
+			Element robotsListElem = document.createElement("robotsList");
+			
+			for (int j = 0; j < robotsList.size(); j++)
+			{
+				Element robotElem = document.createElement("robot");
+				SycamoreRobot<P> robot = robotsList.elementAt(j);
+				robotElem.appendChild(robot.encode(factory, builder, document));
+				robotsListElem.appendChild(robotElem);
+			}
+			
+			robotsElem.appendChild(robotsListElem);
+		}
+		
+		Element humanPilotRobotsElem = document.createElement("humanPilotRobots");
+		for (int i = 0; i < humanPilotRobots.size(); i++)
+		{
+			Vector<SycamoreRobot<P>> humanPilotRobotsList = humanPilotRobots.elementAt(i);
+			Element humanPilotRobotsListElem = document.createElement("humanPilotRobotsList");
+			
+			for (int j = 0; j < humanPilotRobotsList.size(); j++)
+			{
+				Element robotElem = document.createElement("robot");
+				SycamoreRobot<P> humanPilotrobot = humanPilotRobotsList.elementAt(j);
+				robotElem.appendChild(humanPilotrobot.encode(factory, builder, document));
+				humanPilotRobotsListElem.appendChild(robotElem);
+			}
+			
+			humanPilotRobotsElem.appendChild(humanPilotRobotsListElem);
+		}
+
+		// append children
+		element.appendChild(robotsElem);
+		element.appendChild(humanPilotRobotsElem);
+		
+		return element;
+	}
+
+	/**
+	 * @param element
+	 */
+	public boolean decode(Element element)
+	{
+		NodeList nodes = element.getElementsByTagName("SycamoreRobotMatrix");
+
+		// if there is at least a SycamoreRobotMatrix node, decode it
+		if (nodes.getLength() > 0)
+		{
+			// robots
+			NodeList robots = element.getElementsByTagName("robots");
+			if (robots.getLength() > 0)
+			{
+				this.robots = new Vector<Vector<SycamoreRobot<P>>>();
+				Element robotsElem = (Element) robots.item(0);
+				
+				// robots list
+				NodeList robotsList = robotsElem.getElementsByTagName("robotsList");
+				if (robotsList.getLength() > 0)
+				{
+					Vector<SycamoreRobot<P>> list = new Vector<SycamoreRobot<P>>();
+					this.robots.add(list);
+					
+					Element robotListElem = (Element) robotsList.item(0);
+					
+					// robot
+					NodeList robot = robotsElem.getElementsByTagName("robot");
+					for (int i = 0; i < robot.getLength(); i++)
+					{
+						Element robotElem = (Element) robot.item(i);
+						
+						// TODO finish
+					}
+				}
+			}
+		}
+		
+		return true;
 	}
 }

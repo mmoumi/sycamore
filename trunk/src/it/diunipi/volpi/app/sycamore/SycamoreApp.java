@@ -1,5 +1,7 @@
 package it.diunipi.volpi.app.sycamore;
 
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamoreMainPanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSplashScreen;
 import it.diunipi.volpi.sycamore.gui.SycamoreSplashScreen.SPLASH_STATES;
@@ -10,6 +12,8 @@ import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 
 import java.awt.Dimension;
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -17,6 +21,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -25,6 +32,17 @@ import java.util.Locale;
 import javax.swing.AbstractButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * The Sycamore Application
@@ -76,6 +94,8 @@ public abstract class SycamoreApp extends JFrame
 
 	private SycamoreMainPanel	sycamoreMainPanel	= null;
 	private SplashThread		splashThread		= null;
+	private File				loadedProject		= null;
+	private String				originalString		= null;
 
 	/**
 	 * Constructor for SycamoreApp
@@ -101,7 +121,7 @@ public abstract class SycamoreApp extends JFrame
 	protected void initialize_pre()
 	{
 		// try loading workspace path
-		String workspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name());
+		String workspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name(), true);
 		if (workspace == null)
 		{
 			int retVal = JOptionPane.showOptionDialog(this, new SycamoreWorkspaceSelectionPanel(), "Select workspace", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
@@ -305,11 +325,89 @@ public abstract class SycamoreApp extends JFrame
 	 */
 	public synchronized void reset()
 	{
+		boolean dirtyFlag = checkDirtyFlag();
+
+		if (dirtyFlag)
+		{
+			String pt1 = "<html><body><p>Do you want to save the current project before starting a new simulation?<br>";
+			String pt2 = "All unsaved data will be lost.</p></body></html>";
+			String s = pt1 + pt2;
+
+			int retVal = JOptionPane.showOptionDialog(null, s, "Save project?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+			if (retVal == JOptionPane.YES_OPTION)
+			{
+				if (loadedProject == null)
+				{
+					saveProject();
+				}
+				else
+				{
+					saveProject(loadedProject);
+				}
+			}
+		}
+
 		SycamoreSystem.reset();
 		getSycamoreMainPanel().reset();
+
+		loadedProject = null;
+		originalString = null;
 	}
 
 	/**
+	 * @return
+	 */
+	private boolean checkDirtyFlag()
+	{
+		SycamoreEngine engine = getSycamoreMainPanel().getAppEngine();
+		if (loadedProject == null && engine != null)
+		{
+			return true;
+		}
+		else
+		{
+			try
+			{
+				// check dirty flag
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				Document document = builder.newDocument();
+
+				// current project
+				Element currentProject = engine.encode(factory, builder, document);
+				document.appendChild(currentProject);
+
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(document);
+				StringWriter writer = new StringWriter();
+
+				StreamResult result = new StreamResult(writer);
+				transformer.transform(source, result);
+
+				String currentString = writer.toString();
+
+				// check
+				if (currentString.equals(originalString))
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns a textual description of the application version
+	 * 
 	 * @return
 	 */
 	public static String getVersion()
@@ -318,6 +416,8 @@ public abstract class SycamoreApp extends JFrame
 	}
 
 	/**
+	 * Returns the build number of the application
+	 * 
 	 * @return
 	 */
 	public static String getBuildNumber()
@@ -326,6 +426,8 @@ public abstract class SycamoreApp extends JFrame
 	}
 
 	/**
+	 * Returns the build date of the application
+	 * 
 	 * @return
 	 */
 	public static Date getBuildDate()
@@ -340,5 +442,146 @@ public abstract class SycamoreApp extends JFrame
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * @return the loadedProject
+	 */
+	public File getLoadedProject()
+	{
+		return loadedProject;
+	}
+
+	/**
+	 * Opens a fileDialog to save a project
+	 */
+	public void saveProject()
+	{
+		// show a file dialog
+		FileDialog dialog = new FileDialog((Frame) null, "Select the name of the project to be saved", FileDialog.SAVE);
+		dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name()) + System.getProperty("file.separator") + "Projects");
+		dialog.setFile("Project.xml");
+		dialog.setVisible(true);
+
+		// get the file
+		File file = new File(dialog.getDirectory() + System.getProperty("file.separator") + dialog.getFile());
+		if (file != null)
+		{
+			saveProject(file);
+		}
+	}
+
+	/**
+	 * Saves a project on passed file
+	 */
+	public void saveProject(File file)
+	{
+		try
+		{
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+			Document doc = docBuilder.newDocument();
+
+			doc.appendChild(encode(docFactory, docBuilder, doc));
+
+			// write the content into xml file
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+
+			StringWriter stringWriter = new StringWriter();
+			StreamResult resultString = new StreamResult(stringWriter);
+			StreamResult result = new StreamResult(file);
+
+			transformer.transform(source, result);
+			transformer.transform(source, resultString);
+
+			loadedProject = file;
+			originalString = resultString.toString();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @param docFactory
+	 * @param docBuilder
+	 * @param doc
+	 * @return
+	 */
+	private Node encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	{
+		// create element
+		Element element = document.createElement("Sycamore");
+		element.setAttribute("Version", getVersion());
+		element.setAttribute("BuildNumber", getBuildNumber());
+		element.setAttribute("type", getSycamoreMainPanel().getAppEngine().getType() + "");
+
+		// children
+		SycamoreEngine engine = getSycamoreMainPanel().getAppEngine();
+
+		if (engine != null)
+		{
+			element.appendChild(engine.encode(factory, builder, document));
+		}
+
+		return element;
+	}
+
+	/**
+	 * 
+	 */
+	public void loadProject()
+	{
+		// show a file dialog
+		FileDialog dialog = new FileDialog((Frame) null, "Select the name of the project to be load", FileDialog.LOAD);
+		dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name()) + System.getProperty("file.separator") + "Projects");
+		dialog.setFilenameFilter(new FilenameFilter()
+		{
+			@Override
+			public boolean accept(File dir, String name)
+			{
+				return name.endsWith(".xml");
+			}
+		});
+		dialog.setVisible(true);
+
+		// get the file
+		File file = new File(dialog.getDirectory() + System.getProperty("file.separator") + dialog.getFile());
+		if (file != null)
+		{
+			try
+			{
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+				Document doc = dBuilder.parse(file);
+
+				doc.getDocumentElement().normalize();
+				
+				NodeList sycamoreNodes = doc.getElementsByTagName("Sycamore");
+				
+				// take just the first Sycamore Node
+				Element sycamore = (Element) sycamoreNodes.item(0);
+				
+				String typeString = sycamore.getAttribute("type");
+				TYPE type = TYPE.valueOf(typeString);
+				
+				SycamoreEngine engine = getSycamoreMainPanel().initEngine(type);
+				if (!engine.decode(doc.getDocumentElement()))
+				{
+					JOptionPane.showMessageDialog(null, "Failed opening passed file.", "Open Failed", JOptionPane.ERROR_MESSAGE);
+				}
+				
+				getSycamoreMainPanel().setAppEngine(engine);
+				getSycamoreMainPanel().updateGui();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 }

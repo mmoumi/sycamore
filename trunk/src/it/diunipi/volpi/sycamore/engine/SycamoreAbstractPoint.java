@@ -1,5 +1,11 @@
 package it.diunipi.volpi.sycamore.engine;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.jme3.math.Vector3f;
 
 /**
@@ -30,4 +36,12 @@ public abstract class SycamoreAbstractPoint implements Cloneable
 	 */
 	@Override
 	public abstract Object clone() throws CloneNotSupportedException;
+	
+	/**
+	 * Encode this object to XML format. The encoded Element will contain all data necessary to
+	 * re-create and object that is equal to this one.
+	 * 
+	 * @return an XML Element containing the XML description of this object.
+	 */
+	public abstract Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document);
 }

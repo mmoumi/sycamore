@@ -3,6 +3,7 @@ package it.diunipi.volpi.sycamore.engine;
 import it.diunipi.volpi.sycamore.animation.SycamoreAnimatedObject;
 import it.diunipi.volpi.sycamore.animation.Timeline;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.jmescene.SycamoreJMEScene;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.agreements.AgreementImpl;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
@@ -16,6 +17,12 @@ import it.diunipi.volpi.sycamore.util.SubsetFairnessSupporter;
 import java.security.SecureRandom;
 import java.util.Vector;
 import java.util.concurrent.Callable;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -104,7 +111,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 		// setup timeline
 		this.timeline = new Timeline<P>();
-		
+
 		this.startingPosition = startingPosition;
 		this.timeline.addKeyframe(startingPosition);
 		this.setCurrentRatio(0);
@@ -144,7 +151,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		SecureRandom random = new SecureRandom();
 		this.ID = random.nextLong();
 	}
-	
+
 	protected abstract SycamoreRobotLight<P> createNewLightInstance();
 
 	public P getGlobalPosition()
@@ -821,4 +828,92 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		return SycamoreSystem.getN();
 	}
+
+	/**
+	 * Encode this object to XML format. The encoded Element will contain all data necessary to
+	 * re-create and object that is equal to this one.
+	 * 
+	 * @return an XML Element containing the XML description of this object.
+	 */
+	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	{
+		// create element
+		Element element = document.createElement("SycamoreRobot");
+		
+		// parent
+		Element parentElem = document.createElement("SycamoreRobot_parent");
+		parentElem.appendChild(super.encode(factory, builder, document));
+		element.appendChild(parentElem);
+
+		// children
+		Element systemMemoryElem = document.createElement("systemMemory");
+		systemMemoryElem.appendChild(systemMemory.encode(factory, builder, document));
+
+		Element lightsElem = document.createElement("lights");
+		for (int i = 0; i < lights.size(); i++)
+		{
+			SycamoreRobotLight<P> light = lights.elementAt(i);
+			lightsElem.appendChild(light.encode(factory, builder, document));
+		}
+
+		Element IDElem = document.createElement("ID");
+		IDElem.appendChild(document.createTextNode(ID + ""));
+
+		Element colorElem = document.createElement("color");
+		colorElem.appendChild(SycamoreJMEScene.encodeColorRGBA(color, factory, builder, document));
+
+		Element maxLightsElem = document.createElement("maxLights");
+		maxLightsElem.appendChild(document.createTextNode(maxLights + ""));
+
+		Element speedElem = document.createElement("speed");
+		speedElem.appendChild(document.createTextNode(speed + ""));
+
+		Element currentStateElem = document.createElement("currentState");
+		currentStateElem.appendChild(document.createTextNode(currentState + ""));
+
+		Element currentLightsElem = document.createElement("currentLights");
+		currentLightsElem.appendChild(document.createTextNode(currentLights + ""));
+
+		// append children
+		element.appendChild(systemMemoryElem);
+		element.appendChild(lightsElem);
+		element.appendChild(IDElem);
+		element.appendChild(colorElem);
+		element.appendChild(maxLightsElem);
+		element.appendChild(speedElem);
+		element.appendChild(currentStateElem);
+		element.appendChild(currentLightsElem);
+
+		// the following children could be null
+		if (algorithm != null)
+		{
+			Element algorithmElem = document.createElement("algorithm");
+			algorithmElem.appendChild(document.createTextNode(algorithm.getPluginName() + ""));
+			element.appendChild(algorithmElem);
+		}
+
+		if (visibility != null)
+		{
+			Element visibilityElem = document.createElement("visibility");
+			visibilityElem.appendChild(document.createTextNode(visibility.getPluginName() + ""));
+			element.appendChild(visibilityElem);
+		}
+
+		if (memory != null)
+		{
+			Element memoryElem = document.createElement("memory");
+			memoryElem.appendChild(document.createTextNode(memory.getPluginName() + ""));
+			element.appendChild(memoryElem);
+		}
+
+		if (agreement != null)
+		{
+			Element agreementElem = document.createElement("agreement");
+			agreementElem.appendChild(document.createTextNode(agreement.getPluginName() + ""));
+			element.appendChild(agreementElem);
+		}
+
+		return element;
+	}
+
 }

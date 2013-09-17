@@ -212,15 +212,6 @@ public abstract class SycamoreMenuBar extends JMenuBar
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					String pt1 = "<html><body><p>Do you want to save the current project before starting a new simulation?<br>";
-					String pt2 = "All unsaved data will be lost.</p></body></html>";
-					String s = pt1 + pt2;
-
-					int retVal = JOptionPane.showOptionDialog(null, s, "Save project?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
-					if (retVal == JOptionPane.YES_OPTION)
-					{
-						// TODO save
-					}
 					application.reset();
 				}
 			});
@@ -254,6 +245,14 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		{
 			menuItem_open = new JMenuItem("Open...");
 			menuItem_open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+			menuItem_open.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					application.loadProject();
+				}
+			});
 		}
 		return menuItem_open;
 	}
@@ -283,10 +282,18 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		{
 			menuItem_closeWindow = new JMenuItem("Close window");
 			menuItem_closeWindow.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+			menuItem_closeWindow.addActionListener(new ActionListener()
+			{	
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					application.closeApplication();
+				}
+			});
 		}
 		return menuItem_closeWindow;
 	}
-	
+
 	/**
 	 * @return the menuItem_exit
 	 */
@@ -319,6 +326,22 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		{
 			menuItem_save = new JMenuItem("Save");
 			menuItem_save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+			menuItem_save.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					File loadedProject = application.getLoadedProject();
+					if (loadedProject == null)
+					{
+						application.saveProject();
+					}
+					else
+					{
+						application.saveProject(loadedProject);
+					}
+				}
+			});
 		}
 		return menuItem_save;
 	}
@@ -333,6 +356,14 @@ public abstract class SycamoreMenuBar extends JMenuBar
 		if (menuItem_saveAs == null)
 		{
 			menuItem_saveAs = new JMenuItem("Save as...");
+			menuItem_saveAs.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					application.saveProject();
+				}
+			});
 		}
 		return menuItem_saveAs;
 	}

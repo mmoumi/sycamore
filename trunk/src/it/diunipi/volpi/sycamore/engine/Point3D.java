@@ -1,5 +1,11 @@
 package it.diunipi.volpi.sycamore.engine;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 
 import com.jme3.math.Vector3f;
@@ -233,60 +239,87 @@ public class Point3D extends SycamoreAbstractPoint implements Comparable<Point3D
 	{
 		float[] ret = new float[3];
 
-		// TODO
-		// float roll;
-		// float pitch;
-		// float yaw;
+		float roll;
+		float pitch;
+		float yaw;
+
 		//
-		// //
-		// Vector3f axisY = Vector3f.UNIT_Y;
-		// if (this.z < destination.z)
-		// {
-		// Vector3f dest = destination.toVector3f().subtract(this.toVector3f());
-		// dest.normalizeLocal();
-		// roll = dest.angleBetween(axisY);
-		// }
-		// else
-		// {
-		// Vector3f dest = this.toVector3f().subtract(destination.toVector3f());
-		// dest.normalizeLocal();
-		// roll = (float) (axisY.angleBetween(dest) - Math.PI);
-		// }
+		Vector3f axisY = Vector3f.UNIT_Y;
+		if (this.z < destination.z)
+		{
+			Vector3f dest = destination.toVector3f().subtract(this.toVector3f());
+			dest.normalizeLocal();
+			roll = dest.angleBetween(axisY);
+		}
+		else
+		{
+			Vector3f dest = this.toVector3f().subtract(destination.toVector3f());
+			dest.normalizeLocal();
+			roll = (float) (axisY.angleBetween(dest) - Math.PI);
+		}
+
 		//
-		// //
-		// Vector3f axisZ = Vector3f.UNIT_Z;
-		// if (this.x < destination.x)
-		// {
-		// Vector3f dest = destination.toVector3f().subtract(this.toVector3f());
-		// dest.normalizeLocal();
-		// pitch = dest.angleBetween(axisZ);
-		// }
-		// else
-		// {
-		// Vector3f dest = this.toVector3f().subtract(destination.toVector3f());
-		// dest.normalizeLocal();
-		// pitch = (float) (axisZ.angleBetween(dest) - Math.PI);
-		// }
+		Vector3f axisZ = Vector3f.UNIT_Z;
+		if (this.x < destination.x)
+		{
+			Vector3f dest = destination.toVector3f().subtract(this.toVector3f());
+			dest.normalizeLocal();
+			pitch = dest.angleBetween(axisZ);
+		}
+		else
+		{
+			Vector3f dest = this.toVector3f().subtract(destination.toVector3f());
+			dest.normalizeLocal();
+			pitch = (float) (axisZ.angleBetween(dest) - Math.PI);
+		}
+
 		//
-		// //
-		// Vector3f axisX = Vector3f.UNIT_X;
-		// if (this.y < destination.y)
-		// {
-		// Vector3f dest = destination.toVector3f().subtract(this.toVector3f());
-		// dest.normalizeLocal();
-		// yaw = dest.angleBetween(axisX);
-		// }
-		// else
-		// {
-		// Vector3f dest = this.toVector3f().subtract(destination.toVector3f());
-		// dest.normalizeLocal();
-		// yaw = (float) (axisX.angleBetween(dest) - Math.PI);
-		// }
-		//
-		// ret[0] = roll;
-		// ret[1] = pitch;
-		// ret[2] = yaw;
+		Vector3f axisX = Vector3f.UNIT_X;
+		if (this.y < destination.y)
+		{
+			Vector3f dest = destination.toVector3f().subtract(this.toVector3f());
+			dest.normalizeLocal();
+			yaw = dest.angleBetween(axisX);
+		}
+		else
+		{
+			Vector3f dest = this.toVector3f().subtract(destination.toVector3f());
+			dest.normalizeLocal();
+			yaw = (float) (axisX.angleBetween(dest) - Math.PI);
+		}
+
+		ret[0] = roll;
+		ret[1] = pitch;
+		ret[2] = yaw;
 
 		return ret;
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#encode(javax.xml.parsers.DocumentBuilderFactory, javax.xml.parsers.DocumentBuilder, org.w3c.dom.Document)
+	 */
+	@Override
+	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	{
+		// create element
+		Element element = document.createElement("Point3D");
+		
+		// children
+		
+		Element xElem = document.createElement("x");
+		xElem.appendChild(document.createTextNode(x + ""));
+		
+		Element yElem = document.createElement("y");
+		yElem.appendChild(document.createTextNode(y + ""));
+		
+		Element zElem = document.createElement("z");
+		zElem.appendChild(document.createTextNode(z + ""));
+		
+		// append children
+		element.appendChild(xElem);
+		element.appendChild(yElem);
+		element.appendChild(zElem);
+		
+		return element;
 	}
 }
