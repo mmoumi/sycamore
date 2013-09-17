@@ -80,6 +80,14 @@ public class SycamoreSystem
 		if (!workspace.exists())
 		{
 			workspace.mkdir();
+			
+			String pluginsPath = workSpacePath + System.getProperty("file.separator") + "Plugins";
+			String projectsPath = workSpacePath + System.getProperty("file.separator") + "Projects";
+			String scriptsPath = workSpacePath + System.getProperty("file.separator") + "Scripts";
+			
+			new File(pluginsPath).mkdir();
+			new File(projectsPath).mkdir();
+			new File(scriptsPath).mkdir();
 		}
 
 		return workspace;
