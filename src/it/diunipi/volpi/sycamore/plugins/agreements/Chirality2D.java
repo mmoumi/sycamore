@@ -266,7 +266,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	 */
 	public static boolean isFlipX()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_X.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_X);
 	}
 
 	/**
@@ -275,7 +275,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	 */
 	public static void setFlipX(Boolean flipX)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_X.name(), flipX);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_X, flipX);
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	 */
 	public static boolean isFlipY()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_Y.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_Y);
 	}
 
 	/**
@@ -292,7 +292,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	 */
 	public static void setFlipY(Boolean flipY)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_Y.name(), flipY);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_Y, flipY);
 	}
 
 	/*

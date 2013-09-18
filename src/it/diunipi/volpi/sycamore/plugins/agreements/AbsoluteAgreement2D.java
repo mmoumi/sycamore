@@ -217,13 +217,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	 */
 	public static double getTranslationX()
 	{
-		double translationX = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_TRANSLATION_X.name());
-		if (Double.isInfinite(translationX))
-		{
-			translationX = Double.parseDouble(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_TRANSLATION_X.getDefaultValue());
-		}
-
-		return translationX;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_TRANSLATION_X);
 	}
 
 	/**
@@ -232,7 +226,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	 */
 	public static void setTranslationX(double translationX)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_TRANSLATION_X.name(), translationX);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_TRANSLATION_X, translationX);
 	}
 
 	/**
@@ -240,13 +234,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	 */
 	public static double getTranslationY()
 	{
-		double translationY = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_TRANSLATION_Y.name());
-		if (Double.isInfinite(translationY))
-		{
-			translationY = Double.parseDouble(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_TRANSLATION_Y.getDefaultValue());
-		}
-
-		return translationY;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_TRANSLATION_Y);
 	}
 
 	/**
@@ -255,7 +243,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	 */
 	public static void setTranslationY(double translationY)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_TRANSLATION_Y.name(), translationY);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_TRANSLATION_Y, translationY);
 	}
 
 	/**
@@ -263,13 +251,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	 */
 	public static double getScaleX()
 	{
-		double scaleX = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_SCALE_X.name());
-		if (Double.isInfinite(scaleX))
-		{
-			scaleX = Double.parseDouble(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_SCALE_X.getDefaultValue());
-		}
-
-		return scaleX;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_SCALE_X);
 	}
 
 	/**
@@ -278,7 +260,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	 */
 	public static void setScaleX(double scaleX)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_SCALE_X.name(), scaleX);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_SCALE_X, scaleX);
 	}
 
 	/**
@@ -286,13 +268,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	 */
 	public static double getScaleY()
 	{
-		double scaleY = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_SCALE_Y.name());
-		if (Double.isInfinite(scaleY))
-		{
-			scaleY = Double.parseDouble(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_SCALE_Y.getDefaultValue());
-		}
-
-		return scaleY;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_SCALE_Y);
 	}
 
 	/**
@@ -301,7 +277,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	 */
 	public static void setScaleY(double scaleY)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_SCALE_Y.name(), scaleY);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_SCALE_Y, scaleY);
 	}
 
 	/**
@@ -309,13 +285,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	 */
 	public static double getRotation()
 	{
-		double rotation = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_ROTATION.name());
-		if (Double.isInfinite(rotation))
-		{
-			rotation = Double.parseDouble(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_ROTATION.getDefaultValue());
-		}
-
-		return rotation;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_ROTATION);
 	}
 
 	/**
@@ -324,7 +294,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	 */
 	public static void setRotation(double rotation)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_ROTATION.name(), rotation);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement2DProperties.ABSOLUTE_AGREEMENT_2D_ROTATION, rotation);
 	}
 
 	/*

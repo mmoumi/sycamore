@@ -44,7 +44,7 @@ public class SycamoreUtil
 		 */
 		public RandomFairnessmanager()
 		{
-			PropertyManager.getSharedInstance().putProperty(ApplicationProperties.FAIRNESS_COUNT.name(), 10);
+			PropertyManager.getSharedInstance().putProperty(ApplicationProperties.FAIRNESS_COUNT, 10);
 
 			this.counter = new HashMap<Long, Integer>();
 		}
@@ -71,7 +71,7 @@ public class SycamoreUtil
 		public boolean checkFairness(Long id)
 		{
 			Integer count = this.counter.get(id);
-			if (count != null && count == PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.FAIRNESS_COUNT.name()))
+			if (count != null && count == PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.FAIRNESS_COUNT))
 			{
 				this.counter.remove(id);
 				return true;

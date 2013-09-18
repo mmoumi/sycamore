@@ -74,21 +74,21 @@ public class SycamoreSystem
 	 */
 	private static File loadWorkspace()
 	{
-		String workSpacePath = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name());
+		String workSpacePath = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR);
 
 		SycamoreSystem.workspace = new File(workSpacePath);
 		if (!workspace.exists())
 		{
 			workspace.mkdir();
-			
-			String pluginsPath = workSpacePath + System.getProperty("file.separator") + "Plugins";
-			String projectsPath = workSpacePath + System.getProperty("file.separator") + "Projects";
-			String scriptsPath = workSpacePath + System.getProperty("file.separator") + "Scripts";
-			
-			new File(pluginsPath).mkdir();
-			new File(projectsPath).mkdir();
-			new File(scriptsPath).mkdir();
 		}
+		
+		String pluginsPath = workSpacePath + System.getProperty("file.separator") + "Plugins";
+		String projectsPath = workSpacePath + System.getProperty("file.separator") + "Projects";
+		String scriptsPath = workSpacePath + System.getProperty("file.separator") + "Scripts";
+		
+		new File(pluginsPath).mkdir();
+		new File(projectsPath).mkdir();
+		new File(scriptsPath).mkdir();
 
 		return workspace;
 	}
@@ -252,7 +252,7 @@ public class SycamoreSystem
 	 */
 	protected static void setNKnown(boolean isNKnown)
 	{
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.N_KNOWN.name(), isNKnown);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.N_KNOWN, isNKnown);
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class SycamoreSystem
 	 */
 	protected static boolean isNKnown()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.N_KNOWN.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.N_KNOWN);
 	}
 
 	/**
@@ -268,7 +268,7 @@ public class SycamoreSystem
 	 */
 	public static float getEpsilon()
 	{
-		return PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.EPSILON.name());
+		return PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.EPSILON);
 	}
 
 	/**
@@ -379,7 +379,7 @@ public class SycamoreSystem
 	 */
 	public static boolean isGridVisible()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.GRID_VISIBLE.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.GRID_VISIBLE);
 	}
 
 	/**
@@ -388,7 +388,7 @@ public class SycamoreSystem
 	 */
 	public static void setGridVisible(boolean gridVisible)
 	{
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.GRID_VISIBLE.name(), gridVisible);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.GRID_VISIBLE, gridVisible);
 	}
 
 	/**
@@ -396,7 +396,7 @@ public class SycamoreSystem
 	 */
 	public static boolean isAxesVisible()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.AXES_VISIBLE.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.AXES_VISIBLE);
 	}
 
 	/**
@@ -405,7 +405,7 @@ public class SycamoreSystem
 	 */
 	public static void setAxesVisible(boolean axesVisible)
 	{
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.AXES_VISIBLE.name(), axesVisible);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.AXES_VISIBLE, axesVisible);
 	}
 
 	/**
@@ -413,7 +413,7 @@ public class SycamoreSystem
 	 */
 	public static boolean isBaricentrumVisible()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.BARICENTRUM_VISIBLE.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.BARICENTRUM_VISIBLE);
 	}
 
 	/**
@@ -422,7 +422,7 @@ public class SycamoreSystem
 	 */
 	public static void setBaricentrumVisible(boolean baricentrumVisible)
 	{
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.BARICENTRUM_VISIBLE.name(), baricentrumVisible);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.BARICENTRUM_VISIBLE, baricentrumVisible);
 	}
 
 	/**
@@ -430,7 +430,7 @@ public class SycamoreSystem
 	 */
 	public static boolean isVisibilityRangesVisible()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.VISIBILITY_RANGES_VISIBLE.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.VISIBILITY_RANGES_VISIBLE);
 	}
 
 	/**
@@ -439,7 +439,7 @@ public class SycamoreSystem
 	 */
 	public static void setVisibilityRangesVisible(boolean visibilityRangesVisible)
 	{
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.VISIBILITY_RANGES_VISIBLE.name(), visibilityRangesVisible);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.VISIBILITY_RANGES_VISIBLE, visibilityRangesVisible);
 	}
 
 	/**
@@ -447,7 +447,7 @@ public class SycamoreSystem
 	 */
 	public static boolean isMovementDirectionsVisible()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.MOVEMENT_DIRECTIONS_VISIBLE.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.MOVEMENT_DIRECTIONS_VISIBLE);
 	}
 
 	/**
@@ -456,7 +456,7 @@ public class SycamoreSystem
 	 */
 	public static void setMovementDirectionsVisible(boolean movementDirectionsVisible)
 	{
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.MOVEMENT_DIRECTIONS_VISIBLE.name(), movementDirectionsVisible);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.MOVEMENT_DIRECTIONS_VISIBLE, movementDirectionsVisible);
 	}
 
 	/**
@@ -464,7 +464,7 @@ public class SycamoreSystem
 	 */
 	public static boolean isRobotsLightsVisible()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.ROBOTS_LIGHTS_VISIBLE.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.ROBOTS_LIGHTS_VISIBLE);
 	}
 
 	/**
@@ -473,7 +473,7 @@ public class SycamoreSystem
 	 */
 	public static void setRobotsLightsVisible(boolean robotsLightsVisible)
 	{
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.ROBOTS_LIGHTS_VISIBLE.name(), robotsLightsVisible);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.ROBOTS_LIGHTS_VISIBLE, robotsLightsVisible);
 	}
 
 	/**
@@ -481,7 +481,7 @@ public class SycamoreSystem
 	 */
 	public static boolean isVisibilityGraphVisible()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.VISIBILITY_GRAPH_VISIBLE.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.VISIBILITY_GRAPH_VISIBLE);
 	}
 
 	/**
@@ -490,7 +490,7 @@ public class SycamoreSystem
 	 */
 	public static void setVisibilityGraphVisible(boolean visibilityGraphVisible)
 	{
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.VISIBILITY_GRAPH_VISIBLE.name(), visibilityGraphVisible);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.VISIBILITY_GRAPH_VISIBLE, visibilityGraphVisible);
 	}
 
 	/**
@@ -498,7 +498,7 @@ public class SycamoreSystem
 	 */
 	public static boolean isLocalCoordinatesVisible()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.LOCAL_COORDINATE_SYSTEMS_VISIBLE.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.LOCAL_COORDINATE_SYSTEMS_VISIBLE);
 	}
 
 	/**
@@ -507,7 +507,7 @@ public class SycamoreSystem
 	 */
 	public static void setLocalCoordinatesVisible(boolean localCoordinatesVisible)
 	{
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.LOCAL_COORDINATE_SYSTEMS_VISIBLE.name(), localCoordinatesVisible);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.LOCAL_COORDINATE_SYSTEMS_VISIBLE, localCoordinatesVisible);
 	}
 
 	/**
@@ -515,7 +515,7 @@ public class SycamoreSystem
 	 */
 	public static boolean isVisualElementsVisible()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.VISUAL_ELEMENTS_VISIBLE.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ApplicationProperties.VISUAL_ELEMENTS_VISIBLE);
 	}
 
 	/**
@@ -524,7 +524,7 @@ public class SycamoreSystem
 	 */
 	public static void setVisualElementsVisible(boolean visualElementsVisible)
 	{
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.VISUAL_ELEMENTS_VISIBLE.name(), visualElementsVisible);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.VISUAL_ELEMENTS_VISIBLE, visualElementsVisible);
 	}
 
 	/**

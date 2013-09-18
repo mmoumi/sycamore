@@ -92,7 +92,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	 */
 	public SycamoreRobot(SycamoreEngine<P> engine, P startingPosition, ColorRGBA color, int maxLights)
 	{
-		this(engine, startingPosition, PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED.name()), color, maxLights);
+		this(engine, startingPosition, PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED), color, maxLights);
 	}
 
 	/**

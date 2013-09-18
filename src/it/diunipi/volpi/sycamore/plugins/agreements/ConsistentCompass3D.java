@@ -290,7 +290,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static boolean isFlipX()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_X.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_X);
 	}
 
 	/**
@@ -299,7 +299,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static void setFlipX(Boolean flipX)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_X.name(), flipX);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_X, flipX);
 	}
 
 	/**
@@ -307,7 +307,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static boolean isFlipY()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_Y.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_Y);
 	}
 
 	/**
@@ -316,7 +316,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static void setFlipY(Boolean flipY)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_Y.name(), flipY);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_Y, flipY);
 	}
 
 	/**
@@ -324,7 +324,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static boolean isFlipZ()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_Z.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_Z);
 	}
 
 	/**
@@ -333,7 +333,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static void setFlipZ(Boolean flipZ)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_Z.name(), flipZ);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_FLIP_Z, flipZ);
 	}
 
 	/**
@@ -341,13 +341,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static double getRotationX()
 	{
-		double rotationX = PropertyManager.getSharedInstance().getDoubleProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_X.name());
-		if (Double.isInfinite(rotationX))
-		{
-			rotationX = Double.parseDouble(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_X.getDefaultValue());
-		}
-
-		return rotationX;
+		return PropertyManager.getSharedInstance().getDoubleProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_X);
 	}
 
 	/**
@@ -356,7 +350,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static void setRotationX(double rotationX)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_X.name(), rotationX);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_X, rotationX);
 	}
 
 	/**
@@ -364,13 +358,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static double getRotationY()
 	{
-		double rotationY = PropertyManager.getSharedInstance().getDoubleProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_Y.name());
-		if (Double.isInfinite(rotationY))
-		{
-			rotationY = Double.parseDouble(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_Y.getDefaultValue());
-		}
-
-		return rotationY;
+		return PropertyManager.getSharedInstance().getDoubleProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_Y);
 	}
 
 	/**
@@ -379,7 +367,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static void setRotationY(double rotationY)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_Y.name(), rotationY);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_Y, rotationY);
 	}
 
 	/**
@@ -387,13 +375,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static double getRotationZ()
 	{
-		double rotationZ = PropertyManager.getSharedInstance().getDoubleProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_Z.name());
-		if (Double.isInfinite(rotationZ))
-		{
-			rotationZ = Double.parseDouble(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_Z.getDefaultValue());
-		}
-
-		return rotationZ;
+		return PropertyManager.getSharedInstance().getDoubleProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_Z);
 	}
 
 	/**
@@ -402,7 +384,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 */
 	public static void setRotationZ(double rotationZ)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_Z.name(), rotationZ);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass3DProperties.CONSISTENT_COMPASS_3D_ROTATION_Z, rotationZ);
 	}
 
 	/*

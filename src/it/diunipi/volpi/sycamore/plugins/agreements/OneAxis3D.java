@@ -260,13 +260,7 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 	 */
 	public static double getRotation_1()
 	{
-		double rotation = PropertyManager.getSharedInstance().getDoubleProperty(OneAxis3DProperties.ONE_AXIS_3D_ROTATION_1.name());
-		if (Double.isInfinite(rotation))
-		{
-			rotation = Double.parseDouble(OneAxis3DProperties.ONE_AXIS_3D_ROTATION_1.getDefaultValue());
-		}
-
-		return rotation;
+		return PropertyManager.getSharedInstance().getDoubleProperty(OneAxis3DProperties.ONE_AXIS_3D_ROTATION_1);
 	}
 
 	/**
@@ -275,7 +269,7 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 	 */
 	public static void setRotation_1(double rotation_1)
 	{
-		PropertyManager.getSharedInstance().putProperty(OneAxis3DProperties.ONE_AXIS_3D_ROTATION_1.name(), rotation_1);
+		PropertyManager.getSharedInstance().putProperty(OneAxis3DProperties.ONE_AXIS_3D_ROTATION_1, rotation_1);
 	}
 
 	/**
@@ -283,13 +277,7 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 	 */
 	public static double getRotation_2()
 	{
-		double rotation = PropertyManager.getSharedInstance().getDoubleProperty(OneAxis3DProperties.ONE_AXIS_3D_ROTATION_2.name());
-		if (Double.isInfinite(rotation))
-		{
-			rotation = Double.parseDouble(OneAxis3DProperties.ONE_AXIS_3D_ROTATION_2.getDefaultValue());
-		}
-
-		return rotation;
+		return PropertyManager.getSharedInstance().getDoubleProperty(OneAxis3DProperties.ONE_AXIS_3D_ROTATION_2);
 	}
 
 	/**
@@ -298,7 +286,7 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 	 */
 	public static void setRotation_2(double rotation_2)
 	{
-		PropertyManager.getSharedInstance().putProperty(OneAxis3DProperties.ONE_AXIS_3D_ROTATION_2.name(), rotation_2);
+		PropertyManager.getSharedInstance().putProperty(OneAxis3DProperties.ONE_AXIS_3D_ROTATION_2, rotation_2);
 	}
 
 	/**

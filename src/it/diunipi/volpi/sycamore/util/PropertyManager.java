@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * @author Vale
@@ -16,11 +17,47 @@ import java.util.HashMap;
  */
 public class PropertyManager
 {
+	private static class GenericProperty implements SycamoreProperty
+	{
+		private static final long	serialVersionUID	= -141504471505098922L;
+		private String	description			= null;
+		private String	defaultValue	= null;
+
+		/**
+		 * Default constructor.
+		 */
+		public GenericProperty(String description, String defaultValue)
+		{
+			this.description = description;
+			this.defaultValue = defaultValue;
+		}
+
+		/* (non-Javadoc)
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
+		 */
+		@Override
+		public String getDescription()
+		{
+			return description;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDefaultValue()
+		 */
+		@Override
+		public String getDefaultValue()
+		{
+			return defaultValue;
+		}
+	}
+	
 	private static final String		propertyFileName	= "Properties.prop";
 	private static String			propertyPath;
 	private static PropertyManager	sharedInstance		= null;
 
-	private HashMap<String, String>	properties			= null;
+	private HashMap<SycamoreProperty, String>	properties			= null;
 
 	/**
 	 * Private onstructor
@@ -35,14 +72,13 @@ public class PropertyManager
 		else if (OS.contains("Windows"))
 		{
 			propertyPath = System.getenv("APPDATA") + "\\Sycamore\\";
-			// propertyPath = System.getProperty("user.home") + "\\Documents\\Sycamore\\Preferences\\";
 		}
 		else
 		{
 			propertyPath = System.getProperty("user.home") + "/.config/Sycamore/";
 		}
 
-		this.properties = new HashMap<String, String>();
+		this.properties = new HashMap<SycamoreProperty, String>();
 		this.loadProperties();
 	}
 
@@ -51,36 +87,17 @@ public class PropertyManager
 	 */
 	private void loadProperties()
 	{
-		this.putDefaultsProperties();
-
 		try
 		{
 			ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(propertyPath + System.getProperty("file.separator") + propertyFileName));
 
-			this.properties = (HashMap<String, String>) objectInputStream.readObject();
+			this.properties = (HashMap<SycamoreProperty, String>) objectInputStream.readObject();
 
 			objectInputStream.close();
 		}
 		catch (Exception e)
 		{
 			System.err.println("No properties file found. Fallback to default values...");
-		}
-	}
-
-	/**
-	 * 
-	 */
-	private void putDefaultsProperties()
-	{
-		ApplicationProperties[] properties = ApplicationProperties.values();
-
-		for (ApplicationProperties prop : properties)
-		{
-			// default workspace is not loaded, but is asked
-			if (prop != ApplicationProperties.WORKSPACE_DIR)
-			{
-				this.properties.put(prop.name(), prop.getDefaultValue());
-			}
 		}
 	}
 
@@ -118,15 +135,6 @@ public class PropertyManager
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	public String getProperty(String name, boolean skipFallback)
-	{
-		return this.properties.get(name);
-	}
 	
 	/**
 	 * @param name
@@ -134,44 +142,60 @@ public class PropertyManager
 	 */
 	public String getProperty(String name)
 	{
-		String val = this.properties.get(name);
-		if (val != null)
+		Set<SycamoreProperty> keys = this.properties.keySet();
+		for (SycamoreProperty property : keys)
 		{
-			return val;
-		}
-		else
-		{
-			// look in default app properties
-			ApplicationProperties[] appProperties = ApplicationProperties.values();
-			for (int i = 0; i < appProperties.length; i++)
+			if (property.getDescription().equals(name))
 			{
-				if (appProperties[i].name().equals(name))
-				{
-					return appProperties[i].getDefaultValue();
-				}
+				return this.getProperty(property);
 			}
-
-			// return no value
-			return null;
 		}
+		
+		return null;
 	}
 
 	/**
 	 * @param name
 	 * @return
 	 */
-	public int getIntegerProperty(String name, boolean skipFallback)
+	public String getProperty(SycamoreProperty property, boolean skipFallback)
 	{
-		return Integer.parseInt(this.properties.get(name));
+		return this.properties.get(property);
 	}
 	
 	/**
 	 * @param name
 	 * @return
 	 */
-	public int getIntegerProperty(String name)
+	public String getProperty(SycamoreProperty property)
 	{
-		String val = this.properties.get(name);
+		String val = this.properties.get(property);
+		if (val != null)
+		{
+			return val;
+		}
+		else
+		{
+			return property.getDefaultValue();
+		}
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	public int getIntegerProperty(SycamoreProperty property, boolean skipFallback)
+	{
+		return Integer.parseInt(this.properties.get(property));
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public int getIntegerProperty(SycamoreProperty property)
+	{
+		String val = this.properties.get(property);
 		if (val != null)
 		{
 			// look in properties
@@ -179,18 +203,7 @@ public class PropertyManager
 		}
 		else
 		{
-			// look in default app properties
-			ApplicationProperties[] appProperties = ApplicationProperties.values();
-			for (int i = 0; i < appProperties.length; i++)
-			{
-				if (appProperties[i].name().equals(name))
-				{
-					return Integer.parseInt(appProperties[i].getDefaultValue());
-				}
-			}
-
-			// return no value
-			return -1;
+			return Integer.parseInt(property.getDefaultValue());
 		}
 	}
 	
@@ -198,35 +211,25 @@ public class PropertyManager
 	 * @param name
 	 * @return
 	 */
-	public float getFloatProperty(String name, boolean skipFallback)
+	public float getFloatProperty(SycamoreProperty property, boolean skipFallback)
 	{
-		return Float.parseFloat(this.properties.get(name));
+		return Float.parseFloat(this.properties.get(property));
 	}
 
 	/**
 	 * @param name
 	 * @return
 	 */
-	public float getFloatProperty(String name)
+	public float getFloatProperty(SycamoreProperty property)
 	{
-		String val = this.properties.get(name);
+		String val = this.properties.get(property);
 		if (val != null)
 		{
 			return Float.parseFloat(val);
 		}
 		else
 		{
-			// look in default app properties
-			ApplicationProperties[] appProperties = ApplicationProperties.values();
-			for (int i = 0; i < appProperties.length; i++)
-			{
-				if (appProperties[i].name().equals(name))
-				{
-					return Float.parseFloat(appProperties[i].getDefaultValue());
-				}
-			}
-
-			return 1.0f / 0.0f;
+			return Float.parseFloat(property.getDefaultValue());
 		}
 	}
 	
@@ -234,35 +237,25 @@ public class PropertyManager
 	 * @param name
 	 * @return
 	 */
-	public double getDoubleProperty(String name, boolean skipFallback)
+	public double getDoubleProperty(SycamoreProperty property, boolean skipFallback)
 	{
-		return Double.parseDouble(this.properties.get(name));
+		return Double.parseDouble(this.properties.get(property));
 	}
 
 	/**
 	 * @param name
 	 * @return
 	 */
-	public double getDoubleProperty(String name)
+	public double getDoubleProperty(SycamoreProperty property)
 	{
-		String val = this.properties.get(name);
+		String val = this.properties.get(property);
 		if (val != null)
 		{
 			return Double.parseDouble(val);
 		}
 		else
 		{
-			// look in default app properties
-			ApplicationProperties[] appProperties = ApplicationProperties.values();
-			for (int i = 0; i < appProperties.length; i++)
-			{
-				if (appProperties[i].name().equals(name))
-				{
-					return Double.parseDouble(appProperties[i].getDefaultValue());
-				}
-			}
-
-			return 1.0f / 0.0f;
+			return Double.parseDouble(property.getDefaultValue());
 		}
 	}
 	
@@ -270,81 +263,81 @@ public class PropertyManager
 	 * @param name
 	 * @return
 	 */
-	public boolean getBooleanProperty(String name, boolean skipFallback)
+	public boolean getBooleanProperty(SycamoreProperty property, boolean skipFallback)
 	{
-		return Boolean.parseBoolean(this.properties.get(name));
+		return Boolean.parseBoolean(this.properties.get(property));
 	}
 
 	/**
 	 * @param name
 	 * @return
 	 */
-	public boolean getBooleanProperty(String name)
+	public boolean getBooleanProperty(SycamoreProperty property)
 	{
-		String val = this.properties.get(name);
+		String val = this.properties.get(property);
 		if (val != null)
 		{
 			return Boolean.parseBoolean(val);
 		}
 		else
 		{
-			// look in default app properties
-			ApplicationProperties[] appProperties = ApplicationProperties.values();
-			for (int i = 0; i < appProperties.length; i++)
-			{
-				if (appProperties[i].name().equals(name))
-				{
-					return Boolean.parseBoolean(appProperties[i].getDefaultValue());
-				}
-			}
-
-			return false;
+			return Boolean.parseBoolean(property.getDefaultValue());
 		}
 	}
-
+	
 	/**
 	 * @param name
-	 * @param value
+	 * @return
 	 */
 	public void putProperty(final String name, final String value)
 	{
-		this.properties.put(name, value);
+		GenericProperty property = new GenericProperty(name, value);
+		this.putProperty(property, value);
 	}
 
 	/**
 	 * @param name
 	 * @param value
 	 */
-	public void putProperty(String name, int value)
+	public void putProperty(final SycamoreProperty property, final String value)
 	{
-		this.properties.put(name, value + "");
+		this.properties.put(property, value);
 	}
 
 	/**
 	 * @param name
 	 * @param value
 	 */
-	public void putProperty(String name, float value)
+	public void putProperty(SycamoreProperty property, int value)
 	{
-		this.properties.put(name, value + "");
+		this.properties.put(property, value + "");
 	}
 
 	/**
 	 * @param name
 	 * @param value
 	 */
-	public void putProperty(String name, double value)
+	public void putProperty(SycamoreProperty property, float value)
 	{
-		this.properties.put(name, value + "");
+		this.properties.put(property, value + "");
 	}
 
 	/**
 	 * @param name
 	 * @param value
 	 */
-	public void putProperty(String name, boolean value)
+	public void putProperty(SycamoreProperty property, double value)
 	{
-		this.properties.put(name, value + "");
+		this.properties.put(property, value + "");
+	}
+
+	/**
+	 * @param name
+	 * @param value
+	 */
+	public void putProperty(SycamoreProperty property, boolean value)
+	{
+		this.properties.put(property, value + "");
 	}
 
 	/**
