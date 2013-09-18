@@ -481,6 +481,12 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 		// 0-1 scale.
 		if (ratio < 0 || ratio > 1) throw new IllegalArgumentException("The ratio should be between 0 and 1.");
 
+		// case zero
+		if (duration == 1 && keyframes.size() == 1)
+		{
+			return keyframes.firstElement().getPosition();
+		}
+		
 		// extend the ratio to match duration
 		float time = ratio * duration;
 
