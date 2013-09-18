@@ -238,7 +238,7 @@ public class SycamoreInfoPanel extends JPanel
 
 		String txt_Plugins = SycamorePluginManager.getSharedInstance().getLoadedPlugins().size() + "";
 
-		String txt_Workspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name());
+		String txt_Workspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR);
 		String txt_Properties = PropertyManager.getSharedInstance().getPropertyFilePath();
 		String txt_Developer = "Valerio Volpi";
 		String txt_Contacts = "vale.v@me.com, prencipe@di.unipi.it";

@@ -91,7 +91,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	 */
 	public static void setRigid(boolean rigid)
 	{
-		PropertyManager.getSharedInstance().putProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_RIGID.name(), rigid);
+		PropertyManager.getSharedInstance().putProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_RIGID, rigid);
 	}
 
 	/**
@@ -99,13 +99,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	 */
 	public static boolean isContinuous()
 	{
-		String continuous = PropertyManager.getSharedInstance().getProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_CONTINUOUS.name());
-		if (continuous == null)
-		{
-			continuous = AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_CONTINUOUS.getDefaultValue();
-		}
-		
-		return Boolean.parseBoolean(continuous);
+		return PropertyManager.getSharedInstance().getBooleanProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_CONTINUOUS);
 	}
 
 	/**
@@ -114,7 +108,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	 */
 	public static void setContinuous(boolean continuous)
 	{
-		PropertyManager.getSharedInstance().putProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_CONTINUOUS.name(), continuous);
+		PropertyManager.getSharedInstance().putProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_CONTINUOUS, continuous);
 	}
 
 	/**
@@ -122,13 +116,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	 */
 	public static boolean isChangesRobotSpeed()
 	{
-		String changesRobotSpeed = PropertyManager.getSharedInstance().getProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_CHANGES_ROBOT_SPEED.name());
-		if (changesRobotSpeed == null)
-		{
-			changesRobotSpeed = AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_CHANGES_ROBOT_SPEED.getDefaultValue();
-		}
-		
-		return Boolean.parseBoolean(changesRobotSpeed);
+		return PropertyManager.getSharedInstance().getBooleanProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_CHANGES_ROBOT_SPEED);
 	}
 
 	/**
@@ -137,7 +125,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	 */
 	public static void setChangesRobotSpeed(boolean changesRobotSpeed)
 	{
-		PropertyManager.getSharedInstance().putProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_CHANGES_ROBOT_SPEED.name(), changesRobotSpeed);
+		PropertyManager.getSharedInstance().putProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_CHANGES_ROBOT_SPEED, changesRobotSpeed);
 	}
 
 	/**
@@ -145,13 +133,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	 */
 	public static boolean isFair()
 	{
-		String fair = PropertyManager.getSharedInstance().getProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_FAIR.name());
-		if (fair == null)
-		{
-			fair = AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_FAIR.getDefaultValue();
-		}
-		
-		return Boolean.parseBoolean(fair);
+		return PropertyManager.getSharedInstance().getBooleanProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_FAIR);
 	}
 
 	/**
@@ -160,7 +142,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	 */
 	public static void setFair(boolean fair)
 	{
-		PropertyManager.getSharedInstance().putProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_FAIR.name(), fair);
+		PropertyManager.getSharedInstance().putProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_FAIR, fair);
 	}
 
 	/**

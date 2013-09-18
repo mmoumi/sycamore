@@ -216,13 +216,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static double getTranslationX()
 	{
-		double translationX = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_X.name());
-		if (Double.isInfinite(translationX))
-		{
-			translationX = Double.parseDouble(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_X.getDefaultValue());
-		}
-
-		return translationX;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_X);
 	}
 
 	/**
@@ -231,7 +225,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static void setTranslationX(double translationX)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_X.name(), translationX);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_X, translationX);
 	}
 
 	/**
@@ -239,13 +233,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static double getTranslationY()
 	{
-		double translationY = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_Y.name());
-		if (Double.isInfinite(translationY))
-		{
-			translationY = Double.parseDouble(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_Y.getDefaultValue());
-		}
-
-		return translationY;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_Y);
 	}
 
 	/**
@@ -254,7 +242,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static void setTranslationY(double translationY)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_Y.name(), translationY);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_Y, translationY);
 	}
 
 	/**
@@ -262,13 +250,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static double getTranslationZ()
 	{
-		double translationZ = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_Z.name());
-		if (Double.isInfinite(translationZ))
-		{
-			translationZ = Double.parseDouble(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_Z.getDefaultValue());
-		}
-
-		return translationZ;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_Z);
 	}
 
 	/**
@@ -277,7 +259,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static void setTranslationZ(double translationZ)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_Z.name(), translationZ);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_TRANSLATION_Z, translationZ);
 	}
 
 	/**
@@ -285,13 +267,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static double getScaleX()
 	{
-		double scaleX = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_X.name());
-		if (Double.isInfinite(scaleX))
-		{
-			scaleX = Double.parseDouble(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_X.getDefaultValue());
-		}
-
-		return scaleX;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_X);
 	}
 
 	/**
@@ -300,7 +276,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static void setScaleX(double scaleX)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_X.name(), scaleX);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_X, scaleX);
 	}
 
 	/**
@@ -308,13 +284,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static double getScaleY()
 	{
-		double scaleY = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_Y.name());
-		if (Double.isInfinite(scaleY))
-		{
-			scaleY = Double.parseDouble(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_Y.getDefaultValue());
-		}
-
-		return scaleY;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_Y);
 	}
 
 	/**
@@ -323,7 +293,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static void setScaleZ(double scaleZ)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_Z.name(), scaleZ);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_Z, scaleZ);
 	}
 
 	/**
@@ -331,13 +301,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static double getScaleZ()
 	{
-		double scaleZ = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_Z.name());
-		if (Double.isInfinite(scaleZ))
-		{
-			scaleZ = Double.parseDouble(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_Z.getDefaultValue());
-		}
-
-		return scaleZ;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_Z);
 	}
 
 	/**
@@ -346,7 +310,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static void setScaleY(double scaleY)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_Y.name(), scaleY);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_SCALE_Y, scaleY);
 	}
 
 	/**
@@ -354,13 +318,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static double getRotationX()
 	{
-		double rotationX = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_X.name());
-		if (Double.isInfinite(rotationX))
-		{
-			rotationX = Double.parseDouble(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_X.getDefaultValue());
-		}
-
-		return rotationX;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_X);
 	}
 
 	/**
@@ -369,7 +327,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static void setRotationX(double rotationX)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_X.name(), rotationX);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_X, rotationX);
 	}
 
 	/**
@@ -377,13 +335,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static double getRotationY()
 	{
-		double rotationY = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_Y.name());
-		if (Double.isInfinite(rotationY))
-		{
-			rotationY = Double.parseDouble(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_Y.getDefaultValue());
-		}
-
-		return rotationY;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_Y);
 	}
 
 	/**
@@ -392,7 +344,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static void setRotationY(double rotationY)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_Y.name(), rotationY);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_Y, rotationY);
 	}
 
 	/**
@@ -400,13 +352,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static double getRotationZ()
 	{
-		double rotationZ = PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_Z.name());
-		if (Double.isInfinite(rotationZ))
-		{
-			rotationZ = Double.parseDouble(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_Z.getDefaultValue());
-		}
-
-		return rotationZ;
+		return PropertyManager.getSharedInstance().getDoubleProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_Z);
 	}
 
 	/**
@@ -415,7 +361,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	 */
 	public static void setRotationZ(double rotationZ)
 	{
-		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_Z.name(), rotationZ);
+		PropertyManager.getSharedInstance().putProperty(AbsoluteAgreement3DProperties.ABSOLUTE_AGREEMENT_3D_ROTATION_Z, rotationZ);
 	}
 
 	/*

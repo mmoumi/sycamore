@@ -34,8 +34,7 @@ public enum ApplicationProperties implements SycamoreProperty
 	INITIAL_POSITION_MAX_Y("Initial position max y", 10 + ""),
 	INITIAL_POSITION_MIN_Z("Initial position min z", -10 + ""),
 	INITIAL_POSITION_MAX_Z("Initial position max z", 10 + ""),
-	WORKSPACE_DIR("Workspace dir", System.getProperty("user.home") + System.getProperty("file.separator") + "Documents"
-			+ System.getProperty("file.separator") + "Sycamore");
+	WORKSPACE_DIR("Workspace dir", System.getProperty("user.home") + System.getProperty("file.separator") + "Documents" + System.getProperty("file.separator") + "Sycamore");
 
 	private String	description			= null;
 	private String	defaultValue	= null;

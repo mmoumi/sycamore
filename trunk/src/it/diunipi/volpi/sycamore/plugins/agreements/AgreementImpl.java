@@ -57,7 +57,7 @@ public abstract class AgreementImpl<P extends SycamoreAbstractPoint & Computable
 	 */
 	public static boolean isFixMeasureUnit()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(AgreementProperties.FIX_MEASURE_UNIT.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(AgreementProperties.FIX_MEASURE_UNIT);
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public abstract class AgreementImpl<P extends SycamoreAbstractPoint & Computable
 	 */
 	public static void setFixMeasureUnit(boolean fixMeasureUnit)
 	{
-		PropertyManager.getSharedInstance().putProperty(AgreementProperties.FIX_MEASURE_UNIT.name(), fixMeasureUnit);
+		PropertyManager.getSharedInstance().putProperty(AgreementProperties.FIX_MEASURE_UNIT, fixMeasureUnit);
 	}
 	
 	/* (non-Javadoc)

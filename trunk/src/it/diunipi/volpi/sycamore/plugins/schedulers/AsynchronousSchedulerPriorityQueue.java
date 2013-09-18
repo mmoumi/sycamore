@@ -86,7 +86,7 @@ public class AsynchronousSchedulerPriorityQueue<P extends SycamoreAbstractPoint 
 		{
 			if (isFair())
 			{
-				int fairnessCount = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.FAIRNESS_COUNT.name());
+				int fairnessCount = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.FAIRNESS_COUNT);
 				return SycamoreUtil.getRandomLong(0, (long) (SycamoreSystem.getSchedulerFrequency() * 1000 * fairnessCount));
 			}
 			else

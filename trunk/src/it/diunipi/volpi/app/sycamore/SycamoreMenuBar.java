@@ -443,7 +443,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 					@Override
 					public void actionPerformed(ActionEvent e)
 					{
-						PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR.name(), path);
+						PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR, path);
 						confirmReboot();
 					}
 				});
@@ -467,14 +467,14 @@ public abstract class SycamoreMenuBar extends JMenuBar
 					if (returnVal == JFileChooser.APPROVE_OPTION)
 					{
 						// save old workspace
-						String oldWorkspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name());
+						String oldWorkspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR);
 
 						int index = oldWorkspaces.size();
 						PropertyManager.getSharedInstance().putProperty("OLD_WORKSPACE_" + index, oldWorkspace);
 
 						// store new workspace
 						File file = fileChoser.getSelectedFile();
-						PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR.name(), file.getAbsolutePath());
+						PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR, file.getAbsolutePath());
 
 						// eventually reboot
 						confirmReboot();
@@ -492,7 +492,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 	 */
 	private void confirmReboot()
 	{
-		String pt1 = "<html><body><p>You choose: " + PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name()) + "<br>";
+		String pt1 = "<html><body><p>You choose: " + PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR) + "<br>";
 		String pt2 = "The new workspace will be effective on next Sycamore execution.</p>";
 		String pt3 = "Do you want to exit now?</p></body></html>";
 

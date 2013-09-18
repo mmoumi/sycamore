@@ -291,7 +291,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 	 */
 	public static boolean isFlipX()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_X.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_X);
 	}
 
 	/**
@@ -300,7 +300,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 	 */
 	public static void setFlipX(Boolean flipX)
 	{
-		PropertyManager.getSharedInstance().putProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_X.name(), flipX);
+		PropertyManager.getSharedInstance().putProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_X, flipX);
 	}
 
 	/**
@@ -308,7 +308,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 	 */
 	public static boolean isFlipY()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_Y.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_Y);
 	}
 
 	/**
@@ -317,7 +317,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 	 */
 	public static void setFlipY(Boolean flipY)
 	{
-		PropertyManager.getSharedInstance().putProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_Y.name(), flipY);
+		PropertyManager.getSharedInstance().putProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_Y, flipY);
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 	 */
 	public static boolean isFlipZ()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_Z.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_Z);
 	}
 
 	/**
@@ -334,7 +334,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 	 */
 	public static void setFlipZ(Boolean flipZ)
 	{
-		PropertyManager.getSharedInstance().putProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_Z.name(), flipZ);
+		PropertyManager.getSharedInstance().putProperty(Chirality3DProperties.CHIRALITY_3D_FLIP_Z, flipZ);
 	}
 
 	/*

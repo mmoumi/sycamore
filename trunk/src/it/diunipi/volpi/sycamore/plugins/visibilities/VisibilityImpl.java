@@ -57,13 +57,7 @@ public abstract class VisibilityImpl<P extends SycamoreAbstractPoint & Computabl
 	 */
 	public static float getVisibilityRange()
 	{
-		float size = PropertyManager.getSharedInstance().getFloatProperty(VisibilityProperties.VISIBILITY_RANGE_SIZE.name());
-		if (Float.isInfinite(size))
-		{
-			size = Float.parseFloat(VisibilityProperties.VISIBILITY_RANGE_SIZE.getDefaultValue());
-		}
-		
-		return size;
+		return PropertyManager.getSharedInstance().getFloatProperty(VisibilityProperties.VISIBILITY_RANGE_SIZE);
 	}
 	
 	/**
@@ -71,7 +65,7 @@ public abstract class VisibilityImpl<P extends SycamoreAbstractPoint & Computabl
 	 */
 	public static void setVisibilityRange(float visibilityRange)
 	{
-		PropertyManager.getSharedInstance().putProperty(VisibilityProperties.VISIBILITY_RANGE_SIZE.name(), visibilityRange);
+		PropertyManager.getSharedInstance().putProperty(VisibilityProperties.VISIBILITY_RANGE_SIZE, visibilityRange);
 	}
 	
 	/**

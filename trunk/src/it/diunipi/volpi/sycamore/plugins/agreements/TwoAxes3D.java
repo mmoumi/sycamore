@@ -256,13 +256,7 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 	 */
 	public static double getRotation()
 	{
-		double rotation = PropertyManager.getSharedInstance().getDoubleProperty(TwoAxes3DProperties.TWO_AXES_3D_OTATION.name());
-		if (Double.isInfinite(rotation))
-		{
-			rotation = Double.parseDouble(TwoAxes3DProperties.TWO_AXES_3D_OTATION.getDefaultValue());
-		}
-
-		return rotation;
+		return PropertyManager.getSharedInstance().getDoubleProperty(TwoAxes3DProperties.TWO_AXES_3D_OTATION);
 	}
 
 	/**
@@ -271,7 +265,7 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 	 */
 	public static void setRotation(double rotation)
 	{
-		PropertyManager.getSharedInstance().putProperty(TwoAxes3DProperties.TWO_AXES_3D_OTATION.name(), rotation);
+		PropertyManager.getSharedInstance().putProperty(TwoAxes3DProperties.TWO_AXES_3D_OTATION, rotation);
 	}
 
 	/**

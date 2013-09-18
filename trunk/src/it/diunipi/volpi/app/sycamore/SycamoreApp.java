@@ -121,7 +121,7 @@ public abstract class SycamoreApp extends JFrame
 	protected void initialize_pre()
 	{
 		// try loading workspace path
-		String workspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name(), true);
+		String workspace = PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR, true);
 		if (workspace == null)
 		{
 			int retVal = JOptionPane.showOptionDialog(this, new SycamoreWorkspaceSelectionPanel(), "Select workspace", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
@@ -171,10 +171,10 @@ public abstract class SycamoreApp extends JFrame
 	 */
 	private void saveApplicationState()
 	{
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_X.name(), getBounds().x);
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_Y.name(), getBounds().y);
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_WIDTH.name(), getBounds().width);
-		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_HEIGHT.name(), getBounds().height);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_X, getBounds().x);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_Y, getBounds().y);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_WIDTH, getBounds().width);
+		PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WINDOW_HEIGHT, getBounds().height);
 	}
 
 	/**
@@ -259,10 +259,10 @@ public abstract class SycamoreApp extends JFrame
 	protected void initialize_post()
 	{
 		// window bounds
-		int x = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_X.name());
-		int y = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_Y.name());
-		int width = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_WIDTH.name());
-		int height = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_HEIGHT.name());
+		int x = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_X);
+		int y = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_Y);
+		int width = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_WIDTH);
+		int height = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.WINDOW_HEIGHT);
 
 		setBounds(x, y, width, height);
 
@@ -459,7 +459,7 @@ public abstract class SycamoreApp extends JFrame
 	{
 		// show a file dialog
 		FileDialog dialog = new FileDialog((Frame) null, "Select the name of the project to be saved", FileDialog.SAVE);
-		dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name()) + System.getProperty("file.separator") + "Projects");
+		dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR) + System.getProperty("file.separator") + "Projects");
 		dialog.setFile("Project.xml");
 		dialog.setVisible(true);
 
@@ -538,7 +538,7 @@ public abstract class SycamoreApp extends JFrame
 	{
 		// show a file dialog
 		FileDialog dialog = new FileDialog((Frame) null, "Select the name of the project to be load", FileDialog.LOAD);
-		dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR.name()) + System.getProperty("file.separator") + "Projects");
+		dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR) + System.getProperty("file.separator") + "Projects");
 		dialog.setFilenameFilter(new FilenameFilter()
 		{
 			@Override

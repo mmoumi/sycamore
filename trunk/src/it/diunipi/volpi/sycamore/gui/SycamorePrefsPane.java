@@ -296,13 +296,13 @@ public class SycamorePrefsPane extends JPanel
 			spinner_min_x.setMinimumSize(new Dimension(80, 27));
 			spinner_min_x.setPreferredSize(new Dimension(80, 27));
 			spinner_min_x.setModel(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-			spinner_min_x.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_X.name()));
+			spinner_min_x.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_X));
 			spinner_min_x.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MIN_X.name(), (Integer) spinner_min_x.getValue());
+					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MIN_X, (Integer) spinner_min_x.getValue());
 				}
 			});
 		}
@@ -333,13 +333,13 @@ public class SycamorePrefsPane extends JPanel
 			spinner_max_x.setMinimumSize(new Dimension(80, 27));
 			spinner_max_x.setPreferredSize(new Dimension(80, 27));
 			spinner_max_x.setModel(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-			spinner_max_x.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_X.name()));
+			spinner_max_x.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_X));
 			spinner_max_x.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MAX_X.name(), (Integer) spinner_max_x.getValue());
+					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MAX_X, (Integer) spinner_max_x.getValue());
 				}
 			});
 		}
@@ -370,13 +370,13 @@ public class SycamorePrefsPane extends JPanel
 			spinner_min_y.setMinimumSize(new Dimension(80, 27));
 			spinner_min_y.setPreferredSize(new Dimension(80, 27));
 			spinner_min_y.setModel(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-			spinner_min_y.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Y.name()));
+			spinner_min_y.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Y));
 			spinner_min_y.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MIN_Y.name(), (Integer) spinner_min_y.getValue());
+					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MIN_Y, (Integer) spinner_min_y.getValue());
 				}
 			});
 		}
@@ -407,13 +407,13 @@ public class SycamorePrefsPane extends JPanel
 			spinner_max_y.setMinimumSize(new Dimension(80, 27));
 			spinner_max_y.setPreferredSize(new Dimension(80, 27));
 			spinner_max_y.setModel(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-			spinner_max_y.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Y.name()));
+			spinner_max_y.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Y));
 			spinner_max_y.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MAX_Y.name(), (Integer) spinner_max_y.getValue());
+					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MAX_Y, (Integer) spinner_max_y.getValue());
 				}
 			});
 		}
@@ -432,13 +432,13 @@ public class SycamorePrefsPane extends JPanel
 			spinner_max_z.setMinimumSize(new Dimension(80, 27));
 			spinner_max_z.setPreferredSize(new Dimension(80, 27));
 			spinner_max_z.setModel(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-			spinner_max_z.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Z.name()));
+			spinner_max_z.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Z));
 			spinner_max_z.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MAX_Z.name(), (Integer) spinner_max_z.getValue());
+					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MAX_Z, (Integer) spinner_max_z.getValue());
 				}
 			});
 		}
@@ -457,13 +457,13 @@ public class SycamorePrefsPane extends JPanel
 			spinner_min_z.setMinimumSize(new Dimension(80, 27));
 			spinner_min_z.setPreferredSize(new Dimension(80, 27));
 			spinner_min_z.setModel(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-			spinner_min_z.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Z.name()));
+			spinner_min_z.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Z));
 			spinner_min_z.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MIN_Z.name(), (Integer) spinner_min_z.getValue());
+					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.INITIAL_POSITION_MIN_Z, (Integer) spinner_min_z.getValue());
 				}
 			});
 
@@ -507,13 +507,13 @@ public class SycamorePrefsPane extends JPanel
 			spinner_defaultSpeed.setMinimumSize(new Dimension(80, 27));
 			spinner_defaultSpeed.setMaximumSize(new Dimension(80, 27));
 			spinner_defaultSpeed.setModel(new SpinnerNumberModel(1.0, 0.0, Double.MAX_VALUE, 0.1));
-			spinner_defaultSpeed.setValue(PropertyManager.getSharedInstance().getDoubleProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED.name()) * 10.0);
+			spinner_defaultSpeed.setValue(PropertyManager.getSharedInstance().getDoubleProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED) * 10.0);
 			spinner_defaultSpeed.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED.name(), (Float) spinner_defaultSpeed.getValue() / 10.0);
+					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED, (Float) spinner_defaultSpeed.getValue() / 10.0);
 				}
 			});
 		}
@@ -544,13 +544,13 @@ public class SycamorePrefsPane extends JPanel
 			spinner_fairnessCount.setMinimumSize(new Dimension(80, 27));
 			spinner_fairnessCount.setMaximumSize(new Dimension(80, 27));
 			spinner_fairnessCount.setModel(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-			spinner_fairnessCount.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.FAIRNESS_COUNT.name()));
+			spinner_fairnessCount.setValue(PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.FAIRNESS_COUNT));
 			spinner_fairnessCount.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.FAIRNESS_COUNT.name(), (Integer) spinner_fairnessCount.getValue());
+					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.FAIRNESS_COUNT, (Integer) spinner_fairnessCount.getValue());
 				}
 			});
 		}
@@ -673,13 +673,13 @@ public class SycamorePrefsPane extends JPanel
 			{ new Double(0.1), new Double(0.01), new Double(0.001), new Double(0.0001), new Double(0.00001), new Double(0.000001), new Double(0.0000001), new Double(0.00000001),
 					new Double(0.000000001), new Double(0.0000000001), new Double(0.00000000001) }));
 			spinner_epsilon.getEditor().setEnabled(false);
-			spinner_epsilon.setValue(PropertyManager.getSharedInstance().getDoubleProperty(ApplicationProperties.EPSILON.name()));
+			spinner_epsilon.setValue(PropertyManager.getSharedInstance().getDoubleProperty(ApplicationProperties.EPSILON));
 			spinner_epsilon.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.EPSILON.name(), (Double) spinner_epsilon.getValue());
+					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.EPSILON, (Double) spinner_epsilon.getValue());
 				}
 			});
 		}

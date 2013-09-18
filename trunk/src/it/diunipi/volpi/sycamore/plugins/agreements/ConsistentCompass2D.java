@@ -264,7 +264,7 @@ public class ConsistentCompass2D extends AgreementImpl<Point2D>
 	 */
 	public static boolean isFlipX()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_FLIP_X.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_FLIP_X);
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class ConsistentCompass2D extends AgreementImpl<Point2D>
 	 */
 	public static void setFlipX(Boolean flipX)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_FLIP_X.name(), flipX);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_FLIP_X, flipX);
 	}
 
 	/**
@@ -281,7 +281,7 @@ public class ConsistentCompass2D extends AgreementImpl<Point2D>
 	 */
 	public static boolean isFlipY()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_FLIP_Y.name());
+		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_FLIP_Y);
 	}
 
 	/**
@@ -290,7 +290,7 @@ public class ConsistentCompass2D extends AgreementImpl<Point2D>
 	 */
 	public static void setFlipY(Boolean flipY)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_FLIP_Y.name(), flipY);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_FLIP_Y, flipY);
 	}
 
 	/**
@@ -298,13 +298,7 @@ public class ConsistentCompass2D extends AgreementImpl<Point2D>
 	 */
 	public static double getRotation()
 	{
-		double rotation = PropertyManager.getSharedInstance().getDoubleProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_ROTATION.name());
-		if (Double.isInfinite(rotation))
-		{
-			rotation = Double.parseDouble(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_ROTATION.getDefaultValue());
-		}
-
-		return rotation;
+		return PropertyManager.getSharedInstance().getDoubleProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_ROTATION);
 	}
 
 	/**
@@ -313,7 +307,7 @@ public class ConsistentCompass2D extends AgreementImpl<Point2D>
 	 */
 	public static void setRotation(double rotation)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_ROTATION.name(), rotation);
+		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CONSISTENT_COMPASS_2D_ROTATION, rotation);
 	}
 
 	/*

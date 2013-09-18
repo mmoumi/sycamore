@@ -289,13 +289,7 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 	 */
 	public static double getRotation()
 	{
-		double rotation = PropertyManager.getSharedInstance().getDoubleProperty(OneAxis2DProperties.ONE_AXIS_2D_ROTATION.name());
-		if (Double.isInfinite(rotation))
-		{
-			rotation = Double.parseDouble(OneAxis2DProperties.ONE_AXIS_2D_ROTATION.getDefaultValue());
-		}
-
-		return rotation;
+		return PropertyManager.getSharedInstance().getDoubleProperty(OneAxis2DProperties.ONE_AXIS_2D_ROTATION);
 	}
 
 	/**
@@ -304,7 +298,7 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 	 */
 	public static void setRotation(double rotation)
 	{
-		PropertyManager.getSharedInstance().putProperty(OneAxis2DProperties.ONE_AXIS_2D_ROTATION.name(), rotation);
+		PropertyManager.getSharedInstance().putProperty(OneAxis2DProperties.ONE_AXIS_2D_ROTATION, rotation);
 	}
 
 	/*
