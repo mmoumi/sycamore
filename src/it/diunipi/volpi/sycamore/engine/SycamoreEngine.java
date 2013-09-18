@@ -1,6 +1,5 @@
 package it.diunipi.volpi.sycamore.engine;
 
-import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.plugins.humanpilot.HumanPilotScheduler;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
-import java.util.concurrent.Callable;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -515,22 +513,13 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 */
 	public void reset()
 	{
-		SycamoreSystem.enqueueToJME(new Callable<Object>()
+		// reset robots
+		Iterator<SycamoreRobot<P>> iterator = robots.iterator();
+		while (iterator.hasNext())
 		{
-			@Override
-			public synchronized Object call() throws Exception
-			{
-				// reset robots
-				Iterator<SycamoreRobot<P>> iterator = robots.iterator();
-				while (iterator.hasNext())
-				{
-					SycamoreRobot<P> robot = iterator.next();
-					robot.reset();
-				}
-
-				return null;
-			}
-		});
+			SycamoreRobot<P> robot = iterator.next();
+			robot.reset();
+		}
 	}
 
 	/**
