@@ -360,9 +360,9 @@ public abstract class SycamoreApp extends JFrame
 	private boolean checkDirtyFlag()
 	{
 		SycamoreEngine engine = getSycamoreMainPanel().getAppEngine();
-		if (loadedProject == null && engine != null)
+		if (loadedProject == null || engine == null)
 		{
-			return true;
+			return false;
 		}
 		else
 		{
@@ -400,9 +400,9 @@ public abstract class SycamoreApp extends JFrame
 			catch (Exception e)
 			{
 				e.printStackTrace();
+				return true;
 			}
 		}
-		return false;
 	}
 
 	/**
@@ -512,7 +512,7 @@ public abstract class SycamoreApp extends JFrame
 	 * @param doc
 	 * @return
 	 */
-	private Node encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	private synchronized Node encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
 	{
 		// create element
 		Element element = document.createElement("Sycamore");
@@ -534,7 +534,7 @@ public abstract class SycamoreApp extends JFrame
 	/**
 	 * 
 	 */
-	public void loadProject()
+	public synchronized void loadProject()
 	{
 		// show a file dialog
 		FileDialog dialog = new FileDialog((Frame) null, "Select the name of the project to be load", FileDialog.LOAD);
@@ -555,6 +555,8 @@ public abstract class SycamoreApp extends JFrame
 		{
 			try
 			{
+				this.reset();
+				
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 				Document doc = dBuilder.parse(file);
@@ -570,13 +572,21 @@ public abstract class SycamoreApp extends JFrame
 				TYPE type = TYPE.valueOf(typeString);
 				
 				SycamoreEngine engine = getSycamoreMainPanel().initEngine(type);
-				if (!engine.decode(doc.getDocumentElement()))
+				if (!engine.decode(doc.getDocumentElement(), type))
 				{
 					JOptionPane.showMessageDialog(null, "Failed opening passed file.", "Open Failed", JOptionPane.ERROR_MESSAGE);
 				}
-				
-				getSycamoreMainPanel().setAppEngine(engine);
-				getSycamoreMainPanel().updateGui();
+				else
+				{
+					SycamoreSystem.getSchedulerThread().setEngine(engine);
+					SycamoreSystem.getHumanPilotSchedulerThread().setEngine(engine);
+					
+					getSycamoreMainPanel().setAppEngine(engine);
+					getSycamoreMainPanel().update3DScene(type);
+					engine.makeRatioSnapshot();
+					
+					getSycamoreMainPanel().updateGui();	
+				}
 			}
 			catch (Exception e)
 			{

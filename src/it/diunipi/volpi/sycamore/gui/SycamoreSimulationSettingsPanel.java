@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.ComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -62,7 +63,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		setMaximumSize(new Dimension(310, 225));
 		setPreferredSize(new Dimension(310, 225));
 		setSize(new Dimension(310, 225));
-		
+
 		getLabel_title().setText("Simulation settings");
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -84,7 +85,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		gbc_comboBox_selectScheduler.gridx = 0;
 		gbc_comboBox_selectScheduler.gridy = 1;
 		getPanel_contentContainer().add(getComboBox_selectScheduler(), gbc_comboBox_selectScheduler);
-				
+
 		GridBagConstraints gbc_label_robotsNumber = new GridBagConstraints();
 		gbc_label_robotsNumber.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_label_robotsNumber.insets = new Insets(5, 5, 5, 5);
@@ -97,7 +98,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		gbc_button_manageRobots.gridx = 0;
 		gbc_button_manageRobots.gridy = 3;
 		getPanel_contentContainer().add(getButton_manageRobots(), gbc_button_manageRobots);
-		
+
 		GridBagConstraints gbc_label_pluginsInfo = new GridBagConstraints();
 		gbc_label_pluginsInfo.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_label_pluginsInfo.insets = new Insets(5, 5, 5, 5);
@@ -175,7 +176,8 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 				public void actionPerformed(ActionEvent e)
 				{
 					{
-						// listen to the events that comes from the robots configuration panel. We just
+						// listen to the events that comes from the robots configuration panel. We
+						// just
 						// forward the event.
 						fireActionEvent(e);
 					}
@@ -232,7 +234,8 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 				public void actionPerformed(ActionEvent e)
 				{
 					ImageIcon icon = new ImageIcon(getClass().getResource("/it/diunipi/volpi/sycamore/resources/robot_64x64.png"));
-					JOptionPane.showMessageDialog(SycamoreSimulationSettingsPanel.this.getParent(), getScrollPane_robotsConfigurationsContainer(), "Manage robots", JOptionPane.INFORMATION_MESSAGE, icon);
+					JOptionPane.showMessageDialog(SycamoreSimulationSettingsPanel.this.getParent(), getScrollPane_robotsConfigurationsContainer(), "Manage robots", JOptionPane.INFORMATION_MESSAGE,
+							icon);
 				}
 			});
 		}
@@ -307,14 +310,18 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		return appEngine;
 	}
 
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.gui.SycamoreRoundedBorderPanel#setAppEngine(it.diunipi.volpi.sycamore.engine.SycamoreEngine)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.gui.SycamoreRoundedBorderPanel#setAppEngine(it.diunipi.volpi.sycamore
+	 * .engine.SycamoreEngine)
 	 */
 	@Override
 	public void setAppEngine(SycamoreEngine appEngine)
 	{
 		this.appEngine = appEngine;
-		
+
 		getSycamoreRobotsConfigurationPanel().setAppEngine(appEngine);
 		getAdditionalPluginsPanel().setAppEngine(appEngine);
 	}
@@ -328,7 +335,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	public void setEnabled(boolean enabled)
 	{
 		super.setEnabled(enabled);
-		
+
 		getComboBox_selectScheduler().setEnabled(enabled);
 		getSycamoreRobotsConfigurationPanel().setEnabled(enabled);
 		getButton_manageRobots().setEnabled(enabled);
@@ -342,13 +349,29 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	{
 		updateModels();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamoreRoundedBorderPanel#updateGui()
 	 */
 	@Override
 	public void updateGui()
 	{
+		if (appEngine != null)
+		{
+			ComboBoxModel model = getComboBox_selectScheduler().getModel();
+			for (int i = 0; i < model.getSize(); i++)
+			{
+				Scheduler item = (Scheduler) model.getElementAt(i);
+				Scheduler current = appEngine.getCurrentScheduler();
+				if (item != null && current != null && item.getPluginName().equals(current.getPluginName()))
+				{
+					getComboBox_selectScheduler().setSelectedIndex(i);
+				}
+			}
+		}
+
 		getSycamoreRobotsConfigurationPanel().updateGui();
 		getAdditionalPluginsPanel().updateGui();
 	}
@@ -379,7 +402,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 			try
 			{
 				// prepare the new scheduler
-				PluginSelectionComboboxModel<Scheduler> schedulerModel = (PluginSelectionComboboxModel<Scheduler>) comboBox_selectScheduler.getModel();
+				PluginSelectionComboboxModel<Scheduler> schedulerModel = (PluginSelectionComboboxModel<Scheduler>) getComboBox_selectScheduler().getModel();
 				Scheduler scheduler = (Scheduler) schedulerModel.getSelectedItem();
 
 				if (scheduler != null)
@@ -389,6 +412,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 				}
 
 				getSycamoreRobotsConfigurationPanel().updateEngine(newEngine);
+				getAdditionalPluginsPanel().updateEngine(newEngine);
 			}
 			catch (Exception e)
 			{
@@ -406,12 +430,12 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		ArrayList<Scheduler> schedulers = SycamorePluginManager.getSharedInstance().getLoadedSchedulers();
 		PluginSelectionComboboxModel<Scheduler> schedulerModel = new PluginSelectionComboboxModel<Scheduler>(schedulers);
 		getComboBox_selectScheduler().setModel(schedulerModel);
-		
+
 		// update models in the 2 sub-panels
 		getSycamoreRobotsConfigurationPanel().updateModels();
 		getAdditionalPluginsPanel().updateModels();
 	}
-	
+
 	/**
 	 * Updates the label that tells the number of robots in the system
 	 */
@@ -420,7 +444,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		if (appEngine != null)
 		{
 			int robotsCount = appEngine.getRobotsCount();
-			
+
 			String text = "There are no robots in the system";
 			if (robotsCount == 1)
 			{
@@ -430,12 +454,14 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 			{
 				text = "There are " + robotsCount + " robots in the system";
 			}
-			
+
 			getLabel_robotsNumber().setText(text);
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
 	 */
 	@Override
