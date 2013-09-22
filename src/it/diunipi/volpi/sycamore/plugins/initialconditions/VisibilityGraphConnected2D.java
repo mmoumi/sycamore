@@ -8,6 +8,7 @@ import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
+import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
@@ -36,8 +37,12 @@ public class VisibilityGraphConnected2D extends InitialConditionsImpl<Point2D>
 	{
 		if (robots.robotsCount() > 0)
 		{
+			int num = 1;
 			// choose one random robot between passed ones
-			int num = SycamoreUtil.getRandomInt(0, robots.robotsCount() + 1);
+			if (robots.robotsCount() > 1)
+			{
+				num = SycamoreUtil.getRandomInt(1, robots.robotsCount());
+			}
 			Iterator<SycamoreRobot<Point2D>> iterator = robots.robotsIterator();
 
 			SycamoreRobot<Point2D> chosen = null;
@@ -50,9 +55,18 @@ public class VisibilityGraphConnected2D extends InitialConditionsImpl<Point2D>
 			{
 				// take a point inside robot's visible area
 				Visibility<Point2D> visibilty = chosen.getVisibility();
+				Agreement<Point2D> agreement = chosen.getAgreement();
 				if (visibilty != null)
 				{
-					return visibilty.getPointInside(chosen.getLocalPosition());
+					// point is in local coords
+					Point2D point = visibilty.getPointInside(chosen.getLocalPosition());
+					
+					if (agreement != null)
+					{
+						point = agreement.toGlobalCoordinates(point);
+					}
+					
+					return point;
 				}
 			}
 		}
