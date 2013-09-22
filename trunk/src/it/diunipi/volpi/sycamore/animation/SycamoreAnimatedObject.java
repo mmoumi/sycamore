@@ -2,12 +2,14 @@ package it.diunipi.volpi.sycamore.animation;
 
 import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * This class represents a generic animated object. Any animated object has its own timeline and
@@ -132,7 +134,7 @@ public abstract class SycamoreAnimatedObject<P extends SycamoreAbstractPoint & C
 	 * 
 	 * @return an XML Element containing the XML description of this object.
 	 */
-	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	public synchronized Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
 	{
 		// create element
 		Element element = document.createElement("SycamoreAnimatedObject");
@@ -157,5 +159,48 @@ public abstract class SycamoreAnimatedObject<P extends SycamoreAbstractPoint & C
 		element.appendChild(directionElem);
 		
 		return element;
+	}
+
+	/**
+	 * @param parentElem
+	 * @param type
+	 * @return
+	 */
+	public synchronized boolean decode(Element element, TYPE type)
+	{
+		boolean success = true;
+		NodeList nodes = element.getElementsByTagName("SycamoreAnimatedObject");
+
+		// if there is at least a SycamoreAnimatedObject node, decode it
+		if (nodes.getLength() > 0)
+		{
+			// startingPosition
+			NodeList startingPosition = element.getElementsByTagName("startingPosition");
+			if (startingPosition.getLength() > 0)
+			{
+				Element startingPositionElem = (Element) startingPosition.item(0);
+				success = success && this.startingPosition.decode(startingPositionElem, type);
+			}
+			
+			// timeline
+			NodeList timeline = element.getElementsByTagName("timeline");
+			if (timeline.getLength() > 0)
+			{
+				Element timelineElem = (Element) timeline.item(0);
+				success = success &&  this.timeline.decode(timelineElem, type);
+			}
+			
+			// currentRatio
+			NodeList currentRatio = element.getElementsByTagName("currentRatio");
+			if (currentRatio.getLength() > 0)
+			{
+				Element currentRatioElem = (Element) currentRatio.item(0);
+				float ratio = Float.parseFloat(currentRatioElem.getTextContent());
+				
+				this.setCurrentRatio(ratio);
+			}
+		}
+
+		return success;
 	}
 }

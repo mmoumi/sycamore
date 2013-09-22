@@ -2,6 +2,7 @@ package it.diunipi.volpi.sycamore.animation;
 
 import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -220,13 +221,42 @@ public class Keyframe<P extends SycamoreAbstractPoint & ComputablePoint<P>> impl
 
 	/**
 	 * @param element
+	 * @param type
+	 * @return
 	 */
-	public void decode(Element element)
+	public boolean decode(Element element, TYPE type)
 	{
-		NodeList kyframes = element.getElementsByTagName("Keyframe");
-		for (int i = 0; i < kyframes.getLength(); i++)
+		boolean success = true;
+		NodeList nodes = element.getElementsByTagName("Keyframe");
+
+		// if there is at least a Keyframe node, decode it
+		if (nodes.getLength() > 0)
 		{
-			System.out.println(kyframes.item(i).getNodeName());
+			// position
+			NodeList position = element.getElementsByTagName("position");
+			if (position.getLength() > 0)
+			{
+				Element positionElem = (Element) position.item(0);
+				success = success && this.position.decode(positionElem, type);
+			}
+			
+			// time
+			NodeList time = element.getElementsByTagName("time");
+			if (time.getLength() > 0)
+			{
+				Element timeElem = (Element) time.item(0);
+				this.time = Float.parseFloat(timeElem.getTextContent());
+			}
+			
+			// pause
+			NodeList pause = element.getElementsByTagName("pause");
+			if (pause.getLength() > 0)
+			{
+				Element pauseElem = (Element) pause.item(0);
+				this.pause = Boolean.parseBoolean(pauseElem.getTextContent());
+			}
 		}
+
+		return success;
 	}
 }

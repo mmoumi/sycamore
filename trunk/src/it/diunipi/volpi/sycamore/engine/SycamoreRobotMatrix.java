@@ -3,6 +3,8 @@
  */
 package it.diunipi.volpi.sycamore.engine;
 
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -29,7 +31,7 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 	 * 
 	 * @author Valerio Volpi - vale.v@me.com
 	 */
-	private enum TYPE
+	private enum ROBOT_KIND
 	{
 		ROBOT, HUMAN_PILOT, BOTH;
 	}
@@ -48,11 +50,11 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 		/**
 		 * Default constructor.
 		 */
-		public SycamoreRobotIterator(SycamoreRobotMatrix<P> matrix, TYPE type)
+		public SycamoreRobotIterator(SycamoreRobotMatrix<P> matrix, ROBOT_KIND type)
 		{
 			// prepare the robots list
 			this.robots = new Vector<SycamoreRobot<P>>();
-			if (type == TYPE.ROBOT)
+			if (type == ROBOT_KIND.ROBOT)
 			{
 				Vector<Vector<SycamoreRobot<P>>> list = matrix.getRobots();
 				for (Vector<SycamoreRobot<P>> vector : list)
@@ -60,7 +62,7 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 					this.robots.addAll(vector);
 				}
 			}
-			else if (type == TYPE.HUMAN_PILOT)
+			else if (type == ROBOT_KIND.HUMAN_PILOT)
 			{
 				Vector<Vector<SycamoreRobot<P>>> list = matrix.getHumanPilotRobots();
 				for (Vector<SycamoreRobot<P>> vector : list)
@@ -68,7 +70,7 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 					this.robots.addAll(vector);
 				}
 			}
-			else if (type == TYPE.BOTH)
+			else if (type == ROBOT_KIND.BOTH)
 			{
 				// if the tye is BOTH, add all the robots
 				Vector<Vector<SycamoreRobot<P>>> list = matrix.getRobots();
@@ -513,7 +515,7 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 	 */
 	public synchronized Iterator<SycamoreRobot<P>> iterator()
 	{
-		return new SycamoreRobotIterator(this, TYPE.BOTH);
+		return new SycamoreRobotIterator(this, ROBOT_KIND.BOTH);
 	}
 
 	/**
@@ -523,7 +525,7 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 	 */
 	public synchronized Iterator<SycamoreRobot<P>> robotsIterator()
 	{
-		return new SycamoreRobotIterator(this, TYPE.ROBOT);
+		return new SycamoreRobotIterator(this, ROBOT_KIND.ROBOT);
 	}
 
 	/**
@@ -533,7 +535,7 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 	 */
 	public synchronized Iterator<SycamoreRobot<P>> humanPilotsIterator()
 	{
-		return new SycamoreRobotIterator(this, TYPE.HUMAN_PILOT);
+		return new SycamoreRobotIterator(this, ROBOT_KIND.HUMAN_PILOT);
 	}
 
 	/**
@@ -581,9 +583,9 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 	}
 
 	/**
-	 * Returns a vector containing all the human pilot robots in this data structure. This vector does
-	 * not contain any information about the disposition of the robots (rows and cols) in this data
-	 * structure.
+	 * Returns a vector containing all the human pilot robots in this data structure. This vector
+	 * does not contain any information about the disposition of the robots (rows and cols) in this
+	 * data structure.
 	 * 
 	 * @return
 	 */
@@ -614,14 +616,14 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 	{
 		return humanPilotRobots;
 	}
-	
+
 	/**
 	 * Encode this object to XML format. The encoded Element will contain all data necessary to
 	 * re-create and object that is equal to this one.
 	 * 
 	 * @return an XML Element containing the XML description of this object.
 	 */
-	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	public synchronized Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
 	{
 		// create element
 		Element element = document.createElement("SycamoreRobotMatrix");
@@ -632,7 +634,7 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 		{
 			Vector<SycamoreRobot<P>> robotsList = robots.elementAt(i);
 			Element robotsListElem = document.createElement("robotsList");
-			
+
 			for (int j = 0; j < robotsList.size(); j++)
 			{
 				Element robotElem = document.createElement("robot");
@@ -640,39 +642,40 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 				robotElem.appendChild(robot.encode(factory, builder, document));
 				robotsListElem.appendChild(robotElem);
 			}
-			
+
 			robotsElem.appendChild(robotsListElem);
 		}
-		
+
 		Element humanPilotRobotsElem = document.createElement("humanPilotRobots");
 		for (int i = 0; i < humanPilotRobots.size(); i++)
 		{
 			Vector<SycamoreRobot<P>> humanPilotRobotsList = humanPilotRobots.elementAt(i);
 			Element humanPilotRobotsListElem = document.createElement("humanPilotRobotsList");
-			
+
 			for (int j = 0; j < humanPilotRobotsList.size(); j++)
 			{
-				Element robotElem = document.createElement("robot");
+				Element robotElem = document.createElement("humanPilotRobot");
 				SycamoreRobot<P> humanPilotrobot = humanPilotRobotsList.elementAt(j);
 				robotElem.appendChild(humanPilotrobot.encode(factory, builder, document));
 				humanPilotRobotsListElem.appendChild(robotElem);
 			}
-			
+
 			humanPilotRobotsElem.appendChild(humanPilotRobotsListElem);
 		}
 
 		// append children
 		element.appendChild(robotsElem);
 		element.appendChild(humanPilotRobotsElem);
-		
+
 		return element;
 	}
 
 	/**
 	 * @param element
 	 */
-	public boolean decode(Element element)
+	public synchronized boolean decode(Element element, TYPE type, SycamoreEngine<P> engine)
 	{
+		boolean success = true;
 		NodeList nodes = element.getElementsByTagName("SycamoreRobotMatrix");
 
 		// if there is at least a SycamoreRobotMatrix node, decode it
@@ -684,28 +687,86 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 			{
 				this.robots = new Vector<Vector<SycamoreRobot<P>>>();
 				Element robotsElem = (Element) robots.item(0);
-				
+
 				// robots list
 				NodeList robotsList = robotsElem.getElementsByTagName("robotsList");
-				if (robotsList.getLength() > 0)
+				for (int i = 0; i < robotsList.getLength(); i++)
 				{
 					Vector<SycamoreRobot<P>> list = new Vector<SycamoreRobot<P>>();
 					this.robots.add(list);
-					
-					Element robotListElem = (Element) robotsList.item(0);
-					
+
+					Element robotListElem = (Element) robotsList.item(i);
+
 					// robot
-					NodeList robot = robotsElem.getElementsByTagName("robot");
-					for (int i = 0; i < robot.getLength(); i++)
+					NodeList robot = robotListElem.getElementsByTagName("robot");
+					for (int j = 0; j < robot.getLength(); j++)
 					{
-						Element robotElem = (Element) robot.item(i);
-						
-						// TODO finish
+						Element robotElem = (Element) robot.item(j);
+						SycamoreRobot<P> newRobot = null;
+
+						if (type == TYPE.TYPE_2D)
+						{
+							SycamoreEngine2D engine2D = (SycamoreEngine2D) engine;
+							newRobot = (SycamoreRobot<P>) new SycamoreRobot2D(engine2D);
+						}
+						else
+						{
+							SycamoreEngine3D engine3D = (SycamoreEngine3D) engine;
+							newRobot = (SycamoreRobot<P>) new SycamoreRobot3D(engine3D);
+						}
+
+						if (newRobot.decode(robotElem, type))
+						{
+							list.add(newRobot);
+						}
 					}
+				}
+
+				// humanPilotRobots
+				NodeList humanPilotRobots = element.getElementsByTagName("humanPilotRobots");
+				if (humanPilotRobots.getLength() > 0)
+				{
+					this.humanPilotRobots = new Vector<Vector<SycamoreRobot<P>>>();
+					Element humanPilotRobotsElem = (Element) humanPilotRobots.item(0);
+
+					// humanPilotRobots list
+					NodeList humanPilotRobotsList = humanPilotRobotsElem.getElementsByTagName("humanPilotRobotsList");
+					for (int i = 0; i < humanPilotRobotsList.getLength(); i++)
+					{
+						Vector<SycamoreRobot<P>> list = new Vector<SycamoreRobot<P>>();
+						this.humanPilotRobots.add(list);
+
+						Element humanPilotRobotsListElem = (Element) humanPilotRobotsList.item(i);
+
+						// humanPilotRobot
+						NodeList humanPilotRobot = humanPilotRobotsListElem.getElementsByTagName("humanPilotRobot");
+						for (int j = 0; j < humanPilotRobot.getLength(); j++)
+						{
+							Element humanPilotRobotElem = (Element) humanPilotRobot.item(j);
+							SycamoreRobot<P> newhumanPilotRobot = null;
+
+							if (type == TYPE.TYPE_2D)
+							{
+								SycamoreEngine2D engine2D = (SycamoreEngine2D) engine;
+								newhumanPilotRobot = (SycamoreRobot<P>) new SycamoreRobot2D(engine2D);
+							}
+							else
+							{
+								SycamoreEngine3D engine3D = (SycamoreEngine3D) engine;
+								newhumanPilotRobot = (SycamoreRobot<P>) new SycamoreRobot3D(engine3D);
+							}
+
+							if (newhumanPilotRobot.decode(humanPilotRobotElem, type))
+							{
+								list.add(newhumanPilotRobot);
+							}
+						}
+					}
+
 				}
 			}
 		}
 		
-		return true;
+		return success;
 	}
 }

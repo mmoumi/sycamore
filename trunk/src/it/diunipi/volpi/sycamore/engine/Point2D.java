@@ -5,7 +5,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 
 import com.jme3.math.Vector3f;
@@ -262,7 +264,7 @@ public class Point2D extends SycamoreAbstractPoint implements Comparable<Point2D
 	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#encode(javax.xml.parsers.DocumentBuilderFactory, javax.xml.parsers.DocumentBuilder, org.w3c.dom.Document)
 	 */
 	@Override
-	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	public synchronized Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
 	{
 		// create element
 		Element element = document.createElement("Point2D");
@@ -280,5 +282,36 @@ public class Point2D extends SycamoreAbstractPoint implements Comparable<Point2D
 		element.appendChild(yElem);
 		
 		return element;
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#decode(org.w3c.dom.Element, it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE)
+	 */
+	@Override
+	public synchronized boolean decode(Element element, TYPE type)
+	{
+		NodeList nodes = element.getElementsByTagName("Point2D");
+
+		// if there is at least a Point2D node, decode it
+		if (nodes.getLength() > 0)
+		{
+			// x
+			NodeList x = element.getElementsByTagName("x");
+			if (x.getLength() > 0)
+			{
+				Element xElem = (Element) x.item(0);
+				this.x = Float.parseFloat(xElem.getTextContent());
+			}
+			
+			// y
+			NodeList y = element.getElementsByTagName("y");
+			if (y.getLength() > 0)
+			{
+				Element yElem = (Element) y.item(0);
+				this.y = Float.parseFloat(yElem.getTextContent());
+			}
+		}
+		
+		return true;
 	}
 }
