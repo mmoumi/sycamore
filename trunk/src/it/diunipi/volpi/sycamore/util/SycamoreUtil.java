@@ -7,6 +7,7 @@ import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.Point2D;
 import it.diunipi.volpi.sycamore.engine.Point3D;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 
 import java.awt.Color;
 import java.awt.geom.Line2D;
@@ -664,5 +665,20 @@ public class SycamoreUtil
 	public static Vector3f vectorAbs(Vector3f vec)
 	{
 		return new Vector3f(FastMath.abs(vec.x), FastMath.abs(vec.y), FastMath.abs(vec.z));
+	}
+
+	/**
+	 * @return
+	 */
+	public static <P extends SycamoreAbstractPoint & ComputablePoint<P>> P getNewPoint(TYPE type)
+	{
+		if (type == TYPE.TYPE_2D)
+		{
+			return (P) new Point2D();
+		}
+		else
+		{
+			return (P) new Point3D();
+		}
 	}
 }
