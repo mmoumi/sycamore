@@ -236,27 +236,30 @@ public class SwitchToggle extends JComponent implements Runnable, MouseMotionLis
 	@Override
 	public void mouseDragged(MouseEvent evt)
 	{
-		drag = true;
-		if (deltaX == -1)
+		if (this.isEnabled())
 		{
-			deltaX = evt.getX() - buttonX;
+			drag = true;
+			if (deltaX == -1)
+			{
+				deltaX = evt.getX() - buttonX;
+			}
+
+			buttonX = evt.getX() - deltaX;
+
+			int min = -1 * (this.getWidth() - this.getHeight());
+			int max = 0;
+
+			if (buttonX < min)
+			{
+				buttonX = min;
+			}
+			if (buttonX > max)
+			{
+				buttonX = max;
+			}
+
+			this.repaint();
 		}
-
-		buttonX = evt.getX() - deltaX;
-
-		int min = -1 * (this.getWidth() - this.getHeight());
-		int max = 0;
-
-		if (buttonX < min)
-		{
-			buttonX = min;
-		}
-		if (buttonX > max)
-		{
-			buttonX = max;
-		}
-
-		this.repaint();
 	}
 
 	/*
@@ -277,7 +280,7 @@ public class SwitchToggle extends JComponent implements Runnable, MouseMotionLis
 	@Override
 	public void mouseClicked(MouseEvent arg0)
 	{
-		if (!drag)
+		if (this.isEnabled() && !drag)
 		{
 			setSelected(!selected);
 		}
@@ -301,7 +304,7 @@ public class SwitchToggle extends JComponent implements Runnable, MouseMotionLis
 	@Override
 	public void mouseExited(MouseEvent arg0)
 	{
-		//mouseReleased(arg0);
+		// mouseReleased(arg0);
 	}
 
 	/*
@@ -323,20 +326,23 @@ public class SwitchToggle extends JComponent implements Runnable, MouseMotionLis
 	@Override
 	public void mouseReleased(MouseEvent arg0)
 	{
-		deltaX = -1;
-		if (drag)
+		if (this.isEnabled())
 		{
-			int min = -1 * (this.getWidth() - this.getHeight());
-			if (buttonX < min / 2)
+			deltaX = -1;
+			if (drag)
 			{
-				this.setSelected(false);
+				int min = -1 * (this.getWidth() - this.getHeight());
+				if (buttonX < min / 2)
+				{
+					this.setSelected(false);
+				}
+				else
+				{
+					this.setSelected(true);
+				}
 			}
-			else
-			{
-				this.setSelected(true);
-			}
+			drag = false;
 		}
-		drag = false;
 	}
 
 	/*
@@ -347,6 +353,9 @@ public class SwitchToggle extends JComponent implements Runnable, MouseMotionLis
 	@Override
 	public void hierarchyChanged(HierarchyEvent arg0)
 	{
-		new Thread(this).start();
+		if (this.isEnabled())
+		{
+			new Thread(this).start();
+		}
 	}
 }
