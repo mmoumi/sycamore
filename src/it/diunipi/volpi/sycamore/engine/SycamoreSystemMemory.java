@@ -1,11 +1,8 @@
 /**
  * 
  */
-package it.diunipi.volpi.sycamore.plugins.memory;
+package it.diunipi.volpi.sycamore.engine;
 
-import it.diunipi.volpi.sycamore.engine.ComputablePoint;
-import it.diunipi.volpi.sycamore.engine.Observation;
-import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
