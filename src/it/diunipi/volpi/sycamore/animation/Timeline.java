@@ -2,7 +2,9 @@ package it.diunipi.volpi.sycamore.animation;
 
 import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.util.SortedList;
+import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.Iterator;
 import java.util.Vector;
@@ -12,6 +14,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * This class represents a timeline. It contains a certain number of keyframes, stored at a fixed
@@ -566,7 +569,7 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	 * 
 	 * @return an XML Element containing the XML description of this object.
 	 */
-	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	public synchronized Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
 	{
 		// create element
 		Element element = document.createElement("Timeline");
@@ -575,8 +578,10 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 		Element keyframesElem = document.createElement("keyframes");
 		for (int i = 0; i < keyframes.size(); i++)
 		{
+			Element keyframeElem = document.createElement("keyframe");
 			Keyframe<P> keyframe = keyframes.get(i);
-			keyframesElem.appendChild(keyframe.encode(factory, builder, document));
+			keyframeElem.appendChild(keyframe.encode(factory, builder, document));
+			keyframesElem.appendChild(keyframeElem);
 		}
 
 		Element durationElem = document.createElement("duration");
@@ -587,5 +592,51 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 		element.appendChild(durationElem);
 
 		return element;
+	}
+
+	/**
+	 * @param timelineElem
+	 * @param type
+	 * @return
+	 */
+	public synchronized boolean decode(Element element, TYPE type)
+	{
+		boolean success = true;
+		NodeList nodes = element.getElementsByTagName("Timeline");
+
+		// if there is at least a Timeline node, decode it
+		if (nodes.getLength() > 0)
+		{
+			// keyframes
+			NodeList keyframes = element.getElementsByTagName("keyframes");
+			if (keyframes.getLength() > 0)
+			{
+				this.keyframes.removeAllElements();
+				Element keyframesElem = (Element) keyframes.item(0);
+				
+				// single keyframes
+				NodeList singleKeyframes = keyframesElem.getElementsByTagName("keyframe");
+				for (int i = 0; i < singleKeyframes.getLength(); i++)
+				{
+					Element keyframeElem = (Element) singleKeyframes.item(i);
+					Keyframe<P> newKeyframe = new Keyframe<P>((P) SycamoreUtil.getNewPoint(type), 0);
+					
+					if (newKeyframe.decode(keyframeElem, type))
+					{
+						this.keyframes.add(newKeyframe);
+					}
+				}
+			}
+			
+			// duration
+			NodeList duration = element.getElementsByTagName("duration");
+			if (duration.getLength() > 0)
+			{
+				Element durationElem = (Element) duration.item(0);
+				this.duration = Float.parseFloat(durationElem.getTextContent());
+			}
+		}
+
+		return success;
 	}
 }

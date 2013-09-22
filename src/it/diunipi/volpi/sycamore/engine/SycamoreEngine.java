@@ -187,14 +187,6 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * @return the initialConditions
-	 */
-	public InitialConditions<P> getInitialConditions()
-	{
-		return initialConditions;
-	}
-
-	/**
 	 * @return the currentScheduler
 	 */
 	public Scheduler<P> getCurrentScheduler()
@@ -226,6 +218,133 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	protected void setCurrentMeasures(Vector<Measure> currentMeasures)
 	{
 		this.measures = currentMeasures;
+	}
+	
+	/**
+	 * @return the initialConditions
+	 */
+	public InitialConditions<P> getCurrentInitialConditions()
+	{
+		return initialConditions;
+	}
+	
+	/**
+	 * @param initialConditions the initialConditions to set
+	 */
+	public void setCurrentInitialConditions(InitialConditions<P> initialConditions)
+	{
+		this.initialConditions = initialConditions;
+	}
+	
+	/**
+	 * @return the initialConditions
+	 */
+	public Visibility<P> getCurrentVisibility()
+	{
+		if (this.robots.size() > 0)
+		{
+			return this.robots.getRobotRow(0).firstElement().getVisibility();
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	/**
+	 * Creates a new visibility instance using passed interface, and sets such instance as the
+	 * visibility in all the robots in the engine. This visibility will be applied also the newly
+	 * created robots, since this moment.
+	 * 
+	 * @param visibility
+	 * @throws InvocationTargetException
+	 * @throws IllegalArgumentException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	public void createAndSetNewVisibilityInstance(Visibility<P> visibility) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+	{
+		// set visibility range in robots
+		Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
+		while (iterator.hasNext())
+		{
+			SycamoreRobot<P> robot = iterator.next();
+			this.createAndSetNewVisibilityInstance(visibility, robot);
+		}
+	}
+	
+	/**
+	 * @return the initialConditions
+	 */
+	public Memory<P> getCurrentMemory()
+	{
+		if (this.robots.size() > 0)
+		{
+			return this.robots.getRobotRow(0).firstElement().getMemory();
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	/**
+	 * Creates a new memory instance using passed interface, and sets such instance as the memory in
+	 * all the robots in the engine. This memory will be applied also the newly created robots,
+	 * since this moment.
+	 * 
+	 * @param algorithm
+	 * @throws InvocationTargetException
+	 * @throws IllegalArgumentException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	public void createAndSetNewMemoryInstance(Memory<P> memory) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+	{
+		// set visibility range in robots
+		Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
+		while (iterator.hasNext())
+		{
+			SycamoreRobot<P> robot = iterator.next();
+			this.createAndSetNewMemoryInstance(memory, robot);
+		}
+	}
+	
+	/**
+	 * @return the initialConditions
+	 */
+	public Agreement<P> getCurrentAgreement()
+	{
+		if (this.robots.size() > 0)
+		{
+			return this.robots.getRobotRow(0).firstElement().getAgreement();
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Creates a new agreement instance using passed interface, and sets such instance as the
+	 * agreement in all the robots in the engine. This agreement will be applied also the newly
+	 * created robots, since this moment.
+	 * 
+	 * @param agreement
+	 * @throws IllegalArgumentException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	public void createAndSetNewAgreementInstance(Agreement<P> agreement) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+	{
+		// set visibility range in robots
+		Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
+		while (iterator.hasNext())
+		{
+			SycamoreRobot<P> robot = iterator.next();
+			this.createAndSetNewAgreementInstance(agreement, robot);
+		}
 	}
 
 	/**
@@ -442,8 +561,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 
 	/**
 	 * Creates a new visibility instance using passed interface, and sets such instance as the
-	 * visibility in all the robots in the engine. This visibility will be applied also the newly
-	 * created robots, since this moment.
+	 * visibility in passed robot. No other robot will be touched.
 	 * 
 	 * @param visibility
 	 * @throws InvocationTargetException
@@ -451,12 +569,12 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public abstract void createAndSetNewVisibilityInstance(Visibility<P> visibility) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
+	public abstract void createAndSetNewVisibilityInstance(Visibility<P> visibility, SycamoreRobot<P> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
+			InvocationTargetException;
 
 	/**
 	 * Creates a new memory instance using passed interface, and sets such instance as the memory in
-	 * all the robots in the engine. This memory will be applied also the newly created robots,
-	 * since this moment.
+	 * passed robot. No other robot will be touched.
 	 * 
 	 * @param algorithm
 	 * @throws InvocationTargetException
@@ -464,7 +582,8 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	public abstract void createAndSetNewMemoryInstance(Memory<P> memory) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
+	public abstract void createAndSetNewMemoryInstance(Memory<P> memory, SycamoreRobot<P> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
+			InvocationTargetException;
 
 	/**
 	 * Creates a new algorithm instance using passed interface, and sets such instance as the
@@ -481,9 +600,22 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	public abstract void createAndSetNewAlgorithmInstance(Algorithm<P> algorithm, int index) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
 
 	/**
+	 * Creates a new algorithm instance using passed interface, and sets such instance as the
+	 * algorithm in passed robot. No other robot will be touched.
+	 * 
+	 * @param algorithm
+	 * @param index
+	 * @throws IllegalArgumentException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	public abstract void createAndSetNewAlgorithmInstance(Algorithm<P> algorithm, SycamoreRobot<P> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
+			InvocationTargetException;
+
+	/**
 	 * Creates a new agreement instance using passed interface, and sets such instance as the
-	 * agreement in all the robots in the engine. This agreement will be applied also the newly
-	 * created robots, since this moment.
+	 * agreement in passed robot. No other robot will be touched.
 	 * 
 	 * @param agreement
 	 * @throws IllegalArgumentException
@@ -491,7 +623,8 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	public abstract void createAndSetNewAgreementInstance(Agreement<P> agreement) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
+	public abstract void createAndSetNewAgreementInstance(Agreement<P> agreement, SycamoreRobot<P> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
+			InvocationTargetException;
 
 	/**
 	 * Returns true if this engine is valid. An engine is valid if there is at least a robot, and if
@@ -734,7 +867,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * 
 	 * @return an XML Element containing the XML description of this object.
 	 */
-	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	public synchronized Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
 	{
 		// create element
 		Element element = document.createElement("SycamoreEngine");
@@ -783,18 +916,16 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * 
 	 * @param documentElement
 	 */
-	public boolean decode(Element element)
+	public synchronized boolean decode(Element element, TYPE type)
 	{
+		boolean success = true;
 		NodeList nodes = element.getElementsByTagName("SycamoreEngine");
 
 		// if there is at least a SycamoreEngine node, decode it
 		if (nodes.getLength() > 0)
 		{
 			// decode fields
-			if (!this.robots.decode(element))
-			{
-				return false;
-			}
+			success = success && this.robots.decode(element, type, this);
 
 			// get values
 			NodeList animationSpeedMultiplier = element.getElementsByTagName("animationSpeedMultiplier");
@@ -804,65 +935,55 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 				this.animationSpeedMultiplier = Float.parseFloat(animationSpeedMultiplierElem.getTextContent());
 			}
 
-			// initial conditions
-			NodeList initialConditions = element.getElementsByTagName("initialConditions");
-			if (initialConditions.getLength() > 0)
+			try
 			{
-				Element initialConditionsElem = (Element) initialConditions.item(0);
-				String initialConditionsName = initialConditionsElem.getTextContent();
-
-				// get loaded plugins
-				ArrayList<InitialConditions> loaded = SycamorePluginManager.getSharedInstance().getLoadedInitialConditions();
-				for (InitialConditions plugin : loaded)
+				// initial conditions
+				NodeList initialConditions = element.getElementsByTagName("initialConditions");
+				if (initialConditions.getLength() > 0)
 				{
-					if (plugin.getPluginName().equals(initialConditionsName))
+					Element initialConditionsElem = (Element) initialConditions.item(0);
+					String initialConditionsName = initialConditionsElem.getTextContent();
+
+					// get loaded plugins
+					ArrayList<InitialConditions> loaded = SycamorePluginManager.getSharedInstance().getLoadedInitialConditions();
+					for (InitialConditions plugin : loaded)
 					{
-						try
+						if (plugin.getPluginName().equals(initialConditionsName))
 						{
 							// create the new
 							this.createAndSetNewInitialConditionsInstance(plugin);
 							break;
 						}
-						catch (Exception e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							return false;
-						}
 					}
 				}
-			}
 
-			// scheduler
-			NodeList scheduler = element.getElementsByTagName("scheduler");
-			if (scheduler.getLength() > 0)
-			{
-				Element schedulerElem = (Element) scheduler.item(0);
-				String schedulerName = schedulerElem.getTextContent();
-
-				// get loaded plugins
-				ArrayList<Scheduler> loaded = SycamorePluginManager.getSharedInstance().getLoadedSchedulers();
-				for (Scheduler plugin : loaded)
+				// scheduler
+				NodeList scheduler = element.getElementsByTagName("scheduler");
+				if (scheduler.getLength() > 0)
 				{
-					if (plugin.getPluginName().equals(schedulerName))
+					Element schedulerElem = (Element) scheduler.item(0);
+					String schedulerName = schedulerElem.getTextContent();
+
+					// get loaded plugins
+					ArrayList<Scheduler> loaded = SycamorePluginManager.getSharedInstance().getLoadedSchedulers();
+					for (Scheduler plugin : loaded)
 					{
-						try
+						if (plugin.getPluginName().equals(schedulerName))
 						{
 							// create the new
 							this.createAndSetNewSchedulerInstance(plugin);
 							break;
 						}
-						catch (Exception e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							return false;
-						}
 					}
 				}
 			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				return false;
+			}
 		}
 
-		return true;
+		return success;
 	}
 }

@@ -1,5 +1,7 @@
 package it.diunipi.volpi.sycamore.engine;
 
+import java.util.concurrent.Callable;
+
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 
 import com.jme3.material.Material;
@@ -28,6 +30,16 @@ public class SycamoreRobot3D extends SycamoreRobot<Point3D>
 	 * Default constructor.
 	 * 
 	 * @param algorithm
+	 */
+	public SycamoreRobot3D(SycamoreEngine<Point3D> engine)
+	{
+		super(engine, new Point3D());
+	}
+	
+	/**
+	 * Default constructor.
+	 * 
+	 * @param algorithm
 	 * @param engine
 	 * @param startingPosition
 	 */
@@ -43,6 +55,30 @@ public class SycamoreRobot3D extends SycamoreRobot<Point3D>
 	protected SycamoreRobotLight<Point3D> createNewLightInstance()
 	{
 		return new SycamoreRobotLight3D(glassColor, getNewLightGeometry(glassColor));
+	}
+	
+	/**
+	 * @param color
+	 *            the color to set
+	 */
+	public synchronized void setColor(final ColorRGBA color)
+	{
+		this.color = color;
+
+		SycamoreSystem.enqueueToJME(new Callable<Object>()
+		{
+			@Override
+			public Object call() throws Exception
+			{
+
+				Material mat = sceneGeometry.getMaterial();
+				mat.setColor("Ambient", color);
+				mat.setColor("Diffuse", color);
+				mat.setColor("Specular", ColorRGBA.White);
+
+				return null;
+			}
+		});
 	}
 
 	/*

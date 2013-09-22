@@ -52,6 +52,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.ChaseCamera;
@@ -604,8 +605,8 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		// Comment this to disable smooth camera motion
 		chaseCam.setSmoothMotion(true);
 		chaseCam.setMinDistance(2);
-		chaseCam.setDefaultDistance(16);
-		chaseCam.setMaxDistance(200);
+		chaseCam.setDefaultDistance(30);
+		chaseCam.setMaxDistance(400);
 	}
 
 	/**
@@ -997,5 +998,60 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		element.appendChild(aElem);
 
 		return element;
+	}
+	
+	/**
+	 * @param color
+	 * @param factory
+	 * @param builder
+	 * @param document
+	 * @return
+	 */
+	public static ColorRGBA decodeColorRGBA(Element element)
+	{
+		float red = 0;
+		float green = 0;
+		float blue = 0;
+		float alpha = 0;
+		
+		NodeList nodes = element.getElementsByTagName("colorRGBA");
+
+		// if there is at least a Timeline node, decode it
+		if (nodes.getLength() > 0)
+		{		
+			// r
+			NodeList r = element.getElementsByTagName("r");
+			if (r.getLength() > 0)
+			{
+				Element rElem = (Element) r.item(0);
+				red = Float.parseFloat(rElem.getTextContent());
+			}
+			
+			// g
+			NodeList g = element.getElementsByTagName("g");
+			if (g.getLength() > 0)
+			{
+				Element gElem = (Element) g.item(0);
+				green = Float.parseFloat(gElem.getTextContent());
+			}
+			
+			// b
+			NodeList b = element.getElementsByTagName("b");
+			if (b.getLength() > 0)
+			{
+				Element bElem = (Element) b.item(0);
+				blue = Float.parseFloat(bElem.getTextContent());
+			}
+			
+			// a
+			NodeList a = element.getElementsByTagName("a");
+			if (a.getLength() > 0)
+			{
+				Element aElem = (Element) a.item(0);
+				alpha = Float.parseFloat(aElem.getTextContent());
+			}
+		}
+
+		return new ColorRGBA(red, green, blue, alpha);
 	}
 }

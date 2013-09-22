@@ -5,7 +5,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 
 import com.jme3.math.Vector3f;
@@ -299,7 +301,7 @@ public class Point3D extends SycamoreAbstractPoint implements Comparable<Point3D
 	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#encode(javax.xml.parsers.DocumentBuilderFactory, javax.xml.parsers.DocumentBuilder, org.w3c.dom.Document)
 	 */
 	@Override
-	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	public synchronized Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
 	{
 		// create element
 		Element element = document.createElement("Point3D");
@@ -321,5 +323,44 @@ public class Point3D extends SycamoreAbstractPoint implements Comparable<Point3D
 		element.appendChild(zElem);
 		
 		return element;
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#decode(org.w3c.dom.Element, it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE)
+	 */
+	@Override
+	public synchronized boolean decode(Element element, TYPE type)
+	{
+		NodeList nodes = element.getElementsByTagName("Point3D");
+
+		// if there is at least a Point2D node, decode it
+		if (nodes.getLength() > 0)
+		{
+			// x
+			NodeList x = element.getElementsByTagName("x");
+			if (x.getLength() > 0)
+			{
+				Element xElem = (Element) x.item(0);
+				this.x = Float.parseFloat(xElem.getTextContent());
+			}
+			
+			// y
+			NodeList y = element.getElementsByTagName("y");
+			if (y.getLength() > 0)
+			{
+				Element yElem = (Element) y.item(0);
+				this.y = Float.parseFloat(yElem.getTextContent());
+			}
+			
+			// z
+			NodeList z = element.getElementsByTagName("z");
+			if (z.getLength() > 0)
+			{
+				Element zElem = (Element) z.item(0);
+				this.z = Float.parseFloat(zElem.getTextContent());
+			}
+		}
+		
+		return true;
 	}
 }

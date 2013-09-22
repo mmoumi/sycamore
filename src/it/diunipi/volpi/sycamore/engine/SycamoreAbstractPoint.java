@@ -1,5 +1,7 @@
 package it.diunipi.volpi.sycamore.engine;
 
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -44,4 +46,11 @@ public abstract class SycamoreAbstractPoint implements Cloneable
 	 * @return an XML Element containing the XML description of this object.
 	 */
 	public abstract Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document);
+	
+	/**
+	 * @param parentElem
+	 * @param type
+	 * @return
+	 */
+	public abstract boolean decode(Element element, TYPE type);
 }

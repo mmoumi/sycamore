@@ -3,7 +3,6 @@
  */
 package it.diunipi.volpi.sycamore.engine;
 
-import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.agreements.AgreementImpl;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
@@ -19,7 +18,6 @@ import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
 import java.util.Vector;
 
 import com.jme3.math.ColorRGBA;
@@ -35,28 +33,6 @@ import com.jme3.math.ColorRGBA;
  */
 public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 {
-	/**
-	 * Default constructor.
-	 */
-	public SycamoreEngine3D()
-	{
-		super();
-
-		// initial conditions
-		InitialConditions initialCondition = SycamoreSystem.getInitialCondition();
-		if (initialCondition != null && initialCondition.getType() == TYPE.TYPE_3D)
-		{
-			try
-			{
-				createAndSetNewInitialConditionsInstance(initialCondition);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -72,7 +48,7 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 			{
 				speed = speed / 2.0f;
 			}
-			
+
 			// create a new oblivious robot
 			SycamoreRobot3D robot = new SycamoreRobot3D(this, computeStartingPoint(), speed, color, maxLights);
 
@@ -87,12 +63,12 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 			}
 
 			// check if some visibility plugins have to be added
-			Visibility visibility = SycamoreSystem.getVisibility();
+			Visibility visibility = this.getCurrentVisibility();
 			if (visibility != null && visibility.getType() == TYPE.TYPE_3D)
 			{
 				try
 				{
-					createAndSetNewVisibilityInstance(visibility);
+					createAndSetNewVisibilityInstance(visibility, robot);
 				}
 				catch (Exception e)
 				{
@@ -101,12 +77,26 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 			}
 
 			// check if some memory plugins have to be added
-			Memory memory = SycamoreSystem.getMemory();
+			Memory memory = this.getCurrentMemory();
 			if (memory != null && memory.getType() == TYPE.TYPE_3D)
 			{
 				try
 				{
-					createAndSetNewMemoryInstance(memory);
+					createAndSetNewMemoryInstance(memory, robot);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+
+			// check if some agreement plugins have to be added
+			Agreement agreement = this.getCurrentAgreement();
+			if (agreement != null && agreement.getType() == TYPE.TYPE_3D)
+			{
+				try
+				{
+					createAndSetNewAgreementInstance(agreement, robot);
 				}
 				catch (Exception e)
 				{
@@ -128,17 +118,12 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 	@Override
 	public void createAndSetNewAlgorithmInstance(Algorithm<Point3D> algorithm, int index) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
 	{
-		// create a new instance of the scheduler
-		Class<? extends Algorithm> algorithmClass = algorithm.getClass();
-		Constructor<?> constructor = algorithmClass.getConstructors()[0];
-
 		boolean isHumanPilot = algorithm.isHumanPilot();
-		Vector<SycamoreRobot<Point3D>> robotList = isHumanPilot ? robots.getHumanPilotRow(index) : robots.getRobotRow(index);
+		Vector<SycamoreRobot<Point3D>> robotList = isHumanPilot ? robots.getHumanPilotRow(index) : this.robots.getRobotRow(index);
 
 		for (SycamoreRobot<Point3D> robot : robotList)
 		{
-			AlgorithmImpl<Point3D> newInstance = (AlgorithmImpl<Point3D>) constructor.newInstance();
-			robot.setAlgorithm(newInstance);
+			this.createAndSetNewAlgorithmInstance(algorithm, robot);
 		}
 	}
 
@@ -146,25 +131,40 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine#creatAndSetNewVisibilityInstance(it.diunipi
-	 * .volpi.sycamore.plugins.Visibility)
+	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine#createAndSetNewAlgorithmInstance(it.diunipi
+	 * .volpi.sycamore.plugins.algorithms.Algorithm, it.diunipi.volpi.sycamore.engine.SycamoreRobot)
 	 */
 	@Override
-	public void createAndSetNewVisibilityInstance(Visibility<Point3D> visibility) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+	public void createAndSetNewAlgorithmInstance(Algorithm<Point3D> algorithm, SycamoreRobot<Point3D> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
+			InvocationTargetException
+	{
+		// create a new instance of the algorithm
+		Class<? extends Algorithm> algorithmClass = algorithm.getClass();
+		Constructor<?> constructor = algorithmClass.getConstructors()[0];
+
+		AlgorithmImpl<Point3D> newInstance = (AlgorithmImpl<Point3D>) constructor.newInstance();
+		robot.setAlgorithm(newInstance);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine#createAndSetNewVisibilityInstance(it.diunipi
+	 * .volpi.sycamore.plugins.visibilities.Visibility,
+	 * it.diunipi.volpi.sycamore.engine.SycamoreRobot)
+	 */
+	@Override
+	public void createAndSetNewVisibilityInstance(Visibility<Point3D> visibility, SycamoreRobot<Point3D> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
+			InvocationTargetException
 	{
 		Constructor<?> constructor = null;
 		if (visibility != null)
 		{
-			// create a new instance of the scheduler
+			// create a new instance of the visibility
 			Class<? extends Visibility> visibilityClass = visibility.getClass();
 			constructor = visibilityClass.getConstructors()[0];
-		}
 
-		// set visibility range in robots
-		Iterator<SycamoreRobot<Point3D>> iterator = this.robots.iterator();
-		while (iterator.hasNext())
-		{
-			SycamoreRobot<Point3D> robot = iterator.next();
 			if (constructor != null)
 			{
 				// assign visibilty to each robot
@@ -183,24 +183,19 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 	 * 
 	 * @see
 	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine#createAndSetNewMemoryInstance(it.diunipi.
-	 * volpi.sycamore.plugins.memory.Memory)
+	 * volpi.sycamore.plugins.memory.Memory, it.diunipi.volpi.sycamore.engine.SycamoreRobot)
 	 */
 	@Override
-	public void createAndSetNewMemoryInstance(Memory<Point3D> memory) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+	public void createAndSetNewMemoryInstance(Memory<Point3D> memory, SycamoreRobot<Point3D> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
+			InvocationTargetException
 	{
 		Constructor<?> constructor = null;
 		if (memory != null)
 		{
-			// create a new instance of the scheduler
+			// create a new instance of the memory
 			Class<? extends Memory> memoryClass = memory.getClass();
 			constructor = memoryClass.getConstructors()[0];
-		}
 
-		// set visibility range in robots
-		Iterator<SycamoreRobot<Point3D>> iterator = this.robots.iterator();
-		while (iterator.hasNext())
-		{
-			SycamoreRobot<Point3D> robot = iterator.next();
 			if (constructor != null)
 			{
 				// assign memory to each robot
@@ -240,12 +235,17 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 			this.initialConditions = null;
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.engine.SycamoreEngine#createAndSetNewAgreementInstance(it.diunipi.volpi.sycamore.plugins.agreements.Agreement)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine#createAndSetNewAgreementInstance(it.diunipi
+	 * .volpi.sycamore.plugins.agreements.Agreement, it.diunipi.volpi.sycamore.engine.SycamoreRobot)
 	 */
 	@Override
-	public void createAndSetNewAgreementInstance(Agreement<Point3D> agreement) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+	public void createAndSetNewAgreementInstance(Agreement<Point3D> agreement, SycamoreRobot<Point3D> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
+			InvocationTargetException
 	{
 		Constructor<?> constructor = null;
 		if (agreement != null)
@@ -253,13 +253,7 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 			// create a new instance of the agreement
 			Class<? extends Agreement> agreementClass = agreement.getClass();
 			constructor = agreementClass.getConstructors()[0];
-		}
 
-		// set visibility range in robots
-		Iterator<SycamoreRobot<Point3D>> iterator = this.robots.iterator();
-		while (iterator.hasNext())
-		{
-			SycamoreRobot<Point3D> robot = iterator.next();
 			if (constructor != null)
 			{
 				// assign memory to each robot
@@ -301,7 +295,6 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 			int minZ = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Z);
 			int maxZ = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Z);
 
-			
 			return SycamoreUtil.getRandomPoint3D(minX, maxX, minY, maxY, minZ, maxZ);
 		}
 		else

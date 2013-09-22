@@ -1,5 +1,7 @@
 package it.diunipi.volpi.sycamore.engine;
 
+import java.util.concurrent.Callable;
+
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 
 import com.jme3.material.Material;
@@ -21,7 +23,17 @@ import com.jme3.util.TangentBinormalGenerator;
  * @author Valerio Volpi - vale.v@me.com
  */
 public class SycamoreRobot2D extends SycamoreRobot<Point2D>
-{
+{	
+	/**
+	 * Default constructor.
+	 * 
+	 * @param algorithm
+	 */
+	public SycamoreRobot2D(SycamoreEngine<Point2D> engine)
+	{
+		super(engine, new Point2D());
+	}
+	
 	/**
 	 * Default constructor.
 	 * 
@@ -43,6 +55,28 @@ public class SycamoreRobot2D extends SycamoreRobot<Point2D>
 	protected SycamoreRobotLight<Point2D> createNewLightInstance()
 	{
 		return new SycamoreRobotLight2D(glassColor, getNewLightGeometry(glassColor));
+	}
+	
+	/**
+	 * @param color
+	 *            the color to set
+	 */
+	public synchronized void setColor(final ColorRGBA color)
+	{
+		this.color = color;
+
+		SycamoreSystem.enqueueToJME(new Callable<Object>()
+		{
+			@Override
+			public Object call() throws Exception
+			{
+
+				Material mat = sceneGeometry.getMaterial();
+				mat.setColor("Color", color);
+
+				return null;
+			}
+		});
 	}
 
 	/*

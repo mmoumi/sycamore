@@ -2,6 +2,7 @@ package it.diunipi.volpi.sycamore.engine;
 
 import it.diunipi.volpi.sycamore.animation.SycamoreAnimatedObject;
 import it.diunipi.volpi.sycamore.animation.Timeline;
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.jmescene.SycamoreJMEScene;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
@@ -15,6 +16,7 @@ import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SubsetFairnessSupporter;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 
@@ -23,8 +25,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Geometry;
@@ -61,7 +63,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	// utility data
 	private final SycamoreSystemMemory<P>		systemMemory;
 	private final Vector<SycamoreRobotLight<P>>	lights;
-	private final long							ID;
+	private long								ID;
 
 	// model data
 	protected SycamoreEngine<P>					engine				= null;
@@ -84,6 +86,16 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 	// intermedate operations data
 	private Vector<Observation<P>>				snapshot			= null;
+
+	/**
+	 * Default constructor.
+	 * 
+	 * @param algorithm
+	 */
+	public SycamoreRobot(SycamoreEngine<P> engine, P startingPosition)
+	{
+		this(engine, startingPosition, PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED), ColorRGBA.Red, 0);
+	}
 
 	/**
 	 * Default constructor.
@@ -503,25 +515,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	 * @param color
 	 *            the color to set
 	 */
-	public synchronized void setColor(final ColorRGBA color)
-	{
-		this.color = color;
-
-		SycamoreSystem.enqueueToJME(new Callable<Object>()
-		{
-			@Override
-			public Object call() throws Exception
-			{
-
-				Material mat = sceneGeometry.getMaterial();
-				mat.setColor("Ambient", color);
-				mat.setColor("Diffuse", color);
-				mat.setColor("Specular", ColorRGBA.White);
-
-				return null;
-			}
-		});
-	}
+	public abstract void setColor(final ColorRGBA color);
 
 	/*
 	 * (non-Javadoc)
@@ -835,11 +829,11 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	 * 
 	 * @return an XML Element containing the XML description of this object.
 	 */
-	public Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
+	public synchronized Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
 	{
 		// create element
 		Element element = document.createElement("SycamoreRobot");
-		
+
 		// parent
 		Element parentElem = document.createElement("SycamoreRobot_parent");
 		parentElem.appendChild(super.encode(factory, builder, document));
@@ -852,8 +846,11 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		Element lightsElem = document.createElement("lights");
 		for (int i = 0; i < lights.size(); i++)
 		{
+			Element lightElem = document.createElement("light");
+
 			SycamoreRobotLight<P> light = lights.elementAt(i);
-			lightsElem.appendChild(light.encode(factory, builder, document));
+			lightElem.appendChild(light.encode(factory, builder, document));
+			lightsElem.appendChild(lightElem);
 		}
 
 		Element IDElem = document.createElement("ID");
@@ -916,4 +913,192 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		return element;
 	}
 
+	/**
+	 * @param robotElem
+	 * @return
+	 */
+	public synchronized boolean decode(Element element, TYPE type)
+	{
+		boolean success = true;
+		NodeList nodes = element.getElementsByTagName("SycamoreRobot");
+
+		// if there is at least a SycamoreRobotMatrix node, decode it
+		if (nodes.getLength() > 0)
+		{
+			// parent
+			NodeList parent = element.getElementsByTagName("SycamoreRobot_parent");
+			if (parent.getLength() > 0)
+			{
+				Element parentElem = (Element) parent.item(0);
+				success = success && super.decode(parentElem, type);
+			}
+
+			// systemMemory
+			NodeList systemMemory = element.getElementsByTagName("systemMemory");
+			if (systemMemory.getLength() > 0)
+			{
+				Element systemMemoryElem = (Element) systemMemory.item(0);
+				success = success && this.systemMemory.decode(systemMemoryElem, type);
+			}
+
+			// lights
+			NodeList lights = element.getElementsByTagName("lights");
+			if (lights.getLength() > 0)
+			{
+				this.lights.removeAllElements();
+				Element lightsElem = (Element) lights.item(0);
+
+				// single light
+				NodeList light = lightsElem.getElementsByTagName("light");
+				for (int i = 0; i < light.getLength(); i++)
+				{
+					Element lightElem = (Element) light.item(i);
+					SycamoreRobotLight<P> newLight = createNewLightInstance();
+
+					if (newLight.decode(lightElem, type))
+					{
+						this.lights.add(newLight);
+					}
+				}
+			}
+
+			// ID
+			NodeList ID = element.getElementsByTagName("ID");
+			if (ID.getLength() > 0)
+			{
+				Element IDElem = (Element) ID.item(0);
+				this.ID = Long.parseLong(IDElem.getTextContent());
+			}
+
+			// color
+			NodeList color = element.getElementsByTagName("color");
+			if (color.getLength() > 0)
+			{
+				Element colorElem = (Element) color.item(0);
+				this.color = SycamoreJMEScene.decodeColorRGBA(colorElem);
+			}
+
+			// maxLights
+			NodeList maxLights = element.getElementsByTagName("maxLights");
+			if (maxLights.getLength() > 0)
+			{
+				Element maxLightsElem = (Element) maxLights.item(0);
+				this.maxLights = Integer.parseInt(maxLightsElem.getTextContent());
+			}
+
+			// speed
+			NodeList speed = element.getElementsByTagName("speed");
+			if (speed.getLength() > 0)
+			{
+				Element speedElem = (Element) speed.item(0);
+				this.speed = Float.parseFloat(speedElem.getTextContent());
+			}
+
+			// currentState
+			NodeList currentState = element.getElementsByTagName("currentState");
+			if (currentState.getLength() > 0)
+			{
+				Element currentStateElem = (Element) currentState.item(0);
+				this.currentState = ROBOT_STATE.valueOf(currentStateElem.getTextContent());
+			}
+
+			// currentLights
+			NodeList currentLights = element.getElementsByTagName("currentLights");
+			if (currentLights.getLength() > 0)
+			{
+				Element currentLightsElem = (Element) currentLights.item(0);
+				this.currentLights = Integer.parseInt(currentLightsElem.getTextContent());
+			}
+
+			try
+			{
+				// algorithm
+				NodeList algorithm = element.getElementsByTagName("algorithm");
+				if (algorithm.getLength() > 0)
+				{
+					Element algorithmElem = (Element) algorithm.item(0);
+					String algorithmName = algorithmElem.getTextContent();
+
+					// get loaded plugins
+					ArrayList<Algorithm> loaded = SycamorePluginManager.getSharedInstance().getLoadedAlgorithms();
+					for (Algorithm plugin : loaded)
+					{
+						if (plugin.getPluginName().equals(algorithmName))
+						{
+							// create the new
+							engine.createAndSetNewAlgorithmInstance(plugin, this);
+							break;
+						}
+					}
+				}
+				
+				// visibility
+				NodeList visibility = element.getElementsByTagName("visibility");
+				if (visibility.getLength() > 0)
+				{
+					Element visibilityElem = (Element) visibility.item(0);
+					String visibilityName = visibilityElem.getTextContent();
+
+					// get loaded plugins
+					ArrayList<Visibility> loaded = SycamorePluginManager.getSharedInstance().getLoadedVisibilities();
+					for (Visibility plugin : loaded)
+					{
+						if (plugin.getPluginName().equals(visibilityName))
+						{
+							// create the new
+							engine.createAndSetNewVisibilityInstance(plugin, this);
+							break;
+						}
+					}
+				}
+				
+				// memory
+				NodeList memory = element.getElementsByTagName("memory");
+				if (memory.getLength() > 0)
+				{
+					Element memoryElem = (Element) memory.item(0);
+					String memoryName = memoryElem.getTextContent();
+
+					// get loaded plugins
+					ArrayList<Memory> loaded = SycamorePluginManager.getSharedInstance().getLoadedMemories();
+					for (Memory plugin : loaded)
+					{
+						if (plugin.getPluginName().equals(memoryName))
+						{
+							// create the new
+							engine.createAndSetNewMemoryInstance(plugin, this);
+							break;
+						}
+					}
+				}
+				
+				// agreement
+				NodeList agreement = element.getElementsByTagName("agreement");
+				if (agreement.getLength() > 0)
+				{
+					Element agreementElem = (Element) agreement.item(0);
+					String agreementName = agreementElem.getTextContent();
+
+					// get loaded plugins
+					ArrayList<Agreement> loaded = SycamorePluginManager.getSharedInstance().getLoadedAgreements();
+					for (Agreement plugin : loaded)
+					{
+						if (plugin.getPluginName().equals(agreementName))
+						{
+							// create the new
+							engine.createAndSetNewAgreementInstance(plugin, this);
+							break;
+						}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				return false;
+			}
+		}
+
+		return success;
+	}
 }
