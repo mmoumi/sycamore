@@ -374,6 +374,8 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 
 		getSycamoreRobotsConfigurationPanel().updateGui();
 		getAdditionalPluginsPanel().updateGui();
+		
+		updateRobotsCountLabel();
 	}
 
 	/**
