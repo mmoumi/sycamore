@@ -27,7 +27,7 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 {
 	private final Vector<Point2D>	points	= new Vector<Point2D>();
 	private int						count	= 0;
-	private static final int		ROUNDS	= 12;
+	private static final int		ROUNDS	= 128;
 
 	/**
 	 * Default constructor.
@@ -39,7 +39,7 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 		int minY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Y);
 		int maxY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Y);
 		
-		for (int i = 0; i < ROUNDS; i++)
+		for (int i = 0; i < (ROUNDS / 8); i++)
 		{		
 			points.add(new Point2D(0, 0));
 			points.add(SycamoreUtil.getRandomPoint2D(minX, maxX, minY, maxY));
