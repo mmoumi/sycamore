@@ -363,9 +363,9 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 			// is always better....
 			if (type != null)
 			{
-				if (appEngine != null)
+				if (getAppEngine() != null)
 				{
-					TYPE currentType = appEngine.getType();
+					TYPE currentType = getAppEngine().getType();
 
 					if (type == currentType)
 					{

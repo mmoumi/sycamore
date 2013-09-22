@@ -648,18 +648,30 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	 */
 	private void updateRobotsGeometries()
 	{
-		this.robotsNode.detachAllChildren();
-
-		if (appEngine != null)
+		this.enqueue(new Callable<Object>()
 		{
-			// update geometries in robots
-			Iterator<SycamoreRobot<Point2D>> iterator = appEngine.getRobots().iterator();
-			while (iterator.hasNext())
+			/* (non-Javadoc)
+			 * @see java.util.concurrent.Callable#call()
+			 */
+			@Override
+			public Object call() throws Exception
 			{
-				SycamoreRobot<Point2D> robot = iterator.next();
-				robotsNode.attachChild(robot.getRobotNode());
+				robotsNode.detachAllChildren();
+
+				if (getAppEngine() != null)
+				{
+					// update geometries in robots
+					Iterator<SycamoreRobot<Point2D>> iterator = getAppEngine().getRobots().iterator();
+					while (iterator.hasNext())
+					{
+						SycamoreRobot<Point2D> robot = iterator.next();
+						robotsNode.attachChild(robot.getRobotNode());
+					}
+				}
+				
+				return null;
 			}
-		}
+		});
 	}
 
 	/*
@@ -724,12 +736,12 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	@Override
 	public void simpleUpdate(float tpf)
 	{
-		if (appEngine != null)
+		if (getAppEngine() != null)
 		{
 			Vector<SycamoreAbstractPoint> allRobots = new Vector<SycamoreAbstractPoint>();
 
 			// update geometries in robots
-			Iterator<SycamoreRobot<Point2D>> iterator = appEngine.getRobots().iterator();
+			Iterator<SycamoreRobot<Point2D>> iterator = getAppEngine().getRobots().iterator();
 			while (iterator.hasNext())
 			{
 				SycamoreRobot<Point2D> robot = iterator.next();
@@ -831,7 +843,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	/**
 	 * @return the appEngine
 	 */
-	public SycamoreEngine<?> getAppEngine()
+	public synchronized SycamoreEngine getAppEngine()
 	{
 		return appEngine;
 	}
@@ -840,7 +852,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	 * @param appEngine
 	 *            the appEngine to set
 	 */
-	public void setAppEngine(SycamoreEngine<?> appEngine)
+	public synchronized void setAppEngine(SycamoreEngine<?> appEngine)
 	{
 		this.appEngine = appEngine;
 	}
