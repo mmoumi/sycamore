@@ -37,7 +37,8 @@ public class FollowTheLeader2D extends AlgorithmImpl<Point2D>
 			}
 		}
 		// here no leader has been found.
-		System.err.println("No leader found.");
+		
+		// System.err.println("No leader found.");
 		return null;
 	}
 
