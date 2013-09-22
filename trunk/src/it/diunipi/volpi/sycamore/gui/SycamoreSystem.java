@@ -6,12 +6,8 @@ package it.diunipi.volpi.sycamore.gui;
 import it.diunipi.volpi.sycamore.engine.NNotKnownException;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.jmescene.SycamoreJMEScene;
-import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.humanpilot.SycamoreHumanPilotSchedulerThread;
-import it.diunipi.volpi.sycamore.plugins.initialconditions.InitialConditions;
-import it.diunipi.volpi.sycamore.plugins.memory.Memory;
 import it.diunipi.volpi.sycamore.plugins.schedulers.SycamoreSchedulerThread;
-import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 
@@ -45,11 +41,6 @@ public class SycamoreSystem
 	private static SycamoreHumanPilotSchedulerThread	humanPilotSchedulerThread	= null;
 	private static SycamoreJMEScene						jmeSceneManager				= null;
 	private static JFrame								mainFrame					= null;
-
-	private static Visibility							visibility					= null;
-	private static Agreement							agreement					= null;
-	private static InitialConditions					initialCondition			= null;
-	private static Memory								memory						= null;
 
 	/**
 	 * Initialize the system
@@ -269,74 +260,6 @@ public class SycamoreSystem
 	public static float getEpsilon()
 	{
 		return PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.EPSILON);
-	}
-
-	/**
-	 * @param visibility
-	 *            the visibility to set
-	 */
-	public static void setVisibility(Visibility visibility)
-	{
-		SycamoreSystem.visibility = visibility;
-	}
-
-	/**
-	 * @return
-	 */
-	public static Visibility getVisibility()
-	{
-		return SycamoreSystem.visibility;
-	}
-
-	/**
-	 * @param agreement
-	 *            the agreement to set
-	 */
-	public static void setAgreement(Agreement agreement)
-	{
-		SycamoreSystem.agreement = agreement;
-	}
-
-	/**
-	 * @return the agreement
-	 */
-	public static Agreement getAgreement()
-	{
-		return agreement;
-	}
-
-	/**
-	 * @param initialCondition
-	 *            the initialCondition to set
-	 */
-	public static void setInitialCondition(InitialConditions initialCondition)
-	{
-		SycamoreSystem.initialCondition = initialCondition;
-	}
-
-	/**
-	 * @return the initialCondition
-	 */
-	public static InitialConditions getInitialCondition()
-	{
-		return initialCondition;
-	}
-
-	/**
-	 * @param memory
-	 *            the memory to set
-	 */
-	public static void setMemory(Memory memory)
-	{
-		SycamoreSystem.memory = memory;
-	}
-
-	/**
-	 * @return the memory
-	 */
-	public static Memory getMemory()
-	{
-		return SycamoreSystem.memory;
 	}
 
 	/**
