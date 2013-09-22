@@ -5,6 +5,7 @@ package it.diunipi.volpi.sycamore.plugins.memory;
 
 import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
+import it.diunipi.volpi.sycamore.engine.SycamoreSystemMemory;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 
 /**
