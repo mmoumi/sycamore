@@ -5,22 +5,18 @@ package it.diunipi.volpi.sycamore.plugins.memory;
 
 import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.Observation;
-import it.diunipi.volpi.sycamore.engine.Point3D;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
-import it.diunipi.volpi.sycamore.engine.SycamoreRobotLight;
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
-import java.io.File;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * @author Vale
@@ -112,8 +108,11 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 		Element selfPositionsElem = document.createElement("selfPositions");
 		for (int i = 0; i < selfPositions.size(); i++)
 		{
+			Element selfpositionElem = document.createElement("selfPosition");
+
 			P position = selfPositions.elementAt(i);
-			selfPositionsElem.appendChild(position.encode(factory, builder, document));
+			selfpositionElem.appendChild(position.encode(factory, builder, document));
+			selfPositionsElem.appendChild(selfpositionElem);
 		}
 
 		Element snapshotsElem = document.createElement("snapshots");
@@ -123,10 +122,13 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 			Vector<P> points = snapshots.elementAt(i);
 			for (int j = 0; j < points.size(); j++)
 			{
+				Element positionElem = document.createElement("position");
+
 				P position = points.elementAt(j);
-				snapshotElem.appendChild(position.encode(factory, builder, document));
+				positionElem.appendChild(position.encode(factory, builder, document));
+				snapshotElem.appendChild(positionElem);
 			}
-			
+
 			snapshotsElem.appendChild(snapshotElem);
 		}
 
@@ -137,46 +139,74 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 		return element;
 	}
 
-	public static void main(String[] args)
+	/**
+	 * @param systemMemoryElem
+	 * @param type
+	 * @return
+	 */
+	public boolean decode(Element element, TYPE type)
 	{
-		SycamoreSystemMemory<Point3D> memory = new SycamoreSystemMemory<Point3D>();
-		memory.addSelfPosition(new Point3D(3, 4, 5));
+		boolean success = true;
+		NodeList nodes = element.getElementsByTagName("SycamoreSystemMemory");
 
-		Observation<Point3D> o1 = new Observation<Point3D>(new Point3D(6, 7, 8), new Vector<SycamoreRobotLight<Point3D>>(), false);
-		Observation<Point3D> o2 = new Observation<Point3D>(new Point3D(9, 10, 11), new Vector<SycamoreRobotLight<Point3D>>(), false);
-		Observation<Point3D> o3 = new Observation<Point3D>(new Point3D(12, 13, 14), new Vector<SycamoreRobotLight<Point3D>>(), false);
-
-		Vector<Observation<Point3D>> obs = new Vector<Observation<Point3D>>();
-		obs.add(o1);
-		obs.add(o2);
-		obs.add(o3);
-		memory.addSnapshot(obs);
-		memory.addSelfPosition(new Point3D(15, 16, 17));
-
-		try
+		// if there is at least a Keyframe node, decode it
+		if (nodes.getLength() > 0)
 		{
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			// selfPositions
+			NodeList selfPositions = element.getElementsByTagName("selfPositions");
+			this.selfPositions.removeAllElements();
 
-			Document doc = docBuilder.newDocument();
-			doc.appendChild(memory.encode(docFactory, docBuilder, doc));
+			if (selfPositions.getLength() > 0)
+			{
+				Element selfPositionsElem = (Element) selfPositions.item(0);
+				NodeList selfPosition = selfPositionsElem.getElementsByTagName("selfPosition");
 
-			// write the content into xml file
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("/Users/Vale/Desktop/file.xml"));
+				// positions
+				for (int i = 0; i < selfPosition.getLength(); i++)
+				{
+					Element pointElem = (Element) selfPosition.item(i);
+					P point = SycamoreUtil.getNewPoint(type);
 
-			// Output to console for testing
-			// StreamResult result = new StreamResult(System.out);
+					if (point.decode(pointElem, type))
+					{
+						this.selfPositions.add(point);
+					}
+				}
+			}
 
-			transformer.transform(source, result);
+			// snapshots
+			NodeList snapshots = element.getElementsByTagName("snapshots");
+			this.snapshots.removeAllElements();
 
-			System.out.println("File saved!");
+			if (snapshots.getLength() > 0)
+			{
+				Element snapshotsElem = (Element) snapshots.item(0);
+				NodeList snapshot = snapshotsElem.getElementsByTagName("snapshot");
+
+				// single snapshot
+				for (int i = 0; i < snapshot.getLength(); i++)
+				{
+					Vector<P> data = new Vector<P>();
+					Element snapshotElem = (Element) snapshot.item(i);
+					NodeList position = snapshotElem.getElementsByTagName("position");
+					
+					// positions
+					for (int j = 0; j < position.getLength(); j++)
+					{
+						Element positionElem = (Element) position.item(j);
+						P point = SycamoreUtil.getNewPoint(type);
+
+						if (point.decode(positionElem, type))
+						{
+							data.add(point);
+						}
+					}
+					
+					this.snapshots.add(data);
+				}
+			}
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+
+		return success;
 	}
 }
