@@ -238,6 +238,7 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	public void setAppEngine(SycamoreEngine appEngine)
 	{
 		this.appEngine = appEngine;
+		
 		scene.setAppEngine(appEngine);
 	}
 
