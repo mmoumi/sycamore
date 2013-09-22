@@ -329,4 +329,12 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 		getPanel_sceneContainer().reset();
 		getPanel_sceneControl().reset();
 	}
+
+	/**
+	 * @param type
+	 */
+	public void update3DScene(TYPE type)
+	{
+		getPanel_sceneContainer().update3DScene(type);
+	}
 }

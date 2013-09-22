@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -318,10 +319,10 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				{
 					PluginSelectionComboboxModel<Visibility> model = (PluginSelectionComboboxModel<Visibility>) getComboBox_visibility().getModel();
 					Visibility visibility = (Visibility) model.getSelectedItem();
-					SycamoreSystem.setVisibility(visibility);
 
 					if (appEngine != null)
 					{
+						// update message
 						if (visibility != null)
 						{
 							TYPE type = appEngine.getType();
@@ -341,6 +342,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 							}
 						}
 
+						// set in engine
 						try
 						{
 							appEngine.createAndSetNewVisibilityInstance(visibility);
@@ -350,7 +352,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 							exc.printStackTrace();
 						}
 					}
-					
+
 					fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_VISIBILITY_CHANGED.name()));
 				}
 			});
@@ -391,8 +393,8 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				{
 					PluginSelectionComboboxModel<Agreement> model = (PluginSelectionComboboxModel<Agreement>) getComboBox_agreement().getModel();
 					Agreement agreement = (Agreement) model.getSelectedItem();
-					SycamoreSystem.setAgreement(agreement);
 
+					// update message
 					if (appEngine != null)
 					{
 						if (agreement != null)
@@ -410,7 +412,8 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 								getMessage_wrongAgreement().setVisible(true);
 							}
 						}
-						
+
+						// set in engine
 						try
 						{
 							appEngine.createAndSetNewAgreementInstance(agreement);
@@ -420,7 +423,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 							exc.printStackTrace();
 						}
 					}
-					
+
 					fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_AGREEMENT_CHANGED.name()));
 				}
 			});
@@ -468,7 +471,19 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	{
 		if (appEngine != null)
 		{
-			// update visibility controls
+			// select right visibility
+			ComboBoxModel visibilityModel = getComboBox_visibility().getModel();
+			for (int i = 0; i < visibilityModel.getSize(); i++)
+			{
+				Visibility item = (Visibility) visibilityModel.getElementAt(i);
+				Visibility current = appEngine.getCurrentVisibility();
+				if (item != null && current != null && item.getPluginName().equals(current.getPluginName()))
+				{
+					getComboBox_visibility().setSelectedIndex(i);
+				}
+			}
+
+			// update visibility message
 			Visibility visibility = (Visibility) getComboBox_visibility().getSelectedItem();
 			if (visibility != null)
 			{
@@ -486,7 +501,19 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				}
 			}
 
-			// update agreement controls
+			// select right agreement
+			ComboBoxModel agreementModel = getComboBox_agreement().getModel();
+			for (int i = 0; i < agreementModel.getSize(); i++)
+			{
+				Agreement item = (Agreement) agreementModel.getElementAt(i);
+				Agreement current = appEngine.getCurrentAgreement();
+				if (item != null && current != null && item.getPluginName().equals(current.getPluginName()))
+				{
+					getComboBox_agreement().setSelectedIndex(i);
+				}
+			}
+
+			// update agreement message
 			Agreement agreement = (Agreement) getComboBox_agreement().getSelectedItem();
 			if (agreement != null)
 			{
@@ -504,7 +531,19 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				}
 			}
 
-			// update initial conditions controls
+			// select right initial conditions
+			ComboBoxModel initialConditionsModel = getComboBox_initialConditions().getModel();
+			for (int i = 0; i < initialConditionsModel.getSize(); i++)
+			{
+				InitialConditions item = (InitialConditions) initialConditionsModel.getElementAt(i);
+				InitialConditions current = appEngine.getCurrentInitialConditions();
+				if (item != null && current != null && item.getPluginName().equals(current.getPluginName()))
+				{
+					getComboBox_initialConditions().setSelectedIndex(i);
+				}
+			}
+			
+			// update initial conditions message
 			InitialConditions initialCondition = (InitialConditions) getComboBox_initialConditions().getSelectedItem();
 			if (initialCondition != null)
 			{
@@ -521,8 +560,20 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 					getMessage_wrongInitialConditions().setVisible(true);
 				}
 			}
+			
+			// select right memory
+			ComboBoxModel memoryModel = getComboBox_memory().getModel();
+			for (int i = 0; i < memoryModel.getSize(); i++)
+			{
+				Memory item = (Memory) memoryModel.getElementAt(i);
+				Memory current = appEngine.getCurrentMemory();
+				if (item != null && current != null && item.getPluginName().equals(current.getPluginName()))
+				{
+					getComboBox_memory().setSelectedIndex(i);
+				}
+			}
 
-			// update memories
+			// update memory message
 			Memory memory = (Memory) getComboBox_memory().getSelectedItem();
 			if (memory != null)
 			{
@@ -563,7 +614,8 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 		{
 			comboBox_initialConditions = new JComboBox();
 
-			// apply a PluginSelectionComboboxModel with generics for InitialConditions to this combobox
+			// apply a PluginSelectionComboboxModel with generics for InitialConditions to this
+			// combobox
 			ArrayList<InitialConditions> initialConditions = SycamorePluginManager.getSharedInstance().getLoadedInitialConditions();
 			PluginSelectionComboboxModel<InitialConditions> initialConditionsModel = new PluginSelectionComboboxModel<InitialConditions>(initialConditions);
 
@@ -575,8 +627,8 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				{
 					PluginSelectionComboboxModel<InitialConditions> model = (PluginSelectionComboboxModel<InitialConditions>) getComboBox_initialConditions().getModel();
 					InitialConditions initialCondition = (InitialConditions) model.getSelectedItem();
-					SycamoreSystem.setInitialCondition(initialCondition);
 
+					// update message
 					if (appEngine != null)
 					{
 						if (initialCondition != null)
@@ -595,6 +647,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 							}
 						}
 
+						// set in engine
 						try
 						{
 							appEngine.createAndSetNewInitialConditionsInstance(initialCondition);
@@ -604,7 +657,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 							exc.printStackTrace();
 						}
 					}
-					
+
 					fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_INITIAL_CONDITION_CHANGED.name()));
 				}
 			});
@@ -645,8 +698,8 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				{
 					PluginSelectionComboboxModel<Memory> model = (PluginSelectionComboboxModel<Memory>) getComboBox_memory().getModel();
 					Memory memory = (Memory) model.getSelectedItem();
-					SycamoreSystem.setMemory(memory);
 
+					// update message
 					if (appEngine != null)
 					{
 						if (memory != null)
@@ -664,7 +717,8 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 								getMessage_wrongMemory().setVisible(true);
 							}
 						}
-						
+
+						// set in engine
 						try
 						{
 							appEngine.createAndSetNewMemoryInstance(memory);
@@ -674,7 +728,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 							exc.printStackTrace();
 						}
 					}
-					
+
 					fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_MEMORY_CHANGED.name()));
 				}
 			});
@@ -803,7 +857,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				public void actionPerformed(ActionEvent e)
 				{
 					boolean selected = switchToggle_nKnown.isSelected();
-					SycamoreSystem.setNKnown(selected);	
+					SycamoreSystem.setNKnown(selected);
 				}
 			});
 		}
@@ -833,7 +887,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 			switchToggle_multiplicityDetection.setMaximumSize(new Dimension(71, 25));
 			switchToggle_multiplicityDetection.setMinimumSize(new Dimension(71, 25));
 			switchToggle_multiplicityDetection.setPreferredSize(new Dimension(71, 25));
-			switchToggle_multiplicityDetection.setSelected(true);
+			switchToggle_multiplicityDetection.setSelected(false);
 			switchToggle_multiplicityDetection.setEnabled(false);
 			switchToggle_multiplicityDetection.setToolTipText("Coming soon...");
 		}
@@ -863,7 +917,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 		ArrayList<Measure> measures = SycamorePluginManager.getSharedInstance().getLoadedMeasures();
 		PluginSelectionTableModel<Measure> measureModel = new PluginSelectionTableModel<Measure>(measures);
 		getTable_measures().setModel(measureModel);
-		
+
 		// apply a PluginSelectionComboboxModel with generics for Visibilities to this combobox
 		ArrayList<Visibility> visibilities = SycamorePluginManager.getSharedInstance().getLoadedVisibilities();
 		PluginSelectionComboboxModel<Visibility> visibilityModel = new PluginSelectionComboboxModel<Visibility>(visibilities);
@@ -873,15 +927,68 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 		ArrayList<Agreement> agreements = SycamorePluginManager.getSharedInstance().getLoadedAgreements();
 		PluginSelectionComboboxModel<Agreement> agreementModel = new PluginSelectionComboboxModel<Agreement>(agreements);
 		getComboBox_agreement().setModel(agreementModel);
-		
+
 		// apply a PluginSelectionComboboxModel with generics for InitialConditions to this combobox
 		ArrayList<InitialConditions> initialConditions = SycamorePluginManager.getSharedInstance().getLoadedInitialConditions();
 		PluginSelectionComboboxModel<InitialConditions> initialConditionsModel = new PluginSelectionComboboxModel<InitialConditions>(initialConditions);
 		getComboBox_initialConditions().setModel(initialConditionsModel);
-		
+
 		// apply a PluginSelectionComboboxModel with generics for Memory to this combobox
 		ArrayList<Memory> memory = SycamorePluginManager.getSharedInstance().getLoadedMemories();
 		PluginSelectionComboboxModel<Memory> memoryModel = new PluginSelectionComboboxModel<Memory>(memory);
 		getComboBox_memory().setModel(memoryModel);
+	}
+
+	/**
+	 * @param newEngine
+	 */
+	public void updateEngine(SycamoreEngine newEngine)
+	{
+		try
+		{
+			// prepare the new visibility
+			PluginSelectionComboboxModel<Visibility> visibilityModel = (PluginSelectionComboboxModel<Visibility>) getComboBox_visibility().getModel();
+			Visibility visibility = (Visibility) visibilityModel.getSelectedItem();
+
+			if (visibility != null)
+			{
+				// create and set new visibility
+				newEngine.createAndSetNewVisibilityInstance(visibility);
+			}
+
+			// prepare the new agreement
+			PluginSelectionComboboxModel<Agreement> agreementModel = (PluginSelectionComboboxModel<Agreement>) getComboBox_agreement().getModel();
+			Agreement agreement = (Agreement) agreementModel.getSelectedItem();
+
+			if (agreement != null)
+			{
+				// create and set new agreement
+				newEngine.createAndSetNewAgreementInstance(agreement);
+			}
+
+			// prepare the new initialConditions
+			PluginSelectionComboboxModel<InitialConditions> initialConditionsModel = (PluginSelectionComboboxModel<InitialConditions>) getComboBox_initialConditions().getModel();
+			InitialConditions initialConditions = (InitialConditions) initialConditionsModel.getSelectedItem();
+
+			if (initialConditions != null)
+			{
+				// create and set new initialConditions
+				newEngine.createAndSetNewInitialConditionsInstance(initialConditions);
+			}
+
+			// prepare the new memory
+			PluginSelectionComboboxModel<Memory> memoryModel = (PluginSelectionComboboxModel<Memory>) getComboBox_memory().getModel();
+			Memory memory = (Memory) memoryModel.getSelectedItem();
+
+			if (memory != null)
+			{
+				// create and set new memory
+				newEngine.createAndSetNewMemoryInstance(memory);
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

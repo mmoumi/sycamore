@@ -517,4 +517,12 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	{
 		getPluginsPanel().loadPluginFromFileSystem();
 	}
+
+	/**
+	 * @param type
+	 */
+	public void update3DScene(TYPE type)
+	{
+		getSimulationViewPanel().update3DScene(type);
+	}
 }
