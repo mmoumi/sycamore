@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 import com.jme3.math.ColorRGBA;
@@ -166,9 +168,9 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 
 	/**
 	 * This class defines the contour: The Contour of a robot r at time t, denoted by CT(r,t), is
-	 * the boundary of the set U MS(s,t), where s ranges through all the robots in NW(r,t) ��� NE(r,t)
-	 * ��� SE(r,t). We will call a peak of the contour any convex corner of CT (r); the concave
-	 * corners will be called valleys.
+	 * the boundary of the set U MS(s,t), where s ranges through all the robots in NW(r,t) ���
+	 * NE(r,t) ��� SE(r,t). We will call a peak of the contour any convex corner of CT (r); the
+	 * concave corners will be called valleys.
 	 * 
 	 * @author Valerio Volpi - vale.v@me.com
 	 */
@@ -564,7 +566,25 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 	 */
 	public NearGathering()
 	{
-		this.setPaperFilePath(SycamoreSystem.getPluginsResourcesDirectory().getAbsolutePath() + System.getProperty("file.separator") + this.getPluginName() + System.getProperty("file.separator") + "2012-SIROCCO.pdf");
+		this.setPaperFilePath(SycamoreSystem.getPluginsResourcesDirectory().getAbsolutePath() + System.getProperty("file.separator") + this.getPluginName() + System.getProperty("file.separator")
+				+ "2012-SIROCCO.pdf");
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
+	 */
+	@Override
+	public void init()
+	{
+		// try to check if n is known
+		try
+		{
+			SycamoreSystem.getN();
+		}
+		catch (NNotKnownException e)
+		{
+			JOptionPane.showMessageDialog(null, "Warning. The value of n is not known. The algorithm will not work.", "N not known", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 
 	/*

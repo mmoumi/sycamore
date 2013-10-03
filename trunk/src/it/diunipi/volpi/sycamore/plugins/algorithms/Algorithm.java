@@ -22,6 +22,11 @@ import java.util.Vector;
 public interface Algorithm<P extends SycamoreAbstractPoint & ComputablePoint<P>> extends SycamoreTypedPlugin
 {
 	/**
+	 * Initializes this algorithm
+	 */
+	public void init();
+	
+	/**
 	 * Returns true if the execution of the algorithm is finished, false otherwise.
 	 * 
 	 * @return

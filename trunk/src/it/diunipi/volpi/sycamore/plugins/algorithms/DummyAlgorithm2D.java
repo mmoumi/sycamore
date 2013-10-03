@@ -27,12 +27,13 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 {
 	private final Vector<Point2D>	points	= new Vector<Point2D>();
 	private int						count	= 0;
-	private static final int		ROUNDS	= 128;
-
-	/**
-	 * Default constructor.
+	private static final int		ROUNDS	= 8;
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
 	 */
-	public DummyAlgorithm2D()
+	@Override
+	public void init()
 	{
 		int minX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_X);
 		int maxX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_X);

@@ -20,7 +20,15 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 @PluginImplementation
 public class PseudoHumanPilot3D extends AlgorithmImpl<Point3D>
 {
-
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
+	 */
+	@Override
+	public void init()
+	{
+		// Nothing to do
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -142,6 +142,7 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 		Constructor<?> constructor = algorithmClass.getConstructors()[0];
 
 		AlgorithmImpl<Point2D> newInstance = (AlgorithmImpl<Point2D>) constructor.newInstance();
+		newInstance.init();
 		robot.setAlgorithm(newInstance);
 	}
 

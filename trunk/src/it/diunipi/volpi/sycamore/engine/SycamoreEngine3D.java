@@ -143,6 +143,7 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 		Constructor<?> constructor = algorithmClass.getConstructors()[0];
 
 		AlgorithmImpl<Point3D> newInstance = (AlgorithmImpl<Point3D>) constructor.newInstance();
+		newInstance.init();
 		robot.setAlgorithm(newInstance);
 	}
 
