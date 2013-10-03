@@ -26,6 +26,15 @@ public class RotatingRobot2D extends AlgorithmImpl<Point2D>
 	private boolean	beginning	= true;
 	private float	angle		= 0;
 
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
+	 */
+	@Override
+	public void init()
+	{
+		// Nothing to do
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

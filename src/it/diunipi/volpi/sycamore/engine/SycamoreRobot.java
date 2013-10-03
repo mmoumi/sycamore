@@ -916,7 +916,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	 * @param robotElem
 	 * @return
 	 */
-	public synchronized boolean decode(Element element, TYPE type)
+	public synchronized boolean decode(final Element element, final TYPE type)
 	{
 		boolean success = true;
 		NodeList nodes = element.getElementsByTagName("SycamoreRobot");
@@ -940,27 +940,6 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 				success = success && this.systemMemory.decode(systemMemoryElem, type);
 			}
 
-			// lights
-			NodeList lights = element.getElementsByTagName("lights");
-			if (lights.getLength() > 0)
-			{
-				this.lights.removeAllElements();
-				Element lightsElem = (Element) lights.item(0);
-
-				// single light
-				NodeList light = lightsElem.getElementsByTagName("light");
-				for (int i = 0; i < light.getLength(); i++)
-				{
-					Element lightElem = (Element) light.item(i);
-					SycamoreRobotLight<P> newLight = createNewLightInstance();
-
-					if (newLight.decode(lightElem, type))
-					{
-						this.lights.add(newLight);
-					}
-				}
-			}
-
 			// ID
 			NodeList ID = element.getElementsByTagName("ID");
 			if (ID.getLength() > 0)
@@ -982,7 +961,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			if (maxLights.getLength() > 0)
 			{
 				Element maxLightsElem = (Element) maxLights.item(0);
-				this.maxLights = Integer.parseInt(maxLightsElem.getTextContent());
+				this.setMaxLights(Integer.parseInt(maxLightsElem.getTextContent()));
 			}
 
 			// speed
@@ -1008,6 +987,36 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 				Element currentLightsElem = (Element) currentLights.item(0);
 				this.currentLights = Integer.parseInt(currentLightsElem.getTextContent());
 			}
+			
+			
+			SycamoreSystem.enqueueToJME(new Callable<Object>()
+			{
+				/* (non-Javadoc)
+				 * @see java.util.concurrent.Callable#call()
+				 */
+				@Override
+				public Object call() throws Exception
+				{
+					// lights
+					NodeList lightsList = element.getElementsByTagName("lights");
+					if (lightsList.getLength() > 0)
+					{
+						Element lightsElem = (Element) lightsList.item(0);
+
+						// single light
+						NodeList light = lightsElem.getElementsByTagName("light");
+						for (int i = 0; i < light.getLength(); i++)
+						{
+							Element lightElem = (Element) light.item(i);
+							SycamoreRobotLight<P> robotLight = lights.elementAt(i);
+
+							robotLight.decode(lightElem, type);
+						}
+					}
+					
+					return null;
+				}
+			});
 
 			try
 			{

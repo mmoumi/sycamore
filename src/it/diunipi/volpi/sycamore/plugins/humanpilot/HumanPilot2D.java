@@ -24,6 +24,15 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 @PluginImplementation
 public class HumanPilot2D extends AlgorithmImpl<Point2D>
 {
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
+	 */
+	@Override
+	public void init()
+	{
+		// Nothing to do
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

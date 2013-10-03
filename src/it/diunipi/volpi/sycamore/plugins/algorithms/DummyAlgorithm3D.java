@@ -28,11 +28,12 @@ public class DummyAlgorithm3D extends AlgorithmImpl<Point3D>
 	private final Vector<Point3D>	points	= new Vector<Point3D>();
 	private int						count	= 0;
 	private static final int		ROUNDS	= 11;
-
-	/**
-	 * Default constructor.
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
 	 */
-	public DummyAlgorithm3D()
+	@Override
+	public void init()
 	{
 		int minX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_X);
 		int maxX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_X);
