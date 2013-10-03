@@ -204,7 +204,11 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	 */
 	public void stopAnimation()
 	{
-		this.pauseImpl(true);
+		JToggleButton button_play = getButton_play();
+		if (button_play.isSelected())
+		{
+			button_play.doClick();
+		}
 	}
 
 	/**
