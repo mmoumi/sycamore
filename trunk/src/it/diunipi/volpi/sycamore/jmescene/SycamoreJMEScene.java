@@ -514,7 +514,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 							axesNode.setLocalRotation(agreement.getLocalRotation());
 							axesNode.setLocalScale(agreement.getLocalScale());
 						}
-						else
+						else if (robot.getRobotNode() != null)
 						{
 							robot.getRobotNode().setLocalRotation(Quaternion.IDENTITY);
 							robot.getRobotNode().setLocalScale(1, 1, 1);
