@@ -23,7 +23,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -353,8 +356,44 @@ public abstract class SycamoreApp extends JFrame
 
 		loadedProject = null;
 		originalString = null;
-		
+
 		updateGui();
+	}
+
+	/**
+	 * Store current engine in original string
+	 */
+	private synchronized String getEncodedString()
+	{
+		try
+		{
+			if (getAppEngine() != null)
+			{
+				DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+				Document doc = docBuilder.newDocument();
+
+				doc.appendChild(encode(docFactory, docBuilder, doc));
+
+				// write the content into xml file
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(doc);
+
+				StringWriter stringWriter = new StringWriter();
+				StreamResult resultString = new StreamResult(stringWriter);
+
+				transformer.transform(source, resultString);
+				return stringWriter.getBuffer().toString();
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	/**
@@ -362,8 +401,8 @@ public abstract class SycamoreApp extends JFrame
 	 */
 	private boolean checkDirtyFlag()
 	{
-		SycamoreEngine engine = getSycamoreMainPanel().getAppEngine();
-		if (loadedProject == null || engine == null)
+		SycamoreEngine engine = getAppEngine();
+		if (engine == null)
 		{
 			return false;
 		}
@@ -371,34 +410,10 @@ public abstract class SycamoreApp extends JFrame
 		{
 			try
 			{
-				// check dirty flag
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document document = builder.newDocument();
-
-				// current project
-				Element currentProject = engine.encode(factory, builder, document);
-				document.appendChild(currentProject);
-
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
-				Transformer transformer = transformerFactory.newTransformer();
-				DOMSource source = new DOMSource(document);
-				StringWriter writer = new StringWriter();
-
-				StreamResult result = new StreamResult(writer);
-				transformer.transform(source, result);
-
-				String currentString = writer.toString();
+				String currentString = getEncodedString();
 
 				// check
-				if (currentString.equals(originalString))
-				{
-					return false;
-				}
-				else
-				{
-					return true;
-				}
+				return !currentString.equals(originalString);
 			}
 			catch (Exception e)
 			{
@@ -460,18 +475,33 @@ public abstract class SycamoreApp extends JFrame
 	 */
 	public void saveProject()
 	{
-		// show a file dialog
-		FileDialog dialog = new FileDialog((Frame) null, "Select the name of the project to be saved", FileDialog.SAVE);
-		dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR) + System.getProperty("file.separator") + "Projects");
-		dialog.setFile("Project.xml");
-		dialog.setVisible(true);
-
-		// get the file
-		File file = new File(dialog.getDirectory() + System.getProperty("file.separator") + dialog.getFile());
-		if (file != null)
+		if (getAppEngine() != null)
 		{
-			saveProject(file);
+			// show a file dialog
+			FileDialog dialog = new FileDialog((Frame) null, "Select the name of the project to be saved", FileDialog.SAVE);
+			dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR) + System.getProperty("file.separator") + "Projects");
+			dialog.setFile("Project.xml");
+			dialog.setVisible(true);
+
+			if (dialog.getFile() != null)
+			{
+				// get the file
+				File file = new File(dialog.getDirectory() + System.getProperty("file.separator") + dialog.getFile());
+				saveProject(file);
+			}
 		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "There is no simulation to save. \nPlease add some robots in the scene before saving the project.", "Nothing to save", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	private SycamoreEngine getAppEngine()
+	{
+		return getSycamoreMainPanel().getAppEngine();
 	}
 
 	/**
@@ -491,27 +521,17 @@ public abstract class SycamoreApp extends JFrame
 			{
 				try
 				{
-					DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-					DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+					originalString = getEncodedString();
 
-					Document doc = docBuilder.newDocument();
+					if (originalString != null)
+					{
+						// save int file
+						PrintWriter printOut = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file)));
+						printOut.println(originalString);
+						printOut.close();
 
-					doc.appendChild(encode(docFactory, docBuilder, doc));
-
-					// write the content into xml file
-					TransformerFactory transformerFactory = TransformerFactory.newInstance();
-					Transformer transformer = transformerFactory.newTransformer();
-					DOMSource source = new DOMSource(doc);
-
-					StringWriter stringWriter = new StringWriter();
-					StreamResult resultString = new StreamResult(stringWriter);
-					StreamResult result = new StreamResult(file);
-
-					transformer.transform(source, result);
-					transformer.transform(source, resultString);
-
-					loadedProject = file;
-					originalString = resultString.toString();
+						loadedProject = file;
+					}
 				}
 				catch (Exception e)
 				{
@@ -536,10 +556,10 @@ public abstract class SycamoreApp extends JFrame
 		Element element = document.createElement("Sycamore");
 		element.setAttribute("Version", getVersion());
 		element.setAttribute("BuildNumber", getBuildNumber());
-		element.setAttribute("type", getSycamoreMainPanel().getAppEngine().getType() + "");
+		element.setAttribute("type", getAppEngine().getType() + "");
 
 		// children
-		SycamoreEngine engine = getSycamoreMainPanel().getAppEngine();
+		SycamoreEngine engine = getAppEngine();
 
 		if (engine != null)
 		{
@@ -567,10 +587,11 @@ public abstract class SycamoreApp extends JFrame
 		});
 		dialog.setVisible(true);
 
-		// get the file
-		final File file = new File(dialog.getDirectory() + System.getProperty("file.separator") + dialog.getFile());
-		if (file != null)
+		if (dialog.getFile() != null)
 		{
+			// get the file
+			final File file = new File(dialog.getDirectory() + System.getProperty("file.separator") + dialog.getFile());
+
 			final ProgressBarWindow progressBarWindow = new ProgressBarWindow();
 			progressBarWindow.getProgressBar().setIndeterminate(true);
 			progressBarWindow.getLabel_title().setText("Loading project...");
@@ -584,7 +605,7 @@ public abstract class SycamoreApp extends JFrame
 					try
 					{
 						reset();
-						
+
 						DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 						DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 						Document doc = dBuilder.parse(file);
@@ -612,6 +633,9 @@ public abstract class SycamoreApp extends JFrame
 							getSycamoreMainPanel().setAppEngine(engine);
 							getSycamoreMainPanel().update3DScene(type);
 							engine.makeRatioSnapshot();
+
+							originalString = getEncodedString();
+							loadedProject = file;
 
 							getSycamoreMainPanel().updateGui();
 						}
