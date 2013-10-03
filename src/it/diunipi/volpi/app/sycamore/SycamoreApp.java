@@ -2,6 +2,7 @@ package it.diunipi.volpi.app.sycamore;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.gui.ProgressBarWindow;
 import it.diunipi.volpi.sycamore.gui.SycamoreMainPanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSplashScreen;
 import it.diunipi.volpi.sycamore.gui.SycamoreSplashScreen.SPLASH_STATES;
@@ -352,6 +353,8 @@ public abstract class SycamoreApp extends JFrame
 
 		loadedProject = null;
 		originalString = null;
+		
+		updateGui();
 	}
 
 	/**
@@ -474,36 +477,51 @@ public abstract class SycamoreApp extends JFrame
 	/**
 	 * Saves a project on passed file
 	 */
-	public void saveProject(File file)
+	public void saveProject(final File file)
 	{
-		try
+		final ProgressBarWindow progressBarWindow = new ProgressBarWindow();
+		progressBarWindow.getProgressBar().setIndeterminate(true);
+		progressBarWindow.getLabel_title().setText("Saving project...");
+		progressBarWindow.setVisible(true);
+
+		Runnable task = new Runnable()
 		{
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			@Override
+			public void run()
+			{
+				try
+				{
+					DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+					DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-			Document doc = docBuilder.newDocument();
+					Document doc = docBuilder.newDocument();
 
-			doc.appendChild(encode(docFactory, docBuilder, doc));
+					doc.appendChild(encode(docFactory, docBuilder, doc));
 
-			// write the content into xml file
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
+					// write the content into xml file
+					TransformerFactory transformerFactory = TransformerFactory.newInstance();
+					Transformer transformer = transformerFactory.newTransformer();
+					DOMSource source = new DOMSource(doc);
 
-			StringWriter stringWriter = new StringWriter();
-			StreamResult resultString = new StreamResult(stringWriter);
-			StreamResult result = new StreamResult(file);
+					StringWriter stringWriter = new StringWriter();
+					StreamResult resultString = new StreamResult(stringWriter);
+					StreamResult result = new StreamResult(file);
 
-			transformer.transform(source, result);
-			transformer.transform(source, resultString);
+					transformer.transform(source, result);
+					transformer.transform(source, resultString);
 
-			loadedProject = file;
-			originalString = resultString.toString();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+					loadedProject = file;
+					originalString = resultString.toString();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+
+				progressBarWindow.setVisible(false);
+			}
+		};
+		new Thread(task).start();
 	}
 
 	/**
@@ -550,48 +568,63 @@ public abstract class SycamoreApp extends JFrame
 		dialog.setVisible(true);
 
 		// get the file
-		File file = new File(dialog.getDirectory() + System.getProperty("file.separator") + dialog.getFile());
+		final File file = new File(dialog.getDirectory() + System.getProperty("file.separator") + dialog.getFile());
 		if (file != null)
 		{
-			try
-			{
-				this.reset();
-				
-				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				Document doc = dBuilder.parse(file);
+			final ProgressBarWindow progressBarWindow = new ProgressBarWindow();
+			progressBarWindow.getProgressBar().setIndeterminate(true);
+			progressBarWindow.getLabel_title().setText("Loading project...");
+			progressBarWindow.setVisible(true);
 
-				doc.getDocumentElement().normalize();
-				
-				NodeList sycamoreNodes = doc.getElementsByTagName("Sycamore");
-				
-				// take just the first Sycamore Node
-				Element sycamore = (Element) sycamoreNodes.item(0);
-				
-				String typeString = sycamore.getAttribute("type");
-				TYPE type = TYPE.valueOf(typeString);
-				
-				SycamoreEngine engine = getSycamoreMainPanel().initEngine(type);
-				if (!engine.decode(doc.getDocumentElement(), type))
-				{
-					JOptionPane.showMessageDialog(null, "Failed opening passed file.", "Open Failed", JOptionPane.ERROR_MESSAGE);
-				}
-				else
-				{
-					SycamoreSystem.getSchedulerThread().setEngine(engine);
-					SycamoreSystem.getHumanPilotSchedulerThread().setEngine(engine);
-					
-					getSycamoreMainPanel().setAppEngine(engine);
-					getSycamoreMainPanel().update3DScene(type);
-					engine.makeRatioSnapshot();
-					
-					getSycamoreMainPanel().updateGui();	
-				}
-			}
-			catch (Exception e)
+			Runnable task = new Runnable()
 			{
-				e.printStackTrace();
-			}
+				@Override
+				public void run()
+				{
+					try
+					{
+						reset();
+						
+						DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+						DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+						Document doc = dBuilder.parse(file);
+
+						doc.getDocumentElement().normalize();
+
+						NodeList sycamoreNodes = doc.getElementsByTagName("Sycamore");
+
+						// take just the first Sycamore Node
+						Element sycamore = (Element) sycamoreNodes.item(0);
+
+						String typeString = sycamore.getAttribute("type");
+						TYPE type = TYPE.valueOf(typeString);
+
+						SycamoreEngine engine = getSycamoreMainPanel().initEngine(type);
+						if (!engine.decode(doc.getDocumentElement(), type))
+						{
+							JOptionPane.showMessageDialog(null, "Failed opening passed file.", "Open Failed", JOptionPane.ERROR_MESSAGE);
+						}
+						else
+						{
+							SycamoreSystem.getSchedulerThread().setEngine(engine);
+							SycamoreSystem.getHumanPilotSchedulerThread().setEngine(engine);
+
+							getSycamoreMainPanel().setAppEngine(engine);
+							getSycamoreMainPanel().update3DScene(type);
+							engine.makeRatioSnapshot();
+
+							getSycamoreMainPanel().updateGui();
+						}
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+
+					progressBarWindow.setVisible(false);
+				}
+			};
+			new Thread(task).start();
 		}
 	}
 }
