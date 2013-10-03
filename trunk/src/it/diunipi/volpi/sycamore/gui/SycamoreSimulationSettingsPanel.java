@@ -443,11 +443,12 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	 */
 	public void updateRobotsCountLabel()
 	{
+		String text = "There are no robots in the system";
+		
 		if (appEngine != null)
 		{
 			int robotsCount = appEngine.getRobotsCount();
 
-			String text = "There are no robots in the system";
 			if (robotsCount == 1)
 			{
 				text = "There is " + robotsCount + " robot in the system";
@@ -456,9 +457,10 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 			{
 				text = "There are " + robotsCount + " robots in the system";
 			}
-
-			getLabel_robotsNumber().setText(text);
 		}
+		
+
+		getLabel_robotsNumber().setText(text);
 	}
 
 	/*
