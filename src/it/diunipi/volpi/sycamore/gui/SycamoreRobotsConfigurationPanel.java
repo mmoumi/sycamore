@@ -4,6 +4,7 @@ import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.engine.SycamorePluginManager;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
@@ -33,6 +35,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
@@ -501,6 +504,8 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 				// not
 				// fired to avoid useless operations.
 				fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.SIMULATION_DATA_BAD.name()));
+				
+				JOptionPane.showMessageDialog(null, "You have chosen mixed Algorithm types, 2D and 3D.\nThis is not allowed, please check the algorithms you have chosen.", "Wrong Algorithms types", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 
@@ -715,7 +720,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					if (appEngine != null)
+					if (!changeLock && appEngine != null)
 					{
 						// get the color
 						ColorRGBA color = (ColorRGBA) getComboBox_colorSelection().getSelectedItem();
@@ -754,7 +759,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					if (appEngine != null)
+					if (!changeLock && appEngine != null)
 					{
 						// get the algorithm
 						PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) comboBox_algorithmSelection.getModel();
@@ -793,39 +798,43 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					// the selection produces a modification of the array of types, and a call to
-					// checkTypes.
-					PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) comboBox_algorithmSelection.getModel();
-					Algorithm algorithm = (Algorithm) model.getSelectedItem();
-
-					if (algorithm != null)
+					if (!changeLock)
 					{
-						types.put(comboBox_algorithmSelection, algorithm.getType());
+						// the selection produces a modification of the array of types, and a call
+						// to
+						// checkTypes.
+						PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) comboBox_algorithmSelection.getModel();
+						Algorithm algorithm = (Algorithm) model.getSelectedItem();
 
-						// check types to update the GUI
-						if (checkTypes() && appEngine != null)
+						if (algorithm != null)
 						{
-							// eventually create robots in engine
-							updateRobotsInEngine(0, appEngine);
+							types.put(comboBox_algorithmSelection, algorithm.getType());
 
-							try
+							// check types to update the GUI
+							if (checkTypes() && appEngine != null)
 							{
-								// set algorithm in all robots in engine
-								appEngine.createAndSetNewAlgorithmInstance(algorithm, 0);
-							}
-							catch (Exception e1)
-							{
-								e1.printStackTrace();
-							}
+								// eventually create robots in engine
+								updateRobotsInEngine(0, appEngine);
 
+								try
+								{
+									// set algorithm in all robots in engine
+									appEngine.createAndSetNewAlgorithmInstance(algorithm, 0);
+								}
+								catch (Exception e1)
+								{
+									e1.printStackTrace();
+								}
+
+							}
 						}
-					}
-					else
-					{
-						types.remove(comboBox_algorithmSelection);
-						if (appEngine != null)
+						else
 						{
-							updateRobotsInEngine(0, appEngine);
+							types.remove(comboBox_algorithmSelection);
+							if (appEngine != null)
+							{
+								updateRobotsInEngine(0, appEngine);
+							}
 						}
 					}
 				}
@@ -851,7 +860,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					if (appEngine != null)
+					if (!changeLock && appEngine != null)
 					{
 						updateRobotsInEngine(0, appEngine);
 					}
@@ -878,11 +887,14 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					// the plus button adds a new row
-					addRowFromAdditionalsComponents();
-					if (appEngine != null)
+					if (!changeLock)
 					{
-						appEngine.addNewRobotListElement();
+						// the plus button adds a new row
+						addRowFromAdditionalsComponents();
+						if (appEngine != null)
+						{
+							appEngine.addNewRobotListElement();
+						}
 					}
 				}
 			});
@@ -930,7 +942,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				if (appEngine != null)
+				if (!changeLock && appEngine != null)
 				{
 					// get color
 					ColorRGBA color = (ColorRGBA) comboBox_additionalColorSelection.getSelectedItem();
@@ -968,7 +980,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 			@Override
 			public void stateChanged(ChangeEvent e)
 			{
-				if (appEngine != null)
+				if (!changeLock && appEngine != null)
 				{
 					int index = spinner_additionalLightsNumber.getIndex();
 
@@ -1012,43 +1024,46 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				// the selection produces a modification of the array of types, and a call to
-				// checkTypes.
-				PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) comboBox_additionalAlgorithmSelection.getModel();
-				Algorithm algorithm = (Algorithm) model.getSelectedItem();
-				int index = comboBox_additionalAlgorithmSelection.getIndex();
-				
-				if (algorithm != null)
+				if (!changeLock)
 				{
-					types.put(comboBox_additionalAlgorithmSelection, algorithm.getType());
+					// the selection produces a modification of the array of types, and a call to
+					// checkTypes.
+					PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) comboBox_additionalAlgorithmSelection.getModel();
+					Algorithm algorithm = (Algorithm) model.getSelectedItem();
+					int index = comboBox_additionalAlgorithmSelection.getIndex();
 
-					// check types to update the GUI
-					if (checkTypes())
+					if (algorithm != null)
 					{
-						if (appEngine != null)
-						{
-							// eventually create robots in engine
-							updateRobotsInEngine(index, appEngine);
+						types.put(comboBox_additionalAlgorithmSelection, algorithm.getType());
 
-							try
+						// check types to update the GUI
+						if (checkTypes())
+						{
+							if (appEngine != null)
 							{
-								// set algorithm in all robots in engine
-								appEngine.createAndSetNewAlgorithmInstance(algorithm, index);
-							}
-							catch (Exception e1)
-							{
-								e1.printStackTrace();
+								// eventually create robots in engine
+								updateRobotsInEngine(index, appEngine);
+
+								try
+								{
+									// set algorithm in all robots in engine
+									appEngine.createAndSetNewAlgorithmInstance(algorithm, index);
+								}
+								catch (Exception e1)
+								{
+									e1.printStackTrace();
+								}
 							}
 						}
 					}
-				}
-				else
-				{
-					types.remove(comboBox_algorithmSelection);
-					
-					if (appEngine != null)
+					else
 					{
-						updateRobotsInEngine(index, appEngine);
+						types.remove(comboBox_algorithmSelection);
+
+						if (appEngine != null)
+						{
+							updateRobotsInEngine(index, appEngine);
+						}
 					}
 				}
 			}
@@ -1073,7 +1088,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 			@Override
 			public void stateChanged(ChangeEvent e)
 			{
-				if (appEngine != null)
+				if (!changeLock && appEngine != null)
 				{
 					updateRobotsInEngine(spinner_additionalRobotsNumber.getIndex(), appEngine);
 				}
@@ -1101,22 +1116,25 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				// the minus button removes the current row
-				int index = button_removeRow.getIndex();
-				removeRowFromAdditionalComponents(index);
-
-				if (appEngine != null)
+				if (!changeLock)
 				{
+					// the minus button removes the current row
+					int index = button_removeRow.getIndex();
+					removeRowFromAdditionalComponents(index);
 
-					Vector<SycamoreRobot> robotsToRemove = appEngine.removeRobotListElement(index);
-
-					for (SycamoreRobot robot : robotsToRemove)
+					if (appEngine != null)
 					{
-						fireActionEvent(new ActionEvent(robot, 0, SycamoreFiredActionEvents.REMOVE_ROBOT_FROM_SCENE.name()));
-					}
-				}
 
-				checkTypes();
+						Vector<SycamoreRobot> robotsToRemove = appEngine.removeRobotListElement(index);
+
+						for (SycamoreRobot robot : robotsToRemove)
+						{
+							fireActionEvent(new ActionEvent(robot, 0, SycamoreFiredActionEvents.REMOVE_ROBOT_FROM_SCENE.name()));
+						}
+					}
+
+					checkTypes();
+				}
 			}
 		});
 
@@ -1174,7 +1192,82 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	@Override
 	public void updateGui()
 	{
-		// Nothing to do
+		changeLock = true;
+
+		if (appEngine != null)
+		{
+			SycamoreRobotMatrix robotMatrix = appEngine.getRobots();
+			int rows = robotMatrix.robotsRowCount();
+
+			// first robot row
+			{
+				updateGuiRow(0);
+			}
+
+			for (int i = 0; i < (rows - 1); i++)
+			{
+				if (i >= additionalComboboxes.size())
+				{
+					addRowFromAdditionalsComponents();
+				}
+				updateGuiRow(i + 1);
+			}
+		}
+
+		changeLock = false;
+	}
+
+	/**
+	 * @param index
+	 */
+	private void updateGuiRow(int index)
+	{
+		SycamoreRobotMatrix robotMatrix = appEngine.getRobots();
+
+		// get robots. Since just one vector between robots and human pilot robots has data
+		// inside, I can merge them without worry
+		Vector<SycamoreRobot> robots = robotMatrix.getRobotRow(index);
+		robots.addAll(robotMatrix.getHumanPilotRow(index));
+
+		JComboBox combobox_algorithmSelection = (index == 0 ? getComboBox_algorithmSelection() : additionalComboboxes.get(index - 1));
+		JComboBox combobox_colorSelection = (index == 0 ? getComboBox_colorSelection() : additionalColorsComboboxes.get(index - 1));
+		JSpinner spinner_lightsNumber = (index == 0 ? getSpinner_lightsNumber() : additionalLightSpinners.get(index - 1));
+		JSpinner spinner_robotsNumber = (index == 0 ? getSpinner_robotsNumber() : additionalSpinners.get(index - 1));
+
+		if (!robots.isEmpty())
+		{
+			SycamoreRobot robot = robots.firstElement();
+
+			// write algorithm
+			ComboBoxModel model = combobox_algorithmSelection.getModel();
+			for (int j = 0; j < model.getSize(); j++)
+			{
+				Algorithm item = (Algorithm) model.getElementAt(j);
+				Algorithm current = robot.getAlgorithm();
+				if (item != null && current != null && item.getPluginName().equals(current.getPluginName()))
+				{
+					combobox_algorithmSelection.setSelectedIndex(j);
+				}
+			}
+
+			// write color
+			ComboBoxModel colorModel = combobox_colorSelection.getModel();
+			for (int j = 0; j < colorModel.getSize(); j++)
+			{
+				ColorRGBA item = (ColorRGBA) colorModel.getElementAt(j);
+				ColorRGBA current = robot.getColor();
+				if (item != null && current != null && item.equals(current))
+				{
+					combobox_colorSelection.setSelectedIndex(j);
+				}
+			}
+
+			// write lights number
+			spinner_lightsNumber.setValue(robot.getLights().size());
+
+			// write robots number
+			spinner_robotsNumber.setValue(robots.size());
+		}
 	}
 
 	/**
@@ -1252,14 +1345,14 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 				// one of these vector will be empty, the other will not
 				Vector<SycamoreRobot> robots = appEngine.getRobots().getRobotRow(index);
 				Vector<SycamoreRobot> humanPilotRobots = appEngine.getRobots().getHumanPilotRow(index);
-				
+
 				// remove robots
 				for (SycamoreRobot robot : robots)
 				{
 					fireActionEvent(new ActionEvent(robot, 0, SycamoreFiredActionEvents.REMOVE_ROBOT_FROM_SCENE.name()));
 				}
 				robots.removeAllElements();
-				
+
 				// remove human pilot robots
 				for (SycamoreRobot humanPilotRobot : humanPilotRobots)
 				{
