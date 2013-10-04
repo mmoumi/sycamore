@@ -317,43 +317,55 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					PluginSelectionComboboxModel<Visibility> model = (PluginSelectionComboboxModel<Visibility>) getComboBox_visibility().getModel();
-					Visibility visibility = (Visibility) model.getSelectedItem();
-
-					if (appEngine != null)
+					if (!changeLock)
 					{
-						// update message
-						if (visibility != null)
-						{
-							TYPE type = appEngine.getType();
-							TYPE visibilityType = visibility.getType();
+						PluginSelectionComboboxModel<Visibility> model = (PluginSelectionComboboxModel<Visibility>) getComboBox_visibility().getModel();
+						Visibility visibility = (Visibility) model.getSelectedItem();
 
-							if (type == visibilityType)
+						if (appEngine != null)
+						{
+							// prepare data
+							boolean typesOK = true;
+							TYPE engineType = TYPE.TYPE_2D;
+							TYPE pluginType = TYPE.TYPE_2D;
+							
+							// check types, if any
+							if (visibility != null)
 							{
+								engineType = appEngine.getType();
+								pluginType = visibility.getType();
+
+								typesOK = (engineType == pluginType);
+							}
+
+							if (typesOK)
+							{
+								// hide error message
 								getMessage_wrongVisibility().setVisible(false);
 							}
 							else
 							{
-								updateWrongVisibilityText(type, visibilityType);
+								// show error message
+								updateWrongVisibilityText(engineType, pluginType);
 								getMessage_wrongVisibility().setVisible(true);
-
-								// set null in engine
+								
+								// visibility is null
 								visibility = null;
+							}
+
+							// set in engine
+							try
+							{
+								appEngine.createAndSetNewVisibilityInstance(visibility);
+							}
+							catch (Exception exc)
+							{
+								exc.printStackTrace();
 							}
 						}
 
-						// set in engine
-						try
-						{
-							appEngine.createAndSetNewVisibilityInstance(visibility);
-						}
-						catch (Exception exc)
-						{
-							exc.printStackTrace();
-						}
+						fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_VISIBILITY_CHANGED.name()));
 					}
-
-					fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_VISIBILITY_CHANGED.name()));
 				}
 			});
 		}
@@ -391,40 +403,56 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					PluginSelectionComboboxModel<Agreement> model = (PluginSelectionComboboxModel<Agreement>) getComboBox_agreement().getModel();
-					Agreement agreement = (Agreement) model.getSelectedItem();
-
-					// update message
-					if (appEngine != null)
+					if (!changeLock)
 					{
-						if (agreement != null)
-						{
-							TYPE type = appEngine.getType();
-							TYPE agreementType = agreement.getType();
+						PluginSelectionComboboxModel<Agreement> model = (PluginSelectionComboboxModel<Agreement>) getComboBox_agreement().getModel();
+						Agreement agreement = (Agreement) model.getSelectedItem();
 
-							if (type == agreementType)
+						// update message
+						if (appEngine != null)
+						{
+							// prepare data
+							boolean typesOK = true;
+							TYPE engineType = TYPE.TYPE_2D;
+							TYPE pluginType = TYPE.TYPE_2D;
+							
+							// check types, if any
+							if (agreement != null)
 							{
+								engineType = appEngine.getType();
+								pluginType = agreement.getType();
+
+								typesOK = (engineType == pluginType);
+							}
+
+							if (typesOK)
+							{
+								// hide error message
 								getMessage_wrongAgreement().setVisible(false);
 							}
 							else
 							{
-								updateWrongAgreementyText(type, agreementType);
+								// show error message
+								updateWrongAgreementyText(engineType, pluginType);
 								getMessage_wrongAgreement().setVisible(true);
+								
+								// agreement is null
+								agreement = null;
+							}
+							
+							// set in engine
+							try
+							{
+								appEngine.createAndSetNewAgreementInstance(agreement);
+							}
+							catch (Exception exc)
+							{
+								exc.printStackTrace();
 							}
 						}
 
-						// set in engine
-						try
-						{
-							appEngine.createAndSetNewAgreementInstance(agreement);
-						}
-						catch (Exception exc)
-						{
-							exc.printStackTrace();
-						}
+						fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_AGREEMENT_CHANGED.name()));
 					}
-
-					fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_AGREEMENT_CHANGED.name()));
 				}
 			});
 		}
@@ -469,6 +497,8 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	@Override
 	public void updateGui()
 	{
+		changeLock = true;
+
 		if (appEngine != null)
 		{
 			// select right visibility
@@ -542,7 +572,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 					getComboBox_initialConditions().setSelectedIndex(i);
 				}
 			}
-			
+
 			// update initial conditions message
 			InitialConditions initialCondition = (InitialConditions) getComboBox_initialConditions().getSelectedItem();
 			if (initialCondition != null)
@@ -560,7 +590,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 					getMessage_wrongInitialConditions().setVisible(true);
 				}
 			}
-			
+
 			// select right memory
 			ComboBoxModel memoryModel = getComboBox_memory().getModel();
 			for (int i = 0; i < memoryModel.getSize(); i++)
@@ -591,6 +621,8 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				}
 			}
 		}
+
+		changeLock = false;
 	}
 
 	/**
@@ -625,40 +657,56 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					PluginSelectionComboboxModel<InitialConditions> model = (PluginSelectionComboboxModel<InitialConditions>) getComboBox_initialConditions().getModel();
-					InitialConditions initialCondition = (InitialConditions) model.getSelectedItem();
-
-					// update message
-					if (appEngine != null)
+					if (!changeLock)
 					{
-						if (initialCondition != null)
-						{
-							TYPE type = appEngine.getType();
-							TYPE initialConditionyType = initialCondition.getType();
+						PluginSelectionComboboxModel<InitialConditions> model = (PluginSelectionComboboxModel<InitialConditions>) getComboBox_initialConditions().getModel();
+						InitialConditions initialCondition = (InitialConditions) model.getSelectedItem();
 
-							if (type == initialConditionyType)
+						// update message
+						if (appEngine != null)
+						{
+							// prepare data
+							boolean typesOK = true;
+							TYPE engineType = TYPE.TYPE_2D;
+							TYPE pluginType = TYPE.TYPE_2D;
+							
+							// check types, if any
+							if (initialCondition != null)
 							{
+								engineType = appEngine.getType();
+								pluginType = initialCondition.getType();
+
+								typesOK = (engineType == pluginType);
+							}
+
+							if (typesOK)
+							{
+								// hide error message
 								getMessage_wrongInitialConditions().setVisible(false);
 							}
 							else
 							{
-								updateWrongInitialConditionsText(type, initialConditionyType);
+								// show error message
+								updateWrongInitialConditionsText(engineType, pluginType);
 								getMessage_wrongInitialConditions().setVisible(true);
+								
+								// initialCondition is null
+								initialCondition = null;
+							}
+
+							// set in engine
+							try
+							{
+								appEngine.createAndSetNewInitialConditionsInstance(initialCondition);
+							}
+							catch (Exception exc)
+							{
+								exc.printStackTrace();
 							}
 						}
 
-						// set in engine
-						try
-						{
-							appEngine.createAndSetNewInitialConditionsInstance(initialCondition);
-						}
-						catch (Exception exc)
-						{
-							exc.printStackTrace();
-						}
+						fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_INITIAL_CONDITION_CHANGED.name()));
 					}
-
-					fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_INITIAL_CONDITION_CHANGED.name()));
 				}
 			});
 		}
@@ -696,40 +744,56 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					PluginSelectionComboboxModel<Memory> model = (PluginSelectionComboboxModel<Memory>) getComboBox_memory().getModel();
-					Memory memory = (Memory) model.getSelectedItem();
-
-					// update message
-					if (appEngine != null)
+					if (!changeLock)
 					{
-						if (memory != null)
-						{
-							TYPE type = appEngine.getType();
-							TYPE memoryType = memory.getType();
+						PluginSelectionComboboxModel<Memory> model = (PluginSelectionComboboxModel<Memory>) getComboBox_memory().getModel();
+						Memory memory = (Memory) model.getSelectedItem();
 
-							if (type == memoryType)
+						// update message
+						if (appEngine != null)
+						{
+							// prepare data
+							boolean typesOK = true;
+							TYPE engineType = TYPE.TYPE_2D;
+							TYPE pluginType = TYPE.TYPE_2D;
+							
+							// check types, if any
+							if (memory != null)
 							{
+								engineType = appEngine.getType();
+								pluginType = memory.getType();
+
+								typesOK = (engineType == pluginType);
+							}
+
+							if (typesOK)
+							{
+								// hide error message
 								getMessage_wrongMemory().setVisible(false);
 							}
 							else
 							{
-								updateWrongMemoryText(type, memoryType);
+								// show error message
+								updateWrongMemoryText(engineType, pluginType);
 								getMessage_wrongMemory().setVisible(true);
+								
+								// memory is null
+								memory = null;
+							}
+
+							// set in engine
+							try
+							{
+								appEngine.createAndSetNewMemoryInstance(memory);
+							}
+							catch (Exception exc)
+							{
+								exc.printStackTrace();
 							}
 						}
 
-						// set in engine
-						try
-						{
-							appEngine.createAndSetNewMemoryInstance(memory);
-						}
-						catch (Exception exc)
-						{
-							exc.printStackTrace();
-						}
+						fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_MEMORY_CHANGED.name()));
 					}
-
-					fireActionEvent(new ActionEvent(SycamoreAdditionalPluginsPanel.this, 0, SycamoreFiredActionEvents.SELECTED_MEMORY_CHANGED.name()));
 				}
 			});
 
@@ -745,7 +809,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	{
 		getMessage_wrongAgreement().setText(
 				"The type of the chosen agreement is " + visibilityType.getShortDescription() + ", but the type of the scene is " + engineType.getShortDescription()
-						+ ". The default agreement (total) will be used until you choose an agreement whose type is consistent with the scene's one.");
+						+ ". The default agreement (Absolute Agreement) will be used until you choose an agreement whose type is consistent with the scene's one.");
 	}
 
 	/**
@@ -902,10 +966,19 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	@Override
 	public void reset()
 	{
+		changeLock = true;
+		
 		getComboBox_visibility().setSelectedIndex(-1);
 		getComboBox_agreement().setSelectedIndex(-1);
 		getComboBox_initialConditions().setSelectedIndex(-1);
 		getComboBox_memory().setSelectedIndex(-1);
+		
+		getMessage_wrongVisibility().setVisible(false);
+		getMessage_wrongAgreement().setVisible(false);
+		getMessage_wrongInitialConditions().setVisible(false);
+		getMessage_wrongMemory().setVisible(false);
+		
+		changeLock = false;
 	}
 
 	/**
