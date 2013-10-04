@@ -681,6 +681,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		}
 
 		timeline.reset();
+		systemMemory.reset();
 
 		timeline = new Timeline<P>();
 		timeline.addKeyframe(startingPosition);
