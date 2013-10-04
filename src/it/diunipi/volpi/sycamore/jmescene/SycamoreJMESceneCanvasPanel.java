@@ -329,12 +329,4 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	{
 		this.resetJMEScene();
 	}
-
-	/**
-	 * 
-	 */
-	public void update3DScene(TYPE type)
-	{
-		scene.setupScene(type);
-	}
 }
