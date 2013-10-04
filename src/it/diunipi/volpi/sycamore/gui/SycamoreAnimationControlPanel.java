@@ -184,14 +184,14 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 
 			SycamoreSystem.getSchedulerThread().pause();
 			SycamoreSystem.getHumanPilotSchedulerThread().pause();
-			
+
 			getSlider_animationControl().setEnabled(false);
 		}
 		else
 		{
 			SycamoreSystem.getSchedulerThread().pause();
 			SycamoreSystem.getHumanPilotSchedulerThread().pause();
-			
+
 			appEngine.makeRatioSnapshot();
 			getSlider_animationControl().setEnabled(true);
 
@@ -346,15 +346,18 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 			slider_animationSpeed.setOpaque(false);
 			slider_animationSpeed.setPaintTicks(true);
 			slider_animationSpeed.setMinimum(0);
-			slider_animationSpeed.setMaximum(1000);
-			slider_animationSpeed.setMinorTickSpacing(50);
-			slider_animationSpeed.setMajorTickSpacing(250);
-			slider_animationSpeed.setValue(250);
+			slider_animationSpeed.setMaximum(200);
+			slider_animationSpeed.setMinorTickSpacing(10);
+			slider_animationSpeed.setMajorTickSpacing(50);
+			slider_animationSpeed.setValue(50);
 			slider_animationSpeed.addChangeListener(new ChangeListener()
 			{
 				public void stateChanged(ChangeEvent arg0)
 				{
-					getAppEngine().setAnimationSpeedMultiplier(getAnimationSpeedMultiplier());
+					if (!changeLock && getAppEngine() != null)
+					{
+						getAppEngine().setAnimationSpeedMultiplier(getAnimationSpeedMultiplier());
+					}
 				}
 			});
 		}
@@ -412,12 +415,15 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	@Override
 	public void updateGui()
 	{
+		changeLock = true;
 		if (this.appEngine != null && this.appEngine.isValid())
 		{
 			getButton_play().setEnabled(true);
 			getButton_stop().setEnabled(true);
 			getSlider_animationControl().setEnabled(true);
 			getSlider_animationSpeed().setEnabled(true);
+
+			getSlider_animationSpeed().setValue((int) appEngine.getAnimationSpeedMultiplier());
 		}
 		else
 		{
@@ -425,7 +431,10 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 			getButton_stop().setEnabled(false);
 			getSlider_animationControl().setEnabled(false);
 			getSlider_animationSpeed().setEnabled(false);
+
+			getSlider_animationSpeed().setValue((int) SycamoreEngine.getDefaultAnimationSpeedMultiplier());
 		}
+		changeLock = false;
 	}
 
 	/**
@@ -438,7 +447,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		button_play.setIcon(new ImageIcon(url));
 		button_play.setToolTipText("Play animation");
 		button_play.setSelected(false);
-		
+
 		getSlider_animationControl().setEnabled(true);
 	}
 
@@ -449,12 +458,12 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	 */
 	public float getAnimationSpeedMultiplier()
 	{
-		int value = slider_animationSpeed.getValue();
-		float multiplier = (float) value / 5f;
-		return multiplier;
+		return slider_animationSpeed.getValue();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
 	 */
 	@Override
@@ -464,8 +473,8 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		URL url = getClass().getResource("/it/diunipi/volpi/sycamore/resources/play_50x50.png");
 		getButton_play().setIcon(new ImageIcon(url));
 		getButton_play().setToolTipText("Play animation");
-		getButton_play().setSelected(false);	
-		
+		getButton_play().setSelected(false);
+
 		getSlider_animationControl().setValue(100);
 		getSlider_animationControl().setEnabled(true);
 	}
