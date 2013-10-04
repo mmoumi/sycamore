@@ -141,19 +141,22 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					PluginSelectionComboboxModel<Scheduler> model = (PluginSelectionComboboxModel<Scheduler>) comboBox_selectScheduler.getModel();
-					Scheduler scheduler = (Scheduler) model.getSelectedItem();
-
-					if (appEngine != null)
+					if (!changeLock)
 					{
-						try
+						PluginSelectionComboboxModel<Scheduler> model = (PluginSelectionComboboxModel<Scheduler>) getComboBox_selectScheduler().getModel();
+						Scheduler scheduler = (Scheduler) model.getSelectedItem();
+
+						if (appEngine != null)
 						{
-							appEngine.createAndSetNewSchedulerInstance(scheduler);
-							fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.UPDATE_GUI.name()));
-						}
-						catch (Exception e1)
-						{
-							e1.printStackTrace();
+							try
+							{
+								appEngine.createAndSetNewSchedulerInstance(scheduler);
+								fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.UPDATE_GUI.name()));
+							}
+							catch (Exception e1)
+							{
+								e1.printStackTrace();
+							}
 						}
 					}
 				}
@@ -358,6 +361,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	@Override
 	public void updateGui()
 	{
+		changeLock = true;
 		if (appEngine != null)
 		{
 			ComboBoxModel model = getComboBox_selectScheduler().getModel();
@@ -374,8 +378,9 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 
 		getSycamoreRobotsConfigurationPanel().updateGui();
 		getAdditionalPluginsPanel().updateGui();
-		
+
 		updateRobotsCountLabel();
+		changeLock = false;
 	}
 
 	/**
@@ -444,7 +449,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	public void updateRobotsCountLabel()
 	{
 		String text = "There are no robots in the system";
-		
+
 		if (appEngine != null)
 		{
 			int robotsCount = appEngine.getRobotsCount();
@@ -458,7 +463,6 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 				text = "There are " + robotsCount + " robots in the system";
 			}
 		}
-		
 
 		getLabel_robotsNumber().setText(text);
 	}
@@ -471,8 +475,10 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	@Override
 	public void reset()
 	{
+		changeLock = true;
 		getComboBox_selectScheduler().setSelectedIndex(-1);
 		getSycamoreRobotsConfigurationPanel().reset();
 		getAdditionalPluginsPanel().reset();
+		changeLock = false;
 	}
 }
