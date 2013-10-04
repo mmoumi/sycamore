@@ -631,7 +631,7 @@ public abstract class SycamoreApp extends JFrame
 							SycamoreSystem.getHumanPilotSchedulerThread().setEngine(engine);
 
 							getSycamoreMainPanel().setAppEngine(engine);
-							getSycamoreMainPanel().update3DScene(type);
+							getSycamoreMainPanel().setupJMEScene(type);
 							engine.makeRatioSnapshot();
 
 							originalString = getEncodedString();
