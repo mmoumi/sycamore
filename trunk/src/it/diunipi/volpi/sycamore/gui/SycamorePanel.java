@@ -21,6 +21,8 @@ public abstract class SycamorePanel extends JPanel
 	private static final long		serialVersionUID	= -353494685389658659L;
 	private Vector<ActionListener>	listeners			= null;
 
+	protected boolean				changeLock			= false;
+
 	/**
 	 * Adds an <code>ActionListener</code> to the button.
 	 * 
