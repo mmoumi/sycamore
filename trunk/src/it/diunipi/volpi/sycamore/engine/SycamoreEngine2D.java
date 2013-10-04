@@ -170,12 +170,12 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 				// assign visibilty to each robot
 				VisibilityImpl<Point2D> newInstance = (VisibilityImpl<Point2D>) constructor.newInstance();
 				robot.setVisibility(newInstance);
+				return;
 			}
-			else
-			{
-				robot.setVisibility(null);
-			}
-		}
+		}		
+
+		// If no Visibility is set, set null
+		robot.setVisibility(null);
 	}
 
 	/*
@@ -201,12 +201,12 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 				// assign memory to each robot
 				MemoryImpl<Point2D> newInstance = (MemoryImpl<Point2D>) constructor.newInstance();
 				robot.setMemory(newInstance);
-			}
-			else
-			{
-				robot.setMemory(null);
+				return;
 			}
 		}
+		
+		// If no Memory is set, set null
+		robot.setMemory(null);
 	}
 
 	/*
@@ -227,17 +227,25 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 			Class<? extends InitialConditions> initialConditionsClass = initialConditions.getClass();
 			constructor = initialConditionsClass.getConstructors()[0];
 
-			InitialConditions<Point2D> newInstance = (InitialConditions<Point2D>) constructor.newInstance();
-			this.initialConditions = newInstance;
+			if (constructor != null)
+			{
+				InitialConditions<Point2D> newInstance = (InitialConditions<Point2D>) constructor.newInstance();
+				this.initialConditions = newInstance;
+				return;
+			}
 		}
-		else
-		{
-			this.initialConditions = null;
-		}
+
+		// if no InitialConditions has been set, set null
+		this.initialConditions = null;
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.engine.SycamoreEngine#createAndSetNewAgreementInstance(it.diunipi.volpi.sycamore.plugins.agreements.Agreement, it.diunipi.volpi.sycamore.engine.SycamoreRobot)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine#createAndSetNewAgreementInstance(it.diunipi
+	 * .volpi.sycamore.plugins.agreements.Agreement, it.diunipi.volpi.sycamore.engine.SycamoreRobot)
 	 */
 	@Override
 	public void createAndSetNewAgreementInstance(Agreement<Point2D> agreement, SycamoreRobot<Point2D> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
@@ -249,18 +257,18 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 			// create a new instance of the agreement
 			Class<? extends Agreement> agreementClass = agreement.getClass();
 			constructor = agreementClass.getConstructors()[0];
-			
+
 			if (constructor != null)
 			{
 				// assign memory to each robot
 				AgreementImpl<Point2D> newInstance = (AgreementImpl<Point2D>) constructor.newInstance();
 				robot.setAgreement(newInstance);
-			}
-			else
-			{
-				robot.setAgreement(null);
+				return;
 			}
 		}
+
+		// if no Agreement has been set, set null
+		robot.setAgreement(null);
 	}
 
 	/*
