@@ -961,10 +961,25 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	/**
 	 * Reset the scene to initial configuration
 	 */
-	public void reset()
-	{
-		this.robotsNode.detachAllChildren();
-		setupScene(TYPE.TYPE_3D);
+	public synchronized void reset()
+	{	
+		this.enqueue(new Callable<Object>()
+		{
+			/* (non-Javadoc)
+			 * @see java.util.concurrent.Callable#call()
+			 */
+			@Override
+			public Object call() throws Exception
+			{
+				mainNode.removeControl(billboardControl);
+				
+				setupScene(TYPE.TYPE_3D);
+				robotsNode.detachAllChildren();
+				rootNode.updateGeometricState();
+				
+				return null;
+			}
+		});
 	}
 
 	/**
