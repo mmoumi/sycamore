@@ -84,7 +84,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 
 	// auxiliary data
 	private HashMap<SycamoreRobot<P>, Float>	ratioSnapshot				= null;
-	private float								animationSpeedMultiplier	= 10;
+	private float								animationSpeedMultiplier	= getDefaultAnimationSpeedMultiplier();
 	private Vector<ActionListener>				listeners					= null;
 
 	/**
@@ -138,6 +138,14 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 		{
 			listener.actionPerformed(e);
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	public static final int getDefaultAnimationSpeedMultiplier()
+	{
+		return 50;
 	}
 
 	/**
@@ -219,7 +227,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	{
 		this.measures = currentMeasures;
 	}
-	
+
 	/**
 	 * @return the initialConditions
 	 */
@@ -227,15 +235,16 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	{
 		return initialConditions;
 	}
-	
+
 	/**
-	 * @param initialConditions the initialConditions to set
+	 * @param initialConditions
+	 *            the initialConditions to set
 	 */
 	public void setCurrentInitialConditions(InitialConditions<P> initialConditions)
 	{
 		this.initialConditions = initialConditions;
 	}
-	
+
 	/**
 	 * @return the initialConditions
 	 */
@@ -243,14 +252,21 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	{
 		if (this.robots.size() > 0)
 		{
-			return this.robots.getRobotRow(0).firstElement().getVisibility();
+			// get robots. Since just one vector between robots and human pilot robots has data
+			// inside, I can merge them without worry
+
+			Vector<SycamoreRobot<P>> robotsList = robots.getRobotRow(0);
+			robotsList.addAll(robots.getHumanPilotRow(0));
+
+			if (!robotsList.isEmpty())
+			{
+				return robotsList.firstElement().getVisibility();
+			}
 		}
-		else
-		{
-			return null;
-		}
+		
+		return null;
 	}
-	
+
 	/**
 	 * Creates a new visibility instance using passed interface, and sets such instance as the
 	 * visibility in all the robots in the engine. This visibility will be applied also the newly
@@ -272,7 +288,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 			this.createAndSetNewVisibilityInstance(visibility, robot);
 		}
 	}
-	
+
 	/**
 	 * @return the initialConditions
 	 */
@@ -287,7 +303,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Creates a new memory instance using passed interface, and sets such instance as the memory in
 	 * all the robots in the engine. This memory will be applied also the newly created robots,
@@ -309,7 +325,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 			this.createAndSetNewMemoryInstance(memory, robot);
 		}
 	}
-	
+
 	/**
 	 * @return the initialConditions
 	 */
