@@ -648,30 +648,22 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	 */
 	private void updateRobotsGeometries()
 	{
-		this.enqueue(new Callable<Object>()
-		{
-			/* (non-Javadoc)
-			 * @see java.util.concurrent.Callable#call()
-			 */
-			@Override
-			public Object call() throws Exception
-			{
-				robotsNode.detachAllChildren();
+		robotsNode.detachAllChildren();
 
-				if (getAppEngine() != null)
+		if (getAppEngine() != null)
+		{
+			// update geometries in robots
+			Iterator<SycamoreRobot> iterator = getAppEngine().getRobots().iterator();
+			while (iterator.hasNext())
+			{
+				SycamoreRobot robot = iterator.next();
+				if (robot.getRobotNode() != null)
 				{
-					// update geometries in robots
-					Iterator<SycamoreRobot<Point2D>> iterator = getAppEngine().getRobots().iterator();
-					while (iterator.hasNext())
-					{
-						SycamoreRobot<Point2D> robot = iterator.next();
-						robotsNode.attachChild(robot.getRobotNode());
-					}
+					robotsNode.attachChild(robot.getRobotNode());
 				}
-				
-				return null;
 			}
-		});
+		}
+
 	}
 
 	/*
@@ -934,30 +926,27 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 				@Override
 				public Object call() throws Exception
 				{
-					if (currentType == null || type != currentType)
+					// store current type
+					currentType = type;
+
+					if (type == TYPE.TYPE_2D)
 					{
-						// store current type
-						currentType = type;
-
-						if (type == TYPE.TYPE_2D)
-						{
-							mainNode.addControl(billboardControl);
-							rotateGrid(FastMath.PI / 2);
-							mainNode.detachChild(zAxis);
-						}
-						else if (type == TYPE.TYPE_3D)
-						{
-							mainNode.removeControl(billboardControl);
-							mainNode.setLocalRotation(billBoardRotation.clone());
-							rotateGrid(0);
-							if (SycamoreSystem.isAxesVisible())
-							{
-								mainNode.attachChild(zAxis);
-							}
-						}
-
-						updateRobotsGeometries();
+						mainNode.addControl(billboardControl);
+						rotateGrid(FastMath.PI / 2);
+						mainNode.detachChild(zAxis);
 					}
+					else if (type == TYPE.TYPE_3D)
+					{
+						mainNode.removeControl(billboardControl);
+						mainNode.setLocalRotation(billBoardRotation.clone());
+						rotateGrid(0);
+						if (SycamoreSystem.isAxesVisible())
+						{
+							mainNode.attachChild(zAxis);
+						}
+					}
+
+					updateRobotsGeometries();
 
 					return null;
 				}
@@ -1011,7 +1000,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 
 		return element;
 	}
-	
+
 	/**
 	 * @param color
 	 * @param factory
@@ -1025,12 +1014,12 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		float green = 0;
 		float blue = 0;
 		float alpha = 0;
-		
+
 		NodeList nodes = element.getElementsByTagName("colorRGBA");
 
 		// if there is at least a Timeline node, decode it
 		if (nodes.getLength() > 0)
-		{		
+		{
 			// r
 			NodeList r = element.getElementsByTagName("r");
 			if (r.getLength() > 0)
@@ -1038,7 +1027,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 				Element rElem = (Element) r.item(0);
 				red = Float.parseFloat(rElem.getTextContent());
 			}
-			
+
 			// g
 			NodeList g = element.getElementsByTagName("g");
 			if (g.getLength() > 0)
@@ -1046,7 +1035,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 				Element gElem = (Element) g.item(0);
 				green = Float.parseFloat(gElem.getTextContent());
 			}
-			
+
 			// b
 			NodeList b = element.getElementsByTagName("b");
 			if (b.getLength() > 0)
@@ -1054,7 +1043,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 				Element bElem = (Element) b.item(0);
 				blue = Float.parseFloat(bElem.getTextContent());
 			}
-			
+
 			// a
 			NodeList a = element.getElementsByTagName("a");
 			if (a.getLength() > 0)
