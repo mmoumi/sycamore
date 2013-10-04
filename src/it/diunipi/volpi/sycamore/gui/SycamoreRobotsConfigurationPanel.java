@@ -1226,7 +1226,8 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 
 		// get robots. Since just one vector between robots and human pilot robots has data
 		// inside, I can merge them without worry
-		Vector<SycamoreRobot> robots = robotMatrix.getRobotRow(index);
+		Vector<SycamoreRobot> robots = new Vector<SycamoreRobot>();
+		robots.addAll(robotMatrix.getRobotRow(index));
 		robots.addAll(robotMatrix.getHumanPilotRow(index));
 
 		JComboBox combobox_algorithmSelection = (index == 0 ? getComboBox_algorithmSelection() : additionalComboboxes.get(index - 1));
