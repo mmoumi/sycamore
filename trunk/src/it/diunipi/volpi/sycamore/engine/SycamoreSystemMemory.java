@@ -206,4 +206,13 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 
 		return success;
 	}
+
+	/**
+	 * Reset the memory by deleting every data in it
+	 */
+	public synchronized void reset()
+	{
+		this.snapshots.clear();
+		this.selfPositions.clear();
+	}
 }
