@@ -14,6 +14,7 @@ import it.diunipi.volpi.sycamore.util.PropertyManager;
 import java.io.File;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -217,6 +218,28 @@ public class SycamoreSystem
 		if (jmeSceneManager != null)
 		{
 			jmeSceneManager.enqueue(callable);
+		}
+	}
+	
+	/**
+	 * @param callable
+	 */
+	public static void enqueueToJMEandWait(Callable<Object> callable)
+	{
+		if (jmeSceneManager != null)
+		{
+			Future<Object> result = jmeSceneManager.enqueue(callable);
+			while(!result.isDone())
+			{
+				try
+				{
+					Thread.sleep(10);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
