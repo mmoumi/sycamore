@@ -254,8 +254,8 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 		{
 			// get robots. Since just one vector between robots and human pilot robots has data
 			// inside, I can merge them without worry
-
-			Vector<SycamoreRobot<P>> robotsList = robots.getRobotRow(0);
+			Vector<SycamoreRobot<P>> robotsList = new Vector<SycamoreRobot<P>>();
+			robotsList.addAll(robots.getRobotRow(0));
 			robotsList.addAll(robots.getHumanPilotRow(0));
 
 			if (!robotsList.isEmpty())
@@ -263,7 +263,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 				return robotsList.firstElement().getVisibility();
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -296,12 +296,19 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	{
 		if (this.robots.size() > 0)
 		{
-			return this.robots.getRobotRow(0).firstElement().getMemory();
+			// get robots. Since just one vector between robots and human pilot robots has data
+			// inside, I can merge them without worry
+			Vector<SycamoreRobot<P>> robotsList = new Vector<SycamoreRobot<P>>();
+			robotsList.addAll(robots.getRobotRow(0));
+			robotsList.addAll(robots.getHumanPilotRow(0));
+
+			if (!robotsList.isEmpty())
+			{
+				return robotsList.firstElement().getMemory();
+			}
 		}
-		else
-		{
-			return null;
-		}
+
+		return null;
 	}
 
 	/**
@@ -333,12 +340,19 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	{
 		if (this.robots.size() > 0)
 		{
-			return this.robots.getRobotRow(0).firstElement().getAgreement();
+			// get robots. Since just one vector between robots and human pilot robots has data
+			// inside, I can merge them without worry
+			Vector<SycamoreRobot<P>> robotsList = new Vector<SycamoreRobot<P>>();
+			robotsList.addAll(robots.getRobotRow(0));
+			robotsList.addAll(robots.getHumanPilotRow(0));
+
+			if (!robotsList.isEmpty())
+			{
+				return robotsList.firstElement().getAgreement();
+			}
 		}
-		else
-		{
-			return null;
-		}
+
+		return null;
 	}
 
 	/**
