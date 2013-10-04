@@ -129,7 +129,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 		this.color = color;
 
-		SycamoreSystem.enqueueToJME(new Callable<Object>()
+		SycamoreSystem.enqueueToJMEandWait(new Callable<Object>()
 		{
 			/*
 			 * (non-Javadoc)
@@ -248,7 +248,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 		if (maxLights > oldMaxLights)
 		{
-			SycamoreSystem.enqueueToJME(new Callable<Object>()
+			SycamoreSystem.enqueueToJMEandWait(new Callable<Object>()
 			{
 				/*
 				 * (non-Javadoc)
@@ -278,7 +278,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		}
 		else
 		{
-			SycamoreSystem.enqueueToJME(new Callable<Object>()
+			SycamoreSystem.enqueueToJMEandWait(new Callable<Object>()
 			{
 				/*
 				 * (non-Javadoc)
@@ -509,7 +509,15 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		this.currentState = currentState;
 	}
-
+	
+	/**
+	 * @return the color
+	 */
+	public ColorRGBA getColor()
+	{
+		return color;
+	}
+	
 	/**
 	 * @param color
 	 *            the color to set
@@ -953,7 +961,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			if (color.getLength() > 0)
 			{
 				Element colorElem = (Element) color.item(0);
-				this.color = SycamoreJMEScene.decodeColorRGBA(colorElem);
+				this.setColor(SycamoreJMEScene.decodeColorRGBA(colorElem));
 			}
 
 			// maxLights
@@ -988,8 +996,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 				this.currentLights = Integer.parseInt(currentLightsElem.getTextContent());
 			}
 			
-			
-			SycamoreSystem.enqueueToJME(new Callable<Object>()
+			SycamoreSystem.enqueueToJMEandWait(new Callable<Object>()
 			{
 				/* (non-Javadoc)
 				 * @see java.util.concurrent.Callable#call()
