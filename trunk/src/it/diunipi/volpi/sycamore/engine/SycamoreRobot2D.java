@@ -65,7 +65,7 @@ public class SycamoreRobot2D extends SycamoreRobot<Point2D>
 	{
 		this.color = color;
 
-		SycamoreSystem.enqueueToJME(new Callable<Object>()
+		SycamoreSystem.enqueueToJMEandWait(new Callable<Object>()
 		{
 			@Override
 			public Object call() throws Exception
