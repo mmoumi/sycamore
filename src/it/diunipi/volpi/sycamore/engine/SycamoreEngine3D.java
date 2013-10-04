@@ -171,12 +171,12 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 				// assign visibilty to each robot
 				VisibilityImpl<Point3D> newInstance = (VisibilityImpl<Point3D>) constructor.newInstance();
 				robot.setVisibility(newInstance);
-			}
-			else
-			{
-				robot.setVisibility(null);
+				return;
 			}
 		}
+
+		// If no Visibility is set, set null
+		robot.setVisibility(null);
 	}
 
 	/*
@@ -202,12 +202,12 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 				// assign memory to each robot
 				MemoryImpl<Point3D> newInstance = (MemoryImpl<Point3D>) constructor.newInstance();
 				robot.setMemory(newInstance);
-			}
-			else
-			{
-				robot.setMemory(null);
+				return;
 			}
 		}
+		
+		// If no Memory is set, set null
+		robot.setMemory(null);
 	}
 
 	/*
@@ -230,11 +230,11 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 
 			InitialConditions<Point3D> newInstance = (InitialConditions<Point3D>) constructor.newInstance();
 			this.initialConditions = newInstance;
+			return;
 		}
-		else
-		{
-			this.initialConditions = null;
-		}
+
+		// if no InitialConditions has been set, set null
+		this.initialConditions = null;
 	}
 
 	/*
@@ -260,12 +260,12 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 				// assign memory to each robot
 				AgreementImpl<Point3D> newInstance = (AgreementImpl<Point3D>) constructor.newInstance();
 				robot.setAgreement(newInstance);
-			}
-			else
-			{
-				robot.setAgreement(null);
+				return;
 			}
 		}
+
+		// if no Agreement has been set, set null
+		robot.setAgreement(null);
 	}
 
 	/*
