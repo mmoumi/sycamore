@@ -521,8 +521,8 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	/**
 	 * @param type
 	 */
-	public void update3DScene(TYPE type)
+	public void setupJMEScene(TYPE type)
 	{
-		getSimulationViewPanel().update3DScene(type);
+		getSimulationViewPanel().setupScene(type);
 	}
 }
