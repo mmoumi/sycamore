@@ -477,6 +477,8 @@ public abstract class SycamoreApp extends JFrame
 	{
 		if (getAppEngine() != null)
 		{
+			getSycamoreMainPanel().pauseAnimation();
+			
 			// show a file dialog
 			FileDialog dialog = new FileDialog((Frame) null, "Select the name of the project to be saved", FileDialog.SAVE);
 			dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR) + System.getProperty("file.separator") + "Projects");
@@ -574,6 +576,8 @@ public abstract class SycamoreApp extends JFrame
 	 */
 	public synchronized void loadProject()
 	{
+		getSycamoreMainPanel().pauseAnimation();
+		
 		// show a file dialog
 		FileDialog dialog = new FileDialog((Frame) null, "Select the name of the project to be load", FileDialog.LOAD);
 		dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR) + System.getProperty("file.separator") + "Projects");
