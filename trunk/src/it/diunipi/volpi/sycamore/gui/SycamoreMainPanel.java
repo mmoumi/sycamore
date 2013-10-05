@@ -525,4 +525,12 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	{
 		getSimulationViewPanel().setupScene(type);
 	}
+
+	/**
+	 * 
+	 */
+	public void pauseAnimation()
+	{
+		getSycamoreAnimationControlPanel().pauseAnimation();
+	}
 }
