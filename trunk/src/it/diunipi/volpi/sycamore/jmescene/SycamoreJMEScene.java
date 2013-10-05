@@ -637,7 +637,15 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 			@Override
 			public Object call() throws Exception
 			{
-				initCamera(node);
+				if (node == origin)
+				{
+					origin.addControl(chaseCam);
+				}
+				else
+				{
+					baricentrum.addControl(chaseCam);
+				}
+				
 				return null;
 			}
 		});
@@ -792,7 +800,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		robotNode.updateLogicalState(tpf);
 		robotNode.updateGeometricState();
 
-		allRobots.add(robot.getLocalPosition());
+		allRobots.add(robot.getGlobalPosition());
 	}
 
 	/**
@@ -962,21 +970,23 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	 * Reset the scene to initial configuration
 	 */
 	public synchronized void reset()
-	{	
+	{
 		this.enqueue(new Callable<Object>()
 		{
-			/* (non-Javadoc)
+			/*
+			 * (non-Javadoc)
+			 * 
 			 * @see java.util.concurrent.Callable#call()
 			 */
 			@Override
 			public Object call() throws Exception
 			{
 				mainNode.removeControl(billboardControl);
-				
+
 				setupScene(TYPE.TYPE_3D);
 				robotsNode.detachAllChildren();
 				rootNode.updateGeometricState();
-				
+
 				return null;
 			}
 		});
