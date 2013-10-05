@@ -125,6 +125,17 @@ public abstract class VisibilityImpl<P extends SycamoreAbstractPoint & Computabl
 		else
 			return null;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginName()
+	 */
+	@Override
+	public String getPluginName()
+	{
+		return getClass().getSimpleName();
+	}
 
 	/*
 	 * (non-Javadoc)

@@ -188,17 +188,6 @@ public class CubicVisibility extends VisibilityImpl<Point3D>
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginName()
-	 */
-	@Override
-	public String getPluginName()
-	{
-		return "CubicVisibility";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getAuthor()
 	 */
 	@Override

@@ -202,17 +202,6 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginName()
-	 */
-	@Override
-	public String getPluginName()
-	{
-		return "CircularVisibility";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginShortDescription()
 	 */
 	@Override

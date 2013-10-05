@@ -43,17 +43,6 @@ public class SquaredDividedVisibility extends SquaredVisibility
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginName()
-	 */
-	@Override
-	public String getPluginName()
-	{
-		return "SquaredDividedVisibility";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getShortDescription()
 	 */
 	@Override
