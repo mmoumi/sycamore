@@ -181,17 +181,6 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginName()
-	 */
-	@Override
-	public String getPluginName()
-	{
-		return "SphericalVisibility";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginShortDescription()
 	 */
 	@Override
