@@ -509,7 +509,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		this.currentState = currentState;
 	}
-	
+
 	/**
 	 * @return the color
 	 */
@@ -517,7 +517,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		return color;
 	}
-	
+
 	/**
 	 * @param color
 	 *            the color to set
@@ -555,8 +555,13 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			setCurrentState(ROBOT_STATE.LOOKING);
 
 			this.snapshot = engine.getObservations(this);
-			this.systemMemory.addSelfPosition(getLocalPosition());
-			this.systemMemory.addSnapshot(snapshot);
+
+			// if there is a mmory set, save data
+			if (memory != null)
+			{
+				this.systemMemory.addSelfPosition(getLocalPosition());
+				this.systemMemory.addSnapshot(snapshot);
+			}
 
 			setCurrentState(ROBOT_STATE.READY_TO_COMPUTE);
 		}
@@ -996,10 +1001,12 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 				Element currentLightsElem = (Element) currentLights.item(0);
 				this.currentLights = Integer.parseInt(currentLightsElem.getTextContent());
 			}
-			
+
 			SycamoreSystem.enqueueToJMEandWait(new Callable<Object>()
 			{
-				/* (non-Javadoc)
+				/*
+				 * (non-Javadoc)
+				 * 
 				 * @see java.util.concurrent.Callable#call()
 				 */
 				@Override
@@ -1021,7 +1028,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 							robotLight.decode(lightElem, type);
 						}
 					}
-					
+
 					return null;
 				}
 			});
@@ -1047,7 +1054,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 						}
 					}
 				}
-				
+
 				// visibility
 				NodeList visibility = element.getElementsByTagName("visibility");
 				if (visibility.getLength() > 0)
@@ -1067,7 +1074,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 						}
 					}
 				}
-				
+
 				// memory
 				NodeList memory = element.getElementsByTagName("memory");
 				if (memory.getLength() > 0)
@@ -1087,7 +1094,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 						}
 					}
 				}
-				
+
 				// agreement
 				NodeList agreement = element.getElementsByTagName("agreement");
 				if (agreement.getLength() > 0)
