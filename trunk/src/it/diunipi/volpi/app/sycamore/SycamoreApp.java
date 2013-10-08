@@ -32,6 +32,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 
 import javax.swing.AbstractButton;
 import javax.swing.JFrame;
@@ -55,6 +56,11 @@ import org.w3c.dom.NodeList;
  */
 public abstract class SycamoreApp extends JFrame
 {
+	public static enum APP_MODE
+	{
+		SIMULATOR, VISUALIZER;
+	}
+
 	/**
 	 * The thread that cares of showing the splash screen
 	 * 
@@ -96,6 +102,8 @@ public abstract class SycamoreApp extends JFrame
 
 	private static final long	serialVersionUID	= 6480681140397534382L;
 
+	private final APP_MODE		appMode;
+
 	private SycamoreMainPanel	sycamoreMainPanel	= null;
 	private SplashThread		splashThread		= null;
 	private File				loadedProject		= null;
@@ -104,8 +112,10 @@ public abstract class SycamoreApp extends JFrame
 	/**
 	 * Constructor for SycamoreApp
 	 */
-	public SycamoreApp()
+	public SycamoreApp(APP_MODE appMode)
 	{
+		this.appMode = appMode;
+
 		setMinimumSize(new Dimension(400, 300));
 
 		// performs the operations preliminary to initialization
@@ -116,6 +126,14 @@ public abstract class SycamoreApp extends JFrame
 
 		// performs the operations after the initialization
 		initialize_post();
+	}
+	
+	/**
+	 * @return the appMode
+	 */
+	public APP_MODE getAppMode()
+	{
+		return appMode;
 	}
 
 	/**
@@ -136,12 +154,32 @@ public abstract class SycamoreApp extends JFrame
 		}
 
 		// init system
-		SycamoreSystem.initialize();
+		SycamoreSystem.initialize(this.appMode);
 
 		// configure panel behavior on closing
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.addWindowListener(new WindowAdapter()
 		{
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
+			 */
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				if (appMode == APP_MODE.SIMULATOR)
+				{
+					// check dirty flag and eventually ask to save
+					checkDirtyFlagAndSave();
+				}
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.awt.event.WindowAdapter#windowClosed(java.awt.event.WindowEvent)
+			 */
 			@Override
 			public void windowClosed(WindowEvent e)
 			{
@@ -233,7 +271,7 @@ public abstract class SycamoreApp extends JFrame
 	{
 		if (sycamoreMainPanel == null)
 		{
-			sycamoreMainPanel = new SycamoreMainPanel();
+			sycamoreMainPanel = new SycamoreMainPanel(this.appMode);
 			sycamoreMainPanel.setEnabled(false);
 			sycamoreMainPanel.initJMEScene();
 			sycamoreMainPanel.addActionListener(new java.awt.event.ActionListener()
@@ -329,11 +367,37 @@ public abstract class SycamoreApp extends JFrame
 	 */
 	public synchronized void reset()
 	{
+		// check dirty flag and eventually ask to save
+		checkDirtyFlagAndSave();
+
+		SycamoreSystem.enqueueToJMEandWait(new Callable<Object>()
+		{
+			@Override
+			public Object call() throws Exception
+			{
+				getSycamoreMainPanel().reset();
+				SycamoreSystem.reset(appMode);
+
+				return null;
+			}
+		});
+
+		loadedProject = null;
+		originalString = null;
+
+		updateGui();
+	}
+
+	/**
+	 * Check the dirty flag and eventually ask the user to save the project
+	 */
+	private void checkDirtyFlagAndSave()
+	{
 		boolean dirtyFlag = checkDirtyFlag();
 
 		if (dirtyFlag)
 		{
-			String pt1 = "<html><body><p>Do you want to save the current project before starting a new simulation?<br>";
+			String pt1 = "<html><body><p>Do you want to save the current project?<br>";
 			String pt2 = "All unsaved data will be lost.</p></body></html>";
 			String s = pt1 + pt2;
 
@@ -350,14 +414,6 @@ public abstract class SycamoreApp extends JFrame
 				}
 			}
 		}
-
-		SycamoreSystem.reset();
-		getSycamoreMainPanel().reset();
-
-		loadedProject = null;
-		originalString = null;
-
-		updateGui();
 	}
 
 	/**
@@ -478,7 +534,7 @@ public abstract class SycamoreApp extends JFrame
 		if (getAppEngine() != null)
 		{
 			getSycamoreMainPanel().pauseAnimation();
-			
+
 			// show a file dialog
 			FileDialog dialog = new FileDialog((Frame) null, "Select the name of the project to be saved", FileDialog.SAVE);
 			dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR) + System.getProperty("file.separator") + "Projects");
@@ -513,7 +569,7 @@ public abstract class SycamoreApp extends JFrame
 	{
 		final ProgressBarWindow progressBarWindow = new ProgressBarWindow();
 		progressBarWindow.getProgressBar().setIndeterminate(true);
-		progressBarWindow.getLabel_title().setText("Saving project...");
+		progressBarWindow.getLabel_title().setText("Saving project: " + file.getName() + "...");
 		progressBarWindow.setVisible(true);
 
 		Runnable task = new Runnable()
@@ -577,7 +633,7 @@ public abstract class SycamoreApp extends JFrame
 	public synchronized void loadProject()
 	{
 		getSycamoreMainPanel().pauseAnimation();
-		
+
 		// show a file dialog
 		FileDialog dialog = new FileDialog((Frame) null, "Select the name of the project to be load", FileDialog.LOAD);
 		dialog.setDirectory(PropertyManager.getSharedInstance().getProperty(ApplicationProperties.WORKSPACE_DIR) + System.getProperty("file.separator") + "Projects");
@@ -598,7 +654,7 @@ public abstract class SycamoreApp extends JFrame
 
 			final ProgressBarWindow progressBarWindow = new ProgressBarWindow();
 			progressBarWindow.getProgressBar().setIndeterminate(true);
-			progressBarWindow.getLabel_title().setText("Loading project...");
+			progressBarWindow.getLabel_title().setText("Loading project: " + file.getName() + "...");
 			progressBarWindow.setVisible(true);
 
 			Runnable task = new Runnable()
@@ -631,8 +687,15 @@ public abstract class SycamoreApp extends JFrame
 						}
 						else
 						{
-							SycamoreSystem.getSchedulerThread().setEngine(engine);
-							SycamoreSystem.getHumanPilotSchedulerThread().setEngine(engine);
+							if (appMode == APP_MODE.SIMULATOR)
+							{
+								SycamoreSystem.getSchedulerThread().setEngine(engine);
+								SycamoreSystem.getHumanPilotSchedulerThread().setEngine(engine);
+							}
+							else
+							{
+								SycamoreSystem.getVisualizerThread().setEngine(engine);
+							}
 
 							getSycamoreMainPanel().setAppEngine(engine);
 							getSycamoreMainPanel().setupJMEScene(type);

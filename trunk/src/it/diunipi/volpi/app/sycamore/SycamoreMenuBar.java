@@ -39,7 +39,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 {
 	private static final long		serialVersionUID					= 5611549792940856705L;
 
-	private final SycamoreApp		application;
+	protected final SycamoreApp		application;
 
 	private JMenu					menu_file							= null;
 	private JMenu					menu_view							= null;
