@@ -340,6 +340,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 
 	private Vector<AdditionalComboBox>	additionalComboboxes		= null;
 	private Vector<AdditionalComboBox>	additionalColorsComboboxes	= null;
+	private Vector<AdditionalSpinner>	additionalSpeedSpinners		= null;
 	private Vector<AdditionalSpinner>	additionalLightSpinners		= null;
 	private Vector<AdditionalSpinner>	additionalSpinners			= null;
 	private Vector<AdditionalButton>	additionalButtons			= null;
@@ -349,6 +350,8 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	private JLabel						label_color					= null;
 	private JLabel						label_lightsNum				= null;
 	private JLabel						label_robotsNum				= null;
+	private JLabel						label_speed;
+	private JSpinner					spinner_speed;
 
 	/**
 	 * Default constructor.
@@ -357,6 +360,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	{
 		this.additionalComboboxes = new Vector<AdditionalComboBox>();
 		this.additionalColorsComboboxes = new Vector<AdditionalComboBox>();
+		this.additionalSpeedSpinners = new Vector<AdditionalSpinner>();
 		this.additionalLightSpinners = new Vector<AdditionalSpinner>();
 		this.additionalSpinners = new Vector<AdditionalSpinner>();
 		this.additionalButtons = new Vector<AdditionalButton>();
@@ -375,29 +379,34 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	{
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWeights = new double[]
-		{ 1.0, 0.0, 0.0, 0.0, 0.0 };
+		{ 1.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		gridBagLayout.rowWeights = new double[]
 		{ 0.0, 1.0 };
 		setLayout(gridBagLayout);
 		GridBagConstraints gbc_label_algorithm = new GridBagConstraints();
-		gbc_label_algorithm.insets = new Insets(0, 0, 5, 5);
+		gbc_label_algorithm.insets = new Insets(2, 2, 2, 2);
 		gbc_label_algorithm.gridx = 0;
 		gbc_label_algorithm.gridy = 0;
 		add(getLabel_algorithm(), gbc_label_algorithm);
 		GridBagConstraints gbc_label_color = new GridBagConstraints();
-		gbc_label_color.insets = new Insets(0, 0, 5, 5);
+		gbc_label_color.insets = new Insets(2, 2, 2, 2);
 		gbc_label_color.gridx = 1;
 		gbc_label_color.gridy = 0;
 		add(getLabel_color(), gbc_label_color);
+		GridBagConstraints gbc_label_speed = new GridBagConstraints();
+		gbc_label_speed.insets = new Insets(2, 2, 2, 2);
+		gbc_label_speed.gridx = 2;
+		gbc_label_speed.gridy = 0;
+		add(getLabel_speed(), gbc_label_speed);
 		GridBagConstraints gbc_label_lightsNum = new GridBagConstraints();
-		gbc_label_lightsNum.insets = new Insets(0, 0, 5, 5);
-		gbc_label_lightsNum.gridx = 2;
+		gbc_label_lightsNum.insets = new Insets(2, 2, 2, 2);
+		gbc_label_lightsNum.gridx = 3;
 		gbc_label_lightsNum.gridy = 0;
 		add(getLabel_lightsNum(), gbc_label_lightsNum);
 
 		GridBagConstraints gbc_label_robotsNum = new GridBagConstraints();
-		gbc_label_robotsNum.insets = new Insets(0, 0, 5, 5);
-		gbc_label_robotsNum.gridx = 3;
+		gbc_label_robotsNum.insets = new Insets(2, 2, 2, 2);
+		gbc_label_robotsNum.gridx = 4;
 		gbc_label_robotsNum.gridy = 0;
 		add(getLabel_robotsNum(), gbc_label_robotsNum);
 
@@ -420,26 +429,32 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		gbc_comboBox_colorSelection.weightx = 1;
 		add(getComboBox_colorSelection(), gbc_comboBox_colorSelection);
 
+		GridBagConstraints gbc_spinner_speed = new GridBagConstraints();
+		gbc_spinner_speed.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinner_speed.anchor = GridBagConstraints.NORTH;
+		gbc_spinner_speed.insets = new Insets(2, 2, 2, 2);
+		gbc_spinner_speed.gridx = 2;
+		gbc_spinner_speed.gridy = 1;
+		add(getSpinner_speed(), gbc_spinner_speed);
+
 		GridBagConstraints gbc_spinner_lightsNumber = new GridBagConstraints();
 		gbc_spinner_lightsNumber.anchor = GridBagConstraints.NORTH;
 		gbc_spinner_lightsNumber.insets = new Insets(2, 2, 2, 2);
-		gbc_spinner_lightsNumber.fill = GridBagConstraints.HORIZONTAL;
-		gbc_spinner_lightsNumber.gridx = 2;
+		gbc_spinner_lightsNumber.gridx = 3;
 		gbc_spinner_lightsNumber.gridy = 1;
 		add(getSpinner_lightsNumber(), gbc_spinner_lightsNumber);
 
 		GridBagConstraints gbc_spinner_robotsNumber = new GridBagConstraints();
-		gbc_spinner_robotsNumber.fill = GridBagConstraints.HORIZONTAL;
 		gbc_spinner_robotsNumber.anchor = GridBagConstraints.NORTH;
 		gbc_spinner_robotsNumber.insets = new Insets(2, 2, 2, 2);
-		gbc_spinner_robotsNumber.gridx = 3;
+		gbc_spinner_robotsNumber.gridx = 4;
 		gbc_spinner_robotsNumber.gridy = 1;
 		add(getSpinner_robotsNumber(), gbc_spinner_robotsNumber);
 
 		GridBagConstraints gbc_button_addRow = new GridBagConstraints();
 		gbc_button_addRow.insets = new Insets(2, 2, 2, 2);
 		gbc_button_addRow.anchor = GridBagConstraints.NORTH;
-		gbc_button_addRow.gridx = 4;
+		gbc_button_addRow.gridx = 5;
 		gbc_button_addRow.gridy = 1;
 		add(getButton_addRow(), gbc_button_addRow);
 	}
@@ -504,8 +519,9 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 				// not
 				// fired to avoid useless operations.
 				fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.SIMULATION_DATA_BAD.name()));
-				
-				JOptionPane.showMessageDialog(null, "You have chosen mixed Algorithm types, 2D and 3D.\nThis is not allowed, please check the algorithms you have chosen.", "Wrong Algorithms types", JOptionPane.ERROR_MESSAGE);
+
+				JOptionPane.showMessageDialog(null, "You have chosen mixed Algorithm types, 2D and 3D.\nThis is not allowed, please check the algorithms you have chosen.", "Wrong Algorithms types",
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 
@@ -539,6 +555,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		// first of all create new components
 		additionalComboboxes.add(getNewComboBox_algorithmSelection());
 		additionalColorsComboboxes.add(getNewComboBox_colorSelection());
+		additionalSpeedSpinners.add(getNewSpinner_speed());
 		additionalLightSpinners.add(getNewSpinner_lightsNumber());
 		additionalSpinners.add(getNewSpinner_robotsNumber());
 		additionalButtons.add(getNewButton_removeRow());
@@ -567,26 +584,32 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		gbc_comboBox_colorSelection.weightx = 1;
 		add(additionalColorsComboboxes.get(y - 2), gbc_comboBox_colorSelection);
 
+		GridBagConstraints gbc_spinner_speed = new GridBagConstraints();
+		gbc_spinner_speed.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinner_speed.anchor = GridBagConstraints.NORTH;
+		gbc_spinner_speed.insets = new Insets(2, 2, 2, 2);
+		gbc_spinner_speed.gridx = 2;
+		gbc_spinner_speed.gridy = y;
+		add(additionalSpeedSpinners.get(y - 2), gbc_spinner_speed);
+
 		GridBagConstraints gbc_spinner_lightsNumber = new GridBagConstraints();
 		gbc_spinner_lightsNumber.anchor = GridBagConstraints.NORTH;
 		gbc_spinner_lightsNumber.insets = new Insets(2, 2, 2, 2);
-		gbc_spinner_lightsNumber.fill = GridBagConstraints.HORIZONTAL;
-		gbc_spinner_lightsNumber.gridx = 2;
+		gbc_spinner_lightsNumber.gridx = 3;
 		gbc_spinner_lightsNumber.gridy = y;
 		add(additionalLightSpinners.get(y - 2), gbc_spinner_lightsNumber);
 
 		GridBagConstraints gbc_spinner_robotsNumber = new GridBagConstraints();
-		gbc_spinner_robotsNumber.fill = GridBagConstraints.HORIZONTAL;
 		gbc_spinner_robotsNumber.anchor = GridBagConstraints.NORTH;
 		gbc_spinner_robotsNumber.insets = new Insets(2, 2, 2, 2);
-		gbc_spinner_robotsNumber.gridx = 3;
+		gbc_spinner_robotsNumber.gridx = 4;
 		gbc_spinner_robotsNumber.gridy = y;
 		add(additionalSpinners.get(y - 2), gbc_spinner_robotsNumber);
 
 		GridBagConstraints gbc_button_removeRow = new GridBagConstraints();
 		gbc_button_removeRow.insets = new Insets(2, 2, 2, 2);
 		gbc_button_removeRow.anchor = GridBagConstraints.NORTH;
-		gbc_button_removeRow.gridx = 4;
+		gbc_button_removeRow.gridx = 5;
 		gbc_button_removeRow.gridy = y;
 		add(additionalButtons.get(y - 2), gbc_button_removeRow);
 
@@ -604,6 +627,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		// remove from vectors
 		JComboBox comboBox = additionalComboboxes.remove(index - 1);
 		JComboBox colorComboBox = additionalColorsComboboxes.remove(index - 1);
+		JSpinner speedSpinner = additionalSpeedSpinners.remove(index - 1);
 		JSpinner lightSpinner = additionalLightSpinners.remove(index - 1);
 		JSpinner spinner = additionalSpinners.remove(index - 1);
 		AdditionalButton button = additionalButtons.remove(index - 1);
@@ -616,6 +640,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		// remove from GUI
 		this.remove(comboBox);
 		this.remove(colorComboBox);
+		this.remove(speedSpinner);
 		this.remove(lightSpinner);
 		this.remove(spinner);
 		this.remove(button);
@@ -654,26 +679,32 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 			gbc_comboBox_colorSelection.weightx = 1;
 			layout.setConstraints(additionalColorsComboboxes.get(i), gbc_comboBox_colorSelection);
 
+			GridBagConstraints gbc_spinner_speed = new GridBagConstraints();
+			gbc_spinner_speed.fill = GridBagConstraints.HORIZONTAL;
+			gbc_spinner_speed.anchor = GridBagConstraints.NORTH;
+			gbc_spinner_speed.insets = new Insets(2, 2, 2, 2);
+			gbc_spinner_speed.gridx = 2;
+			gbc_spinner_speed.gridy = i + 2;
+			layout.setConstraints(additionalSpeedSpinners.get(i), gbc_spinner_speed);
+
 			GridBagConstraints gbc_spinner_lightsNumber = new GridBagConstraints();
 			gbc_spinner_lightsNumber.anchor = GridBagConstraints.NORTH;
 			gbc_spinner_lightsNumber.insets = new Insets(2, 2, 2, 2);
-			gbc_spinner_lightsNumber.fill = GridBagConstraints.HORIZONTAL;
-			gbc_spinner_lightsNumber.gridx = 2;
+			gbc_spinner_lightsNumber.gridx = 3;
 			gbc_spinner_lightsNumber.gridy = i + 2;
 			layout.setConstraints(additionalLightSpinners.get(i), gbc_spinner_lightsNumber);
 
 			GridBagConstraints gbc_spinner_robotsNumber = new GridBagConstraints();
-			gbc_spinner_robotsNumber.fill = GridBagConstraints.HORIZONTAL;
 			gbc_spinner_robotsNumber.anchor = GridBagConstraints.NORTH;
 			gbc_spinner_robotsNumber.insets = new Insets(2, 2, 2, 2);
-			gbc_spinner_robotsNumber.gridx = 3;
+			gbc_spinner_robotsNumber.gridx = 4;
 			gbc_spinner_robotsNumber.gridy = i + 2;
 			layout.setConstraints(additionalSpinners.get(i), gbc_spinner_robotsNumber);
 
 			GridBagConstraints gbc_button_removeRow = new GridBagConstraints();
 			gbc_button_removeRow.insets = new Insets(2, 2, 2, 2);
 			gbc_button_removeRow.anchor = GridBagConstraints.NORTH;
-			gbc_button_removeRow.gridx = 4;
+			gbc_button_removeRow.gridx = 5;
 			gbc_button_removeRow.gridy = i + 2;
 			layout.setConstraints(additionalButtons.get(i), gbc_button_removeRow);
 		}
@@ -691,6 +722,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 			additionalButtons.get(i).setIndex(i + 1);
 			additionalComboboxes.get(i).setIndex(i + 1);
 			additionalColorsComboboxes.get(i).setIndex(i + 1);
+			additionalSpeedSpinners.get(i).setIndex(i + 1);
 			additionalLightSpinners.get(i).setIndex(i + 1);
 			additionalSpinners.get(i).setIndex(i + 1);
 		}
@@ -743,6 +775,46 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	}
 
 	/**
+	 * @return
+	 */
+	private JSpinner getSpinner_speed()
+	{
+		if (spinner_speed == null)
+		{
+			spinner_speed = new JSpinner();
+			spinner_speed.setMaximumSize(new Dimension(80, 27));
+			spinner_speed.setMinimumSize(new Dimension(80, 27));
+			spinner_speed.setPreferredSize(new Dimension(80, 27));
+			spinner_speed.setModel(new SpinnerNumberModel(10, 0, 99, 1));
+			spinner_speed.addChangeListener(new ChangeListener()
+			{
+				@Override
+				public void stateChanged(ChangeEvent e)
+				{
+					if (!changeLock && appEngine != null)
+					{
+						// get the algorithm
+						PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) comboBox_algorithmSelection.getModel();
+						Algorithm algorithm = (Algorithm) model.getSelectedItem();
+
+						if (algorithm != null)
+						{
+							// set lights number in engine
+							boolean isHumanPilot = algorithm.isHumanPilot();
+
+							int value = (Integer) spinner_speed.getValue();
+							float speed = ((float) value) / 100.0f;
+
+							appEngine.setRobotsSpeed(0, speed, isHumanPilot);
+						}
+					}
+				}
+			});
+		}
+		return spinner_speed;
+	}
+
+	/**
 	 * @return the spinner_lightsNumber
 	 */
 	private JSpinner getSpinner_lightsNumber()
@@ -750,9 +822,9 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		if (spinner_lightsNumber == null)
 		{
 			spinner_lightsNumber = new JSpinner();
-			spinner_lightsNumber.setMaximumSize(new Dimension(50, 27));
-			spinner_lightsNumber.setMinimumSize(new Dimension(50, 27));
-			spinner_lightsNumber.setPreferredSize(new Dimension(50, 27));
+			spinner_lightsNumber.setMaximumSize(new Dimension(80, 27));
+			spinner_lightsNumber.setMinimumSize(new Dimension(80, 27));
+			spinner_lightsNumber.setPreferredSize(new Dimension(80, 27));
 			spinner_lightsNumber.setModel(new SpinnerNumberModel(0, 0, 99, 1));
 			spinner_lightsNumber.addChangeListener(new ChangeListener()
 			{
@@ -851,9 +923,9 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		if (spinner_robotsNumber == null)
 		{
 			spinner_robotsNumber = new JSpinner();
-			spinner_robotsNumber.setMaximumSize(new Dimension(50, 27));
-			spinner_robotsNumber.setMinimumSize(new Dimension(50, 27));
-			spinner_robotsNumber.setPreferredSize(new Dimension(50, 27));
+			spinner_robotsNumber.setMaximumSize(new Dimension(80, 27));
+			spinner_robotsNumber.setMinimumSize(new Dimension(80, 27));
+			spinner_robotsNumber.setPreferredSize(new Dimension(80, 27));
 			spinner_robotsNumber.setModel(new SpinnerNumberModel(1, 1, 100, 1));
 			spinner_robotsNumber.addChangeListener(new ChangeListener()
 			{
@@ -966,14 +1038,54 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	}
 
 	/**
+	 * @return
+	 */
+	private AdditionalSpinner getNewSpinner_speed()
+	{
+		final AdditionalSpinner spinner_additionalSpeed = new AdditionalSpinner(additionalSpeedSpinners.size() + 1);
+		spinner_additionalSpeed.setMaximumSize(new Dimension(80, 27));
+		spinner_additionalSpeed.setMinimumSize(new Dimension(80, 27));
+		spinner_additionalSpeed.setPreferredSize(new Dimension(80, 27));
+		spinner_additionalSpeed.setModel(new SpinnerNumberModel(10, 0, 99, 1));
+		spinner_additionalSpeed.addChangeListener(new ChangeListener()
+		{
+			@Override
+			public void stateChanged(ChangeEvent e)
+			{
+				if (!changeLock && appEngine != null)
+				{
+					int index = spinner_additionalSpeed.getIndex();
+					
+					// get index-th algorithm
+					PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) additionalComboboxes.elementAt(index - 1).getModel();
+					Algorithm algorithm = (Algorithm) model.getSelectedItem();
+
+					if (algorithm != null)
+					{
+						// set lights number in engine
+						boolean isHumanPilot = algorithm.isHumanPilot();
+
+						int value = (Integer) spinner_additionalSpeed.getValue();
+						float speed = ((float) value) / 100.0f;
+
+						appEngine.setRobotsSpeed(index, speed, isHumanPilot);
+					}
+				}
+			}
+		});
+
+		return spinner_additionalSpeed;
+	}
+
+	/**
 	 * @return the spinner_lightsNumber
 	 */
 	private AdditionalSpinner getNewSpinner_lightsNumber()
 	{
 		final AdditionalSpinner spinner_additionalLightsNumber = new AdditionalSpinner(additionalLightSpinners.size() + 1);
-		spinner_additionalLightsNumber.setMaximumSize(new Dimension(50, 27));
-		spinner_additionalLightsNumber.setMinimumSize(new Dimension(50, 27));
-		spinner_additionalLightsNumber.setPreferredSize(new Dimension(50, 27));
+		spinner_additionalLightsNumber.setMaximumSize(new Dimension(80, 27));
+		spinner_additionalLightsNumber.setMinimumSize(new Dimension(80, 27));
+		spinner_additionalLightsNumber.setPreferredSize(new Dimension(80, 27));
 		spinner_additionalLightsNumber.setModel(new SpinnerNumberModel(0, 0, 99, 1));
 		spinner_additionalLightsNumber.addChangeListener(new ChangeListener()
 		{
@@ -1079,9 +1191,9 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	private AdditionalSpinner getNewSpinner_robotsNumber()
 	{
 		final AdditionalSpinner spinner_additionalRobotsNumber = new AdditionalSpinner(additionalSpinners.size() + 1);
-		spinner_additionalRobotsNumber.setMaximumSize(new Dimension(50, 27));
-		spinner_additionalRobotsNumber.setMinimumSize(new Dimension(50, 27));
-		spinner_additionalRobotsNumber.setPreferredSize(new Dimension(50, 27));
+		spinner_additionalRobotsNumber.setMaximumSize(new Dimension(80, 27));
+		spinner_additionalRobotsNumber.setMinimumSize(new Dimension(80, 27));
+		spinner_additionalRobotsNumber.setPreferredSize(new Dimension(80, 27));
 		spinner_additionalRobotsNumber.setModel(new SpinnerNumberModel(1, 1, 999, 1));
 		spinner_additionalRobotsNumber.addChangeListener(new ChangeListener()
 		{
@@ -1232,6 +1344,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 
 		JComboBox combobox_algorithmSelection = (index == 0 ? getComboBox_algorithmSelection() : additionalComboboxes.get(index - 1));
 		JComboBox combobox_colorSelection = (index == 0 ? getComboBox_colorSelection() : additionalColorsComboboxes.get(index - 1));
+		JSpinner spinner_speed = (index == 0 ? getSpinner_speed() : additionalSpeedSpinners.get(index - 1));
 		JSpinner spinner_lightsNumber = (index == 0 ? getSpinner_lightsNumber() : additionalLightSpinners.get(index - 1));
 		JSpinner spinner_robotsNumber = (index == 0 ? getSpinner_robotsNumber() : additionalSpinners.get(index - 1));
 
@@ -1262,6 +1375,9 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 					combobox_colorSelection.setSelectedIndex(j);
 				}
 			}
+
+			// write lights number
+			spinner_speed.setValue((int) (robot.getSpeed() * 100));
 
 			// write lights number
 			spinner_lightsNumber.setValue(robot.getLights().size());
@@ -1453,6 +1569,18 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 			label_color = new JLabel("Color:");
 		}
 		return label_color;
+	}
+
+	/**
+	 * @return
+	 */
+	private JLabel getLabel_speed()
+	{
+		if (label_speed == null)
+		{
+			label_speed = new JLabel("Speed:");
+		}
+		return label_speed;
 	}
 
 	/**
