@@ -24,7 +24,16 @@ public class LargestMemory3D extends MemoryImpl<Point3D>
 	 * @see it.diunipi.volpi.sycamore.plugins.memory.Memory#getMemoryLimit()
 	 */
 	@Override
-	public int getMemoryLimit()
+	public int getSelfPositionsLimit()
+	{
+		return Integer.MAX_VALUE;
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.memory.Memory#getSnapshotsLimit()
+	 */
+	@Override
+	public int getSnapshotsLimit()
 	{
 		return Integer.MAX_VALUE;
 	}
