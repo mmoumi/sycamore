@@ -1,10 +1,10 @@
 /**
  * 
  */
-package it.diunipi.volpi.sycamore.plugins.schedulers;
+package it.diunipi.volpi.sycamore.engine;
 
-import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.plugins.schedulers.SchedulerImpl;
 
 /**
  * @author Vale
@@ -190,7 +190,7 @@ public class SycamoreSchedulerThread extends Thread
 	/**
 	 * Perform operations after a finish of the simulation
 	 */
-	private void manageSimulationFinished()
+	protected void manageSimulationFinished()
 	{
 		if (engine != null)
 		{
