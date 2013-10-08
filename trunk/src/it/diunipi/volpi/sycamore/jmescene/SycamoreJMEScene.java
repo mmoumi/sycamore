@@ -139,7 +139,6 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	private ChaseCamera								chaseCam			= null;
 	private Node									mainNode			= null;
 	private Quaternion								billBoardRotation	= null;
-	private BillboardControl						billboardControl	= null;
 	private Geometry								grid				= null;
 
 	private HashMap<String, String>					caps				= null;
@@ -536,7 +535,6 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		this.mainNode = new Node();
 		rootNode.attachChild(mainNode);
 
-		this.billboardControl = new BillboardControl();
 		this.billBoardRotation = mainNode.getLocalRotation().clone();
 
 		// Create and load the skybox
@@ -946,13 +944,13 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 
 					if (type == TYPE.TYPE_2D)
 					{
-						mainNode.addControl(billboardControl);
+						mainNode.addControl(new BillboardControl());
 						rotateGrid(FastMath.PI / 2);
 						mainNode.detachChild(zAxis);
 					}
 					else if (type == TYPE.TYPE_3D)
 					{
-						mainNode.removeControl(billboardControl);
+						mainNode.removeControl(BillboardControl.class);
 						mainNode.setLocalRotation(billBoardRotation.clone());
 						rotateGrid(0);
 						if (SycamoreSystem.isAxesVisible())
@@ -979,7 +977,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	public synchronized void reset()
 	{
 		// not enqueued because it is always executed in the JME thread
-		mainNode.removeControl(billboardControl);
+		mainNode.removeControl(BillboardControl.class);
 
 		setupScene(TYPE.TYPE_3D);
 		robotsNode.detachAllChildren();
