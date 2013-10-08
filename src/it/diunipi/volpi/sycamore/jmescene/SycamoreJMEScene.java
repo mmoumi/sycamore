@@ -645,7 +645,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 				{
 					baricentrum.addControl(chaseCam);
 				}
-				
+
 				return null;
 			}
 		});
@@ -971,25 +971,13 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	 */
 	public synchronized void reset()
 	{
-		this.enqueue(new Callable<Object>()
-		{
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see java.util.concurrent.Callable#call()
-			 */
-			@Override
-			public Object call() throws Exception
-			{
-				mainNode.removeControl(billboardControl);
+		// not enqueued because it is always executed in the JME thread
+		mainNode.removeControl(billboardControl);
 
-				setupScene(TYPE.TYPE_3D);
-				robotsNode.detachAllChildren();
-				rootNode.updateGeometricState();
+		setupScene(TYPE.TYPE_3D);
+		robotsNode.detachAllChildren();
+		rootNode.updateGeometricState();
 
-				return null;
-			}
-		});
 	}
 
 	/**
