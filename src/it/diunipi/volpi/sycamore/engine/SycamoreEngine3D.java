@@ -170,6 +170,8 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 			{
 				// assign visibilty to each robot
 				VisibilityImpl<Point3D> newInstance = (VisibilityImpl<Point3D>) constructor.newInstance();
+				
+				newInstance.setRobot(robot);
 				robot.setVisibility(newInstance);
 				return;
 			}
