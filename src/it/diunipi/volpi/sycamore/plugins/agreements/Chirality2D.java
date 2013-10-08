@@ -35,8 +35,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 {
 	private enum ConsistentCompass2DProperties implements SycamoreProperty
 	{
-		CHIRALITY_2D_FLIP_X("FlipX", false + ""), 
-		CHIRALITY_2D_FLIP_Y("FlipY", false + "");
+		CHIRALITY_2D_FLIP_X("FlipX", false + ""), CHIRALITY_2D_FLIP_Y("FlipY", false + "");
 
 		private String	description		= null;
 		private String	defaultValue	= null;
@@ -74,13 +73,13 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	}
 
 	// node is static because it is the same for all the robots
-	private Node					axesNode		= new Node("Axes node");
+	private Node						axesNode		= new Node("Axes node");
 
-	private double					translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
-	private double					translationY	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+	private double						translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+	private double						translationY	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
 
-	private double					scaleFactor		= SycamoreUtil.getRandomDouble(0.5, 4);
-	private double					rotation		= SycamoreUtil.getRandomDouble(0, 365);
+	private double						scaleFactor		= SycamoreUtil.getRandomDouble(0.5, 4);
+	private double						rotation		= SycamoreUtil.getRandomDouble(0, 365);
 
 	private Chirality2DSettingsPanel	panel_settings	= null;
 
@@ -222,7 +221,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	{
 		return (isFlipX() ? -1 : 1);
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -373,7 +372,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	 * .model.SycamoreRobot)
 	 */
 	@Override
-	public void setOwner(SycamoreRobot<Point2D> owner)
+	public void setRobot(SycamoreRobot<Point2D> owner)
 	{
 		// Nothing to do
 	}

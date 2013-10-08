@@ -288,7 +288,7 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 	 * .model.SycamoreRobot)
 	 */
 	@Override
-	public void setOwner(SycamoreRobot<Point2D> owner)
+	public void setRobot(SycamoreRobot<Point2D> owner)
 	{
 		// Nothing to do
 	}

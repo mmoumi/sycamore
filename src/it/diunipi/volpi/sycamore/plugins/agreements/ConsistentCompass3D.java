@@ -465,7 +465,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	 * .model.SycamoreRobot)
 	 */
 	@Override
-	public void setOwner(SycamoreRobot<Point3D> owner)
+	public void setRobot(SycamoreRobot<Point3D> owner)
 	{
 		// Nothing to do
 	}
