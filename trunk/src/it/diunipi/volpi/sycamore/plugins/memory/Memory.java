@@ -22,9 +22,14 @@ public interface Memory<P extends SycamoreAbstractPoint & ComputablePoint<P>> ex
 	public void setSystemMemory(SycamoreSystemMemory<P> memory);
 	
 	/**
-	 * @return the memory limit. Integer.MAX_VALUE means infinite
+	 * @return the memory limit for self positions. Integer.MAX_VALUE means infinite
 	 */
-	public int getMemoryLimit();
+	public int getSelfPositionsLimit();
+	
+	/**
+	 * @return the memory limit for snapshots. Integer.MAX_VALUE means infinite
+	 */
+	public int getSnapshotsLimit();
 
 	/**
 	 * @param number

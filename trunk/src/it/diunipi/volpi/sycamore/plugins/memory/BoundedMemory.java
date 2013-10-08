@@ -62,7 +62,16 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 	 * @see it.diunipi.volpi.sycamore.plugins.memory.Memory#getMemoryLimit()
 	 */
 	@Override
-	public int getMemoryLimit()
+	public int getSelfPositionsLimit()
+	{
+		return getMemorySize();
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.memory.Memory#getSnapshotsLimit()
+	 */
+	@Override
+	public int getSnapshotsLimit()
 	{
 		return getMemorySize();
 	}
