@@ -82,17 +82,18 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 	 * .SycamoreAbstractPoint, it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint)
 	 */
 	@Override
-	public boolean isPointVisible(Point2D point1, Point2D point2)
+	public boolean isPointVisible(Point2D point)
 	{
+		Point2D center = robot.getLocalPosition();
 		float visibilityRange = getVisibilityRange();
 		
 		// build a square around point1
-		float x = point1.x - (visibilityRange / 2);
-		float y = point1.y + (visibilityRange / 2);
+		float x = center.x - (visibilityRange / 2);
+		float y = center.y + (visibilityRange / 2);
 
-		if (point2.x >= x && point2.x <= (x + visibilityRange))
+		if (point.x >= x && point.x <= (x + visibilityRange))
 		{
-			if (point2.y >= (y - visibilityRange) && point2.y <= y)
+			if (point.y >= (y - visibilityRange) && point.y <= y)
 			{
 				return true;
 			}
@@ -105,8 +106,9 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 	 * @see it.diunipi.volpi.sycamore.plugins.visibilities.Visibility#getPointInside()
 	 */
 	@Override
-	public Point2D getPointInside(Point2D center)
+	public Point2D getPointInside()
 	{	
+		Point2D center = robot.getLocalPosition();
 		float visibilityRange = getVisibilityRange();
 		
 		float startX = center.x - (visibilityRange / 2);
@@ -124,7 +126,7 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 	 * it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint)
 	 */
 	@Override
-	public Vector<Observation<Point2D>> filter(Vector<Observation<Point2D>> observations, Point2D calleePosition)
+	public Vector<Observation<Point2D>> filter(Vector<Observation<Point2D>> observations)
 	{
 		Vector<Observation<Point2D>> filtered = new Vector<Observation<Point2D>>();
 
@@ -132,7 +134,7 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 		for (Observation<Point2D> observation : observations)
 		{
 			Point2D robotPosition = observation.getRobotPosition();
-			if (isPointVisible(calleePosition, robotPosition))
+			if (isPointVisible(robotPosition))
 			{
 				filtered.add(observation);
 			}

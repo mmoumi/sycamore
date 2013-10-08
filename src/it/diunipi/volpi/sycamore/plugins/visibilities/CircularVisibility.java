@@ -117,12 +117,14 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 	 * .SycamoreAbstractPoint, it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint)
 	 */
 	@Override
-	public boolean isPointVisible(Point2D point1, Point2D point2)
+	public boolean isPointVisible(Point2D point)
 	{
 		// if the distance between the point and center is less than the radius, the point is
 		// inside the circle
 		float circleRadius = getVisibilityRange() / 2;
-		if (point1.distanceTo(point2) < circleRadius)
+		
+		Point2D center = robot.getLocalPosition();
+		if (center.distanceTo(point) < circleRadius)
 		{
 			return true;
 		}
@@ -138,8 +140,10 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 	 * @see it.diunipi.volpi.sycamore.plugins.visibilities.Visibility#getPointInside()
 	 */
 	@Override
-	public Point2D getPointInside(Point2D center)
+	public Point2D getPointInside()
 	{
+		Point2D center = robot.getLocalPosition();
+		
 		// get a random radius and a random angle
 		float radius = SycamoreUtil.getRandomFloat(0, (getVisibilityRange() / 2));
 		double angle = Math.random() * Math.PI * 2;
@@ -156,7 +160,7 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 	 * @see it.diunipi.volpi.sycamore.plugins.Visibility#filter(java.util.Vector)
 	 */
 	@Override
-	public Vector<Observation<Point2D>> filter(Vector<Observation<Point2D>> observations, Point2D calleePosition)
+	public Vector<Observation<Point2D>> filter(Vector<Observation<Point2D>> observations)
 	{
 		Vector<Observation<Point2D>> filtered = new Vector<Observation<Point2D>>();
 
@@ -164,7 +168,7 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 		for (Observation<Point2D> observation : observations)
 		{
 			Point2D robotPosition = observation.getRobotPosition();
-			if (isPointVisible(calleePosition, robotPosition))
+			if (isPointVisible(robotPosition))
 			{
 				filtered.add(observation);
 			}

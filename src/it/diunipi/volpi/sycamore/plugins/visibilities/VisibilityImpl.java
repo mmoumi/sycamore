@@ -6,6 +6,7 @@ package it.diunipi.volpi.sycamore.plugins.visibilities;
 import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 
@@ -50,6 +51,24 @@ public abstract class VisibilityImpl<P extends SycamoreAbstractPoint & Computabl
 		{
 			return defaultValue;
 		}
+	}
+	
+	protected SycamoreRobot<P> robot;
+	
+	/**
+	 * @return the robot
+	 */
+	public SycamoreRobot<P> getRobot()
+	{
+		return robot;
+	}
+	
+	/**
+	 * @param robot the robot to set
+	 */
+	public void setRobot(SycamoreRobot<P> robot)
+	{
+		this.robot = robot;
 	}
 	
 	/**
