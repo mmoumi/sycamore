@@ -81,20 +81,21 @@ public class CubicVisibility extends VisibilityImpl<Point3D>
 	 * .SycamoreAbstractPoint, it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint)
 	 */
 	@Override
-	public boolean isPointVisible(Point3D point1, Point3D point2)
+	public boolean isPointVisible(Point3D point)
 	{
+		Point3D center = robot.getLocalPosition();
 		float visibilityRange = getVisibilityRange();
 		
-		// build a cube around point1
-		float x = point1.x - (visibilityRange / 2);
-		float y = point1.y - (visibilityRange / 2);
-		float z = point1.z - (visibilityRange / 2);
+		// build a cube around center
+		float x = center.x - (visibilityRange / 2);
+		float y = center.y - (visibilityRange / 2);
+		float z = center.z - (visibilityRange / 2);
 
-		if (point2.x > x && point2.x < (x + visibilityRange))
+		if (point.x > x && point.x < (x + visibilityRange))
 		{
-			if (point2.y > y && point2.y < (y + visibilityRange))
+			if (point.y > y && point.y < (y + visibilityRange))
 			{
-				if (point2.z > y && point2.z < (z + visibilityRange))
+				if (point.z > y && point.z < (z + visibilityRange))
 				{
 					return true;
 				}
@@ -108,8 +109,9 @@ public class CubicVisibility extends VisibilityImpl<Point3D>
 	 * @see it.diunipi.volpi.sycamore.plugins.visibilities.Visibility#getPointInside()
 	 */
 	@Override
-	public Point3D getPointInside(Point3D center)
+	public Point3D getPointInside()
 	{
+		Point3D center = robot.getLocalPosition();
 		float visibilityRange = getVisibilityRange();
 		
 		float startX = center.x - (visibilityRange / 2);
@@ -129,7 +131,7 @@ public class CubicVisibility extends VisibilityImpl<Point3D>
 	 * it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint)
 	 */
 	@Override
-	public Vector<Observation<Point3D>> filter(Vector<Observation<Point3D>> observations, Point3D calleePosition)
+	public Vector<Observation<Point3D>> filter(Vector<Observation<Point3D>> observations)
 	{
 		Vector<Observation<Point3D>> filtered = new Vector<Observation<Point3D>>();
 
@@ -139,7 +141,7 @@ public class CubicVisibility extends VisibilityImpl<Point3D>
 			Point3D robotPosition = observation.getRobotPosition();
 			// if the distance between the point and center is less than the radius, the point is
 			// inside the circle
-			if (isPointVisible(calleePosition, robotPosition))
+			if (isPointVisible(robotPosition))
 			{
 				filtered.add(observation);
 			}

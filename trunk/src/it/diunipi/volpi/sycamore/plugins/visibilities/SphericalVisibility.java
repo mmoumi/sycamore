@@ -93,11 +93,12 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 	 * .SycamoreAbstractPoint, it.diunipi.volpi.sycamore.model.SycamoreAbstractPoint)
 	 */
 	@Override
-	public boolean isPointVisible(Point3D point1, Point3D point2)
+	public boolean isPointVisible(Point3D point)
 	{
 		// if the distance between the point and center is less than the radius, the point is
 		// inside the circle
-		if (point1.distanceTo(point2) < getVisibilityRange())
+		Point3D center = robot.getLocalPosition();
+		if (center.distanceTo(point) < getVisibilityRange())
 		{
 			return true;
 		}
@@ -113,8 +114,10 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 	 * @see it.diunipi.volpi.sycamore.plugins.visibilities.Visibility#getPointInside()
 	 */
 	@Override
-	public Point3D getPointInside(Point3D center)
+	public Point3D getPointInside()
 	{
+		Point3D center = robot.getLocalPosition();
+		
 		// get a random radius and a random angle
 		float radius = SycamoreUtil.getRandomFloat(0, (getVisibilityRange() / 2));
 
@@ -133,7 +136,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 	 * @see it.diunipi.volpi.sycamore.plugins.Visibility#filter(java.util.Vector)
 	 */
 	@Override
-	public Vector<Observation<Point3D>> filter(Vector<Observation<Point3D>> observations, Point3D calleePosition)
+	public Vector<Observation<Point3D>> filter(Vector<Observation<Point3D>> observations)
 	{
 		Vector<Observation<Point3D>> filtered = new Vector<Observation<Point3D>>();
 
@@ -143,7 +146,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 			Point3D robotPosition = observation.getRobotPosition();
 			// if the distance between the point and center is less than the radius, the point is
 			// inside the circle
-			if (isPointVisible(calleePosition, robotPosition))
+			if (isPointVisible(robotPosition))
 			{
 				filtered.add(observation);
 			}
