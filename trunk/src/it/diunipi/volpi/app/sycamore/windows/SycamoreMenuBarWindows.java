@@ -37,32 +37,39 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 		// add menu items under File menu
 		if (application.getAppMode() == APP_MODE.SIMULATOR)
 		{
+			// new simulation is added just in SIMULATOR mode
 			getMenu_file().add(getMenuItem_new());
 			getMenu_file().add(getMenuItem_newBatch());
 		}
 
+		// open menus are added always
 		getMenu_file().add(getMenuItem_open());
 		getMenu_file().add(getMenu_openRecent());
 
 		if (application.getAppMode() == APP_MODE.SIMULATOR)
 		{
+			// save menus are added just in SIMULATOR mode
 			getMenu_file().add(new JSeparator());
 			getMenu_file().add(getMenuItem_save());
 			getMenu_file().add(getMenuItem_saveAs());
 		}
 		
+		// exit menu is needed and added always
 		getMenu_file().add(new JSeparator());
 		getMenu_file().add(getMenuItem_exit());
 
 		// add menu items under Edit menu
 		if (application.getAppMode() == APP_MODE.SIMULATOR)
 		{
+			// the following menus are added just in SIMULATOR mode
 			getMenu_edit().add(getMenuItem_Import());
 			getMenu_edit().add(getMenuItem_Export());
 			getMenu_edit().add(new JSeparator());
 			getMenu_edit().add(getMenu_switchWorkspace());
 			getMenu_edit().add(new JSeparator());
 		}
+		
+		// preferences menu is needed and added always
 		getMenu_edit().add(getMenuItem_preferences());
 
 		// add menu items under View menu

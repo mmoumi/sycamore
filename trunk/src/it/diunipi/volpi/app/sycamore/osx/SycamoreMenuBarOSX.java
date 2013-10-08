@@ -48,15 +48,18 @@ public class SycamoreMenuBarOSX extends SycamoreMenuBar
 		// add menu items under File menu
 		if (application.getAppMode() == APP_MODE.SIMULATOR)
 		{
+			// new simulation is added just in SIMULATOR mode
 			getMenu_file().add(getMenuItem_new());
 			getMenu_file().add(getMenuItem_newBatch());
 		}
 		
+		// open menus are added always
 		getMenu_file().add(getMenuItem_open());
 		getMenu_file().add(getMenu_openRecent());
 		
 		if (application.getAppMode() == APP_MODE.SIMULATOR)
 		{
+			// the following menus are added just in SIMULATOR mode
 			getMenu_file().add(new JSeparator());
 			getMenu_file().add(getMenuItem_save());
 			getMenu_file().add(getMenuItem_saveAs());

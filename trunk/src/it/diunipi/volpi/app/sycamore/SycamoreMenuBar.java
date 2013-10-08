@@ -283,7 +283,7 @@ public abstract class SycamoreMenuBar extends JMenuBar
 			menuItem_closeWindow = new JMenuItem("Close window");
 			menuItem_closeWindow.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 			menuItem_closeWindow.addActionListener(new ActionListener()
-			{	
+			{
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
@@ -406,12 +406,15 @@ public abstract class SycamoreMenuBar extends JMenuBar
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
+					// prepare plugin exporting panel
 					SycamorePluginsExportingPanel pluginsExportingPanel = new SycamorePluginsExportingPanel();
 
+					// show panel
 					int result = JOptionPane.showOptionDialog(null, pluginsExportingPanel, "Export plugins to another location of the File System", JOptionPane.OK_CANCEL_OPTION,
 							JOptionPane.PLAIN_MESSAGE, null, null, null);
 					if (result == JOptionPane.OK_OPTION)
 					{
+						// perform exporting
 						File[] filesToExport = pluginsExportingPanel.getFilesToExport();
 						File exportDir = new File(pluginsExportingPanel.getExportingPath());
 						EXPORT_MODE mode = pluginsExportingPanel.getExportMode();

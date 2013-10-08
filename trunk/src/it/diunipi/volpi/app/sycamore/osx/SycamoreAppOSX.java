@@ -94,9 +94,13 @@ public class SycamoreAppOSX extends SycamoreApp
 		{
 			try
 			{
+				// get full screen utilities class
 				Class<?> util = Class.forName("com.apple.eawt.FullScreenUtilities");
-				Class<?> params[] = new Class[]
-				{ Window.class, Boolean.TYPE };
+				
+				// get params classes
+				Class<?> params[] = new Class[]{ Window.class, Boolean.TYPE };
+				
+				// invoke fullScreen method with prepared params
 				Method method = util.getMethod("setWindowCanFullScreen", params);
 				method.invoke(util, window, true);
 			}

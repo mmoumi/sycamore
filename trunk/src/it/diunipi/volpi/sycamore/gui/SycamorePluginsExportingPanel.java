@@ -4,8 +4,8 @@
 package it.diunipi.volpi.sycamore.gui;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
-import it.diunipi.volpi.sycamore.engine.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.plugins.SycamorePlugin;
+import it.diunipi.volpi.sycamore.plugins.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.plugins.SycamorePluginExporter.EXPORT_MODE;
 
 import java.awt.Dimension;
@@ -32,8 +32,9 @@ import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 /**
- * @author Vale
+ * A panel that lets the user export installed plugins in a jar file
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class SycamorePluginsExportingPanel extends SycamorePanel
 {
@@ -164,7 +165,6 @@ public class SycamorePluginsExportingPanel extends SycamorePanel
 
 	/**
 	 * @author Valerio Volpi - vale.v@me.com
-	 * 
 	 */
 	private class PluginsFileTableModel extends DefaultTableModel
 	{
@@ -666,7 +666,9 @@ public class SycamorePluginsExportingPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * Returns the list of files to be exported
+	 * 
+	 * @return the files to be exported
 	 */
 	public File[] getFilesToExport()
 	{
@@ -685,7 +687,9 @@ public class SycamorePluginsExportingPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * Returns the path where to export plugins
+	 * 
+	 * @return the exporting path
 	 */
 	public String getExportingPath()
 	{

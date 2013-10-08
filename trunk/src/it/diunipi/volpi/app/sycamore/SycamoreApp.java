@@ -56,9 +56,22 @@ import org.w3c.dom.NodeList;
  */
 public abstract class SycamoreApp extends JFrame
 {
+	/**
+	 * Applicatio modes
+	 * 
+	 * @author Vale
+	 */
 	public static enum APP_MODE
 	{
-		SIMULATOR, VISUALIZER;
+		/**
+		 * App starts as the simulator with all functionalities
+		 */
+		SIMULATOR,
+
+		/**
+		 * App starts just as a visualizer of open projects
+		 */
+		VISUALIZER;
 	}
 
 	/**
@@ -127,7 +140,7 @@ public abstract class SycamoreApp extends JFrame
 		// performs the operations after the initialization
 		initialize_post();
 	}
-	
+
 	/**
 	 * @return the appMode
 	 */
@@ -239,7 +252,7 @@ public abstract class SycamoreApp extends JFrame
 		gbc_sycamoreMainPanel.gridy = 0;
 		getContentPane().add(getSycamoreMainPanel(), gbc_sycamoreMainPanel);
 
-		// call event of main panel
+		// add a listener for menu bar events
 		getMenuBar_main().addActionListener(new ActionListener()
 		{
 			@Override
@@ -247,10 +260,12 @@ public abstract class SycamoreApp extends JFrame
 			{
 				if (e.getActionCommand().equals(SycamoreFiredActionEvents.LOAD_PLUGIN.name()))
 				{
+					// load plugins command received
 					getSycamoreMainPanel().loadPluginFromFileSystem();
 				}
 				else
 				{
+					// any other command received. Update visible elements
 					getSycamoreMainPanel().updateVisibleElements((AbstractButton) e.getSource(), e.getActionCommand());
 				}
 			}
@@ -375,6 +390,7 @@ public abstract class SycamoreApp extends JFrame
 			@Override
 			public Object call() throws Exception
 			{
+				// reset is performed into JME thread to avoid problems
 				getSycamoreMainPanel().reset();
 				SycamoreSystem.reset(appMode);
 
@@ -382,6 +398,7 @@ public abstract class SycamoreApp extends JFrame
 			}
 		});
 
+		// reset original string and loaded project
 		loadedProject = null;
 		originalString = null;
 
@@ -453,22 +470,25 @@ public abstract class SycamoreApp extends JFrame
 	}
 
 	/**
-	 * @return
+	 * Checks if the projecthas been modified. Returns true if modifications are detected, false
+	 * otherwise.
 	 */
 	private boolean checkDirtyFlag()
 	{
 		SycamoreEngine engine = getAppEngine();
 		if (engine == null)
 		{
+			// no engine means false
 			return false;
 		}
 		else
 		{
 			try
 			{
+				// get the string for current project
 				String currentString = getEncodedString();
 
-				// check
+				// check if is equal to the string for original project
 				return !currentString.equals(originalString);
 			}
 			catch (Exception e)
@@ -555,7 +575,7 @@ public abstract class SycamoreApp extends JFrame
 	}
 
 	/**
-	 * @return
+	 * @return the appEngine
 	 */
 	private SycamoreEngine getAppEngine()
 	{
@@ -579,6 +599,7 @@ public abstract class SycamoreApp extends JFrame
 			{
 				try
 				{
+					// get the string
 					originalString = getEncodedString();
 
 					if (originalString != null)
@@ -603,6 +624,8 @@ public abstract class SycamoreApp extends JFrame
 	}
 
 	/**
+	 * Encodes this application into a XML Node object
+	 * 
 	 * @param docFactory
 	 * @param docBuilder
 	 * @param doc
@@ -628,7 +651,8 @@ public abstract class SycamoreApp extends JFrame
 	}
 
 	/**
-	 * 
+	 * Loads a project from the file system. Asks the use to choose a file and then creates a new
+	 * Engine with the new project decoded.
 	 */
 	public synchronized void loadProject()
 	{
@@ -642,6 +666,7 @@ public abstract class SycamoreApp extends JFrame
 			@Override
 			public boolean accept(File dir, String name)
 			{
+				// accepts just XML files
 				return name.endsWith(".xml");
 			}
 		});
@@ -664,6 +689,7 @@ public abstract class SycamoreApp extends JFrame
 				{
 					try
 					{
+						// reset the scene to delete every object fromold simulation
 						reset();
 
 						DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -680,13 +706,17 @@ public abstract class SycamoreApp extends JFrame
 						String typeString = sycamore.getAttribute("type");
 						TYPE type = TYPE.valueOf(typeString);
 
+						// create engine
 						SycamoreEngine engine = getSycamoreMainPanel().initEngine(type);
+						
+						// decode engine
 						if (!engine.decode(doc.getDocumentElement(), type))
 						{
 							JOptionPane.showMessageDialog(null, "Failed opening passed file.", "Open Failed", JOptionPane.ERROR_MESSAGE);
 						}
 						else
 						{
+							// set engine everywhere
 							if (appMode == APP_MODE.SIMULATOR)
 							{
 								SycamoreSystem.getSchedulerThread().setEngine(engine);
@@ -701,9 +731,11 @@ public abstract class SycamoreApp extends JFrame
 							getSycamoreMainPanel().setupJMEScene(type);
 							engine.makeRatioSnapshot();
 
+							// update original string and loaded project
 							originalString = getEncodedString();
 							loadedProject = file;
 
+							// update GUI
 							getSycamoreMainPanel().updateGui();
 						}
 					}

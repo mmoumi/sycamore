@@ -58,7 +58,10 @@ public abstract class SycamoreAnimatedObject<P extends SycamoreAbstractPoint & C
 	{
 		if (!Float.isNaN(currentRatio) && !Float.isInfinite(currentRatio))
 		{
+			// set the ratio
 			this.currentRatio = currentRatio;
+			
+			// eventually compute the direction
 			if (currentRatio < 1)
 			{
 				this.computeCurrentDirection();

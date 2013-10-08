@@ -2,7 +2,7 @@ package it.diunipi.volpi.sycamore.gui;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
-import it.diunipi.volpi.sycamore.engine.SycamorePluginManager;
+import it.diunipi.volpi.sycamore.plugins.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.plugins.schedulers.Scheduler;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 
@@ -79,6 +79,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		gbc_label_selectScheduler.gridx = 0;
 		gbc_label_selectScheduler.gridy = 0;
 		getPanel_contentContainer().add(getLabel_selectScheduler(), gbc_label_selectScheduler);
+		
 		GridBagConstraints gbc_comboBox_selectScheduler = new GridBagConstraints();
 		gbc_comboBox_selectScheduler.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox_selectScheduler.insets = new Insets(5, 5, 5, 7);
@@ -92,6 +93,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		gbc_label_robotsNumber.gridx = 0;
 		gbc_label_robotsNumber.gridy = 2;
 		getPanel_contentContainer().add(getLabel_robotsNumber(), gbc_label_robotsNumber);
+		
 		GridBagConstraints gbc_button_manageRobots = new GridBagConstraints();
 		gbc_button_manageRobots.fill = GridBagConstraints.HORIZONTAL;
 		gbc_button_manageRobots.insets = new Insets(5, 5, 5, 7);
@@ -105,6 +107,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 		gbc_label_pluginsInfo.gridx = 0;
 		gbc_label_pluginsInfo.gridy = 4;
 		getPanel_contentContainer().add(getLabel_pluginsInfo(), gbc_label_pluginsInfo);
+		
 		GridBagConstraints gbc_button_otherPlugins = new GridBagConstraints();
 		gbc_button_otherPlugins.anchor = GridBagConstraints.NORTH;
 		gbc_button_otherPlugins.fill = GridBagConstraints.HORIZONTAL;
@@ -208,7 +211,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	}
 
 	/**
-	 * @return
+	 * @return label_robotsNumber
 	 */
 	private JLabel getLabel_robotsNumber()
 	{
@@ -246,7 +249,7 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	}
 
 	/**
-	 * @return
+	 * @return label_pluginsInfo
 	 */
 	private JLabel getLabel_pluginsInfo()
 	{

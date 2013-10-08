@@ -288,7 +288,7 @@ public class SycamorePluginInformationsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return scrollPane_description
 	 */
 	private JScrollPane getScrollPane_description()
 	{

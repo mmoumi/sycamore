@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 
 /**
- * The model for combo boxes for the selection of plugins
+ * The model for comboboxes for the selection of plugins
  * 
  * @author Valerio Volpi - vale.v@me.com
  * 

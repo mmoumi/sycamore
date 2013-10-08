@@ -13,8 +13,12 @@ import java.util.Iterator;
 import javax.swing.ImageIcon;
 
 /**
- * @author Vale
+ * A version of the animation control panel specific for Visualzer. Its appearence is exactly the
+ * same, but its behavior is not. In particular, whith this panel a pressure of the stop button does
+ * not reset the timelines as the same button in <code>SycamoreAnimationControlPanel</code> does,
+ * but simply sets the ratios of all the robots to zero.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class SycamoreVisualizerAnimationControlPanel extends SycamoreAnimationControlPanel
 {
@@ -34,7 +38,7 @@ public class SycamoreVisualizerAnimationControlPanel extends SycamoreAnimationCo
 		getButton_play().setToolTipText("Pause animation");
 
 		getAppEngine().clearRatioSnapshot();
-		
+
 		getSlider_animationControl().setEnabled(false);
 		getSpinner_fine_tune().setEnabled(false);
 
@@ -56,13 +60,13 @@ public class SycamoreVisualizerAnimationControlPanel extends SycamoreAnimationCo
 		getButton_play().setIcon(new ImageIcon(url));
 		getButton_play().setToolTipText("Play animation");
 		getButton_play().setSelected(false);
-		
+
 		getSlider_animationControl().setEnabled(true);
 		getSpinner_fine_tune().setEnabled(true);
 
 		SycamoreSystem.getVisualizerThread().pause();
 		getAppEngine().makeRatioSnapshot();
-		
+
 		if (finishSimulation)
 		{
 			Iterator<SycamoreRobot> iterator = getAppEngine().getRobots().robotsIterator();

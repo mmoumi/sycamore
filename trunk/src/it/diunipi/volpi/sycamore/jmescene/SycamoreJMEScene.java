@@ -157,7 +157,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	}
 
 	/**
-	 * 
+	 * Setup system capabilities
 	 */
 	private void setupSystemCaps()
 	{
@@ -183,7 +183,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	}
 
 	/**
-	 * @return the caps
+	 * @return the capabilities of the system
 	 */
 	public HashMap<String, String> getCaps()
 	{
@@ -469,7 +469,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	}
 
 	/**
-	 * 
+	 * Handle a change in the selection of the current agreement
 	 */
 	public void manageAgreementChange()
 	{
@@ -483,7 +483,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	}
 
 	/**
-	 * 
+	 * Update the graphics for Agreements axes and positions
 	 */
 	public void updateAgreementsGraphics()
 	{
@@ -774,26 +774,33 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		Agreement agreement = robot.getAgreement();
 		if (agreement != null)
 		{
+			// default translation, rotation, scale
 			Vector3f translation = Vector3f.ZERO;
 			Vector3f scale = new Vector3f(1, 1, 1);
 			Quaternion rotation = Quaternion.ZERO;
 
+			// update with robot's ones
 			translation = agreement.getLocalTranslation();
 			scale = agreement.getLocalScale();
 			rotation = agreement.getLocalRotation();
 
+			// set them
 			robotNode.setLocalRotation(rotation);
 			robotNode.setLocalScale(scale);
 			robotNode.setLocalTranslation(translation);
 
+			// get the transform for the translation determined by the robot position instead of
+			// robot's agreement
 			Transform transform = robotNode.getLocalTransform();
 			Transform positionTransform = new Transform(position);
 
+			// combine
 			positionTransform.combineWithParent(transform);
 			robotNode.setLocalTransform(positionTransform);
 		}
 		else
 		{
+			// translate robot
 			robotNode.setLocalTranslation(position);
 		}
 
@@ -981,6 +988,9 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	}
 
 	/**
+	 * Encodes passed color inside an XML Element object, to be used by other objects that need to
+	 * encode a color anywhere.
+	 * 
 	 * @param color
 	 * @param factory
 	 * @param builder
@@ -1015,6 +1025,9 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	}
 
 	/**
+	 * Decodes passed XML element and returns a ColorRGBA object that matches with the color
+	 * informations encoded in XML
+	 * 
 	 * @param color
 	 * @param factory
 	 * @param builder

@@ -304,7 +304,7 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	}
 
 	/**
-	 * 
+	 * Handle a change in the selection of the current agreement
 	 */
 	public void manageAgreementChange()
 	{
@@ -312,7 +312,7 @@ public class SycamoreJMESceneCanvasPanel extends SycamorePanel
 	}
 
 	/**
-	 * 
+	 * Update the graphics for Agreements axes and positions
 	 */
 	public void updateAgreementsGraphics()
 	{

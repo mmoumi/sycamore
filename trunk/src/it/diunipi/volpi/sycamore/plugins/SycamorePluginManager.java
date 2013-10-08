@@ -1,11 +1,8 @@
-package it.diunipi.volpi.sycamore.engine;
+package it.diunipi.volpi.sycamore.plugins;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.PluginComparator;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.plugins.PluginLoader;
-import it.diunipi.volpi.sycamore.plugins.SycamorePlugin;
-import it.diunipi.volpi.sycamore.plugins.SycamoreTypedPlugin;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.plugins.initialconditions.InitialConditions;

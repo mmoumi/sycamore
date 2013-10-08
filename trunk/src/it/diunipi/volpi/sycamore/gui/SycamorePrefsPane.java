@@ -22,8 +22,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author Vale
+ * The preferences panel for the whole application
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class SycamorePrefsPane extends JPanel
 {
@@ -51,7 +52,7 @@ public class SycamorePrefsPane extends JPanel
 	private JLabel				label_epsilon						= null;
 	private JPanel				panel_components					= null;
 	private JSpinner			spinner_epsilon						= null;
-	private JLabel				label_fairnessCountDEscription_1	= null;
+	private JLabel				label_fairnessCountDescription_1	= null;
 	private JLabel				label_fairnessCountDescription_2	= null;
 	private JLabel				label_epsilonDescription_1			= null;
 	private JLabel				label_epsilonDescription_2			= null;
@@ -69,7 +70,6 @@ public class SycamorePrefsPane extends JPanel
 	 */
 	private void initialize()
 	{
-
 		setPreferredSize(new Dimension(500, 440));
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -97,7 +97,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return panel_system
 	 */
 	private JPanel getPanel_system()
 	{
@@ -124,7 +124,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return panel_initialPosition
 	 */
 	private JPanel getPanel_initialPosition()
 	{
@@ -233,7 +233,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return textPane_description
 	 */
 	private JTextPane getTextPane_description()
 	{
@@ -248,7 +248,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_defaultSpeed
 	 */
 	private JLabel getLabel_defaultSpeed()
 	{
@@ -260,7 +260,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_title
 	 */
 	private JLabel getLabel_title()
 	{
@@ -273,7 +273,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_min_x
 	 */
 	private JLabel getLabel_min_x()
 	{
@@ -285,7 +285,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_min_x
 	 */
 	private JSpinner getSpinner_min_x()
 	{
@@ -310,7 +310,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_max_x
 	 */
 	private JLabel getLabel_max_x()
 	{
@@ -322,7 +322,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_max_x
 	 */
 	private JSpinner getSpinner_max_x()
 	{
@@ -347,7 +347,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_min_y
 	 */
 	private JLabel getLabel_min_y()
 	{
@@ -359,7 +359,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_min_y
 	 */
 	private JSpinner getSpinner_min_y()
 	{
@@ -384,7 +384,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_max_y
 	 */
 	private JLabel getLabel_max_y()
 	{
@@ -396,7 +396,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_max_y
 	 */
 	private JSpinner getSpinner_max_y()
 	{
@@ -421,7 +421,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_max_z
 	 */
 	private JSpinner getSpinner_max_z()
 	{
@@ -446,7 +446,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_min_z
 	 */
 	private JSpinner getSpinner_min_z()
 	{
@@ -472,7 +472,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_min_z
 	 */
 	private JLabel getLabel_min_z()
 	{
@@ -484,7 +484,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_max_z
 	 */
 	private JLabel getLabel_max_z()
 	{
@@ -496,7 +496,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_defaultSpeed
 	 */
 	private JSpinner getSpinner_defaultSpeed()
 	{
@@ -521,7 +521,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_fairnessCount
 	 */
 	private JLabel getLabel_fairnessCount()
 	{
@@ -533,7 +533,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_fairnessCount
 	 */
 	private JSpinner getSpinner_fairnessCount()
 	{
@@ -558,7 +558,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_epsilon
 	 */
 	private JLabel getLabel_epsilon()
 	{
@@ -570,7 +570,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return panel_components
 	 */
 	private JPanel getPanel_components()
 	{
@@ -612,13 +612,13 @@ public class SycamorePrefsPane extends JPanel
 			gbc_spinner_fairnessCount.gridx = 1;
 			gbc_spinner_fairnessCount.gridy = 1;
 			panel_components.add(getSpinner_fairnessCount(), gbc_spinner_fairnessCount);
-			GridBagConstraints gbc_label_fairnessCountDEscription_1 = new GridBagConstraints();
-			gbc_label_fairnessCountDEscription_1.fill = GridBagConstraints.HORIZONTAL;
-			gbc_label_fairnessCountDEscription_1.gridwidth = 2;
-			gbc_label_fairnessCountDEscription_1.insets = new Insets(0, 2, 1, 2);
-			gbc_label_fairnessCountDEscription_1.gridx = 0;
-			gbc_label_fairnessCountDEscription_1.gridy = 2;
-			panel_components.add(getLabel_fairnessCountDEscription_1(), gbc_label_fairnessCountDEscription_1);
+			GridBagConstraints gbc_label_fairnessCountDescription_1 = new GridBagConstraints();
+			gbc_label_fairnessCountDescription_1.fill = GridBagConstraints.HORIZONTAL;
+			gbc_label_fairnessCountDescription_1.gridwidth = 2;
+			gbc_label_fairnessCountDescription_1.insets = new Insets(0, 2, 1, 2);
+			gbc_label_fairnessCountDescription_1.gridx = 0;
+			gbc_label_fairnessCountDescription_1.gridy = 2;
+			panel_components.add(getLabel_fairnessCountDescription_1(), gbc_label_fairnessCountDescription_1);
 			GridBagConstraints gbc_label_fairnessCountDescription_2 = new GridBagConstraints();
 			gbc_label_fairnessCountDescription_2.fill = GridBagConstraints.HORIZONTAL;
 			gbc_label_fairnessCountDescription_2.gridwidth = 2;
@@ -657,7 +657,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_epsilon
 	 */
 	private JSpinner getSpinner_epsilon()
 	{
@@ -687,20 +687,20 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_fairnessCountDEscription_1
 	 */
-	private JLabel getLabel_fairnessCountDEscription_1()
+	private JLabel getLabel_fairnessCountDescription_1()
 	{
-		if (label_fairnessCountDEscription_1 == null)
+		if (label_fairnessCountDescription_1 == null)
 		{
-			label_fairnessCountDEscription_1 = new JLabel("The fairness count is the maximum number of steps where");
-			label_fairnessCountDEscription_1.setFont(label_fairnessCountDEscription_1.getFont().deriveFont(label_fairnessCountDEscription_1.getFont().getSize() - 2f));
+			label_fairnessCountDescription_1 = new JLabel("The fairness count is the maximum number of steps where");
+			label_fairnessCountDescription_1.setFont(label_fairnessCountDescription_1.getFont().deriveFont(label_fairnessCountDescription_1.getFont().getSize() - 2f));
 		}
-		return label_fairnessCountDEscription_1;
+		return label_fairnessCountDescription_1;
 	}
 
 	/**
-	 * @return
+	 * @return label_fairnessCountDescription_2
 	 */
 	private JLabel getLabel_fairnessCountDescription_2()
 	{
@@ -713,7 +713,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_epsilonDescription_1
 	 */
 	private JLabel getLabel_epsilonDescription_1()
 	{
@@ -726,7 +726,7 @@ public class SycamorePrefsPane extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_epsilonDescription_2
 	 */
 	private JLabel getLabel_epsilonDescription_2()
 	{

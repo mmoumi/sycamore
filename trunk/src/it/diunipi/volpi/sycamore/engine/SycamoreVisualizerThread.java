@@ -5,8 +5,10 @@ import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import java.util.Iterator;
 
 /**
- * @author Vale
+ * This class is the thread that runs in the Visualizer. Since in Visualizer there is no scheduler,
+ * this thread cares about playing the animation by setting the appropriate ratios into robots.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class SycamoreVisualizerThread extends SycamoreSchedulerThread
 {
@@ -34,7 +36,8 @@ public class SycamoreVisualizerThread extends SycamoreSchedulerThread
 
 			if (engine != null)
 			{
-				updateTimelines();
+				// update robots ratios
+				updateRobotsRatios();
 
 				// sleep to have fixed frequency
 				try
@@ -62,9 +65,9 @@ public class SycamoreVisualizerThread extends SycamoreSchedulerThread
 	}
 
 	/**
-	 * 
+	 * Updates the robots ratios in order to have an animation
 	 */
-	private void updateTimelines()
+	private void updateRobotsRatios()
 	{
 		Iterator<SycamoreRobot> iterator = engine.getRobots().robotsIterator();
 

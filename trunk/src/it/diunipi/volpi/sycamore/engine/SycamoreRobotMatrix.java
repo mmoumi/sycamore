@@ -671,7 +671,10 @@ public class SycamoreRobotMatrix<P extends SycamoreAbstractPoint & ComputablePoi
 	}
 
 	/**
-	 * @param element
+	 * Decode the fields in this robot matrix by taking them from passed XML element. TYPE parameter is
+	 * used to determine the type (2D or 3D) of the decoded object.
+	 * 
+	 * @param documentElement
 	 */
 	public synchronized boolean decode(Element element, TYPE type, SycamoreEngine<P> engine)
 	{

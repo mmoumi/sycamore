@@ -148,7 +148,7 @@ public class SycamoreSystem
 	}
 
 	/**
-	 * @return
+	 * @return the JME render manager
 	 */
 	public static RenderManager getRenderManager()
 	{
@@ -156,7 +156,7 @@ public class SycamoreSystem
 	}
 
 	/**
-	 * @return the assetManager
+	 * @return the JME asset manager
 	 */
 	public static AssetManager getAssetManager()
 	{
@@ -164,7 +164,7 @@ public class SycamoreSystem
 	}
 
 	/**
-	 * @return
+	 * @return the JME scene capabilities
 	 */
 	public static HashMap<String, String> getSystemCaps()
 	{
@@ -172,7 +172,7 @@ public class SycamoreSystem
 	}
 
 	/**
-	 * @return
+	 * @return the JME context
 	 */
 	public static JmeContext getContext()
 	{
@@ -324,7 +324,7 @@ public class SycamoreSystem
 	}
 
 	/**
-	 * @return
+	 * @return the plugins' directory absolute path
 	 */
 	public static File getPluginsDirectory()
 	{
@@ -332,7 +332,7 @@ public class SycamoreSystem
 	}
 
 	/**
-	 * @return
+	 * @return the resources' directory absolute path
 	 */
 	public static File getPluginsResourcesDirectory()
 	{

@@ -36,6 +36,7 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	private SycamoreAnimationControlPanel	sycamoreAnimationControlPanel	= null;
 	private SycamoreEngine					appEngine						= null;
 
+	// the app mode
 	private final APP_MODE					appMode;
 
 	/**

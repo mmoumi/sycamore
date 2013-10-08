@@ -16,8 +16,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * @author Vale
+ * This class represents the memory of the system. It is owned by a robot, and it contains, for that
+ * robot, all the past positions and observations. It can be accessed only through an instance of a
+ * Memory plugin. If no such plugin exists, this object is not filled with data.
  * 
+ * @author Valerio Volpi - vale.v@me.com
+ * 
+ * @param <P>
  */
 public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 {
@@ -25,7 +30,7 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 	private Vector<Vector<P>>	snapshots		= null;
 
 	/**
-	 * 
+	 * Default constructor.
 	 */
 	public SycamoreSystemMemory()
 	{
@@ -50,6 +55,8 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 	}
 
 	/**
+	 * Clones passed point by returning an exact copy of it, but on a different instance.
+	 * 
 	 * @param point
 	 * @return
 	 */
@@ -57,6 +64,7 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 	{
 		try
 		{
+			// clone
 			return (P) point.clone();
 		}
 		catch (CloneNotSupportedException e)
@@ -68,6 +76,8 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 	}
 
 	/**
+	 * Adds passed position to the positions vector
+	 * 
 	 * @param position
 	 */
 	public void addSelfPosition(P position)
@@ -76,6 +86,8 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 	}
 
 	/**
+	 * Adds passed snapshot to the snapshots vector
+	 * 
 	 * @param position
 	 */
 	public void addSnapshot(Vector<Observation<P>> snapshot)
@@ -137,9 +149,10 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 	}
 
 	/**
-	 * @param systemMemoryElem
-	 * @param type
-	 * @return
+	 * Decode the fields in this memory by taking them from passed XML element. TYPE parameter is
+	 * used to determine the type (2D or 3D) of the decoded object.
+	 * 
+	 * @param documentElement
 	 */
 	public boolean decode(Element element, TYPE type)
 	{
@@ -186,7 +199,7 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 					Vector<P> data = new Vector<P>();
 					Element snapshotElem = (Element) snapshot.item(i);
 					NodeList position = snapshotElem.getElementsByTagName("position");
-					
+
 					// positions
 					for (int j = 0; j < position.getLength(); j++)
 					{
@@ -198,7 +211,7 @@ public class SycamoreSystemMemory<P extends SycamoreAbstractPoint & ComputablePo
 							data.add(point);
 						}
 					}
-					
+
 					this.snapshots.add(data);
 				}
 			}

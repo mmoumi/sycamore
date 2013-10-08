@@ -31,17 +31,25 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 
 /**
- * @author Valerio Volpi - volpiv@cli.di.unipi.it
+ * Utility class with a lot of static utility methods.
  * 
+ * @author Valerio Volpi - volpiv@cli.di.unipi.it
  */
 public class SycamoreUtil
 {
+	/**
+	 * The fairness manager. It cares of returning random siubsets of a vector, but after a fixed
+	 * number of calls it forces an object that was never returned to be placed inside the returning
+	 * vector.
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
 	private static class RandomFairnessmanager
 	{
 		private HashMap<Long, Integer>	counter;
 
 		/**
-		 * 
+		 * Constructor.
 		 */
 		public RandomFairnessmanager()
 		{
@@ -51,6 +59,8 @@ public class SycamoreUtil
 		}
 
 		/**
+		 * Store the element with passed ID
+		 * 
 		 * @param id
 		 */
 		public void storeElement(Long id)
@@ -66,6 +76,8 @@ public class SycamoreUtil
 		}
 
 		/**
+		 * Check if the element with passed ID has been returned within last n steps
+		 * 
 		 * @param id
 		 * @return
 		 */
@@ -82,9 +94,6 @@ public class SycamoreUtil
 		}
 	}
 
-	/**
-	 * 
-	 */
 	private static final RandomFairnessmanager	fairnessManager	= new RandomFairnessmanager();
 
 	/**
@@ -96,6 +105,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns a random float between passed values
+	 * 
 	 * @param start
 	 * @param end
 	 * @return
@@ -106,6 +117,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns a random double between passed values
+	 * 
 	 * @param start
 	 * @param end
 	 * @return
@@ -116,6 +129,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns a random color
+	 * 
 	 * @return
 	 */
 	public static ColorRGBA getRandomColor()
@@ -124,8 +139,10 @@ public class SycamoreUtil
 	}
 
 	/**
-	 * @param i
-	 * @param size
+	 * Returns a random integer between passed values
+	 * 
+	 * @param start
+	 * @param end
 	 * @return
 	 */
 	public static int getRandomInt(int start, int end)
@@ -135,8 +152,10 @@ public class SycamoreUtil
 	}
 
 	/**
-	 * @param i
-	 * @param size
+	 * Returns a random long between passed values
+	 * 
+	 * @param start
+	 * @param end
 	 * @return
 	 */
 	public static long getRandomLong(long start, long end)
@@ -148,6 +167,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns a random Point2D object whose coordinates are between passed values.
+	 * 
 	 * @param startX
 	 * @param endX
 	 * @param startY
@@ -160,6 +181,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns a random Point3D object whose coordinates are between passed values.
+	 * 
 	 * @param startX
 	 * @param endX
 	 * @param startY
@@ -174,6 +197,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns a random subset of passed objects. No fair is guaranteed.
+	 * 
 	 * @param objects
 	 * @return
 	 */
@@ -205,6 +230,10 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns a random subset of passed objects. No fair is guaranteed. The fairness manager is
+	 * used to guarantee that any object is always returned at least after a fixed number of calls
+	 * to this method.
+	 * 
 	 * @param objects
 	 * @return
 	 */
@@ -257,6 +286,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns a random point that is on the segment conecting passed points.
+	 * 
 	 * @param point1
 	 * @param point2
 	 * @return
@@ -308,6 +339,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Converts a Sycamore Point2D to an awt Point2D
+	 * 
 	 * @param point
 	 * @return
 	 */
@@ -324,6 +357,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Converts an awt Point2D to a Sycamore Point2D
+	 * 
 	 * @param point
 	 * @return
 	 */
@@ -333,6 +368,9 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * If swap is on, return a Point2D whose coordinates are swapped. Otherwise returns the passed
+	 * point.
+	 * 
 	 * @param src
 	 * @param swap
 	 * @return
@@ -348,6 +386,9 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * If swap flags are on, return a Point3D whose coordinates are swapped according with the
+	 * flags. Otherwise returns the passed point.
+	 * 
 	 * @param src
 	 * @param swap
 	 * @return
@@ -381,6 +422,10 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * If swap flags are on, return a Point3D whose coordinates are swapped according with the
+	 * flags. Otherwise returns the passed point. The coordinates are swapped in the inverse order
+	 * as the <code>shufflePoint3D</code> method does.
+	 * 
 	 * @param src
 	 * @param swap
 	 * @return
@@ -414,6 +459,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Converts a ColorRGBA in an awt Color
+	 * 
 	 * @param passedColor
 	 * @return
 	 */
@@ -427,6 +474,13 @@ public class SycamoreUtil
 		return new Color(red, green, blue, alpha);
 	}
 
+	/**
+	 * Copies sourceFile into destFile
+	 * 
+	 * @param sourceFile
+	 * @param destFile
+	 * @throws IOException
+	 */
 	public static void copyFile(File sourceFile, File destFile) throws IOException
 	{
 		if (!destFile.exists())
@@ -466,6 +520,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Computes the baricentrum between the passed points
+	 * 
 	 * @param points
 	 * @return
 	 */
@@ -511,6 +567,9 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns the set of awt Point2D objects that are corresponding to the intersection between
+	 * passed Path2D and passed Line2D.
+	 * 
 	 * @param path
 	 * @param line
 	 * @return
@@ -590,6 +649,9 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns the set of awt Point2D objects that are corresponding to the intersection between the
+	 * two passed Line2D objects.
+	 * 
 	 * @param line1
 	 * @param line2
 	 * @return
@@ -614,6 +676,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns the angle between the two passed Line2D objects, in radiants.
+	 * 
 	 * @param line1
 	 * @param line2
 	 * @return
@@ -631,17 +695,19 @@ public class SycamoreUtil
 	}
 
 	/**
-	 * Points on border are considered part of the square
+	 * Returns true if passed point is inside passed rectangle, false otherwise. Points on border
+	 * are considered part of the rectangle. Pay attention to the fact that rect is an awt
+	 * Rectangle2D object, while point is a Sycamore Point2D object.
 	 * 
 	 * @param point
-	 * @param square
+	 * @param rect
 	 * @return
 	 */
-	public static boolean isPointInsideSquare(Point2D point, Rectangle2D square)
+	public static boolean isPointInsideRectangle(Point2D point, Rectangle2D rect)
 	{
-		if (point.x >= square.getX() && point.x <= (square.getX() + square.getWidth()))
+		if (point.x >= rect.getX() && point.x <= (rect.getX() + rect.getWidth()))
 		{
-			if (point.y >= (square.getY() - square.getHeight()) && point.y <= square.getY())
+			if (point.y >= (rect.getY() - rect.getHeight()) && point.y <= rect.getY())
 			{
 				return true;
 			}
@@ -651,6 +717,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns a random boolean
+	 * 
 	 * @return
 	 */
 	public static boolean getRandomBoolan()
@@ -659,6 +727,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Computes the absolute value of passed vector and returns it.
+	 * 
 	 * @param scale
 	 * @return
 	 */
@@ -668,6 +738,8 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Return a new blank point of passed type.
+	 * 
 	 * @return
 	 */
 	public static <P extends SycamoreAbstractPoint & ComputablePoint<P>> P getNewPoint(TYPE type)
