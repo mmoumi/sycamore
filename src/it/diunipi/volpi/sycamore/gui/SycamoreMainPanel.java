@@ -1,5 +1,6 @@
 package it.diunipi.volpi.sycamore.gui;
 
+import it.diunipi.volpi.app.sycamore.SycamoreApp.APP_MODE;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine2D;
@@ -35,11 +36,14 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	private SycamoreAnimationControlPanel	sycamoreAnimationControlPanel	= null;
 	private SycamoreEngine					appEngine						= null;
 
+	private final APP_MODE					appMode;
+
 	/**
 	 * Default constructor
 	 */
-	public SycamoreMainPanel()
+	public SycamoreMainPanel(APP_MODE appMode)
 	{
+		this.appMode = appMode;
 		initialize();
 	}
 
@@ -64,7 +68,16 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 		gbc_multiSplitPane.gridx = 0;
 		gbc_multiSplitPane.gridy = 1;
 		gbc_multiSplitPane.fill = GridBagConstraints.BOTH;
-		add(getMultiSplitPane(), gbc_multiSplitPane);
+
+		if (this.appMode == APP_MODE.SIMULATOR)
+		{
+			add(getMultiSplitPane(), gbc_multiSplitPane);
+		}
+		else
+		{
+			add(getSimulationViewPanel(), gbc_multiSplitPane);
+		}
+
 		GridBagConstraints gbc_sycamoreAnimationControlPanel = new GridBagConstraints();
 		gbc_sycamoreAnimationControlPanel.fill = GridBagConstraints.BOTH;
 		gbc_sycamoreAnimationControlPanel.gridx = 0;
@@ -169,9 +182,16 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 		// update plugins
 		getSimulationSettingsPanel().updateEngine(newEngine);
 
-		// set the engine in scheduler threads
-		SycamoreSystem.getSchedulerThread().setEngine(newEngine);
-		SycamoreSystem.getHumanPilotSchedulerThread().setEngine(newEngine);
+		if (this.appMode == APP_MODE.SIMULATOR)
+		{
+			// set the engine in scheduler threads
+			SycamoreSystem.getSchedulerThread().setEngine(newEngine);
+			SycamoreSystem.getHumanPilotSchedulerThread().setEngine(newEngine);
+		}
+		else
+		{
+			SycamoreSystem.getVisualizerThread().setEngine(newEngine);
+		}
 
 		// update the animation speed value
 		newEngine.setAnimationSpeedMultiplier(getSycamoreAnimationControlPanel().getAnimationSpeedMultiplier());
@@ -207,7 +227,7 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 					{
 						updateVisibleElements((AbstractButton) e.getSource(), e.getActionCommand());
 					}
-					
+
 					// forward event
 					fireActionEvent(e);
 				}
@@ -223,8 +243,16 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	{
 		if (sycamoreAnimationControlPanel == null)
 		{
-			sycamoreAnimationControlPanel = new SycamoreAnimationControlPanel();
-			sycamoreAnimationControlPanel.addActionListener(this);
+			if (this.appMode == APP_MODE.SIMULATOR)
+			{
+				sycamoreAnimationControlPanel = new SycamoreAnimationControlPanel();
+				sycamoreAnimationControlPanel.addActionListener(this);
+			}
+			else
+			{
+				sycamoreAnimationControlPanel = new SycamoreVisualizerAnimationControlPanel();
+				sycamoreAnimationControlPanel.addActionListener(this);
+			}
 		}
 		return sycamoreAnimationControlPanel;
 	}
@@ -436,14 +464,14 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 		{
 			// save visible state
 			SycamoreSystem.setVisibilityGraphVisible(visible);
-			
-			//TODO implement 
+
+			// TODO implement
 		}
 		else if (actionCommand.equals(SycamoreFiredActionEvents.SHOW_MOVEMENT_DIRECTIONS.name()))
 		{
 			// save visible state
 			SycamoreSystem.setMovementDirectionsVisible(visible);
-			
+
 			// apply to robots
 			if (appEngine != null)
 			{
@@ -477,36 +505,46 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 		{
 			// save visible state
 			SycamoreSystem.setVisualElementsVisible(visible);
-			
-			//TODO implement 
+
+			// TODO implement
 		}
-		
+
 		// update buttons
 		getSimulationViewPanel().updateGui();
-		
+
 		// update menu bar
 		fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.UPDATE_GUI.name()));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
 	 */
 	@Override
 	public synchronized void reset()
 	{
-		// set everywhere a null enegine
-		setAppEngine(null);	
-		SycamoreSystem.getSchedulerThread().setEngine(null);
-		SycamoreSystem.getHumanPilotSchedulerThread().setEngine(null);
-		
-		getSimulationSettingsPanel().reset();
+		// reset
 		getSimulationViewPanel().reset();
+		getSimulationSettingsPanel().reset();
 		getSycamoreAnimationControlPanel().reset();
-		
+
+		// set everywhere a null enegine
+		setAppEngine(null);
+		if (this.appMode == APP_MODE.SIMULATOR)
+		{
+			SycamoreSystem.getSchedulerThread().setEngine(null);
+			SycamoreSystem.getHumanPilotSchedulerThread().setEngine(null);
+		}
+		else
+		{
+			SycamoreSystem.getVisualizerThread().setEngine(null);
+		}
+
 		getPluginsPanel().setEnabled(true);
 		getSimulationSettingsPanel().setEnabled(true);
 		getReportPanel().setEnabled(true);
-		
+
 		updateGui();
 	}
 
