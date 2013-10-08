@@ -1,10 +1,10 @@
 /**
  * 
  */
-package it.diunipi.volpi.sycamore.plugins.humanpilot;
+package it.diunipi.volpi.sycamore.engine;
 
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.plugins.schedulers.SycamoreSchedulerThread;
+import it.diunipi.volpi.sycamore.plugins.humanpilot.HumanPilotScheduler;
 
 /**
  * The thread that manages the scheduler for human pilot. It owns the human pilot scheduler and
