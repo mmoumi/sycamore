@@ -7,8 +7,11 @@ import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.plugins.schedulers.SchedulerImpl;
 
 /**
- * @author Vale
+ * The thread that manages the scheduler for robots. It owns the scheduler selected by the users and
+ * defines when to call its methods. This thread is also the one that interacts with the GUI, in
+ * fact it stops the scheduler if the user presses the pause/stop button.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class SycamoreSchedulerThread extends Thread
 {

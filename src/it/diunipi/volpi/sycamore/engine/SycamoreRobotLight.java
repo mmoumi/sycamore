@@ -82,9 +82,10 @@ public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & Compu
 	}
 
 	/**
-	 * @param lightElem
-	 * @param type
-	 * @return
+	 * Decode the fields in this light by taking them from passed XML element. TYPE parameter is
+	 * used to determine the type (2D or 3D) of the decoded object.
+	 * 
+	 * @param documentElement
 	 */
 	public boolean decode(Element element, TYPE type)
 	{

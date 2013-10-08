@@ -14,8 +14,10 @@ import javax.swing.JProgressBar;
 import javax.swing.JWindow;
 
 /**
- * @author Vale
+ * A window that contains a progress bar and a textual description. It is drawed over the
+ * application frame to represent operations performing.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class ProgressBarWindow extends JWindow
 {
@@ -76,7 +78,7 @@ public class ProgressBarWindow extends JWindow
 	}
 
 	/**
-	 * @return
+	 * @return label_title
 	 */
 	public JLabel getLabel_title()
 	{
@@ -88,7 +90,7 @@ public class ProgressBarWindow extends JWindow
 	}
 
 	/**
-	 * @return
+	 * @return progressBar
 	 */
 	public JProgressBar getProgressBar()
 	{

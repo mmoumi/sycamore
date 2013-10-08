@@ -12,16 +12,23 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * @author Vale
+ * The PropertyManager, the class that lets the objects access anywhere to properties, read them,
+ * store them, modify them and get their default value.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class PropertyManager
 {
+	/**
+	 * A generic property
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
 	private static class GenericProperty implements SycamoreProperty
 	{
 		private static final long	serialVersionUID	= -141504471505098922L;
-		private String	description			= null;
-		private String	defaultValue	= null;
+		private String				description			= null;
+		private String				defaultValue		= null;
 
 		/**
 		 * Default constructor.
@@ -32,7 +39,9 @@ public class PropertyManager
 			this.defaultValue = defaultValue;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
 		 */
 		@Override
@@ -52,15 +61,15 @@ public class PropertyManager
 			return defaultValue;
 		}
 	}
-	
-	private static final String		propertyFileName	= "Properties.prop";
-	private static String			propertyPath;
-	private static PropertyManager	sharedInstance		= null;
+
+	private static final String					propertyFileName	= "Properties.prop";
+	private static String						propertyPath;
+	private static PropertyManager				sharedInstance		= null;
 
 	private HashMap<SycamoreProperty, String>	properties			= null;
 
 	/**
-	 * Private onstructor
+	 * Private constructor.
 	 */
 	private PropertyManager()
 	{
@@ -83,7 +92,8 @@ public class PropertyManager
 	}
 
 	/**
-	 * 
+	 * Load properties from the property file. If it fails in loading the properties, tries a
+	 * fallback to default values for the properties it has.
 	 */
 	private void loadProperties()
 	{
@@ -91,6 +101,7 @@ public class PropertyManager
 		{
 			ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(propertyPath + System.getProperty("file.separator") + propertyFileName));
 
+			// read hashtable form property file
 			this.properties = (HashMap<SycamoreProperty, String>) objectInputStream.readObject();
 
 			objectInputStream.close();
@@ -102,7 +113,7 @@ public class PropertyManager
 	}
 
 	/**
-	 * 
+	 * Dispose the manger, deleting all the properties
 	 */
 	public void dispose()
 	{
@@ -112,12 +123,13 @@ public class PropertyManager
 	}
 
 	/**
-	 * 
+	 * Save the current properties in the property file. The old property file is overridden.
 	 */
 	private void storeProperties()
 	{
 		try
 		{
+			// get and eventually create the property path
 			File file = new File(propertyPath);
 			if (!file.exists() || !file.isDirectory())
 			{
@@ -126,6 +138,7 @@ public class PropertyManager
 
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(propertyPath + System.getProperty("file.separator") + propertyFileName));
 
+			// write the property file
 			objectOutputStream.writeObject(properties);
 
 			objectOutputStream.close();
@@ -135,8 +148,10 @@ public class PropertyManager
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
+	 * Returns the String value of the property with passed name
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -150,11 +165,15 @@ public class PropertyManager
 				return this.getProperty(property);
 			}
 		}
-		
+
 		return null;
 	}
 
 	/**
+	 * Returns the String value of the property with passed name. It is possible to force this
+	 * method to skip the fallback to default values if it does not found any value for the
+	 * property.
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -162,8 +181,10 @@ public class PropertyManager
 	{
 		return this.properties.get(property);
 	}
-	
+
 	/**
+	 * Returns the String value of the passed property
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -181,6 +202,9 @@ public class PropertyManager
 	}
 
 	/**
+	 * Returns the integer value of the passed property. It is possible to force this method to skip
+	 * the fallback to default values if it does not found any value for the property.
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -188,8 +212,10 @@ public class PropertyManager
 	{
 		return Integer.parseInt(this.properties.get(property));
 	}
-	
+
 	/**
+	 * Returns the integer value of the passed property.
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -206,8 +232,11 @@ public class PropertyManager
 			return Integer.parseInt(property.getDefaultValue());
 		}
 	}
-	
+
 	/**
+	 * Returns the float value of the passed property. It is possible to force this method to skip
+	 * the fallback to default values if it does not found any value for the property.
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -217,6 +246,8 @@ public class PropertyManager
 	}
 
 	/**
+	 * Returns the float value of the passed property.
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -232,8 +263,11 @@ public class PropertyManager
 			return Float.parseFloat(property.getDefaultValue());
 		}
 	}
-	
+
 	/**
+	 * Returns the double value of the passed property. It is possible to force this method to skip
+	 * the fallback to default values if it does not found any value for the property.
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -243,6 +277,8 @@ public class PropertyManager
 	}
 
 	/**
+	 * Returns the double value of the passed property.
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -258,8 +294,11 @@ public class PropertyManager
 			return Double.parseDouble(property.getDefaultValue());
 		}
 	}
-	
+
 	/**
+	 * Returns the boolean value of the passed property. It is possible to force this method to skip
+	 * the fallback to default values if it does not found any value for the property.
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -269,6 +308,8 @@ public class PropertyManager
 	}
 
 	/**
+	 * Returns the boolean value of the passed property.
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -284,8 +325,10 @@ public class PropertyManager
 			return Boolean.parseBoolean(property.getDefaultValue());
 		}
 	}
-	
+
 	/**
+	 * Stores passed value associated to property with passed name
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -296,6 +339,8 @@ public class PropertyManager
 	}
 
 	/**
+	 * Stores passed value associated to passed property
+	 * 
 	 * @param name
 	 * @param value
 	 */
@@ -305,6 +350,8 @@ public class PropertyManager
 	}
 
 	/**
+	 * Stores passed value associated to passed property
+	 * 
 	 * @param name
 	 * @param value
 	 */
@@ -314,6 +361,8 @@ public class PropertyManager
 	}
 
 	/**
+	 * Stores passed value associated to passed property
+	 * 
 	 * @param name
 	 * @param value
 	 */
@@ -323,6 +372,8 @@ public class PropertyManager
 	}
 
 	/**
+	 * Stores passed value associated to passed property
+	 * 
 	 * @param name
 	 * @param value
 	 */
@@ -332,6 +383,8 @@ public class PropertyManager
 	}
 
 	/**
+	 * Stores passed value associated to passed property
+	 * 
 	 * @param name
 	 * @param value
 	 */
@@ -341,6 +394,9 @@ public class PropertyManager
 	}
 
 	/**
+	 * Returns the only instance of the PropertyManager that exists in the system. This method is
+	 * accessible from within any method of the application. It is also accessible to plugins.
+	 * 
 	 * @return the sharedInstance
 	 */
 	public static PropertyManager getSharedInstance()
@@ -353,6 +409,8 @@ public class PropertyManager
 	}
 
 	/**
+	 * Returns the path of the property file.
+	 * 
 	 * @return
 	 */
 	public String getPropertyFilePath()

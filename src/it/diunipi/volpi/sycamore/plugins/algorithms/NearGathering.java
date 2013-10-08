@@ -509,7 +509,7 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 				// consider only valleys that are in NE
 				for (Point2D valley : valleys)
 				{
-					if (SycamoreUtil.isPointInsideSquare(point, neQuadrant))
+					if (SycamoreUtil.isPointInsideRectangle(point, neQuadrant))
 					{
 						neValleys.add(valley);
 					}
@@ -883,19 +883,19 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 		for (Observation<Point2D> observation : snapshot)
 		{
 			Point2D point = observation.getRobotPosition();
-			if (SycamoreUtil.isPointInsideSquare(point, quadrantNW))
+			if (SycamoreUtil.isPointInsideRectangle(point, quadrantNW))
 			{
 				this.robotsNW.add(observation.getRobotPosition());
 			}
-			else if (SycamoreUtil.isPointInsideSquare(point, quadrantNE))
+			else if (SycamoreUtil.isPointInsideRectangle(point, quadrantNE))
 			{
 				this.robotsNE.add(observation.getRobotPosition());
 			}
-			else if (SycamoreUtil.isPointInsideSquare(point, quadrantSE))
+			else if (SycamoreUtil.isPointInsideRectangle(point, quadrantSE))
 			{
 				this.robotsSE.add(observation.getRobotPosition());
 			}
-			else if (SycamoreUtil.isPointInsideSquare(point, quadrantSW))
+			else if (SycamoreUtil.isPointInsideRectangle(point, quadrantSW))
 			{
 				this.robotsSW.add(observation.getRobotPosition());
 			}

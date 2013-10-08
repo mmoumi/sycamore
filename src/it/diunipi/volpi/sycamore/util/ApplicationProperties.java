@@ -6,8 +6,9 @@ package it.diunipi.volpi.sycamore.util;
 import java.awt.Toolkit;
 
 /**
- * @author Vale
+ * The properties of the Sycamore application
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public enum ApplicationProperties implements SycamoreProperty
 {
@@ -40,7 +41,7 @@ public enum ApplicationProperties implements SycamoreProperty
 	private String	defaultValue	= null;
 
 	/**
-	 * 
+	 * Default constructor for properties
 	 */
 	ApplicationProperties(String description, String defaultValue)
 	{

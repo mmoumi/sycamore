@@ -1,8 +1,8 @@
 package it.diunipi.volpi.sycamore.gui;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
-import it.diunipi.volpi.sycamore.engine.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.plugins.SycamorePlugin;
+import it.diunipi.volpi.sycamore.plugins.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 

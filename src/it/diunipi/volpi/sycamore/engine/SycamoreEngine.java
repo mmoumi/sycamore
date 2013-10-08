@@ -1,5 +1,6 @@
 package it.diunipi.volpi.sycamore.engine;
 
+import it.diunipi.volpi.sycamore.plugins.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.plugins.humanpilot.HumanPilotScheduler;
@@ -141,6 +142,8 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
+	 * Returns the default value of the animation speed multiplier
+	 * 
 	 * @return
 	 */
 	public static final int getDefaultAnimationSpeedMultiplier()
@@ -246,7 +249,9 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * @return the initialConditions
+	 * Returns the current visibility set in the robots of this engine.
+	 * 
+	 * @return current visibility
 	 */
 	public Visibility<P> getCurrentVisibility()
 	{
@@ -290,7 +295,9 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * @return the initialConditions
+	 * Returns the current memory set in the robots of this engine.
+	 * 
+	 * @return current memory
 	 */
 	public Memory<P> getCurrentMemory()
 	{
@@ -334,7 +341,9 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * @return the initialConditions
+	 * Returns the current agreement set in the robots of this engine.
+	 * 
+	 * @return current agreement
 	 */
 	public Agreement<P> getCurrentAgreement()
 	{
@@ -844,7 +853,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 			robot.setMaxLights(value);
 		}
 	}
-	
+
 	/**
 	 * Sets passed value as the max number of supported lights in all the robots in the i-th list.
 	 * The isHumanPilot flag is used to determine which robots set is to be used.
@@ -958,7 +967,8 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * Decode the fields in this engine by taking them from passed XML element
+	 * Decode the fields in this Engine by taking them from passed XML element. TYPE parameter is
+	 * used to determine the type (2D or 3D) of the decoded object.
 	 * 
 	 * @param documentElement
 	 */

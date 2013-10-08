@@ -3,8 +3,8 @@ package it.diunipi.volpi.sycamore.gui;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
-import it.diunipi.volpi.sycamore.engine.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.engine.SycamoreRobotMatrix;
+import it.diunipi.volpi.sycamore.plugins.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
@@ -775,7 +775,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_speed
 	 */
 	private JSpinner getSpinner_speed()
 	{
@@ -1038,7 +1038,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_additionalSpeed
 	 */
 	private AdditionalSpinner getNewSpinner_speed()
 	{

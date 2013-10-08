@@ -142,7 +142,7 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 			{
 				@Override
 				public void actionPerformed(ActionEvent e)
-				{								
+				{
 					// just forward the event
 					fireActionEvent(e);
 				}
@@ -227,7 +227,7 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	}
 
 	/**
-	 * Removes passed robot from teh scene.
+	 * Removes passed robot from the scene.
 	 */
 	public void removeRobotFromScene(SycamoreRobot<?> robot)
 	{
@@ -235,6 +235,8 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	}
 
 	/**
+	 * Setup the scene for passed type
+	 * 
 	 * @param type
 	 */
 	public void setupScene(TYPE type)
@@ -243,7 +245,7 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return panel_border
 	 */
 	private JPanel getPanel_border()
 	{
@@ -273,6 +275,9 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	}
 
 	/**
+	 * Sets the scene grid visible or invisible depending on the boolean value of
+	 * passed flag.
+	 * 
 	 * @param visible
 	 */
 	public void setGridVisible(boolean visible)
@@ -281,6 +286,9 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	}
 
 	/**
+	 * Sets the global coordinates system axes visible or invisible depending on the boolean value of
+	 * passed flag.
+	 * 
 	 * @param visible
 	 */
 	public void setAxesVisible(boolean visible)
@@ -289,14 +297,20 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	}
 
 	/**
+	 * Sets the baricentrum visible or invisible depending on the boolean value of
+	 * passed flag.
+	 * 
 	 * @param visible
 	 */
 	public void setBaricentrumVisible(boolean visible)
 	{
 		getPanel_sceneContainer().setBaricentrumVisible(visible);
 	}
-	
+
 	/**
+	 * Sets the local coordinates systems visible or invisible depending on the boolean value of
+	 * passed flag.
+	 * 
 	 * @param visible
 	 */
 	public void setLocalCoordinatesVisible(boolean visible)
@@ -305,22 +319,24 @@ public class SycamoreSimulationViewPanel extends SycamorePanel
 	}
 
 	/**
-	 * 
+	 * Handle a change in the selection of the current agreement
 	 */
 	public void manageAgreementChange()
 	{
 		getPanel_sceneContainer().manageAgreementChange();
 	}
-	
+
 	/**
-	 * 
+	 * Update the graphics for Agreements axes and positions
 	 */
 	public void updateAgreementsGraphics()
 	{
 		getPanel_sceneContainer().updateAgreementsGraphics();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
 	 */
 	@Override

@@ -25,7 +25,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
 /**
- * A iOS-like swith toggle.
+ * An iOS-like swith toggle.
  * 
  * @author Valerio Volpi - vale.v@me.com
  * 

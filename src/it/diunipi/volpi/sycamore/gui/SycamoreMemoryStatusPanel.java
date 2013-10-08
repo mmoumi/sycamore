@@ -15,15 +15,16 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 /**
- * @author Vale
+ * A panel that displays informations about the used memory and current memory
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class SycamoreMemoryStatusPanel extends JPanel
 {
-	private static final long	serialVersionUID	= 3706812556556016445L;
-	private JLabel				label_memory;
-	private JProgressBar		progressBar_indicator;
-	private JButton				button_GC;
+	private static final long	serialVersionUID		= 3706812556556016445L;
+	private JLabel				label_memory			= null;
+	private JProgressBar		progressBar_indicator	= null;
+	private JButton				button_GC				= null;
 
 	/**
 	 * Constructor.
@@ -68,7 +69,7 @@ public class SycamoreMemoryStatusPanel extends JPanel
 	}
 
 	/**
-	 * 
+	 * Sets up the memory indicator, using an infinite loop that updates every 5 seconds
 	 */
 	private void setupIndicator()
 	{
@@ -81,15 +82,18 @@ public class SycamoreMemoryStatusPanel extends JPanel
 				{
 					Runtime runtime = Runtime.getRuntime();
 
+					// oobtain memory values
 					long mbTotal = runtime.totalMemory() / (1024 * 1024);
 					long mbFree = runtime.freeMemory() / (1024 * 1024);
 					long mbUsed = mbTotal - mbFree;
 
+					// update label
 					getLabel_memory().setText("Total memory: " + mbTotal + " MB - Used memory: " + mbUsed + " MB - Free memory: " + mbFree + " MB");
 
+					// update progress bar
 					getProgressBar_indicator().setMaximum((int) mbTotal);
 					getProgressBar_indicator().setValue((int) mbUsed);
-					
+
 					try
 					{
 						Thread.sleep(5000);
@@ -106,7 +110,7 @@ public class SycamoreMemoryStatusPanel extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_memory
 	 */
 	private JLabel getLabel_memory()
 	{
@@ -118,7 +122,7 @@ public class SycamoreMemoryStatusPanel extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return progressBar_indicator
 	 */
 	private JProgressBar getProgressBar_indicator()
 	{
@@ -130,7 +134,7 @@ public class SycamoreMemoryStatusPanel extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return button_GC
 	 */
 	private JButton getButton_GC()
 	{
@@ -142,7 +146,10 @@ public class SycamoreMemoryStatusPanel extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
+					// call garbage collector
 					System.gc();
+					
+					// update memory values
 					setupIndicator();
 				}
 			});

@@ -20,7 +20,9 @@ public class SycamoreSplashScreen extends JWindow
 	 */
 	public enum SPLASH_STATES
 	{
-		INITIALIZING("Initializing application..."), PREPARING_3D("Preparing 3D scene..."), DONE("Done Initializing.");
+		INITIALIZING("Initializing application..."), 
+		PREPARING_3D("Preparing 3D scene..."), 
+		DONE("Done Initializing.");
 
 		private String	description	= null;
 

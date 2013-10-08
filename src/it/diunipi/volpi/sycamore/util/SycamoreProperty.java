@@ -6,8 +6,9 @@ package it.diunipi.volpi.sycamore.util;
 import java.io.Serializable;
 
 /**
- * @author Vale
- *
+ * The interface to be implemented by any property in Sycamore
+ * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public interface SycamoreProperty extends Serializable
 {

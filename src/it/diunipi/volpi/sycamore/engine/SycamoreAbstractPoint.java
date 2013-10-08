@@ -38,7 +38,7 @@ public abstract class SycamoreAbstractPoint implements Cloneable
 	 */
 	@Override
 	public abstract Object clone() throws CloneNotSupportedException;
-	
+
 	/**
 	 * Encode this object to XML format. The encoded Element will contain all data necessary to
 	 * re-create and object that is equal to this one.
@@ -46,8 +46,11 @@ public abstract class SycamoreAbstractPoint implements Cloneable
 	 * @return an XML Element containing the XML description of this object.
 	 */
 	public abstract Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document);
-	
+
 	/**
+	 * Decode the fields in this Abstract point by taking them from passed XML element. TYPE
+	 * parameter is used to determine the type (2D or 3D) of the decoded object.
+	 * 
 	 * @param parentElem
 	 * @param type
 	 * @return

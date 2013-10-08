@@ -5,6 +5,7 @@ import it.diunipi.volpi.sycamore.animation.Timeline;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.jmescene.SycamoreJMEScene;
+import it.diunipi.volpi.sycamore.plugins.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.agreements.AgreementImpl;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
@@ -938,8 +939,10 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	}
 
 	/**
-	 * @param robotElem
-	 * @return
+	 * Decode the fields in this robot by taking them from passed XML element. TYPE parameter is
+	 * used to determine the type (2D or 3D) of the decoded object.
+	 * 
+	 * @param documentElement
 	 */
 	public synchronized boolean decode(final Element element, final TYPE type)
 	{

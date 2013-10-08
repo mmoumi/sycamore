@@ -80,6 +80,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		gbc_button_play.gridx = 0;
 		gbc_button_play.gridy = 0;
 		add(getButton_play(), gbc_button_play);
+		
 		GridBagConstraints gbc_button_stop = new GridBagConstraints();
 		gbc_button_stop.gridheight = 2;
 		gbc_button_stop.anchor = GridBagConstraints.WEST;
@@ -494,7 +495,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return label_fine_tune
 	 */
 	private JLabel getLabel_fine_tune()
 	{
@@ -508,7 +509,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_fine_tune
 	 */
 	protected JSpinner getSpinner_fine_tune()
 	{
@@ -532,7 +533,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return panel_controls
 	 */
 	private JPanel getPanel_controls()
 	{

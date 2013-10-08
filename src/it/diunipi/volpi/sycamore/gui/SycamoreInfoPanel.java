@@ -4,7 +4,7 @@
 package it.diunipi.volpi.sycamore.gui;
 
 import it.diunipi.volpi.app.sycamore.SycamoreApp;
-import it.diunipi.volpi.sycamore.engine.SycamorePluginManager;
+import it.diunipi.volpi.sycamore.plugins.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 
@@ -37,24 +37,26 @@ import com.jme3.renderer.Caps;
 import com.jme3.system.JmeSystem;
 
 /**
- * @author Vale
+ * The about panel for Sycamore. It shows a lot of infos about the application and the system. It
+ * also shows informations about memory usage
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class SycamoreInfoPanel extends JPanel
 {
-	private static final long			serialVersionUID	= 4200554499440035361L;
-	private JLabel						label_title;
-	private JTextPane					textPane_info;
-	private JLabel						label_version;
-	private SycamoreMemoryStatusPanel	sycamoreMemoryStatusPanel_memoryStatus;
-	private JScrollPane					scrollPane_info;
+	private static final long			serialVersionUID						= 4200554499440035361L;
+	private JLabel						label_title								= null;
+	private JTextPane					textPane_info							= null;
+	private JLabel						label_version							= null;
+	private SycamoreMemoryStatusPanel	sycamoreMemoryStatusPanel_memoryStatus	= null;
+	private JScrollPane					scrollPane_info							= null;
 
 	// Styles vector
-	private Vector<MutableAttributeSet>	infoStyles			= new Vector<MutableAttributeSet>();
+	private Vector<MutableAttributeSet>	infoStyles								= new Vector<MutableAttributeSet>();
 	// Vector indexes
-	static final int					TEXT_HEADER			= 0;
-	static final int					TEXT_HIGHLIGHT		= 1;
-	static final int					TEXT_NORMAL			= 2;
+	static final int					TEXT_HEADER								= 0;
+	static final int					TEXT_HIGHLIGHT							= 1;
+	static final int					TEXT_NORMAL								= 2;
 
 	/**
 	 * Constructor
@@ -112,7 +114,7 @@ public class SycamoreInfoPanel extends JPanel
 	}
 
 	/**
-	 * This method was created in VisualAge.
+	 * Creates the styles for Info panel
 	 */
 	private void createInfoStyles()
 	{
@@ -145,7 +147,7 @@ public class SycamoreInfoPanel extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_title
 	 */
 	private JLabel getLabel_title()
 	{
@@ -159,7 +161,7 @@ public class SycamoreInfoPanel extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return textPane_info
 	 */
 	private JTextPane getTextPane_info()
 	{
@@ -172,7 +174,7 @@ public class SycamoreInfoPanel extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_version
 	 */
 	private JLabel getLabel_version()
 	{
@@ -186,7 +188,7 @@ public class SycamoreInfoPanel extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return sycamoreMemoryStatusPanel_memoryStatus
 	 */
 	private SycamoreMemoryStatusPanel getSycamoreMemoryStatusPanel_memoryStatus()
 	{
@@ -198,7 +200,7 @@ public class SycamoreInfoPanel extends JPanel
 	}
 
 	/**
-	 * Display infos
+	 * Display infos about application and system
 	 */
 	private void displayInfo()
 	{
@@ -366,7 +368,7 @@ public class SycamoreInfoPanel extends JPanel
 	}
 
 	/**
-	 * @return
+	 * @return scrollPane_info
 	 */
 	private JScrollPane getScrollPane_info()
 	{

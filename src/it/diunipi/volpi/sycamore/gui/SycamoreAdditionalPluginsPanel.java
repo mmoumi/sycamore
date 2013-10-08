@@ -5,7 +5,7 @@ package it.diunipi.volpi.sycamore.gui;
 
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
-import it.diunipi.volpi.sycamore.engine.SycamorePluginManager;
+import it.diunipi.volpi.sycamore.plugins.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.plugins.initialconditions.InitialConditions;
 import it.diunipi.volpi.sycamore.plugins.measures.Measure;
@@ -34,7 +34,7 @@ import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 /**
- * A panel that lets the user manage all the plugins exceptiong for schedulers and algorithms.
+ * A panel that lets the user manage all the plugins excepting for schedulers and algorithms.
  * 
  * @author Valerio Volpi - vale.v@me.com
  */
@@ -215,24 +215,28 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 		gbc_message_wrongMemory.gridx = 0;
 		gbc_message_wrongMemory.gridy = 13;
 		add(getMessage_wrongMemory(), gbc_message_wrongMemory);
+		
 		GridBagConstraints gbc_label_nKnown = new GridBagConstraints();
 		gbc_label_nKnown.insets = new Insets(2, 2, 2, 2);
 		gbc_label_nKnown.anchor = GridBagConstraints.WEST;
 		gbc_label_nKnown.gridx = 0;
 		gbc_label_nKnown.gridy = 14;
 		add(getLabel_nKnown(), gbc_label_nKnown);
+		
 		GridBagConstraints gbc_onOffButton_nKnown = new GridBagConstraints();
 		gbc_onOffButton_nKnown.anchor = GridBagConstraints.WEST;
 		gbc_onOffButton_nKnown.insets = new Insets(2, 30, 2, 2);
 		gbc_onOffButton_nKnown.gridx = 1;
 		gbc_onOffButton_nKnown.gridy = 14;
 		add(getSwitchToggle_nKnown(), gbc_onOffButton_nKnown);
+		
 		GridBagConstraints gbc_label_multiplictyDetection = new GridBagConstraints();
 		gbc_label_multiplictyDetection.anchor = GridBagConstraints.WEST;
 		gbc_label_multiplictyDetection.insets = new Insets(2, 2, 2, 2);
 		gbc_label_multiplictyDetection.gridx = 0;
 		gbc_label_multiplictyDetection.gridy = 15;
 		add(getLabel_multiplictyDetection(), gbc_label_multiplictyDetection);
+		
 		GridBagConstraints gbc_onOffButton_multiplicityDetection = new GridBagConstraints();
 		gbc_onOffButton_multiplicityDetection.anchor = GridBagConstraints.WEST;
 		gbc_onOffButton_multiplicityDetection.insets = new Insets(2, 30, 2, 2);
@@ -813,7 +817,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return message_wrongAgreement
 	 */
 	private JTextPane getMessage_wrongAgreement()
 	{
@@ -843,7 +847,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return message_wrongInitialConditions
 	 */
 	private JTextPane getMessage_wrongInitialConditions()
 	{
@@ -873,7 +877,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return message_wrongMemory
 	 */
 	private JTextPane getMessage_wrongMemory()
 	{
@@ -892,7 +896,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return label_nKnown
 	 */
 	private JLabel getLabel_nKnown()
 	{
@@ -904,7 +908,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return switchToggle_nKnown
 	 */
 	private SwitchToggle getSwitchToggle_nKnown()
 	{
@@ -929,7 +933,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return label_multiplictyDetection
 	 */
 	private JLabel getLabel_multiplictyDetection()
 	{
@@ -941,7 +945,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return switchToggle_multiplicityDetection
 	 */
 	private SwitchToggle getSwitchToggle_multiplicityDetection()
 	{
