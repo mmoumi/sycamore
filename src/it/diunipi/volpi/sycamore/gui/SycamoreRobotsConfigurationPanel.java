@@ -6,6 +6,8 @@ import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.engine.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.plugins.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
+import it.diunipi.volpi.sycamore.util.ApplicationProperties;
+import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
@@ -785,7 +787,11 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 			spinner_speed.setMaximumSize(new Dimension(80, 27));
 			spinner_speed.setMinimumSize(new Dimension(80, 27));
 			spinner_speed.setPreferredSize(new Dimension(80, 27));
-			spinner_speed.setModel(new SpinnerNumberModel(10, 0, 99, 1));
+			
+			float speedValue = PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED);
+			int speed = (int) (speedValue * 100);
+			
+			spinner_speed.setModel(new SpinnerNumberModel(speed, 0, 99, 1));
 			spinner_speed.addChangeListener(new ChangeListener()
 			{
 				@Override
@@ -885,6 +891,19 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 							// check types to update the GUI
 							if (checkTypes() && appEngine != null)
 							{
+								// update speed values
+								float speedvalue = PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED);
+								if (algorithm.isHumanPilot())
+								{
+									int speed = (int) (speedvalue * 50);
+									getSpinner_speed().setValue(speed);
+								}
+								else
+								{
+									int speed = (int) (speedvalue * 100);
+									getSpinner_speed().setValue(speed);
+								}
+
 								// eventually create robots in engine
 								updateRobotsInEngine(0, appEngine);
 
@@ -1046,7 +1065,11 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 		spinner_additionalSpeed.setMaximumSize(new Dimension(80, 27));
 		spinner_additionalSpeed.setMinimumSize(new Dimension(80, 27));
 		spinner_additionalSpeed.setPreferredSize(new Dimension(80, 27));
-		spinner_additionalSpeed.setModel(new SpinnerNumberModel(10, 0, 99, 1));
+		
+		float speedValue = PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED);
+		int speed = (int) (speedValue * 100);
+		
+		spinner_additionalSpeed.setModel(new SpinnerNumberModel(speed, 0, 99, 1));
 		spinner_additionalSpeed.addChangeListener(new ChangeListener()
 		{
 			@Override
@@ -1055,7 +1078,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 				if (!changeLock && appEngine != null)
 				{
 					int index = spinner_additionalSpeed.getIndex();
-					
+
 					// get index-th algorithm
 					PluginSelectionComboboxModel<Algorithm> model = (PluginSelectionComboboxModel<Algorithm>) additionalComboboxes.elementAt(index - 1).getModel();
 					Algorithm algorithm = (Algorithm) model.getSelectedItem();
@@ -1153,6 +1176,19 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 						{
 							if (appEngine != null)
 							{
+								// update speed values
+								float speedvalue = PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED);
+								if (algorithm.isHumanPilot())
+								{
+									int speed = (int) (speedvalue * 50);
+									additionalSpeedSpinners.elementAt(index - 1).setValue(speed);
+								}
+								else
+								{
+									int speed = (int) (speedvalue * 100);
+									additionalSpeedSpinners.elementAt(index - 1).setValue(speed);
+								}
+								
 								// eventually create robots in engine
 								updateRobotsInEngine(index, appEngine);
 
@@ -1398,6 +1434,7 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 			JSpinner selectedSpinner = (index == 0 ? getSpinner_robotsNumber() : additionalSpinners.get(index - 1));
 			JComboBox algorithmCombobox = (index == 0 ? getComboBox_algorithmSelection() : additionalComboboxes.get(index - 1));
 			JComboBox colorCombobox = (index == 0 ? getComboBox_colorSelection() : additionalColorsComboboxes.get(index - 1));
+			JSpinner speedSpinner = (index == 0 ? getSpinner_speed() : additionalSpeedSpinners.get(index - 1));
 			JSpinner lightSpinner = (index == 0 ? getSpinner_lightsNumber() : additionalLightSpinners.get(index - 1));
 
 			// get selected algorithm, and the corresponding type and robot type
@@ -1426,11 +1463,13 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 
 					// compute default lights number
 					int maxLights = (Integer) lightSpinner.getValue();
+					int speedValue = (Integer) speedSpinner.getValue();
+					float speed = ((float) speedValue) / 100.0f;
 
 					for (int i = 0; i < numRobots; i++)
 					{
 						// add in engine
-						SycamoreRobot robot = engine.createAndAddNewRobotInstance(isHumanPilot, index, color, maxLights);
+						SycamoreRobot robot = engine.createAndAddNewRobotInstance(isHumanPilot, index, color, maxLights, speed);
 						fireActionEvent(new ActionEvent(robot, 0, SycamoreFiredActionEvents.ADD_ROBOT_IN_SCENE.name()));
 					}
 				}

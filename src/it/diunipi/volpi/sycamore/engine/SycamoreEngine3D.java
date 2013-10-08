@@ -40,15 +40,9 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 	 * java.lang.Class)
 	 */
 	@Override
-	public SycamoreRobot<Point3D> createAndAddNewRobotInstance(boolean isHumanPilot, int index, ColorRGBA color, int maxLights)
+	public SycamoreRobot<Point3D> createAndAddNewRobotInstance(boolean isHumanPilot, int index, ColorRGBA color, int maxLights, float speed)
 	{
 		{
-			float speed = PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED);
-			if (isHumanPilot)
-			{
-				speed = speed / 2.0f;
-			}
-
 			// create a new oblivious robot
 			SycamoreRobot3D robot = new SycamoreRobot3D(this, computeStartingPoint(), speed, color, maxLights);
 

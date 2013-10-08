@@ -40,14 +40,9 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 	 * java.lang.Class)
 	 */
 	@Override
-	public SycamoreRobot<Point2D> createAndAddNewRobotInstance(boolean isHumanPilot, int index, ColorRGBA color, int maxLights)
+	public SycamoreRobot<Point2D> createAndAddNewRobotInstance(boolean isHumanPilot, int index, ColorRGBA color, int maxLights, float speed)
 	{
 		{
-			float speed = PropertyManager.getSharedInstance().getFloatProperty(ApplicationProperties.DEFAULT_ROBOT_SPEED);
-			if (isHumanPilot)
-			{
-				speed = speed / 2.0f;
-			}
 			// create a new oblivious robot
 			SycamoreRobot2D robot = new SycamoreRobot2D(this, computeStartingPoint(), speed, color, maxLights);
 
