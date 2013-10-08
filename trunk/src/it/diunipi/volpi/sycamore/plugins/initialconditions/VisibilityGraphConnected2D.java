@@ -59,7 +59,7 @@ public class VisibilityGraphConnected2D extends InitialConditionsImpl<Point2D>
 				if (visibilty != null)
 				{
 					// point is in local coords
-					Point2D point = visibilty.getPointInside(chosen.getLocalPosition());
+					Point2D point = visibilty.getPointInside();
 					
 					if (agreement != null)
 					{
