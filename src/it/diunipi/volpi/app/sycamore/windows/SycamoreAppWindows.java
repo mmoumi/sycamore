@@ -21,15 +21,15 @@ public class SycamoreAppWindows extends SycamoreApp
 	 */
 	public static void main(String[] args)
 	{
-		new SycamoreAppWindows();
+		new SycamoreAppWindows(APP_MODE.valueOf(args[0]));
 	}
 
 	/**
 	 * Constructor for SycamoreApp
 	 */
-	public SycamoreAppWindows()
+	public SycamoreAppWindows(APP_MODE appMode)
 	{
-		super();
+		super(appMode);
 	}
 
 	/*
