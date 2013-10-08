@@ -27,15 +27,15 @@ public class SycamoreAppOSX extends SycamoreApp
 	 */
 	public static void main(String[] args)
 	{
-		new SycamoreAppOSX();
+		new SycamoreAppOSX(APP_MODE.valueOf(args[0]));
 	}
 
 	/**
 	 * Constructor for SycamoreApp
 	 */
-	public SycamoreAppOSX()
+	public SycamoreAppOSX(APP_MODE appMode)
 	{
-		super();
+		super(appMode);
 	}
 
 	/*

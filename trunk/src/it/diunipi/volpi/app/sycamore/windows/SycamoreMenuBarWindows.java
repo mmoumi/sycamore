@@ -1,6 +1,7 @@
 package it.diunipi.volpi.app.sycamore.windows;
 
 import it.diunipi.volpi.app.sycamore.SycamoreMenuBar;
+import it.diunipi.volpi.app.sycamore.SycamoreApp.APP_MODE;
 
 import javax.swing.JSeparator;
 
@@ -11,7 +12,7 @@ import javax.swing.JSeparator;
  */
 public class SycamoreMenuBarWindows extends SycamoreMenuBar
 {
-	private static final long	serialVersionUID					= 5893076147267552708L;
+	private static final long	serialVersionUID	= 5893076147267552708L;
 
 	/**
 	 * Default constructor
@@ -22,7 +23,9 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 		setupMenuBar();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.app.sycamore.SycamoreMenuBar#setupMenuBar()
 	 */
 	@Override
@@ -32,24 +35,36 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 		this.setupPreferencesmenu();
 
 		// add menu items under File menu
-		getMenu_file().add(getMenuItem_new());
-		getMenu_file().add(getMenuItem_newBatch());
+		if (application.getAppMode() == APP_MODE.SIMULATOR)
+		{
+			getMenu_file().add(getMenuItem_new());
+			getMenu_file().add(getMenuItem_newBatch());
+		}
+
 		getMenu_file().add(getMenuItem_open());
 		getMenu_file().add(getMenu_openRecent());
-		getMenu_file().add(new JSeparator());
-		getMenu_file().add(getMenuItem_save());
-		getMenu_file().add(getMenuItem_saveAs());
+
+		if (application.getAppMode() == APP_MODE.SIMULATOR)
+		{
+			getMenu_file().add(new JSeparator());
+			getMenu_file().add(getMenuItem_save());
+			getMenu_file().add(getMenuItem_saveAs());
+		}
+		
 		getMenu_file().add(new JSeparator());
 		getMenu_file().add(getMenuItem_exit());
 
 		// add menu items under Edit menu
-		getMenu_edit().add(getMenuItem_Import());
-		getMenu_edit().add(getMenuItem_Export());
-		getMenu_edit().add(new JSeparator());
-		getMenu_edit().add(getMenu_switchWorkspace());
-		getMenu_edit().add(new JSeparator());
+		if (application.getAppMode() == APP_MODE.SIMULATOR)
+		{
+			getMenu_edit().add(getMenuItem_Import());
+			getMenu_edit().add(getMenuItem_Export());
+			getMenu_edit().add(new JSeparator());
+			getMenu_edit().add(getMenu_switchWorkspace());
+			getMenu_edit().add(new JSeparator());
+		}
 		getMenu_edit().add(getMenuItem_preferences());
-		
+
 		// add menu items under View menu
 		getMenu_view().add(getCheckBoxmenuItem_axes());
 		getMenu_view().add(getCheckBoxmenuItem_grid());
@@ -73,7 +88,9 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 		this.add(getMenu_help());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.app.sycamore.SycamoreMenuBar#setupPreferencesmenu()
 	 */
 	@Override
@@ -81,8 +98,10 @@ public class SycamoreMenuBarWindows extends SycamoreMenuBar
 	{
 		// Not supported
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.app.sycamore.SycamoreMenuBar#setupAboutMenu()
 	 */
 	@Override
