@@ -80,7 +80,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		gbc_button_play.gridx = 0;
 		gbc_button_play.gridy = 0;
 		add(getButton_play(), gbc_button_play);
-		
+
 		GridBagConstraints gbc_button_stop = new GridBagConstraints();
 		gbc_button_stop.gridheight = 2;
 		gbc_button_stop.anchor = GridBagConstraints.WEST;
@@ -195,6 +195,8 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 
 			getSlider_animationControl().setEnabled(false);
 			getSpinner_fine_tune().setEnabled(false);
+			
+			getButton_play().setEnabled(true);
 		}
 		else
 		{
@@ -425,7 +427,15 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		changeLock = true;
 		if (this.appEngine != null && this.appEngine.isValid())
 		{
-			getButton_play().setEnabled(true);
+			if (appEngine.isSimulationFinished())
+			{
+				getButton_play().setEnabled(false);
+			}
+			else
+			{
+				getButton_play().setEnabled(true);
+			}
+			
 			getButton_stop().setEnabled(true);
 
 			getSlider_animationControl().setEnabled(true);
@@ -445,6 +455,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 			getSlider_animationSpeed().setEnabled(false);
 			getSlider_animationSpeed().setValue((int) SycamoreEngine.getDefaultAnimationSpeedMultiplier());
 		}
+
 		changeLock = false;
 	}
 
@@ -458,6 +469,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		button_play.setIcon(new ImageIcon(url));
 		button_play.setToolTipText("Play animation");
 		button_play.setSelected(false);
+		button_play.setEnabled(false);
 
 		getSlider_animationControl().setEnabled(true);
 		getSpinner_fine_tune().setEnabled(true);
@@ -486,6 +498,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		getButton_play().setIcon(new ImageIcon(url));
 		getButton_play().setToolTipText("Play animation");
 		getButton_play().setSelected(false);
+		getButton_play().setEnabled(true);
 
 		getSlider_animationControl().setValue(100);
 		getSlider_animationControl().setEnabled(true);
