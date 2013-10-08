@@ -534,10 +534,11 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * @param algorithm
 	 * @param color
 	 * @param index
+	 * @param speed 
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	public abstract SycamoreRobot<P> createAndAddNewRobotInstance(boolean isHumanPilot, int index, ColorRGBA color, int numLights);
+	public abstract SycamoreRobot<P> createAndAddNewRobotInstance(boolean isHumanPilot, int index, ColorRGBA color, int numLights, float speed);
 
 	/**
 	 * Removes a robot (any) from the index-th list
