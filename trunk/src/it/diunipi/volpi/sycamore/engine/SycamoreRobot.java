@@ -52,7 +52,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	 */
 	public static enum ROBOT_STATE
 	{
-		READY_TO_LOOK, LOOKING, READY_TO_COMPUTE, COMPUTING, READY_TO_MOVE, MOVING;
+		READY_TO_LOOK, LOOKING, READY_TO_COMPUTE, COMPUTING, READY_TO_MOVE, MOVING, FINISHED;
 	}
 
 	// constants
@@ -165,7 +165,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	}
 
 	protected abstract SycamoreRobotLight<P> createNewLightInstance();
-	
+
 	/**
 	 * @return
 	 */
@@ -209,9 +209,10 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		super.setDirection(direction);
 		updateDirectionGeometry();
 	}
-	
+
 	/**
-	 * @param speed the speed to set
+	 * @param speed
+	 *            the speed to set
 	 */
 	public void setSpeed(float speed)
 	{
@@ -461,7 +462,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		this.agreement = agreement;
 		if (agreement != null)
 		{
-			this.agreement.setOwner(this);
+			this.agreement.setRobot(this);
 		}
 	}
 
@@ -475,7 +476,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		if (algorithm != null)
 		{
-			return algorithm.isFinished();
+			return (this.currentState == ROBOT_STATE.FINISHED);
 		}
 		else
 			return true;
@@ -622,7 +623,14 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 				}
 			}
 
-			setCurrentState(ROBOT_STATE.READY_TO_MOVE);
+			if (algorithm.isFinished())
+			{
+				setCurrentState(ROBOT_STATE.FINISHED);
+			}
+			else
+			{
+				setCurrentState(ROBOT_STATE.READY_TO_MOVE);
+			}
 		}
 	}
 
