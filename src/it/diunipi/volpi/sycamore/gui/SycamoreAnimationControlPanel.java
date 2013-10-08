@@ -17,8 +17,11 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -39,6 +42,9 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	private JLabel						label_animationSpeed				= null;
 	private JSlider						slider_animationSpeed				= null;
 	private SycamoreEngine				appEngine							= null;
+	private JLabel						label_fine_tune						= null;
+	private JSpinner					spinner_fine_tune					= null;
+	private JPanel						panel_controls;
 
 	/**
 	 * Default constructor
@@ -63,7 +69,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		gridBagLayout.rowHeights = new int[]
 		{ 0, 0, 0 };
 		gridBagLayout.columnWeights = new double[]
-		{ 0.0, 1.0, 1.0, 1.0, 0.0, Double.MIN_VALUE };
+		{ 0.0, 1.0, 5.0, 1.0, 0.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[]
 		{ 1.0, 1.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
@@ -109,7 +115,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	/**
 	 * @return the button_play
 	 */
-	private JToggleButton getButton_play()
+	protected JToggleButton getButton_play()
 	{
 		if (button_play == null)
 		{
@@ -147,7 +153,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	/**
 	 * Perform actions after a play command
 	 */
-	private void playImpl()
+	protected void playImpl()
 	{
 		// during play, show pause icon
 		URL url = getClass().getResource("/it/diunipi/volpi/sycamore/resources/pause_50x50.png");
@@ -157,6 +163,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		appEngine.clearRatioSnapshot();
 		getSlider_animationControl().setEnabled(false);
 		getSlider_animationControl().setValue(100);
+		getSpinner_fine_tune().setEnabled(false);
 
 		SycamoreSystem.getSchedulerThread().play();
 		SycamoreSystem.getHumanPilotSchedulerThread().play();
@@ -169,7 +176,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	 * 
 	 * @param doReset
 	 */
-	private void pauseImpl(boolean finishSimulation)
+	protected void pauseImpl(boolean finishSimulation)
 	{
 		// in pause, show play icon
 		URL url = getClass().getResource("/it/diunipi/volpi/sycamore/resources/play_50x50.png");
@@ -186,6 +193,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 			SycamoreSystem.getHumanPilotSchedulerThread().pause();
 
 			getSlider_animationControl().setEnabled(false);
+			getSpinner_fine_tune().setEnabled(false);
 		}
 		else
 		{
@@ -194,6 +202,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 
 			appEngine.makeRatioSnapshot();
 			getSlider_animationControl().setEnabled(true);
+			getSpinner_fine_tune().setEnabled(true);
 
 			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.PAUSE_ANIMATION.name()));
 		}
@@ -214,7 +223,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	/**
 	 * @return the button_stop
 	 */
-	private JButton getButton_stop()
+	protected JButton getButton_stop()
 	{
 		if (button_stop == null)
 		{
@@ -256,26 +265,18 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 			gbl_roundedBorderPanel_controlContainer.columnWidths = new int[]
 			{ 0, 0 };
 			gbl_roundedBorderPanel_controlContainer.rowHeights = new int[]
-			{ 0, 0 };
+			{ 0 };
 			gbl_roundedBorderPanel_controlContainer.columnWeights = new double[]
 			{ 1.0, Double.MIN_VALUE };
 			gbl_roundedBorderPanel_controlContainer.rowWeights = new double[]
-			{ 1.0, Double.MIN_VALUE };
+			{ 1.0 };
 			roundedBorderPanel_controlContainer.setLayout(gbl_roundedBorderPanel_controlContainer);
-
-			GridBagConstraints gbc_label_animationControl = new GridBagConstraints();
-			gbc_label_animationControl.insets = new Insets(2, 2, 2, 2);
-			gbc_label_animationControl.gridx = 0;
-			gbc_label_animationControl.gridy = 0;
-			roundedBorderPanel_controlContainer.add(getLabel_animationControl(), gbc_label_animationControl);
-
-			GridBagConstraints gbc_slider_animationControl = new GridBagConstraints();
-			gbc_slider_animationControl.insets = new Insets(0, 50, 5, 50);
-			gbc_slider_animationControl.anchor = GridBagConstraints.NORTH;
-			gbc_slider_animationControl.fill = GridBagConstraints.HORIZONTAL;
-			gbc_slider_animationControl.gridx = 0;
-			gbc_slider_animationControl.gridy = 1;
-			roundedBorderPanel_controlContainer.add(getSlider_animationControl(), gbc_slider_animationControl);
+			GridBagConstraints gbc_panel_controls = new GridBagConstraints();
+			gbc_panel_controls.insets = new Insets(2, 30, 2, 30);
+			gbc_panel_controls.fill = GridBagConstraints.BOTH;
+			gbc_panel_controls.gridx = 0;
+			gbc_panel_controls.gridy = 0;
+			roundedBorderPanel_controlContainer.add(getPanel_controls(), gbc_panel_controls);
 		}
 		return roundedBorderPanel_controlContainer;
 	}
@@ -297,11 +298,14 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	/**
 	 * @return the slider_animationControl
 	 */
-	private JSlider getSlider_animationControl()
+	protected JSlider getSlider_animationControl()
 	{
 		if (slider_animationControl == null)
 		{
 			slider_animationControl = new JSlider();
+			slider_animationControl.setMaximumSize(new Dimension(32767, 28));
+			slider_animationControl.setMinimumSize(new Dimension(36, 28));
+			slider_animationControl.setPreferredSize(new Dimension(190, 28));
 			slider_animationControl.setPaintTicks(true);
 			slider_animationControl.setMinimum(0);
 			slider_animationControl.setMaximum(100);
@@ -316,6 +320,8 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 				{
 					int value = slider_animationControl.getValue();
 					appEngine.setRobotRatioPercentage(value);
+
+					getSpinner_fine_tune().setValue((double) value);
 				}
 			});
 		}
@@ -420,18 +426,22 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		{
 			getButton_play().setEnabled(true);
 			getButton_stop().setEnabled(true);
-			getSlider_animationControl().setEnabled(true);
-			getSlider_animationSpeed().setEnabled(true);
 
+			getSlider_animationControl().setEnabled(true);
+			getSpinner_fine_tune().setEnabled(true);
+
+			getSlider_animationSpeed().setEnabled(true);
 			getSlider_animationSpeed().setValue((int) appEngine.getAnimationSpeedMultiplier());
 		}
 		else
 		{
 			getButton_play().setEnabled(false);
 			getButton_stop().setEnabled(false);
-			getSlider_animationControl().setEnabled(false);
-			getSlider_animationSpeed().setEnabled(false);
 
+			getSlider_animationControl().setEnabled(false);
+			getSpinner_fine_tune().setEnabled(false);
+
+			getSlider_animationSpeed().setEnabled(false);
 			getSlider_animationSpeed().setValue((int) SycamoreEngine.getDefaultAnimationSpeedMultiplier());
 		}
 		changeLock = false;
@@ -449,6 +459,7 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 		button_play.setSelected(false);
 
 		getSlider_animationControl().setEnabled(true);
+		getSpinner_fine_tune().setEnabled(true);
 	}
 
 	/**
@@ -477,5 +488,89 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 
 		getSlider_animationControl().setValue(100);
 		getSlider_animationControl().setEnabled(true);
+
+		getSpinner_fine_tune().setValue(100.0);
+		getSpinner_fine_tune().setEnabled(true);
+	}
+
+	/**
+	 * @return
+	 */
+	private JLabel getLabel_fine_tune()
+	{
+		if (label_fine_tune == null)
+		{
+			label_fine_tune = new JLabel("Fine-tune (%):");
+			label_fine_tune.setFont(new Font("Lucida Grande", Font.BOLD, 14));
+			label_fine_tune.setForeground(Color.DARK_GRAY);
+		}
+		return label_fine_tune;
+	}
+
+	/**
+	 * @return
+	 */
+	protected JSpinner getSpinner_fine_tune()
+	{
+		if (spinner_fine_tune == null)
+		{
+			spinner_fine_tune = new JSpinner();
+			spinner_fine_tune.setModel(new SpinnerNumberModel(100.0, 0, 100.0, 0.1));
+			spinner_fine_tune.addChangeListener(new ChangeListener()
+			{
+				@Override
+				public void stateChanged(ChangeEvent e)
+				{
+					double value = (Double) getSpinner_fine_tune().getValue();
+					appEngine.setRobotRatioPercentage((float) value);
+
+					getSlider_animationControl().setValue((int) value);
+				}
+			});
+		}
+		return spinner_fine_tune;
+	}
+
+	/**
+	 * @return
+	 */
+	private JPanel getPanel_controls()
+	{
+		if (panel_controls == null)
+		{
+			panel_controls = new JPanel();
+			GridBagLayout gbl_panel_controls = new GridBagLayout();
+			gbl_panel_controls.columnWidths = new int[]
+			{ 0, 0, 0 };
+			gbl_panel_controls.rowHeights = new int[]
+			{ 0, 0, 0 };
+			gbl_panel_controls.columnWeights = new double[]
+			{ 1.0, 0.0, Double.MIN_VALUE };
+			gbl_panel_controls.rowWeights = new double[]
+			{ 0.0, 1.0, Double.MIN_VALUE };
+			panel_controls.setLayout(gbl_panel_controls);
+			GridBagConstraints gbc_label_animationControl = new GridBagConstraints();
+			gbc_label_animationControl.insets = new Insets(2, 2, 2, 2);
+			gbc_label_animationControl.gridx = 0;
+			gbc_label_animationControl.gridy = 0;
+			panel_controls.add(getLabel_animationControl(), gbc_label_animationControl);
+			GridBagConstraints gbc_label_fine_tune = new GridBagConstraints();
+			gbc_label_fine_tune.insets = new Insets(2, 2, 2, 2);
+			gbc_label_fine_tune.gridx = 1;
+			gbc_label_fine_tune.gridy = 0;
+			panel_controls.add(getLabel_fine_tune(), gbc_label_fine_tune);
+			GridBagConstraints gbc_slider_animationControl = new GridBagConstraints();
+			gbc_slider_animationControl.fill = GridBagConstraints.BOTH;
+			gbc_slider_animationControl.insets = new Insets(2, 25, 2, 25);
+			gbc_slider_animationControl.gridx = 0;
+			gbc_slider_animationControl.gridy = 1;
+			panel_controls.add(getSlider_animationControl(), gbc_slider_animationControl);
+			GridBagConstraints gbc_spinner_fine_tune = new GridBagConstraints();
+			gbc_spinner_fine_tune.insets = new Insets(2, 2, 2, 2);
+			gbc_spinner_fine_tune.gridx = 1;
+			gbc_spinner_fine_tune.gridy = 1;
+			panel_controls.add(getSpinner_fine_tune(), gbc_spinner_fine_tune);
+		}
+		return panel_controls;
 	}
 }
