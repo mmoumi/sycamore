@@ -470,7 +470,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 		}
 		else
 		{
-			return visibility.filter(observations, callee.getLocalPosition());
+			return visibility.filter(observations);
 		}
 	}
 
@@ -842,6 +842,22 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 		for (SycamoreRobot<P> robot : robotsList)
 		{
 			robot.setMaxLights(value);
+		}
+	}
+	
+	/**
+	 * Sets passed value as the max number of supported lights in all the robots in the i-th list.
+	 * The isHumanPilot flag is used to determine which robots set is to be used.
+	 * 
+	 * @param i
+	 * @param value
+	 */
+	public void setRobotsSpeed(int i, Float value, boolean isHumanPilot)
+	{
+		Vector<SycamoreRobot<P>> robotsList = isHumanPilot ? robots.getHumanPilotRow(i) : this.robots.getRobotRow(i);
+		for (SycamoreRobot<P> robot : robotsList)
+		{
+			robot.setSpeed(value);
 		}
 	}
 

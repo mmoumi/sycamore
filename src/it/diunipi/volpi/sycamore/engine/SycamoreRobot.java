@@ -164,7 +164,10 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	}
 
 	protected abstract SycamoreRobotLight<P> createNewLightInstance();
-
+	
+	/**
+	 * @return
+	 */
 	public P getGlobalPosition()
 	{
 		if (this.agreement != null)
@@ -204,6 +207,14 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		super.setDirection(direction);
 		updateDirectionGeometry();
+	}
+	
+	/**
+	 * @param speed the speed to set
+	 */
+	public void setSpeed(float speed)
+	{
+		this.speed = speed;
 	}
 
 	/**
