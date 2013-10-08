@@ -3,11 +3,13 @@
  */
 package it.diunipi.volpi.sycamore.gui;
 
+import it.diunipi.volpi.app.sycamore.SycamoreApp.APP_MODE;
 import it.diunipi.volpi.sycamore.engine.NNotKnownException;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
+import it.diunipi.volpi.sycamore.engine.SycamoreHumanPilotSchedulerThread;
+import it.diunipi.volpi.sycamore.engine.SycamoreSchedulerThread;
+import it.diunipi.volpi.sycamore.engine.SycamoreVisualizerThread;
 import it.diunipi.volpi.sycamore.jmescene.SycamoreJMEScene;
-import it.diunipi.volpi.sycamore.plugins.humanpilot.SycamoreHumanPilotSchedulerThread;
-import it.diunipi.volpi.sycamore.plugins.schedulers.SycamoreSchedulerThread;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 
@@ -40,21 +42,30 @@ public class SycamoreSystem
 	private static SycamoreEngine						engine						= null;
 	private static SycamoreSchedulerThread				schedulerThread				= null;
 	private static SycamoreHumanPilotSchedulerThread	humanPilotSchedulerThread	= null;
+	private static SycamoreVisualizerThread				visualizerThread			= null;
 	private static SycamoreJMEScene						jmeSceneManager				= null;
 	private static JFrame								mainFrame					= null;
 
 	/**
 	 * Initialize the system
 	 */
-	public static void initialize()
+	public static void initialize(APP_MODE appMode)
 	{
 		loadWorkspace();
 
-		schedulerThread = new SycamoreSchedulerThread();
-		schedulerThread.start();
+		if (appMode == APP_MODE.SIMULATOR)
+		{
+			schedulerThread = new SycamoreSchedulerThread();
+			schedulerThread.start();
 
-		humanPilotSchedulerThread = new SycamoreHumanPilotSchedulerThread();
-		humanPilotSchedulerThread.start();
+			humanPilotSchedulerThread = new SycamoreHumanPilotSchedulerThread();
+			humanPilotSchedulerThread.start();
+		}
+		else
+		{
+			visualizerThread = new SycamoreVisualizerThread();
+			visualizerThread.start();
+		}
 
 		Logger.getLogger("").setLevel(loggerLevel);
 	}
@@ -73,11 +84,11 @@ public class SycamoreSystem
 		{
 			workspace.mkdir();
 		}
-		
+
 		String pluginsPath = workSpacePath + System.getProperty("file.separator") + "Plugins";
 		String projectsPath = workSpacePath + System.getProperty("file.separator") + "Projects";
 		String scriptsPath = workSpacePath + System.getProperty("file.separator") + "Scripts";
-		
+
 		new File(pluginsPath).mkdir();
 		new File(projectsPath).mkdir();
 		new File(scriptsPath).mkdir();
@@ -135,7 +146,7 @@ public class SycamoreSystem
 	{
 		return schedulerGuiSynchronizer;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -151,7 +162,7 @@ public class SycamoreSystem
 	{
 		return jmeSceneManager.getAssetManager();
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -159,7 +170,7 @@ public class SycamoreSystem
 	{
 		return jmeSceneManager.getCaps();
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -202,6 +213,14 @@ public class SycamoreSystem
 	}
 
 	/**
+	 * @return the visualizerThread
+	 */
+	public static SycamoreVisualizerThread getVisualizerThread()
+	{
+		return visualizerThread;
+	}
+
+	/**
 	 * @param jmeSceneManager
 	 *            the jmeSceneManager to set
 	 */
@@ -220,7 +239,7 @@ public class SycamoreSystem
 			jmeSceneManager.enqueue(callable);
 		}
 	}
-	
+
 	/**
 	 * @param callable
 	 */
@@ -229,7 +248,7 @@ public class SycamoreSystem
 		if (jmeSceneManager != null)
 		{
 			Future<Object> result = jmeSceneManager.enqueue(callable);
-			while(!result.isDone())
+			while (!result.isDone())
 			{
 				try
 				{
@@ -476,24 +495,34 @@ public class SycamoreSystem
 	/**
 	 * Reset the system to its initial state
 	 */
-	public static synchronized void reset()
+	public static synchronized void reset(APP_MODE appMode)
 	{
 		try
 		{
-			// make current scheduler therads return
-			schedulerThread.interrupt();
-			humanPilotSchedulerThread.interrupt();
+			if (appMode == APP_MODE.SIMULATOR)
+			{
+				// make current scheduler therads return
+				schedulerThread.interrupt();
+				humanPilotSchedulerThread.interrupt();
+
+				// create new scheduler threads
+				schedulerThread = new SycamoreSchedulerThread();
+				schedulerThread.start();
+
+				humanPilotSchedulerThread = new SycamoreHumanPilotSchedulerThread();
+				humanPilotSchedulerThread.start();
+			}
+			else
+			{
+				visualizerThread.interrupt();
+
+				visualizerThread = new SycamoreVisualizerThread();
+				visualizerThread.start();
+			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-
-		// create new scheduler threads
-		schedulerThread = new SycamoreSchedulerThread();
-		schedulerThread.start();
-
-		humanPilotSchedulerThread = new SycamoreHumanPilotSchedulerThread();
-		humanPilotSchedulerThread.start();
 	}
 }
