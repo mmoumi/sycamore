@@ -11,8 +11,11 @@ import java.util.Vector;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
- * @author Vale
+ * This plugin represents the bounded memory in 3D. This memory has a fixed size that can be chosen by the
+ * user. Such size applies both to the number of positions occupied by the robot in the past and to
+ * the number of stored past snapshots.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class BoundedMemory3D extends BoundedMemory<Point3D>

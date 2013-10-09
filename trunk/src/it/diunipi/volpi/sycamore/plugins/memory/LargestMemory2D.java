@@ -12,8 +12,12 @@ import java.util.Vector;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
- * @author Vale
+ * Largest memory in 2D. This plugin offers to robots the largest possible memory. Its purpose is to give to the robots
+ * the possibility to count on an almost infinite memory. Since infinity is obviously not possible
+ * to obtain, this plugin offers 2^32 memory positions for the past points occupied and 2^32 memory
+ * positions for the same number of the past snapshots.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class LargestMemory2D extends MemoryImpl<Point2D>
@@ -28,8 +32,10 @@ public class LargestMemory2D extends MemoryImpl<Point2D>
 	{
 		return Integer.MAX_VALUE;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.memory.Memory#getSnapshotsLimit()
 	 */
 	@Override
@@ -54,7 +60,7 @@ public class LargestMemory2D extends MemoryImpl<Point2D>
 				return positions.elementAt(number);
 			}
 		}
-		
+
 		// if the code is here it means that number does not point to valid memory
 		throw new RequestedDataNotInMemoryException("Memory does not contain requested self observation");
 	}
@@ -75,7 +81,7 @@ public class LargestMemory2D extends MemoryImpl<Point2D>
 				return snapshots.elementAt(number);
 			}
 		}
-		
+
 		// if the code is here it means that number does not point to valid memory
 		throw new RequestedDataNotInMemoryException("Memory does not contain requested snapshot");
 	}
@@ -132,7 +138,7 @@ public class LargestMemory2D extends MemoryImpl<Point2D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "The larges possible memory. Remembers up to 2^32 snapshots.";
+		return "The larges possible memory. Remembers up to 2^32 steps in the past.";
 	}
 
 	/*
@@ -143,7 +149,9 @@ public class LargestMemory2D extends MemoryImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "The larges possible memory, that remembers up to 2^32 steps in the past, both snapshots and self-observations.";
+		return "Largest memory in 2D. This plugin offers to robots the largest possible memory. Its purpose is to give to the robots the possibility " +
+				"to count on an almost infinite memory. Since infinity is obviously not possible to obtain, this plugin offers 2^32 memory positions for " +
+				"the past points occupied and 2^32 memory positions for the same number of the past snapshots.";
 	}
 
 }

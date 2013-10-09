@@ -10,16 +10,25 @@ import java.util.Iterator;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
- * This is an implementation of the fully synchronous scheduler. It chooses which robots are allowed
- * to move using a priority queue.
+ * This is an implementation of the Fully-Synchronous scheduler. It implements the FSYNCH model of
+ * the Mobile Robots Theory. At each step of the scheduler, all the robots are activated, and all of
+ * them obtain a snapshot of the same instant in time. Moreover, all of them start moving together,
+ * and the step of the scheduler ends just when all the robots reach their destination. As a
+ * consequence, no robot will ever be observed while moving, and the understanding of the active
+ * robots is always consistent.
+ * 
+ * @see Paola Flocchini, Giuseppe Prencipe, Nicola Santoro - Distributed Computing by Oblivious
+ *      Mobile Robots, Morgan&Claypool publishers, 2012
  * 
  * @author Vale
  */
 @PluginImplementation
 public class FullySynchronousScheduler<P extends SycamoreAbstractPoint & ComputablePoint<P>> extends SchedulerImpl<P>
 {
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getAuthor()
 	 */
 	@Override
 	public String getAuthor()
@@ -27,26 +36,35 @@ public class FullySynchronousScheduler<P extends SycamoreAbstractPoint & Computa
 		return "Valerio Volpi";
 	}
 
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginShortDescription()
 	 */
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "A fully sinchronous scheduler";
+		return "A Fully-Sinchronous scheduler. It implements the FSYNCH model.";
 	}
 
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginLongDescription()
 	 */
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "A fully sinchronous scheduler";
+		return "This is an implementation of the fully synchronous scheduler. It implements the FSYNCH model of the Mobile Robots Theory. "
+				+ "At each step of the scheduler, all the robots are activated, and all of them obtain a snapshot of the same instant in time. "
+				+ "Moreover, all of them start moving together, and the step of the scheduler ends just when all the robots reach their destination. "
+				+ "As a consequence, no robot will ever be observed while moving, and the understanding of the active robots is always consistent.";
 	}
 
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPanel_settings()
 	 */
 	@Override
 	public SycamorePanel getPanel_settings()
@@ -54,19 +72,8 @@ public class FullySynchronousScheduler<P extends SycamoreAbstractPoint & Computa
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginName()
-	 */
-	@Override
-	public String getPluginName()
-	{
-		return "FullySynchronousScheduler";
-	}
-
 	/**
-	 * 
+	 * Returns true just if no robot in the system is in MOVING state
 	 */
 	private boolean noneIsMoving()
 	{
@@ -92,7 +99,7 @@ public class FullySynchronousScheduler<P extends SycamoreAbstractPoint & Computa
 	@Override
 	public void runLoop_pre()
 	{
-
+		// Nothing to do
 	}
 
 	/*
@@ -103,6 +110,7 @@ public class FullySynchronousScheduler<P extends SycamoreAbstractPoint & Computa
 	@Override
 	public synchronized void runLoopIteration()
 	{
+		// the step is performed just if no robot is moving
 		if (!appEngine.isSimulationFinished() && noneIsMoving())
 		{
 			Iterator<SycamoreRobot<P>> iterator = appEngine.getRobots().robotsIterator();
@@ -137,6 +145,6 @@ public class FullySynchronousScheduler<P extends SycamoreAbstractPoint & Computa
 	@Override
 	public void runLoop_post()
 	{
-
+		// Nothing to do
 	}
 }

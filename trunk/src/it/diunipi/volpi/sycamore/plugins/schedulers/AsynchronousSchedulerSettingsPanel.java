@@ -19,8 +19,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * @author Vale
+ * The settings panel for <code>AsynchronousScheduler</code> and
+ * <code>AsynchronousSchedulerPriorityQueue</code> plugin
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 {
@@ -69,7 +71,7 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return panel_settings
 	 */
 	private JPanel getPanel_settings()
 	{
@@ -167,55 +169,69 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return label_continuous
 	 */
 	private JLabel getLabel_continuous()
 	{
 		if (label_continuous == null)
 		{
 			label_continuous = new JLabel("Continuous:");
+			label_continuous.setToolTipText("<html>CONTINUITY: If the scheduler is continuous, a robot skips the SLEEP phase at the end of its movement and it<br>"
+					+ "immediately jumps to the LOOK phase after a MOVE. If otherwise the scheduler is not continuous, it can sleep for an arbitrary time<br>"
+					+ "before performing a new LOOK operation.</html>");
 		}
 		return label_continuous;
 	}
 
 	/**
-	 * @return
+	 * @return label_rigid
 	 */
 	private JLabel getLabel_rigid()
 	{
 		if (label_rigid == null)
 		{
 			label_rigid = new JLabel("Rigid movement:");
+			label_rigid.setToolTipText("<html>RIGIDITY: If the scheduler is rigid, it makes a robot always perform a rigid movement, that is, it makes a<br>"
+					+ "robot always reach its destination point. If otherwise the rigidity feature is disabled, a robot can stop its movement before<br>"
+					+ "reaching its destination point. When a robot stops, it always goes to the LOOK step, even if the destination point is not reached.</html>");
 		}
 		return label_rigid;
 	}
 
 	/**
-	 * @return
+	 * @return label_changeSpeed
 	 */
 	private JLabel getLabel_changeSpeed()
 	{
 		if (label_changeSpeed == null)
 		{
 			label_changeSpeed = new JLabel("Changes robot speed:");
+			label_changeSpeed.setToolTipText("<html>SPEED VARIANCE: The speed variance feature makes the scheduler decrease the speed of the robots.<br>"
+					+ "The robot will still reach its destination (at least if RIGIDITY is enabled) but it could take a lot of time to arrive to the<br>"
+					+ "final position. The speed can be arbitrarily changed, but it will never be zero and it will never become higher than the robot's<br>"
+					+ "default speed. If this feature is disabled, each robot moves at its own default constant speed.</html>");
 		}
 		return label_changeSpeed;
 	}
 
 	/**
-	 * @return
+	 * @return label_fair
 	 */
 	private JLabel getLabel_fair()
 	{
 		if (label_fair == null)
 		{
 			label_fair = new JLabel("Fair:");
+			label_fair.setToolTipText("<html>FAIRNESS: The fairness is the ability of the scheduler to guarantee that a robot will never sleep for an<br>"
+					+ "infinite amount of time. With FAIRNESS feature enabled, the time that passes between two calls of the robot's methods will never<br>"
+					+ "exceed a predefined and well-known value. If this feature is disabled, a robot could theoretically stay without moving for an<br>" 
+					+ "infinite time.</html>");
 		}
 		return label_fair;
 	}
 
 	/**
-	 * @return
+	 * @return switchToggle_continuous
 	 */
 	private SwitchToggle getSwitchToggle_continuous()
 	{
@@ -225,6 +241,9 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 			switchToggle_continuous.setMaximumSize(new Dimension(71, 25));
 			switchToggle_continuous.setMinimumSize(new Dimension(71, 25));
 			switchToggle_continuous.setPreferredSize(new Dimension(71, 25));
+			switchToggle_continuous.setToolTipText("<html>CONTINUITY: If the scheduler is continuous, a robot skips the SLEEP phase at the end of its movement and it<br>"
+					+ "immediately jumps to the LOOK phase after a MOVE. If otherwise the scheduler is not continuous, it can sleep for an arbitrary time<br>"
+					+ "before performing a new LOOK operation.</html>");
 			switchToggle_continuous.addActionListener(new ActionListener()
 			{
 				@Override
@@ -232,7 +251,7 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 				{
 					boolean selected = switchToggle_continuous.isSelected();
 					AsynchronousScheduler.setContinuous(selected);
-					
+
 					if (selected)
 					{
 						getSwitchToggle_fair().setEnabled(false);
@@ -248,7 +267,7 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return switchToggle_rigid
 	 */
 	private SwitchToggle getSwitchToggle_rigid()
 	{
@@ -258,6 +277,9 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 			switchToggle_rigid.setMaximumSize(new Dimension(71, 25));
 			switchToggle_rigid.setMinimumSize(new Dimension(71, 25));
 			switchToggle_rigid.setPreferredSize(new Dimension(71, 25));
+			switchToggle_rigid.setToolTipText("<html>RIGIDITY: If the scheduler is rigid, it makes a robot always perform a rigid movement, that is, it makes a<br>"
+					+ "robot always reach its destination point. If otherwise the rigidity feature is disabled, a robot can stop its movement before<br>"
+					+ "reaching its destination point. When a robot stops, it always goes to the LOOK step, even if the destination point is not reached.</html>");
 			switchToggle_rigid.addActionListener(new ActionListener()
 			{
 				@Override
@@ -272,7 +294,7 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return switchToggle_changeSpeed
 	 */
 	private SwitchToggle getSwitchToggle_changeSpeed()
 	{
@@ -282,6 +304,10 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 			switchToggle_changeSpeed.setMaximumSize(new Dimension(71, 25));
 			switchToggle_changeSpeed.setMinimumSize(new Dimension(71, 25));
 			switchToggle_changeSpeed.setPreferredSize(new Dimension(71, 25));
+			switchToggle_changeSpeed.setToolTipText("<html>SPEED VARIANCE: The speed variance feature makes the scheduler decrease the speed of the robots.<br>"
+					+ "The robot will still reach its destination (at least if RIGIDITY is enabled) but it could take a lot of time to arrive to the<br>"
+					+ "final position. The speed can be arbitrarily changed, but it will never be zero and it will never become higher than the robot's<br>"
+					+ "default speed. If this feature is disabled, each robot moves at its own default constant speed.</html>");
 			switchToggle_changeSpeed.addActionListener(new ActionListener()
 			{
 				@Override
@@ -296,7 +322,7 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return switchToggle_fair
 	 */
 	private SwitchToggle getSwitchToggle_fair()
 	{
@@ -307,6 +333,10 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 			switchToggle_fair.setMinimumSize(new Dimension(71, 25));
 			switchToggle_fair.setPreferredSize(new Dimension(71, 25));
 			switchToggle_fair.setEnabled(!AsynchronousScheduler.isContinuous());
+			switchToggle_fair.setToolTipText("<html>FAIRNESS: The fairness is the ability of the scheduler to guarantee that a robot will never sleep for an<br>"
+					+ "infinite amount of time. With FAIRNESS feature enabled, the time that passes between two calls of the robot's methods will never<br>"
+					+ "exceed a predefined and well-known value. If this feature is disabled, a robot could theoretically stay without moving for an<br>" 
+					+ "infinite time.</html>");
 			switchToggle_fair.addActionListener(new ActionListener()
 			{
 				@Override
@@ -319,8 +349,10 @@ public class AsynchronousSchedulerSettingsPanel extends SycamorePanel
 		}
 		return switchToggle_fair;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
 	 */
 	@Override

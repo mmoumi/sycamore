@@ -6,6 +6,8 @@ import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreRobot.ROBOT_STATE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.plugins.schedulers.AsynchronousScheduler;
+import it.diunipi.volpi.sycamore.plugins.schedulers.Scheduler;
 import it.diunipi.volpi.sycamore.plugins.schedulers.SchedulerImpl;
 
 import java.util.Iterator;
@@ -14,14 +16,18 @@ import java.util.Vector;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
- * This scheduler is specific for human pilots. 
+ * This {@link Scheduler} is specific for human pilots. It behaves exactly as the
+ * {@link AsynchronousScheduler} with the continuity feature enabled. The human pilot scheduler is
+ * rigid, it is not fair and it does not change the speed of the Human Pilot robots.
  * 
  * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class HumanPilotScheduler<P extends SycamoreAbstractPoint & ComputablePoint<P>> extends SchedulerImpl<P>
 {
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getAuthor()
 	 */
 	@Override
@@ -30,7 +36,9 @@ public class HumanPilotScheduler<P extends SycamoreAbstractPoint & ComputablePoi
 		return "Valerio Volpi - vale.v@me.com";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginShortDescription()
 	 */
 	@Override
@@ -39,7 +47,9 @@ public class HumanPilotScheduler<P extends SycamoreAbstractPoint & ComputablePoi
 		return "A scheduler for human pilot robots";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginLongDescription()
 	 */
 	@Override
@@ -48,7 +58,9 @@ public class HumanPilotScheduler<P extends SycamoreAbstractPoint & ComputablePoi
 		return "A scheduler for human pilot robots. They never stay without moving.";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPanel_settings()
 	 */
 	@Override
@@ -98,9 +110,10 @@ public class HumanPilotScheduler<P extends SycamoreAbstractPoint & ComputablePoi
 	{
 
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.schedulers.SchedulerImpl#getNotMovingRobots()
 	 */
 	@Override

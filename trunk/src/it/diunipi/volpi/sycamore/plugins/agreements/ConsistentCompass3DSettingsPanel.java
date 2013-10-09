@@ -23,8 +23,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author Vale
+ * The settings panel for <code>ConsistentCompass3D</code> plugin
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class ConsistentCompass3DSettingsPanel extends AgreementSettingsPanel
 {

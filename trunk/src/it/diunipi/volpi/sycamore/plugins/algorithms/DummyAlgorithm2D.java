@@ -17,7 +17,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import com.jme3.math.ColorRGBA;
 
 /**
- * A dummy 2D algorithm. It makes the robots perform simple and predefinite movements for the
+ * A dummy 2D algorithm. It makes the robots perform simple and predefined movements for the
  * purpose of testing.
  * 
  * @author Valerio Volpi - vale.v@me.com
@@ -72,7 +72,7 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "A dummy algorithm. It makes the robots perform simple and predefinite movements for the purpose of testing.";
+		return "A dummy algorithm. It makes the robots perform simple and predefined movements for the purpose of testing.";
 	}
 
 	/*

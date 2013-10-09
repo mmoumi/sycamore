@@ -27,23 +27,35 @@ import com.jme3.scene.Node;
 import com.jme3.scene.debug.Arrow;
 
 /**
- * @author Vale
+ * Partial agreement in 2D. With this agreement, for both axes the direction is the same for all the
+ * robots but the orientation is not. This means that no position between north, south, east, west
+ * is common knowledge between robots. In terms of transformation factors, the rotation factor is
+ * the only element that is completely agreed between robots. The other elements (translation factor
+ * and scale factor, sign along the two axes) are different between a robot and another. In
+ * addition, the axes could be swapped, in a way that what is x for a robot corresponds to y for
+ * another robot. As a result no axis orientation is agreed.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
-public class PartialAxis2D extends AgreementImpl<Point2D>
+public class PartialAgreement2D extends AgreementImpl<Point2D>
 {
-	private enum PartialAxis2DProperties implements SycamoreProperty
+	/**
+	 * Properties related to the partial agreement in 2D
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
+	private enum PartialAgreement2DProperties implements SycamoreProperty
 	{
-		PARTIAL_AXIS_2D_ROTATION("Rotation", "" + 0.0);
+		PARTIAL_AGREEMENT_2D_ROTATION("Rotation", "" + 0.0);
 
 		private String	description		= null;
 		private String	defaultValue	= null;
 
 		/**
-		 * 
+		 * Constructor.
 		 */
-		PartialAxis2DProperties(String description, String defaultValue)
+		PartialAgreement2DProperties(String description, String defaultValue)
 		{
 			this.description = description;
 			this.defaultValue = defaultValue;
@@ -72,31 +84,31 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 		}
 	}
 
-	// node is static because it is the same for all the robots
-	private Node					axesNode		= new Node("Axes node");
+	private Node						axesNode		= new Node("Axes node");
 
-	private double					translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
-	private double					translationY	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+	private double						translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+	private double						translationY	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
 
-	private double					scaleFactor		= SycamoreUtil.getRandomDouble(0.5, 4);
-	private int						scaleXSignum	= SycamoreUtil.getRandomBoolan() ? 1 : -1;
-	private int						scaleYSignum	= SycamoreUtil.getRandomBoolan() ? 1 : -1;
+	private double						scaleFactor		= SycamoreUtil.getRandomDouble(0.5, 4);
+	private int							scaleXSignum	= SycamoreUtil.getRandomBoolan() ? 1 : -1;
+	private int							scaleYSignum	= SycamoreUtil.getRandomBoolan() ? 1 : -1;
 
-	private boolean					agreeOnX		= SycamoreUtil.getRandomBoolan();
-	private boolean					agreeOnY		= !agreeOnX;
+	private boolean						agreeOnX		= SycamoreUtil.getRandomBoolan();
+	private boolean						agreeOnY		= !agreeOnX;
 
-	private PartialAxis2DSettingsPanel	panel_settings	= null;
+	private PartialAgreement2DSettingsPanel	panel_settings	= null;
 
 	/**
 	 * Default constructor
 	 */
-	public PartialAxis2D()
+	public PartialAgreement2D()
 	{
 		SycamoreSystem.enqueueToJME(new Callable<Object>()
 		{
 			@Override
 			public Object call() throws Exception
 			{
+				// red arrow for x axis
 				Arrow arrowX = new Arrow(new Vector3f(2, 0, 0));
 				arrowX.setLineWidth(4); // make arrow thicker
 				Geometry xAxis = new Geometry("X coordinate axis", arrowX);
@@ -107,6 +119,7 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 				xAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(xAxis);
 
+				// green arrow for y axis
 				Arrow arrowY = new Arrow(new Vector3f(0, 2, 0));
 				arrowY.setLineWidth(4); // make arrow thicker
 				Geometry yAxis = new Geometry("Y coordinate axis", arrowY);
@@ -134,11 +147,13 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 	@Override
 	public Point2D toLocalCoordinates(Point2D point)
 	{
+		// prepare awt Point2D points
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
 
 		try
 		{
+			// transform using the inverse transform the source point into the dest point
 			computeTransform().inverseTransform(sourcePoint, destPoint);
 		}
 		catch (NoninvertibleTransformException e)
@@ -146,6 +161,7 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 			e.printStackTrace();
 		}
 
+		// return dest point as a Sycamore Point2D object
 		return SycamoreUtil.convertPoint2D(destPoint);
 	}
 
@@ -159,11 +175,14 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 	@Override
 	public Point2D toGlobalCoordinates(Point2D point)
 	{
+		// prepare awt Point2D points
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
 
+		// transform the source point into the dest point
 		computeTransform().transform(sourcePoint, destPoint);
 
+		// return dest point as a Sycamore Point2D object
 		return SycamoreUtil.convertPoint2D(destPoint);
 	}
 
@@ -206,6 +225,8 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 	}
 
 	/**
+	 * Returns an AffineTransform object that describe the transform of the system
+	 * 
 	 * @return
 	 */
 	private AffineTransform computeTransform()
@@ -219,7 +240,7 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on x axis
 	 */
 	private int getSignumX()
 	{
@@ -227,7 +248,7 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on y axis
 	 */
 	private int getSignumY()
 	{
@@ -269,7 +290,7 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 	 */
 	public static double getRotation()
 	{
-		return PropertyManager.getSharedInstance().getDoubleProperty(PartialAxis2DProperties.PARTIAL_AXIS_2D_ROTATION);
+		return PropertyManager.getSharedInstance().getDoubleProperty(PartialAgreement2DProperties.PARTIAL_AGREEMENT_2D_ROTATION);
 	}
 
 	/**
@@ -278,7 +299,7 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 	 */
 	public static void setRotation(double rotation)
 	{
-		PropertyManager.getSharedInstance().putProperty(PartialAxis2DProperties.PARTIAL_AXIS_2D_ROTATION, rotation);
+		PropertyManager.getSharedInstance().putProperty(PartialAgreement2DProperties.PARTIAL_AGREEMENT_2D_ROTATION, rotation);
 	}
 
 	/*
@@ -322,7 +343,7 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Agreement on one unknown axis in 2D. Only north and south or east and west are agreed and x and y axes could be swapped between two different robots.";
+		return "Partial agreement in 2D. Directions of axes are agreed but orentations are not.";
 	}
 
 	/*
@@ -333,7 +354,13 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Agreement on one unknown axis in 2D. Each robot has its own coordinates system with its own origin, but the direction of one axis is agreed. This means that only two cardinal points are agreed: either north and south or east and west. The orientation of the other two cardinal points could be different from one robot to another. In addition, the axes could be swapped, so that what is the X axis for a robot could correspond to the Y axis for another robot.";
+		return "Partial agreement in 2D. With this agreement, for both axes the direction is the same for all " +
+				"the robots but the orientation is not. This means that no position between north, south, east, " +
+				"west is common knowledge between robots. In terms of transformation factors, the rotation factor " +
+				"is the only element that is completely agreed between robots. The other elements (translation " +
+				"factor and scale factor, sign along the two axes) are different between a robot and another. " +
+				"In addition, the axes could be swapped, in a way that what is x for a robot corresponds to y for " +
+				"another robot. As a result no axis orientation is agreed.";
 	}
 
 	/*
@@ -346,7 +373,7 @@ public class PartialAxis2D extends AgreementImpl<Point2D>
 	{
 		if (panel_settings == null)
 		{
-			panel_settings = new PartialAxis2DSettingsPanel();
+			panel_settings = new PartialAgreement2DSettingsPanel();
 		}
 		return panel_settings;
 	}

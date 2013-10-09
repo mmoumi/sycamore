@@ -21,10 +21,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author Vale
+ * The settings panel for <code>PartialAgreement2D</code> plugin
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
-public class PartialAxis2DSettingsPanel extends AgreementSettingsPanel
+public class PartialAgreement2DSettingsPanel extends AgreementSettingsPanel
 {
 	private static final long	serialVersionUID	= 7587684962080577106L;
 	private JPanel				panel_settings		= null;
@@ -35,7 +36,7 @@ public class PartialAxis2DSettingsPanel extends AgreementSettingsPanel
 	/**
 	 * Default constructor.
 	 */
-	public PartialAxis2DSettingsPanel()
+	public PartialAgreement2DSettingsPanel()
 	{
 		initialize();
 	}
@@ -139,14 +140,14 @@ public class PartialAxis2DSettingsPanel extends AgreementSettingsPanel
 			spinner_rotation.setMinimumSize(new Dimension(80, 27));
 			spinner_rotation.setPreferredSize(new Dimension(80, 27));
 			spinner_rotation.setModel(new SpinnerNumberModel(0.0, -Double.MAX_VALUE, Double.MAX_VALUE, 1));
-			spinner_rotation.setValue(PartialAxis2D.getRotation());
+			spinner_rotation.setValue(PartialAgreement2D.getRotation());
 			spinner_rotation.addChangeListener(new ChangeListener()
 			{
 				@Override
 				public void stateChanged(ChangeEvent e)
 				{
-					PartialAxis2D.setRotation((Double) spinner_rotation.getValue());
-					fireActionEvent(new ActionEvent(PartialAxis2DSettingsPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					PartialAgreement2D.setRotation((Double) spinner_rotation.getValue());
+					fireActionEvent(new ActionEvent(PartialAgreement2DSettingsPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}

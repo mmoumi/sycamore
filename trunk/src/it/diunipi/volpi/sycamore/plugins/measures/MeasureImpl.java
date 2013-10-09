@@ -1,6 +1,13 @@
 package it.diunipi.volpi.sycamore.plugins.measures;
 
-
+/**
+ * A basic implementation of the <code>Measure</code> interface. It implements some methods using
+ * default values. While implementing a plugin, it is not recommended to start directly from the
+ * <code>Measure</code> interface, but it is suggested to extend the <code>MeasureImpl</code>
+ * class instead.
+ * 
+ * @author Valerio Volpi - vale.v@me.com
+ */
 public abstract class MeasureImpl implements Measure
 {
 	/*

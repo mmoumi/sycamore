@@ -10,16 +10,26 @@ import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 
 /**
- * @author Vale
- *
+ * A basic implementation of the <code>Agreement</code> interface. It implements some methods using
+ * default values. While implementing a plugin, it is not recommended to start directly from the
+ * <code>Agreement</code> interface, but it is suggested to extend the <code>AgreementImpl</code>
+ * class instead. This class offers the ability of fixing the measure unit. When the measure unit is
+ * fixed, all the scale factors, independently from which agreement is set, are equal to one.
+ * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public abstract class AgreementImpl<P extends SycamoreAbstractPoint & ComputablePoint<P>> implements Agreement<P>
 {
+	/**
+	 * The properties related to all the agreements in the system
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
 	private enum AgreementProperties implements SycamoreProperty
 	{
 		FIX_MEASURE_UNIT("Fix measure unit", true + "");
 
-		private String	description			= null;
+		private String	description		= null;
 		private String	defaultValue	= null;
 
 		/**
@@ -31,7 +41,9 @@ public abstract class AgreementImpl<P extends SycamoreAbstractPoint & Computable
 			this.defaultValue = defaultValue;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
 		 */
 		@Override
@@ -51,7 +63,7 @@ public abstract class AgreementImpl<P extends SycamoreAbstractPoint & Computable
 			return defaultValue;
 		}
 	}
-	
+
 	/**
 	 * @return the fixMeasureUnit
 	 */
@@ -59,16 +71,19 @@ public abstract class AgreementImpl<P extends SycamoreAbstractPoint & Computable
 	{
 		return PropertyManager.getSharedInstance().getBooleanProperty(AgreementProperties.FIX_MEASURE_UNIT);
 	}
-	
+
 	/**
-	 * @param fixMeasureUnit the fixMeasureUnit to set
+	 * @param fixMeasureUnit
+	 *            the fixMeasureUnit to set
 	 */
 	public static void setFixMeasureUnit(boolean fixMeasureUnit)
 	{
 		PropertyManager.getSharedInstance().putProperty(AgreementProperties.FIX_MEASURE_UNIT, fixMeasureUnit);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getShortDescription()
 	 */
 	@Override
@@ -76,8 +91,10 @@ public abstract class AgreementImpl<P extends SycamoreAbstractPoint & Computable
 	{
 		return "AGR " + this.getTypeString();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginLongDescription()
 	 */
 	@Override
@@ -85,8 +102,10 @@ public abstract class AgreementImpl<P extends SycamoreAbstractPoint & Computable
 	{
 		return "Agreement of type " + this.getTypeString();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getTypeDescription()
 	 */
 	@Override
@@ -94,7 +113,7 @@ public abstract class AgreementImpl<P extends SycamoreAbstractPoint & Computable
 	{
 		return "Agreement";
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -105,8 +124,10 @@ public abstract class AgreementImpl<P extends SycamoreAbstractPoint & Computable
 	{
 		return getClass().getSimpleName();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.SycamoreTypedPlugin#getTypeString()
 	 */
 	@Override
@@ -123,7 +144,7 @@ public abstract class AgreementImpl<P extends SycamoreAbstractPoint & Computable
 		else
 			return null;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

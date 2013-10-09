@@ -16,13 +16,54 @@ import java.util.Vector;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
- * This is an implementation of the asynchronous scheduler.
+ * This is an implementation of the Asynchronous scheduler. It implements the ASYNCH or CORDA model
+ * of Mobile Robots theory. In ASYNCH, each robot is activated asynchronously and independently from
+ * the other robots. Furthermore, the duration of each LOOK, COMPUTE, MOVE and SLEEP as well as the
+ * time that passes between successive activities in the same cycle is finite but otherwise
+ * unpredictable. As a result, computations can be made based on totally obsolete observations,
+ * taken arbitrarily far in the past. Another consequence is that robots can be seen while moving,
+ * creating further inconsistencies in the robot's understanding of the universe. From a technical
+ * point of view, in each of its step this scheduler can activate any number of robots, and can
+ * execute any of the available operations on each of them. The operations are always executed in
+ * the right order: LOOK-COMPUTE-MOVE-SLEEP, but each of them is executed by the scheduler in a
+ * different step, and there is no guarantee about the time that passes between two calls. The
+ * selection of the robots to be activated is performed through a random subset of the not moving
+ * robots. To be more precise, the scheduler in its step takes the list of all the robots that are
+ * not in MOVING state, computes a random subset of them, and activates them by calling one
+ * operation on each of the selected robots. This scheduler has also four funcions that can be
+ * activated by the user:
+ * <ul>
+ * <li>RIGIDITY: If the scheduler is rigid, it makes a robot always perform a rigid movement, that
+ * is, it makes a robot always reach its destination point. If otherwise the rigidity feature is
+ * disabled, a robot can stop its movement before reaching its destination point. When a robot
+ * stops, it always goes to the LOOK step, even if the destination point is not reached.</li>
+ * <li>CONTINUITY: If the scheduler is continuous, a robot skips the SLEEP phase at the end of its
+ * movement and it immediately jumps to the LOOK phase after a MOVE. If otherwise the scheduler is
+ * not continuous, it can sleep for an arbitrary time before performing a new LOOK operation.</li>
+ * <li>SPEED VARIANCE: The speed variance feature makes the scheduler decrease the speed of the
+ * robots. The robot will still reach its destination (at least if RIGIDITY is enabled) but it could
+ * take a lot of time to arrive to the final position. The speed can be arbitrarily changed, but it
+ * will never be zero and it will never become higher than the robot's default speed. If this
+ * feature is disabled, each robot moves at its own default constant speed.</li>
+ * <li>FAIRNESS: The fairness is the ability of the scheduler to guarantee that a robot will never
+ * sleep for an infinite amount of time. With FAIRNESS feature enabled, the time that passes between
+ * two calls of the robot's methods will never exceed a predefined and well-known value. If this
+ * feature is disabled, a robot could theoretically stay without moving for an infinite time.</li>
+ * </ul>
+ * 
+ * * @see Paola Flocchini, Giuseppe Prencipe, Nicola Santoro - Distributed Computing by Oblivious
+ * Mobile Robots, Morgan&Claypool publishers, 2012
  * 
  * @author Vale
  */
 @PluginImplementation
 public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputablePoint<P>> extends SchedulerImpl<P>
 {
+	/**
+	 * Properties related to chirality agreement 2D
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
 	private enum AsynchronousSchedulerProperties implements SycamoreProperty
 	{
 		ASYNCHRONOUS_SCHEDULER_RIGID("Rigid", "" + true), 
@@ -34,7 +75,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 		private String	defaultValue	= null;
 
 		/**
-		 * 
+		 * Constructor.
 		 */
 		AsynchronousSchedulerProperties(String description, String defaultValue)
 		{
@@ -81,7 +122,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 		{
 			rigid = AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_RIGID.getDefaultValue();
 		}
-		
+
 		return Boolean.parseBoolean(rigid);
 	}
 
@@ -145,8 +186,8 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 		PropertyManager.getSharedInstance().putProperty(AsynchronousSchedulerProperties.ASYNCHRONOUS_SCHEDULER_FAIR, fair);
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getAuthor()
 	 */
 	@Override
 	public String getAuthor()
@@ -154,26 +195,47 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 		return "Valerio Volpi";
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginShortDescription()
 	 */
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "An asynchronous scheduler";
+		return "This is an implementation of the Asynchronous scheduler. It implements the ASYNCH or CORDA model of Mobile Robots theory.";
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginLongDescription()
 	 */
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "An asynchronous scheduler where robots can stay without moving.";
+		return "This is an implementation of the Asynchronous scheduler. It implements the ASYNCH or CORDA model of Mobile Robots theory. In ASYNCH, each robot is activated "
+				+ "asynchronously and independently from the other robots. Furthermore, the duration of each LOOK, COMPUTE, MOVE and SLEEP as well as the time that passes between "
+				+ "successive activities in the same cycle is finite but otherwise unpredictable. As a result, computations can be made based on totally obsolete observations, taken "
+				+ "arbitrarily far in the past. Another consequence is that robots can be seen while moving, creating further inconsistencies in the robot's understanding of the universe. "
+				+ "From a technical point of view, in each of its step this scheduler can activate any number of robots, and can execute any of the available operations on each of them. The "
+				+ "operations are always executed in the right order: LOOK-COMPUTE-MOVE-SLEEP, but each of them is executed by the scheduler in a different step, and there is no guarantee "
+				+ "about the time that passes between two calls. The selection of the robots to be activated is performed through a random subset of the not moving robots. To be more precise, "
+				+ "the scheduler in its step takes the list of all the robots that are not in MOVING state, computes a random subset of them, and activates them by calling one operation "
+				+ "on each of the selected robots. This scheduler has also four funcions that can be activated by the user:\n" 
+				+ "- RIGIDITY: If the scheduler is rigid, it makes a robot always perform a rigid movement, that is, it makes a robot always reach its destination point. If otherwise "
+				+ "the rigidity feature is disabled, a robot can stop its movement before reaching its destination point. When a robot stops, it always goes to the LOOK step, even if "
+				+ "the destination point is not reached.\n"
+				+ "- CONTINUITY: If the scheduler is continuous, a robot skips the SLEEP phase at the end of its movement and it immediately jumps to the LOOK phase after a MOVE. If "
+				+ "otherwise the scheduler is not continuous, it can sleep for an arbitrary time before performing a new LOOK operation.\n"
+				+ "- SPEED VARIANCE: The speed variance feature makes the scheduler decrease the speed of the robots. The robot will still reach its destination (at least if RIGIDITY is enabled) "
+				+ "but it could take a lot of time to arrive to the final position. The speed can be arbitrarily changed, but it will never be zero and it will never become higher than the robot's "
+				+ "default speed. If this feature is disabled, each robot moves at its own default constant speed.\n"
+				+ "- FAIRNESS: The fairness is the ability of the scheduler to guarantee that a robot will never sleep for an infinite amount of time. With FAIRNESS feature enabled, the time "
+				+ "that passes between two calls of the robot's methods will never exceed a predefined and well-known value. If this feature is disabled, a robot could theoretically stay without "
+				+ "moving for an infinite time.\n";
 	}
 
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPanel_settings()
 	 */
 	@Override
 	public SycamorePanel getPanel_settings()
@@ -286,6 +348,12 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	}
 
 	/**
+	 * This method changes the last destination point of passed robot, by selecting as the new
+	 * destination any point that is on the segment between the robot's position and the old
+	 * destination. The arrival time is recomputed in order to have a constant speed movement. This
+	 * method performs a permanent modification of the timeline. It will never be possible to
+	 * restore the old destintion after a call to this method.
+	 * 
 	 * @param robot
 	 */
 	private void changeRobotDestination(SycamoreRobot<P> robot)
@@ -332,6 +400,10 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	}
 
 	/**
+	 * This method changes the speed of the passed robot. The destination point's arrival time is
+	 * changed in order to have the robot reach it slowly. The new speed is always lower than the
+	 * robot's default speed but it is never equal to zero.
+	 * 
 	 * @param robot
 	 */
 	private void changeRobotSpeed(SycamoreRobot<P> robot)

@@ -25,13 +25,18 @@ import com.jme3.scene.Node;
 import com.jme3.scene.debug.Arrow;
 
 /**
- * @author Vale
+ * Disorientation in 2D. No assumption can be made on any form of agreement between robots.
+ * Basically directions of axes, orientations, measure unit and position of origin can be different
+ * between a robot and another. In terms of of transformation factors, all the components
+ * (translations, scales, signs of scales, rotations) are different between robots. In addition, the
+ * axes could also be shuffled in a way that what is x for a robot corresponds to y for another
+ * robot.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class Disorientation2D extends AgreementImpl<Point2D>
 {
-	// node is static because it is the same for all the robots
 	private Node					axesNode		= new Node("Axes node");
 
 	private double					translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
@@ -40,7 +45,7 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 	private double					scaleFactor		= SycamoreUtil.getRandomDouble(0.5, 4);
 	private int						scaleXSignum	= SycamoreUtil.getRandomBoolan() ? 1 : -1;
 	private int						scaleYSignum	= SycamoreUtil.getRandomBoolan() ? 1 : -1;
-	
+
 	private double					rotation		= SycamoreUtil.getRandomDouble(0, 365);
 
 	private AgreementSettingsPanel	panel_settings	= null;
@@ -55,6 +60,7 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 			@Override
 			public Object call() throws Exception
 			{
+				// red arrow for x axis
 				Arrow arrowX = new Arrow(new Vector3f(2, 0, 0));
 				arrowX.setLineWidth(4); // make arrow thicker
 				Geometry xAxis = new Geometry("X coordinate axis", arrowX);
@@ -65,6 +71,7 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 				xAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(xAxis);
 
+				// green arrow for y axis
 				Arrow arrowY = new Arrow(new Vector3f(0, 2, 0));
 				arrowY.setLineWidth(4); // make arrow thicker
 				Geometry yAxis = new Geometry("Y coordinate axis", arrowY);
@@ -92,11 +99,13 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 	@Override
 	public Point2D toLocalCoordinates(Point2D point)
 	{
+		// prepare awt Point2D points
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
 
 		try
 		{
+			// transform using the inverse transform the source point into the dest point
 			computeTransform().inverseTransform(sourcePoint, destPoint);
 		}
 		catch (NoninvertibleTransformException e)
@@ -104,9 +113,8 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 			e.printStackTrace();
 		}
 
-		Point2D ret = SycamoreUtil.convertPoint2D(destPoint);
-
-		return ret;
+		// return dest point as a Sycamore Point2D object
+		return SycamoreUtil.convertPoint2D(destPoint);
 	}
 
 	/*
@@ -119,14 +127,15 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 	@Override
 	public Point2D toGlobalCoordinates(Point2D point)
 	{
+		// prepare awt Point2D points
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
 
+		// transform the source point into the dest point
 		computeTransform().transform(sourcePoint, destPoint);
 
-		Point2D ret = SycamoreUtil.convertPoint2D(destPoint);
-
-		return ret;
+		// return dest point as a Sycamore Point2D object
+		return SycamoreUtil.convertPoint2D(destPoint);
 	}
 
 	/*
@@ -168,6 +177,8 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 	}
 
 	/**
+	 * Returns an AffineTransform object that describe the transform of the system
+	 * 
 	 * @return
 	 */
 	private AffineTransform computeTransform()
@@ -179,7 +190,7 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 
 		return transform;
 	}
-	
+
 	/**
 	 * @return the scaleX
 	 */
@@ -251,7 +262,7 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Complete disorientation in 2D.";
+		return "Disorientation in 2D. No assumption can be made on any form of agreement between robots.";
 	}
 
 	/*
@@ -262,7 +273,10 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Complete disorientation in 2D. Each robot has a unique local coordinates system, that has its own origin. The orientation of the axes can be different from one robot to another, as well as the measure unit and the axes themselves. There could be a rotation factor, still different from one robot to another, and the axes may also be shuffled.";
+		return "Disorientation in 2D. No assumption can be made on any form of agreement between robots. Basically directions of axes, " +
+				"orientations, measure unit and position of origin can be different between a robot and another. In terms of of transformation factors, " +
+				"all the components (translations, scales, signs of scales, rotations) are different between robots. In addition, the axes could also be " +
+				"shuffled in a way that what is x for a robot corresponds to y for another robot.";
 	}
 
 	/*
@@ -291,36 +305,5 @@ public class Disorientation2D extends AgreementImpl<Point2D>
 	public void setRobot(SycamoreRobot<Point2D> owner)
 	{
 		// Nothing to do
-	}
-
-	public static void main(String[] args)
-	{
-		Disorientation2D agreement1 = new Disorientation2D();
-		Disorientation2D agreement2 = new Disorientation2D();
-
-		Point2D p1 = new Point2D(0, 0);
-		Point2D p2 = agreement1.toGlobalCoordinates(p1);
-		Point2D p3 = agreement2.toLocalCoordinates(p2);
-		Point2D p4 = agreement2.toGlobalCoordinates(p3);
-
-		System.out.println(p1 + " expressed in local coordinates with agreement 1");
-		System.out.println("global (agr1): " + p2 + " -> local (agr2): " + p3 + " -> global (agr2): " + p4);
-		System.out.println();
-
-		p1 = new Point2D(1, 0);
-		p2 = agreement1.toGlobalCoordinates(p1);
-		p3 = agreement2.toLocalCoordinates(p2);
-
-		System.out.println(p1 + " expressed in local coordinates");
-		System.out.println("global: " + p2 + " -> local: " + p3);
-		System.out.println();
-
-		p1 = new Point2D(0, 1);
-		p2 = agreement1.toGlobalCoordinates(p1);
-		p3 = agreement2.toLocalCoordinates(p2);
-
-		System.out.println(p1 + " expressed in local coordinates");
-		System.out.println("global: " + p2 + " -> local: " + p3);
-		System.out.println();
 	}
 }

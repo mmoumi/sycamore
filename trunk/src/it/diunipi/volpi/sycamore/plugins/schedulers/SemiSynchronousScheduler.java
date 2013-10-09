@@ -12,16 +12,23 @@ import java.util.Vector;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
- * This is an implementation of the semi synchronous scheduler. It chooses which robots are allowed
- * to move using a priority queue.
+ * This is an implementation of the Semi-Synchronous scheduler. It implements the model in theory
+ * that is called SSYNCH, SYm or ATOM. At each step of the scheduler, a subset of the robots are
+ * activated, and they obtain the same snapshot of the environment. The same subset of the robots
+ * executes the COMPUTE and MOVE operation synchronously, and the step of the scheduler ends just
+ * when all the robots reach their destination. As a consequence, no robot will ever be observed
+ * while moving, and the understanding of the active robots is always consistent.
+ * 
+ *  * @see Paola Flocchini, Giuseppe Prencipe, Nicola Santoro - Distributed Computing by Oblivious
+ *      Mobile Robots, Morgan&Claypool publishers, 2012
  * 
  * @author Vale
  */
 @PluginImplementation
 public class SemiSynchronousScheduler<P extends SycamoreAbstractPoint & ComputablePoint<P>> extends SchedulerImpl<P>
 {
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getAuthor()
 	 */
 	@Override
 	public String getAuthor()
@@ -29,26 +36,30 @@ public class SemiSynchronousScheduler<P extends SycamoreAbstractPoint & Computab
 		return "Valerio Volpi";
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginShortDescription()
 	 */
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "A semi-synchronous scheduler";
+		return "A Semy-Sinchronous scheduler. It implements the SSYNCH (SYm, ATOM) model.";
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginLongDescription()
 	 */
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "A semi-synchronous scheduler where just some robots are moving";
+		return "This is an implementation of the Semi-Synchronous scheduler. It implements the model in theory that is called SSYNCH, SYm or ATOM. " +
+				"At each step of the scheduler, a subset of the robots are activated, and they obtain the same snapshot of the environment. " +
+				"The same subset of the robots executes the COMPUTE and MOVE operation synchronously, and the step of the scheduler ends just when " +
+				"all the robots reach their destination. As a consequence, no robot will ever be observed while moving, and the understanding of " +
+				"the active robots is always consistent.";
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPanel_settings()
 	 */
 	@Override
 	public SycamorePanel getPanel_settings()
@@ -66,9 +77,9 @@ public class SemiSynchronousScheduler<P extends SycamoreAbstractPoint & Computab
 	{
 		return "SemiSynchronousScheduler";
 	}
-	
+
 	/**
-	 * 
+	 * Returns true just if no robot in the system is in MOVING state
 	 */
 	private boolean noneIsMoving()
 	{
@@ -94,7 +105,7 @@ public class SemiSynchronousScheduler<P extends SycamoreAbstractPoint & Computab
 	@Override
 	public void runLoop_pre()
 	{
-
+		// Nothing to do
 	}
 
 	/*
@@ -104,10 +115,11 @@ public class SemiSynchronousScheduler<P extends SycamoreAbstractPoint & Computab
 	 */
 	public void runLoopIteration()
 	{
+		// the step is performed just if no robot is moving
 		if (!appEngine.isSimulationFinished() && noneIsMoving())
 		{
 			Vector<SycamoreRobot<P>> robots = SycamoreUtil.randomFairSubset(appEngine.getRobots().toRobotsVector());
-			
+
 			Iterator<SycamoreRobot<P>> iterator = robots.iterator();
 
 			while (iterator.hasNext())
@@ -140,6 +152,6 @@ public class SemiSynchronousScheduler<P extends SycamoreAbstractPoint & Computab
 	@Override
 	public void runLoop_post()
 	{
-
+		// Nothing to do
 	}
 }

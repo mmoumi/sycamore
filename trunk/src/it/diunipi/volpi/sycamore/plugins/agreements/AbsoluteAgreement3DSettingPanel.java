@@ -21,36 +21,37 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author Vale
+ * The settings panel for <code>AbsoluteAgreement3D</code> plugin
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class AbsoluteAgreement3DSettingPanel extends AgreementSettingsPanel
 {
-	private static final long	serialVersionUID	= 7587684962080577106L;
-	private JPanel				panel_settings;
-	private JLabel				label_translation_x;
-	private JLabel				label_translation_y;
-	private JSpinner			spinner_translation_x;
-	private JSpinner			spinner_translation_y;
-	private JLabel				label_scale_x;
-	private JLabel				label_scale_y;
-	private JSpinner			spinner_scale_x;
-	private JSpinner			spinner_scale_y;
-	private JLabel				label_rotation_x;
-	private JSpinner			spinner_rotation_x;
-	private JPanel				panel_contents;
-	private JLabel				label_translation_z;
-	private JSpinner			spinner_translation_z;
-	private JLabel				label_scale_z;
-	private JLabel				label_rotation_y;
-	private JLabel				label_rotation_z;
-	private JSpinner			spinner_scale_z;
-	private JSpinner			spinner_rotation_y;
-	private JSpinner			spinner_rotation_z;
+	private static final long	serialVersionUID		= 7587684962080577106L;
+	private JPanel				panel_settings			= null;
+	private JLabel				label_translation_x		= null;
+	private JLabel				label_translation_y		= null;
+	private JSpinner			spinner_translation_x	= null;
+	private JSpinner			spinner_translation_y	= null;
+	private JLabel				label_scale_x			= null;
+	private JLabel				label_scale_y			= null;
+	private JSpinner			spinner_scale_x			= null;
+	private JSpinner			spinner_scale_y			= null;
+	private JLabel				label_rotation_x		= null;
+	private JSpinner			spinner_rotation_x		= null;
+	private JPanel				panel_contents			= null;
+	private JLabel				label_translation_z		= null;
+	private JSpinner			spinner_translation_z	= null;
+	private JLabel				label_scale_z			= null;
+	private JLabel				label_rotation_y		= null;
+	private JLabel				label_rotation_z		= null;
+	private JSpinner			spinner_scale_z			= null;
+	private JSpinner			spinner_rotation_y		= null;
+	private JSpinner			spinner_rotation_z		= null;
 
-	private double				storeScaleX			= 0;
-	private double				storeScaleY			= 0;
-	private double				storeScaleZ			= 0;
+	private double				storeScaleX				= 0;
+	private double				storeScaleY				= 0;
+	private double				storeScaleZ				= 0;
 
 	/**
 	 * Default constructor.
@@ -95,26 +96,33 @@ public class AbsoluteAgreement3DSettingPanel extends AgreementSettingsPanel
 	{
 		super.updateGui();
 
+		// if the measure unit is fixed, the scale factor is 1 and teh related controls are
+		// disabled
 		if (AgreementImpl.isFixMeasureUnit())
 		{
+			// save scale values
 			storeScaleX = AbsoluteAgreement3D.getScaleX();
 			storeScaleY = AbsoluteAgreement3D.getScaleY();
 			storeScaleZ = AbsoluteAgreement3D.getScaleZ();
 
+			// set scale to 1
 			getSpinner_scale_x().setValue(new Double(1.0));
 			getSpinner_scale_y().setValue(new Double(1.0));
 			getSpinner_scale_z().setValue(new Double(1.0));
 
+			// disable controls
 			getSpinner_scale_x().setEnabled(false);
 			getSpinner_scale_y().setEnabled(false);
 			getSpinner_scale_z().setEnabled(false);
 		}
 		else
 		{
+			// sets scale to its value
 			getSpinner_scale_x().setValue(storeScaleX);
 			getSpinner_scale_y().setValue(storeScaleY);
 			getSpinner_scale_z().setValue(storeScaleZ);
 
+			// enable controls
 			getSpinner_scale_x().setEnabled(true);
 			getSpinner_scale_y().setEnabled(true);
 			getSpinner_scale_z().setEnabled(true);

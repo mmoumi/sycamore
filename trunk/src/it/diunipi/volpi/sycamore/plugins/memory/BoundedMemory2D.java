@@ -11,8 +11,11 @@ import java.util.Vector;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
- * @author Vale
+ * This plugin represents the bounded memory in 2D. This memory has a fixed size that can be chosen
+ * by the user. Such size applies both to the number of positions occupied by the robot in the past
+ * and to the number of stored past snapshots.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class BoundedMemory2D extends BoundedMemory<Point2D>
@@ -29,13 +32,13 @@ public class BoundedMemory2D extends BoundedMemory<Point2D>
 		{
 			Vector<Point2D> positions = systemMemory.getSelfPositions();
 			int min = Math.min(positions.size(), getMemorySize());
-			
+
 			if (number >= 0 && number < min)
 			{
 				return positions.elementAt(number);
 			}
 		}
-		
+
 		// if the code is here it means that number does not point to valid memory
 		throw new RequestedDataNotInMemoryException("Memory does not contain requested self observation");
 	}
@@ -52,13 +55,13 @@ public class BoundedMemory2D extends BoundedMemory<Point2D>
 		{
 			Vector<Vector<Point2D>> snapshots = systemMemory.getSnapshots();
 			int min = Math.min(snapshots.size(), getMemorySize());
-			
+
 			if (number >= 0 && number < min)
 			{
 				return snapshots.elementAt(number);
 			}
 		}
-		
+
 		// if the code is here it means that number does not point to valid memory
 		throw new RequestedDataNotInMemoryException("Memory does not contain requested snapshot");
 	}

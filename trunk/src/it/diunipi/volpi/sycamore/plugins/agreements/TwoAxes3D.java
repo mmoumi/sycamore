@@ -26,22 +26,33 @@ import com.jme3.scene.Node;
 import com.jme3.scene.debug.Arrow;
 
 /**
- * @author Vale
+ * Agreement on just two of the three axes in 3D. With this agreement, for two axes the direction
+ * and orientation is the same for all the robots, while for the other axis the direction is the
+ * same but the orientation is not. This means that just the positions of two pairs between north
+ * and south, east and west or up and down are common knowledge between robots. In terms of
+ * transformation factors, the rotation factors are completely agreed between robots, as well as the
+ * sign of the scale factor along two axes. The other elements (translation factor and scale factor,
+ * sign along the other axis) are different between a robot and another.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class TwoAxes3D extends AgreementImpl<Point3D>
 {
+	/**
+	 * Properties related to the agreement on two axes in 3D
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
 	private enum TwoAxes3DProperties implements SycamoreProperty
 	{
-		TWO_AXES_3D_AXES("Axes", "X,Y"), 
-		TWO_AXES_3D_OTATION("Rotation", "" + 0.0);
+		TWO_AXES_3D_AXES("Axes", "X,Y"), TWO_AXES_3D_OTATION("Rotation", "" + 0.0);
 
 		private String	description		= null;
 		private String	defaultValue	= null;
 
 		/**
-		 * 
+		 * Constructor.
 		 */
 		TwoAxes3DProperties(String description, String defaultValue)
 		{
@@ -72,7 +83,6 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 		}
 	}
 
-	// node is static because it is the same for all the robots
 	private Node					axesNode		= new Node("Axes node");
 
 	private double					translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
@@ -96,6 +106,7 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 			@Override
 			public Object call() throws Exception
 			{
+				// red arrow for x axis
 				Arrow arrowX = new Arrow(new Vector3f(2, 0, 0));
 				arrowX.setLineWidth(4); // make arrow thicker
 				Geometry xAxis = new Geometry("X coordinate axis", arrowX);
@@ -106,6 +117,7 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 				xAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(xAxis);
 
+				// green arrow for y axis
 				Arrow arrowY = new Arrow(new Vector3f(0, 2, 0));
 				arrowY.setLineWidth(4); // make arrow thicker
 				Geometry yAxis = new Geometry("Y coordinate axis", arrowY);
@@ -116,6 +128,7 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 				yAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(yAxis);
 
+				// blue arrow for z axis
 				Arrow arrowZ = new Arrow(new Vector3f(0, 0, 2));
 				arrowZ.setLineWidth(4); // make arrow thicker
 				Geometry zAxis = new Geometry("Z coordinate axis", arrowZ);
@@ -125,6 +138,7 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 				zAxis.setMaterial(matZ);
 				zAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(zAxis);
+
 
 				axesNode.updateGeometricState();
 
@@ -217,6 +231,8 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 	}
 
 	/**
+	 * Returns a JME Transform object that describes the transforms of the system.
+	 * 
 	 * @return
 	 */
 	private Transform computeTransform()
@@ -229,16 +245,16 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 	}
 
 	/**
-	 * @param rotation
-	 *            the rotation to set
+	 * @param axes the agreed axes
 	 */
-	public static void setAxes(String axis)
+	public static void setAxes(String axes)
 	{
-		PropertyManager.getSharedInstance().putProperty(TwoAxes3DProperties.TWO_AXES_3D_AXES.name(), axis);
+		PropertyManager.getSharedInstance().putProperty(TwoAxes3DProperties.TWO_AXES_3D_AXES.name(), axes);
 	}
 
+
 	/**
-	 * @return the rotation
+	 * @return the agreed axes
 	 */
 	public static String getAxes()
 	{
@@ -269,15 +285,15 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on x axis
 	 */
 	private int getSignumX()
 	{
 		return (getAxes().contains("X") ? 1 : scaleXSignum);
 	}
-	
+
 	/**
-	 * @return
+	 * @return the signum of the scale on y axis
 	 */
 	private int getSignumY()
 	{
@@ -285,7 +301,7 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on z axis
 	 */
 	private int getSignumZ()
 	{
@@ -378,7 +394,7 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Agreement on two axes in 3D. Only four coordinate systems above north and south, east and west and up and down are agreed.";
+		return "Agreement on just two of the three axes in 3D. Just the positions of two pairs between north and south, east and west or up and down are agreed.";
 	}
 
 	/*
@@ -389,7 +405,7 @@ public class TwoAxes3D extends AgreementImpl<Point3D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Agreement on two axes in 3D. Each robot has its own coordinates system with its own origin, but the direction of two axes is agreed. This means that four cardinal points above north and south, east and west and up and down are agrreed and the orientation of the other two cardinal points could be different from one robot to another.";
+		return "Agreement on just two of the three axes in 3D. With this agreement, for two axes the direction and orientation is the same for all the robots, while for the other axis the direction is the same but the orientation is not. This means that just the positions of two pairs between north and south, east and west or up and down are common knowledge between robots. In terms of transformation factors, the rotation factors are completely agreed between robots, as well as the sign of the scale factor along two axes. The other elements (translation factor and scale factor, sign along the other axis) are different between a robot and another.";
 	}
 
 	/*

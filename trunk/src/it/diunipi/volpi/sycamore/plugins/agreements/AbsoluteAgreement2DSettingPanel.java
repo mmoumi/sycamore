@@ -20,8 +20,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author Vale
+ * The settings panel for <code>AbsoluteAgreement2D</code> plugin
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class AbsoluteAgreement2DSettingPanel extends AgreementSettingsPanel
 {
@@ -72,22 +73,29 @@ public class AbsoluteAgreement2DSettingPanel extends AgreementSettingsPanel
 	{
 		super.updateGui();
 
+		// if the measure unit is fixed, the scale factor is 1 and teh related controls are
+		// disabled
 		if (AgreementImpl.isFixMeasureUnit())
 		{
+			// save scale values
 			storeScaleX = AbsoluteAgreement2D.getScaleX();
 			storeScaleY = AbsoluteAgreement2D.getScaleY();
-			
+
+			// set scale to 1
 			getSpinner_scale_x().setValue(new Double(1.0));
 			getSpinner_scale_y().setValue(new Double(1.0));
 
+			// disable controls
 			getSpinner_scale_x().setEnabled(false);
 			getSpinner_scale_y().setEnabled(false);
 		}
 		else
 		{
+			// sets scale to its value
 			getSpinner_scale_x().setValue(storeScaleX);
 			getSpinner_scale_y().setValue(storeScaleY);
 
+			// enable controls
 			getSpinner_scale_x().setEnabled(true);
 			getSpinner_scale_y().setEnabled(true);
 		}
