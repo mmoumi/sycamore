@@ -27,23 +27,35 @@ import com.jme3.scene.Node;
 import com.jme3.scene.debug.Arrow;
 
 /**
- * @author Vale
+ * Agreement on Chirality (orientation) of axes in 2D. The respective orientation of the axes is
+ * fixed (i.e the x axis is placed at 90 degrees in clockwise direction from the y axis), but the
+ * directions of the axes are not. In terms of transformation factors, the only element that is
+ * agreed between the robots is the sign of the scale factor along each axis. All the other
+ * elements (translation factor, scale factor, rotation factor) are different between a robot and
+ * another.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class Chirality2D extends AgreementImpl<Point2D>
 {
-	private enum ConsistentCompass2DProperties implements SycamoreProperty
+	/**
+	 * Properties related to chirality agreement 2D
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
+	private enum Chirality2DProperties implements SycamoreProperty
 	{
-		CHIRALITY_2D_FLIP_X("FlipX", false + ""), CHIRALITY_2D_FLIP_Y("FlipY", false + "");
+		CHIRALITY_2D_FLIP_X("FlipX", false + ""), 
+		CHIRALITY_2D_FLIP_Y("FlipY", false + "");
 
 		private String	description		= null;
 		private String	defaultValue	= null;
 
 		/**
-		 * 
+		 * Constructor.
 		 */
-		ConsistentCompass2DProperties(String description, String defaultValue)
+		Chirality2DProperties(String description, String defaultValue)
 		{
 			this.description = description;
 			this.defaultValue = defaultValue;
@@ -72,7 +84,6 @@ public class Chirality2D extends AgreementImpl<Point2D>
 		}
 	}
 
-	// node is static because it is the same for all the robots
 	private Node						axesNode		= new Node("Axes node");
 
 	private double						translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
@@ -93,6 +104,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 			@Override
 			public Object call() throws Exception
 			{
+				// red arrow for x axis
 				Arrow arrowX = new Arrow(new Vector3f(2, 0, 0));
 				arrowX.setLineWidth(4); // make arrow thicker
 				Geometry xAxis = new Geometry("X coordinate axis", arrowX);
@@ -103,6 +115,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 				xAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(xAxis);
 
+				// green arrow for y axis
 				Arrow arrowY = new Arrow(new Vector3f(0, 2, 0));
 				arrowY.setLineWidth(4); // make arrow thicker
 				Geometry yAxis = new Geometry("Y coordinate axis", arrowY);
@@ -130,11 +143,13 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	@Override
 	public Point2D toLocalCoordinates(Point2D point)
 	{
+		// prepare awt Point2D points
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
 
 		try
 		{
+			// transform using the inverse transform the source point into the dest point
 			computeTransform().inverseTransform(sourcePoint, destPoint);
 		}
 		catch (NoninvertibleTransformException e)
@@ -142,6 +157,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 			e.printStackTrace();
 		}
 
+		// return dest point as a Sycamore Point2D object
 		return SycamoreUtil.convertPoint2D(destPoint);
 	}
 
@@ -155,11 +171,14 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	@Override
 	public Point2D toGlobalCoordinates(Point2D point)
 	{
+		// prepare awt Point2D points
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
 
+		// transform the source point into the dest point
 		computeTransform().transform(sourcePoint, destPoint);
 
+		// return dest point as a Sycamore Point2D object
 		return SycamoreUtil.convertPoint2D(destPoint);
 	}
 
@@ -202,6 +221,8 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	}
 
 	/**
+	 * Returns an AffineTransform object that describe the transform of the system
+	 * 
 	 * @return
 	 */
 	private AffineTransform computeTransform()
@@ -215,7 +236,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on x axis
 	 */
 	private int getSignumX()
 	{
@@ -223,7 +244,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on y axis
 	 */
 	private int getSignumY()
 	{
@@ -265,7 +286,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	 */
 	public static boolean isFlipX()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_X);
+		return PropertyManager.getSharedInstance().getBooleanProperty(Chirality2DProperties.CHIRALITY_2D_FLIP_X);
 	}
 
 	/**
@@ -274,7 +295,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	 */
 	public static void setFlipX(Boolean flipX)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_X, flipX);
+		PropertyManager.getSharedInstance().putProperty(Chirality2DProperties.CHIRALITY_2D_FLIP_X, flipX);
 	}
 
 	/**
@@ -282,7 +303,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	 */
 	public static boolean isFlipY()
 	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_Y);
+		return PropertyManager.getSharedInstance().getBooleanProperty(Chirality2DProperties.CHIRALITY_2D_FLIP_Y);
 	}
 
 	/**
@@ -291,7 +312,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	 */
 	public static void setFlipY(Boolean flipY)
 	{
-		PropertyManager.getSharedInstance().putProperty(ConsistentCompass2DProperties.CHIRALITY_2D_FLIP_Y, flipY);
+		PropertyManager.getSharedInstance().putProperty(Chirality2DProperties.CHIRALITY_2D_FLIP_Y, flipY);
 	}
 
 	/*
@@ -335,7 +356,7 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Consistent compass in 2D. North, south, west, east are the same for all the robots.";
+		return "Agreement on Chirality (orientation) of axes in 2D. Just the mutual orientation of the axes is agreed.";
 	}
 
 	/*
@@ -346,7 +367,9 @@ public class Chirality2D extends AgreementImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Consistent compass in 2D. Each robot has its own coordinates system with its own origin, but the directions for north, south, west and east cardinal points are the same for all the robots.";
+		return "Agreement on Chirality (orientation) of axes in 2D. The respective orientation of the axes is fixed (i.e the x axis is placed at 90 degrees in clockwise direction from the y axis), " +
+				"but the directions of the axes are not. In terms of transformation factors, the only element that is agreed between the robots is the sign of the scale factor along each axis. All " +
+				"the others elements (translation factor, scale factor, rotation factor) are different between a robot and another.";
 	}
 
 	/*

@@ -24,8 +24,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author Vale
+ * The settings panel for <code>TwoAxes3D</code> plugin
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class TwoAxes3DSettingsPanel extends AgreementSettingsPanel
 {
@@ -217,7 +218,7 @@ public class TwoAxes3DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return comboBox_axes
 	 */
 	private JComboBox getComboBox_axes()
 	{

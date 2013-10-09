@@ -27,21 +27,34 @@ import com.jme3.scene.Node;
 import com.jme3.scene.debug.Arrow;
 
 /**
- * @author Vale
+ * Agreement on just one axis in 2D. With this agreement, for one axis the direction and orientation
+ * is the same for all the robots, while for the other axis the direction is the same but the
+ * orientation is not. This means that just the positions of north and south or just the ones of
+ * east and west are common knowledge between robots. In terms of transformation factors, the
+ * rotation factor is completely agreed between robots, as well as the sign of the scale factor
+ * along one axis. The other elements (translation factor and scale factor, sign along the other
+ * axis) are different between a robot and another.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class OneAxis2D extends AgreementImpl<Point2D>
 {
+	/**
+	 * Properties related to the agreement on one axis in 2D
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
 	private enum OneAxis2DProperties implements SycamoreProperty
 	{
-		ONE_AXIS_2D_AXIS("Axis", "X"), ONE_AXIS_2D_ROTATION("Rotation", "" + 0.0);
+		ONE_AXIS_2D_AXIS("Axis", "X"), 
+		ONE_AXIS_2D_ROTATION("Rotation", "" + 0.0);
 
 		private String	description		= null;
 		private String	defaultValue	= null;
 
 		/**
-		 * 
+		 * Constructor.
 		 */
 		OneAxis2DProperties(String description, String defaultValue)
 		{
@@ -72,7 +85,6 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 		}
 	}
 
-	// node is static because it is the same for all the robots
 	private Node					axesNode		= new Node("Axes node");
 
 	private double					translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
@@ -94,6 +106,7 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 			@Override
 			public Object call() throws Exception
 			{
+				// red arrow for x axis
 				Arrow arrowX = new Arrow(new Vector3f(2, 0, 0));
 				arrowX.setLineWidth(4); // make arrow thicker
 				Geometry xAxis = new Geometry("X coordinate axis", arrowX);
@@ -104,6 +117,7 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 				xAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(xAxis);
 
+				// green arrow for y axis
 				Arrow arrowY = new Arrow(new Vector3f(0, 2, 0));
 				arrowY.setLineWidth(4); // make arrow thicker
 				Geometry yAxis = new Geometry("Y coordinate axis", arrowY);
@@ -131,11 +145,13 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 	@Override
 	public Point2D toLocalCoordinates(Point2D point)
 	{
+		// prepare awt Point2D points
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
 
 		try
 		{
+			// transform using the inverse transform the source point into the dest point
 			computeTransform().inverseTransform(sourcePoint, destPoint);
 		}
 		catch (NoninvertibleTransformException e)
@@ -143,6 +159,7 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 			e.printStackTrace();
 		}
 
+		// return dest point as a Sycamore Point2D object
 		return SycamoreUtil.convertPoint2D(destPoint);
 	}
 
@@ -156,11 +173,14 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 	@Override
 	public Point2D toGlobalCoordinates(Point2D point)
 	{
+		// prepare awt Point2D points
 		java.awt.geom.Point2D sourcePoint = SycamoreUtil.convertPoint2D(point);
 		java.awt.geom.Point2D destPoint = new java.awt.geom.Point2D.Float();
 
+		// transform the source point into the dest point
 		computeTransform().transform(sourcePoint, destPoint);
 
+		// return dest point as a Sycamore Point2D object
 		return SycamoreUtil.convertPoint2D(destPoint);
 	}
 
@@ -203,6 +223,8 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 	}
 
 	/**
+	 * Returns an AffineTransform object that describe the transform of the system
+	 * 
 	 * @return
 	 */
 	private AffineTransform computeTransform()
@@ -216,7 +238,7 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on x axis
 	 */
 	private int getSignumX()
 	{
@@ -224,7 +246,7 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on y axis
 	 */
 	private int getSignumY()
 	{
@@ -353,7 +375,11 @@ public class OneAxis2D extends AgreementImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Agreement on one axis in 2D. Each robot has its own coordinates system with its own origin, but the direction of one axis is agreed. This means that only two cardinal points are agreed: either north and south or east and west. The orientation of the other two cardinal points could be different from one robot to another.";
+		return "Agreement on just one axis in 2D. With this agreement, for one axis the direction and orientation is the same for all the robots, " +
+				"while for the other axis the direction is the same but the orientation is not. This means that just the positions of north and south " +
+				"or just the ones of east and west are common knowledge between robots. In terms of transformation factors, the rotation factor is " +
+				"completely agreed between robots, as well as the sign of the scale factor along one axis. The other elements (translation factor and scale " +
+				"factor, sign along the other axis) are different between a robot and another.";
 	}
 
 	/*

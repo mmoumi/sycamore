@@ -25,12 +25,21 @@ import com.jme3.scene.Node;
 import com.jme3.scene.debug.Arrow;
 
 /**
- * @author Vale
+ * Absolute agreement in 3D. The local coordinate systems of the robots are different from the
+ * global coordinate system, but they are all equal with each other. It is possible for the user to
+ * define the translation, scale and rotation factors, but these factors will be applied to all the
+ * local coordinate systems, with the result of an absolute agreement.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 {
+	/**
+	 * Properties related to absolute agreement 3D
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
 	private enum AbsoluteAgreement3DProperties implements SycamoreProperty
 	{
 		ABSOLUTE_AGREEMENT_3D_TRANSLATION_X("Translation X", "" + 0.0),
@@ -47,7 +56,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 		private String	defaultValue	= null;
 
 		/**
-		 * 
+		 * Constructor.
 		 */
 		AbsoluteAgreement3DProperties(String description, String defaultValue)
 		{
@@ -80,6 +89,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 
 	// node is static because it is the same for all the robots
 	private static Node						axesNode		= new Node("Axes node");
+	
 	private AbsoluteAgreement3DSettingPanel	panel_settings	= null;
 
 	/**
@@ -92,6 +102,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 			@Override
 			public Object call() throws Exception
 			{
+				// red arrow for x axis
 				Arrow arrowX = new Arrow(new Vector3f(2, 0, 0));
 				arrowX.setLineWidth(4); // make arrow thicker
 				Geometry xAxis = new Geometry("X coordinate axis", arrowX);
@@ -102,6 +113,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 				xAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(xAxis);
 
+				// green arrow for x axis
 				Arrow arrowY = new Arrow(new Vector3f(0, 2, 0));
 				arrowY.setLineWidth(4); // make arrow thicker
 				Geometry yAxis = new Geometry("Y coordinate axis", arrowY);
@@ -112,6 +124,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 				yAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(yAxis);
 
+				// blue arrow for x axis
 				Arrow arrowZ = new Arrow(new Vector3f(0, 0, 2));
 				arrowZ.setLineWidth(4); // make arrow thicker
 				Geometry zAxis = new Geometry("Z coordinate axis", arrowZ);
@@ -200,6 +213,8 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	}
 
 	/**
+	 * Returns a JME Transform object that describes the transforms of the system.
+	 * 
 	 * @return
 	 */
 	private Transform computeTransform()
@@ -405,7 +420,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Total agreement in 3D. The local coordinates systems are completely agreed.";
+		return "Absolute agreement in 3D. The local coordinates systems are completely agreed.";
 	}
 
 	/*
@@ -416,7 +431,9 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Total agreement in 3D. The local coordinates systems are completely agreed and there is a single origin, a single measure unit and a single orientation and rotation of axes for all the robots. The local coordinates system is different from the global one, but is the same for all the robots.";
+		return "Absolute agreement in 3D. The local coordinate systems of the robots are different from the global coordinate system, " +
+				"but they are all equal with each other. It is possible for the user to define the translation, scale and rotation factors, " +
+				"but these factors will be applied to all the local coordinate systems, with the result of an absolute agreement.";
 	}
 
 	/*

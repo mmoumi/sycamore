@@ -20,8 +20,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * @author Vale
+ * The generic settings panel for agreement plugins
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class AgreementSettingsPanel extends SycamorePanel
 {
@@ -160,20 +161,20 @@ public class AgreementSettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return label_fixMeasureUnit
 	 */
 	private JLabel getLabel_fixMeasureUnit()
 	{
 		if (label_fixMeasureUnit == null)
 		{
-			label_fixMeasureUnit = new JLabel("Fix measure unit");
+			label_fixMeasureUnit = new JLabel("Fix measure unit: ");
 			label_fixMeasureUnit.setToolTipText("Make all the robots in the system have the same measure unit.");
 		}
 		return label_fixMeasureUnit;
 	}
 
 	/**
-	 * @return
+	 * @return switchToggle_fixMeasureUnit
 	 */
 	private SwitchToggle getSwitchToggle_fixMeasureUnit()
 	{
@@ -202,7 +203,7 @@ public class AgreementSettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return panel_container
 	 */
 	private JPanel getPanel_container()
 	{

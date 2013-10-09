@@ -24,8 +24,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author Vale
+ * The settings panel for <code>OneAxis3D</code> plugin
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class OneAxis3DSettingsPanel extends AgreementSettingsPanel
 {
@@ -148,7 +149,7 @@ public class OneAxis3DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return spinner_rotation
+	 * @return spinner_rotation_1
 	 */
 	private JSpinner getSpinner_rotation_1()
 	{
@@ -237,7 +238,7 @@ public class OneAxis3DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return comboBox_axis
 	 */
 	private JComboBox getComboBox_axis()
 	{
@@ -263,7 +264,7 @@ public class OneAxis3DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_1
 	 */
 	private JLabel getLabel_1()
 	{
@@ -275,7 +276,7 @@ public class OneAxis3DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return spinner_rotation_2
 	 */
 	private JSpinner getSpinner_rotation_2()
 	{
@@ -301,7 +302,7 @@ public class OneAxis3DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_2
 	 */
 	private JLabel getLabel_2()
 	{

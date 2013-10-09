@@ -26,12 +26,24 @@ import com.jme3.scene.Node;
 import com.jme3.scene.debug.Arrow;
 
 /**
- * @author Vale
+ * Agreement on Chirality (orientation) of axes in 3D. The respective orientation of the axes is
+ * fixed (i.e the x axis is placed at 90 degrees in clockwise direction from the y axis and the z
+ * axis is the normal, computed with the right-hand rule, to the plane containing both x and y axes)
+ * , but the directions of the axes are not. In terms of transformation factors, the only element
+ * that is agreed between the robots is the sign of the scale factor along each axis. All the other
+ * elements (translation factor, scale factor, rotation factor) are different between a robot and
+ * another.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class Chirality3D extends AgreementImpl<Point3D>
 {
+	/**
+	 * Properties related to chirality agreement 3D
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
 	private enum Chirality3DProperties implements SycamoreProperty
 	{
 		CHIRALITY_3D_FLIP_X("FlipX", false + ""), 
@@ -42,7 +54,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 		private String	defaultValue	= null;
 
 		/**
-		 * 
+		 * Constructor.
 		 */
 		Chirality3DProperties(String description, String defaultValue)
 		{
@@ -73,18 +85,17 @@ public class Chirality3D extends AgreementImpl<Point3D>
 		}
 	}
 
-	// node is static because it is the same for all the robots
-	private Node					axesNode		= new Node("Axes node");
+	private Node						axesNode		= new Node("Axes node");
 
-	private double					translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
-	private double					translationY	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
-	private double					translationZ	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+	private double						translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+	private double						translationY	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
+	private double						translationZ	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
 
-	private double					scaleFactor		= SycamoreUtil.getRandomDouble(0.5, 4);
+	private double						scaleFactor		= SycamoreUtil.getRandomDouble(0.5, 4);
 
-	private double					rotationX		= SycamoreUtil.getRandomDouble(0, 365);
-	private double					rotationY		= SycamoreUtil.getRandomDouble(0, 365);
-	private double					rotationZ		= SycamoreUtil.getRandomDouble(0, 365);
+	private double						rotationX		= SycamoreUtil.getRandomDouble(0, 365);
+	private double						rotationY		= SycamoreUtil.getRandomDouble(0, 365);
+	private double						rotationZ		= SycamoreUtil.getRandomDouble(0, 365);
 
 	private Chirality3DSettingsPanel	panel_settings	= null;
 
@@ -98,6 +109,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 			@Override
 			public Object call() throws Exception
 			{
+				// red arrow for x axis
 				Arrow arrowX = new Arrow(new Vector3f(2, 0, 0));
 				arrowX.setLineWidth(4); // make arrow thicker
 				Geometry xAxis = new Geometry("X coordinate axis", arrowX);
@@ -108,6 +120,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 				xAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(xAxis);
 
+				// green arrow for y axis
 				Arrow arrowY = new Arrow(new Vector3f(0, 2, 0));
 				arrowY.setLineWidth(4); // make arrow thicker
 				Geometry yAxis = new Geometry("Y coordinate axis", arrowY);
@@ -118,6 +131,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 				yAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(yAxis);
 
+				// blue arrow for z axis
 				Arrow arrowZ = new Arrow(new Vector3f(0, 0, 2));
 				arrowZ.setLineWidth(4); // make arrow thicker
 				Geometry zAxis = new Geometry("Z coordinate axis", arrowZ);
@@ -206,6 +220,8 @@ public class Chirality3D extends AgreementImpl<Point3D>
 	}
 
 	/**
+	 * Returns a JME Transform object that describes the transforms of the system.
+	 * 
 	 * @return
 	 */
 	private Transform computeTransform()
@@ -218,15 +234,15 @@ public class Chirality3D extends AgreementImpl<Point3D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on x axis
 	 */
 	private int getSignumX()
 	{
 		return (isFlipX() ? -1 : 1);
 	}
-	
+
 	/**
-	 * @return
+	 * @return the signum of the scale on y axis
 	 */
 	private int getSignumY()
 	{
@@ -234,7 +250,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on z axis
 	 */
 	private int getSignumZ()
 	{
@@ -378,7 +394,7 @@ public class Chirality3D extends AgreementImpl<Point3D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Consistent compass in 3D. North, south, west, east, up, down are the same for all the robots.";
+		return "Agreement on Chirality (orientation) of axes in 3D. Just the mutual orientation of the axes is agreed.";
 	}
 
 	/*
@@ -389,7 +405,10 @@ public class Chirality3D extends AgreementImpl<Point3D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Consistent compass in 3D. Each robot has its own coordinates system with its own origin, but the directions for north, south, west, east, up and down cardinal points are the same for all the robots.";
+		return "Agreement on Chirality (orientation) of axes in 3D. The respective orientation of the axes is fixed (i.e the x axis is placed at 90 degrees in clockwise direction "
+				+ "from the y axis and the z axis is the normal, computed with the right-hand rule, to the plane containing both x and y axes), but the directions of the axes are not. "
+				+ "In terms of transformation factors, the only element that is agreed between the robots is the sign of the scale factor along each axis. All the others elements "
+				+ "(translation factor, scale factor, rotation factor) are different between a robot and another.";
 	}
 
 	/*

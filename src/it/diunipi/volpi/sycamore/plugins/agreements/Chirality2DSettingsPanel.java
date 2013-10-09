@@ -19,8 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * @author Vale
+ * The settings panel for <code>Chirality2D</code> plugin
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class Chirality2DSettingsPanel extends AgreementSettingsPanel
 {
@@ -163,7 +164,7 @@ public class Chirality2DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_flipX
 	 */
 	private JLabel getLabel_flipX()
 	{
@@ -175,7 +176,7 @@ public class Chirality2DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_flipY
 	 */
 	private JLabel getLabel_flipY()
 	{
@@ -187,7 +188,7 @@ public class Chirality2DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return switchToggle_flipX
 	 */
 	private SwitchToggle getSwitchToggle_flipX()
 	{
@@ -213,7 +214,7 @@ public class Chirality2DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return switchToggle_flipY
 	 */
 	private SwitchToggle getSwitchToggle_flipY()
 	{

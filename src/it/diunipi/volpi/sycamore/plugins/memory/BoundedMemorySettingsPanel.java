@@ -21,8 +21,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author Vale
+ * The settings panel for <code>BoundedMemory</code> plugin
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class BoundedMemorySettingsPanel extends SycamorePanel
 {
@@ -64,7 +65,7 @@ public class BoundedMemorySettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return label_memorySize
 	 */
 	private JLabel getLabel_memorySize()
 	{
@@ -78,7 +79,7 @@ public class BoundedMemorySettingsPanel extends SycamorePanel
 	
 
 	/**
-	 * @return
+	 * @return spinner_memorySize
 	 */
 	private JSpinner getSpinner_memorySize()
 	{
@@ -103,7 +104,7 @@ public class BoundedMemorySettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return panel_size
 	 */
 	private JPanel getPanel_size()
 	{

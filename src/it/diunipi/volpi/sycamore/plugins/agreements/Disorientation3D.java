@@ -24,8 +24,14 @@ import com.jme3.scene.Node;
 import com.jme3.scene.debug.Arrow;
 
 /**
- * @author Vale
+ * Disorientation in 3D. No assumption can be made on any form of agreement between robots.
+ * Basically directions of axes, orientations, measure unit and position of origin can be different
+ * between a robot and another. In terms of of transformation factors, all the components
+ * (translations, scales, signs of scales, rotations) are different between robots. In addition, the
+ * axes could also be shuffled in a way that what is x for a robot corresponds to y for another
+ * robot.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class Disorientation3D extends AgreementImpl<Point3D>
@@ -58,6 +64,7 @@ public class Disorientation3D extends AgreementImpl<Point3D>
 			@Override
 			public Object call() throws Exception
 			{
+				// red arrow for x axis
 				Arrow arrowX = new Arrow(new Vector3f(2, 0, 0));
 				arrowX.setLineWidth(4); // make arrow thicker
 				Geometry xAxis = new Geometry("X coordinate axis", arrowX);
@@ -68,6 +75,7 @@ public class Disorientation3D extends AgreementImpl<Point3D>
 				xAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(xAxis);
 
+				// green arrow for y axis
 				Arrow arrowY = new Arrow(new Vector3f(0, 2, 0));
 				arrowY.setLineWidth(4); // make arrow thicker
 				Geometry yAxis = new Geometry("Y coordinate axis", arrowY);
@@ -78,6 +86,7 @@ public class Disorientation3D extends AgreementImpl<Point3D>
 				yAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(yAxis);
 
+				// blue arrow for z axis
 				Arrow arrowZ = new Arrow(new Vector3f(0, 0, 2));
 				arrowZ.setLineWidth(4); // make arrow thicker
 				Geometry zAxis = new Geometry("Z coordinate axis", arrowZ);
@@ -166,6 +175,8 @@ public class Disorientation3D extends AgreementImpl<Point3D>
 	}
 
 	/**
+	 * Returns a JME Transform object that describes the transforms of the system.
+	 * 
 	 * @return
 	 */
 	private Transform computeTransform()
@@ -263,7 +274,7 @@ public class Disorientation3D extends AgreementImpl<Point3D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Complete disorientation in 3D.";
+		return "Disorientation in 3D. No assumption can be made on any form of agreement between robots.";
 	}
 
 	/*
@@ -274,7 +285,10 @@ public class Disorientation3D extends AgreementImpl<Point3D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Complete disorientation in 3D. Each robot has a unique local coordinates system, that has its own origin. The orientation of the axes can be different from one robot to another, as well as the measure unit and the axes themselves. There could be several rotation factors, still differents from one robot to another, and the axes may also be shuffled.";
+		return "Disorientation in 3D. No assumption can be made on any form of agreement between robots. Basically directions of axes, " +
+				"orientations, measure unit and position of origin can be different between a robot and another. In terms of of transformation factors, " +
+				"all the components (translations, scales, signs of scales, rotations) are different between robots. In addition, the axes could also be " +
+				"shuffled in a way that what is x for a robot corresponds to y for another robot.";
 	}
 
 	/*

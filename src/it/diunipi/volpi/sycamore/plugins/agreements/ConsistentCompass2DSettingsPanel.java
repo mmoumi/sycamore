@@ -23,8 +23,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author Vale
+ * The settings panel for <code>ConsistentCompass2D</code> plugin
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class ConsistentCompass2DSettingsPanel extends AgreementSettingsPanel
 {
@@ -217,7 +218,7 @@ public class ConsistentCompass2DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_flipX
 	 */
 	private JLabel getLabel_flipX()
 	{
@@ -229,7 +230,7 @@ public class ConsistentCompass2DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return label_flipY
 	 */
 	private JLabel getLabel_flipY()
 	{
@@ -241,7 +242,7 @@ public class ConsistentCompass2DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return switchToggle_flipX
 	 */
 	private SwitchToggle getSwitchToggle_flipX()
 	{
@@ -267,7 +268,7 @@ public class ConsistentCompass2DSettingsPanel extends AgreementSettingsPanel
 	}
 
 	/**
-	 * @return
+	 * @return switchToggle_flipY
 	 */
 	private SwitchToggle getSwitchToggle_flipY()
 	{

@@ -26,12 +26,24 @@ import com.jme3.scene.Node;
 import com.jme3.scene.debug.Arrow;
 
 /**
- * @author Vale
+ * Agreement on just one axis in 3D. With this agreement, for one axis the direction and orientation
+ * is the same for all the robots, while for the other two axes the direction is the same but the
+ * orientation is not. This means that just the positions of north and south or just the ones of
+ * east and west, or just the ones of up and down are common knowledge between robots. In terms of
+ * transformation factors, the rotation factors are completely agreed between robots, as well as
+ * the sign of the scale factor along one axis. The other elements (translation factor and scale
+ * factor, sign along the other two axes) are different between a robot and another.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class OneAxis3D extends AgreementImpl<Point3D>
 {
+	/**
+	 * Properties related to the agreement on one axis in 3D
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
 	private enum OneAxis3DProperties implements SycamoreProperty
 	{
 		ONE_AXIS_3D_AXIS("Axis", "X"), 
@@ -42,7 +54,7 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 		private String	defaultValue	= null;
 
 		/**
-		 * 
+		 * Constructor.
 		 */
 		OneAxis3DProperties(String description, String defaultValue)
 		{
@@ -73,7 +85,6 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 		}
 	}
 
-	// node is static because it is the same for all the robots
 	private Node					axesNode		= new Node("Axes node");
 
 	private double					translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
@@ -97,6 +108,7 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 			@Override
 			public Object call() throws Exception
 			{
+				// red arrow for x axis
 				Arrow arrowX = new Arrow(new Vector3f(2, 0, 0));
 				arrowX.setLineWidth(4); // make arrow thicker
 				Geometry xAxis = new Geometry("X coordinate axis", arrowX);
@@ -107,6 +119,7 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 				xAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(xAxis);
 
+				// green arrow for y axis
 				Arrow arrowY = new Arrow(new Vector3f(0, 2, 0));
 				arrowY.setLineWidth(4); // make arrow thicker
 				Geometry yAxis = new Geometry("Y coordinate axis", arrowY);
@@ -117,6 +130,7 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 				yAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(yAxis);
 
+				// blue arrow for z axis
 				Arrow arrowZ = new Arrow(new Vector3f(0, 0, 2));
 				arrowZ.setLineWidth(4); // make arrow thicker
 				Geometry zAxis = new Geometry("Z coordinate axis", arrowZ);
@@ -221,6 +235,8 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 	}
 
 	/**
+	 * Returns a JME Transform object that describes the transforms of the system.
+	 * 
 	 * @return
 	 */
 	private Transform computeTransform()
@@ -256,7 +272,7 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 	}
 
 	/**
-	 * @return the rotation
+	 * @return the rotation_1
 	 */
 	public static double getRotation_1()
 	{
@@ -273,7 +289,7 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 	}
 
 	/**
-	 * @return the rotation
+	 * @return the rotation_2
 	 */
 	public static double getRotation_2()
 	{
@@ -290,15 +306,15 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on x axis
 	 */
 	private int getSignumX()
 	{
 		return (getAxis().equals("X") ? 1 : scaleXSignum);
 	}
-	
+
 	/**
-	 * @return
+	 * @return the signum of the scale on y axis
 	 */
 	private int getSignumY()
 	{
@@ -306,7 +322,7 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on z axis
 	 */
 	private int getSignumZ()
 	{
@@ -410,7 +426,11 @@ public class OneAxis3D extends AgreementImpl<Point3D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Agreement on one axis in 3D. Each robot has its own coordinates system with its own origin, but the direction of one axis is agreed. This means that only two cardinal points are agreed: either north and south, east and west or up and down. The orientation of the other four cardinal points could be different from one robot to another.";
+		return "Agreement on just one axis in 3D. With this agreement, for one axis the direction and orientation is the same for all the robots, " +
+				"while for the other axis the direction is the same but the orientation is not. This means that just the positions of north and south " +
+				"or just the ones of east and west, or just the ones of up and down are common knowledge between robots. In terms of transformation " +
+				"factors, the rotation factors are completely agreed between robots, as well as the sign of the scale factor along one axis. The other " +
+				"elements (translation factor and scale factor, sign along the other two axes) are different between a robot and another.";
 	}
 
 	/*

@@ -24,8 +24,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author Vale
+ * The settings panel for <code>OneAxis2D</code> plugin
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class OneAxis2DSettingsPanel extends AgreementSettingsPanel
 {
@@ -216,6 +217,9 @@ public class OneAxis2DSettingsPanel extends AgreementSettingsPanel
 		return panel_contents;
 	}
 
+	/**
+	 * @return comboBox_axis
+	 */
 	private JComboBox getComboBox_axis()
 	{
 		if (comboBox_axis == null)
@@ -224,7 +228,6 @@ public class OneAxis2DSettingsPanel extends AgreementSettingsPanel
 			comboBox_axis.setModel(new DefaultComboBoxModel(new String[]
 			{ "X", "Y" }));
 			comboBox_axis.setSelectedItem(OneAxis2D.getAxis());
-
 			comboBox_axis.addActionListener(new ActionListener()
 			{
 

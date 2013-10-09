@@ -11,21 +11,29 @@ import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
- * @author Vale
+ * This plugin represents the bounded memory. This memory has a fixed size that can be chosen by the
+ * user. Such size applies both to the number of positions occupied by the robot in the past and to
+ * the number of stored past snapshots.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public abstract class BoundedMemory<P extends SycamoreAbstractPoint & ComputablePoint<P>> extends MemoryImpl<P>
 {
+	/**
+	 * Properties related to the bounded memory
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
 	private enum BoundedMemoryProperties implements SycamoreProperty
 	{
 		BOUNDED_MEMORY_SIZE("Memory size", "" + 10);
 
-		private String	description			= null;
+		private String	description		= null;
 		private String	defaultValue	= null;
 
 		/**
-		 * 
+		 * Constructor.
 		 */
 		BoundedMemoryProperties(String description, String defaultValue)
 		{
@@ -33,7 +41,9 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 			this.defaultValue = defaultValue;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
 		 */
 		@Override
@@ -66,8 +76,10 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 	{
 		return getMemorySize();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.memory.Memory#getSnapshotsLimit()
 	 */
 	@Override
@@ -121,7 +133,7 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Tiny memory. Remembers just one past snapshot";
+		return "Bounded memory. Remembers a finite number of steps in the past.";
 	}
 
 	/*
@@ -132,7 +144,9 @@ public abstract class BoundedMemory<P extends SycamoreAbstractPoint & Computable
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Tiny memory that remembers just one step in the past. Remembers both the last snapshot and the last self-observation.";
+		return "This plugin represents the bounded memory. This memory has a fixed size that can be chosen by the user. " +
+				"Such size applies both to the number of positions occupied by the robot in the past and to the number of " +
+				"stored past snapshots.";
 	}
 
 	/**

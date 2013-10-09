@@ -26,12 +26,22 @@ import com.jme3.scene.Node;
 import com.jme3.scene.debug.Arrow;
 
 /**
- * @author Vale
+ * Consistent compass in 3D. The directions and orientations of all the axes are agreed between the
+ * robots. The compass is defined consistent as the definitions of north, south, east and west are
+ * the same for all the robots. In terms of of transformation factors, the rotation factors are
+ * completely agreed between robots, as well as the sign of the scale factor along each axis. The
+ * other elements (translation factor and scale factor) are different between a robot and another.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class ConsistentCompass3D extends AgreementImpl<Point3D>
 {
+	/**
+	 * Properties related to consistent compass agreement 3D
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
 	private enum ConsistentCompass3DProperties implements SycamoreProperty
 	{
 		CONSISTENT_COMPASS_3D_FLIP_X("FlipX", false + ""), 
@@ -45,7 +55,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 		private String	defaultValue	= null;
 
 		/**
-		 * 
+		 * Constructor.
 		 */
 		ConsistentCompass3DProperties(String description, String defaultValue)
 		{
@@ -76,7 +86,6 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 		}
 	}
 
-	// node is static because it is the same for all the robots
 	private Node							axesNode		= new Node("Axes node");
 
 	private double							translationX	= SycamoreUtil.getRandomDouble(-4.0, 4.0);
@@ -97,6 +106,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 			@Override
 			public Object call() throws Exception
 			{
+				// red arrow for x axis
 				Arrow arrowX = new Arrow(new Vector3f(2, 0, 0));
 				arrowX.setLineWidth(4); // make arrow thicker
 				Geometry xAxis = new Geometry("X coordinate axis", arrowX);
@@ -107,6 +117,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 				xAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(xAxis);
 
+				// green arrow for y axis
 				Arrow arrowY = new Arrow(new Vector3f(0, 2, 0));
 				arrowY.setLineWidth(4); // make arrow thicker
 				Geometry yAxis = new Geometry("Y coordinate axis", arrowY);
@@ -117,6 +128,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 				yAxis.setLocalTranslation(Vector3f.ZERO);
 				axesNode.attachChild(yAxis);
 
+				// blue arrow for z axis
 				Arrow arrowZ = new Arrow(new Vector3f(0, 0, 2));
 				arrowZ.setLineWidth(4); // make arrow thicker
 				Geometry zAxis = new Geometry("Z coordinate axis", arrowZ);
@@ -205,6 +217,8 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	}
 
 	/**
+	 * Returns a JME Transform object that describes the transforms of the system.
+	 * 
 	 * @return
 	 */
 	private Transform computeTransform()
@@ -217,7 +231,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	}
 	
 	/**
-	 * @return
+	 * @return the signum of the scale on x axis
 	 */
 	private int getSignumX()
 	{
@@ -225,7 +239,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	}
 	
 	/**
-	 * @return
+	 * @return the signum of the scale on y axis
 	 */
 	private int getSignumY()
 	{
@@ -233,7 +247,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	}
 
 	/**
-	 * @return
+	 * @return the signum of the scale on z axis
 	 */
 	private int getSignumZ()
 	{
@@ -428,7 +442,7 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Consistent compass in 3D. North, south, west, east, up, down are the same for all the robots.";
+		return "Consistent compass in 3D. North, south, west, east are the same for all the robots.";
 	}
 
 	/*
@@ -439,7 +453,10 @@ public class ConsistentCompass3D extends AgreementImpl<Point3D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Consistent compass in 3D. Each robot has its own coordinates system with its own origin, but the directions for north, south, west, east, up and down cardinal points are the same for all the robots.";
+		return "Consistent compass in 3D. The directions and orientations of all the axes are agreed between the robots. The compass is defined " +
+				"consistent as the definitions of north, south, east and west are the same for all the robots. In terms of of transformation factors, " +
+				"the rotation factors are completely agreed between robots, as well as the sign of the scale factor along each axis. The other elements " +
+				"(translation factor and scale factor) are different between a robot and another.";
 	}
 
 	/*
