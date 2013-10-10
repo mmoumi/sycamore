@@ -1,5 +1,7 @@
 package it.diunipi.volpi.sycamore.plugins.algorithms;
 
+import java.io.File;
+
 import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
@@ -17,8 +19,8 @@ import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
  */
 public abstract class AlgorithmImpl<P extends SycamoreAbstractPoint & ComputablePoint<P>> implements Algorithm<P>
 {
-	private boolean	finished		= false;
-	private String	paperFilePath	= null;
+	private boolean	finished	= false;
+	private File	paperFile	= null;
 
 	/*
 	 * (non-Javadoc)
@@ -92,7 +94,7 @@ public abstract class AlgorithmImpl<P extends SycamoreAbstractPoint & Computable
 		else
 			return null;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -143,17 +145,17 @@ public abstract class AlgorithmImpl<P extends SycamoreAbstractPoint & Computable
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#getPaperFilePath()
 	 */
 	@Override
-	public String getPaperFilePath()
+	public File getPaperFilePath()
 	{
-		return paperFilePath;
+		return paperFile;
 	}
 
 	/**
 	 * @param paperFilePath
 	 *            the paperFilePath to set
 	 */
-	public void setPaperFilePath(String paperFilePath)
+	public void setPaperFilePath(File paperFilePath)
 	{
-		this.paperFilePath = paperFilePath;
+		this.paperFile = paperFilePath;
 	}
 }

@@ -6,6 +6,7 @@ import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
 import it.diunipi.volpi.sycamore.plugins.SycamoreTypedPlugin;
 
+import java.io.File;
 import java.util.Vector;
 
 /**
@@ -50,7 +51,7 @@ public interface Algorithm<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	 * 
 	 * @return
 	 */
-	public String getPaperFilePath();
+	public File getPaperFilePath();
 
 	/**
 	 * Returns the academic references of this algorithm

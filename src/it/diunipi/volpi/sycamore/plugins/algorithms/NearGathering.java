@@ -18,6 +18,9 @@ import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -566,8 +569,15 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 	 */
 	public NearGathering()
 	{
-		this.setPaperFilePath(SycamoreSystem.getPluginsResourcesDirectory().getAbsolutePath() + System.getProperty("file.separator") + this.getPluginName() + System.getProperty("file.separator")
-				+ "2012-SIROCCO.pdf");
+		try
+		{
+			URL file = this.getClass().getResource("/it/diunipi/volpi/sycamore/plugins/algorithms/resources/2012-SIROCCO.pdf");
+			this.setPaperFilePath(new File(file.toURI()));
+		}
+		catch (URISyntaxException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/*
