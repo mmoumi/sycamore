@@ -35,7 +35,6 @@ public class Point2D extends SycamoreAbstractPoint implements Comparable<Point2D
 	 * 
 	 * @param x
 	 * @param y
-	 * @param z
 	 */
 	public Point2D(float x, float y)
 	{

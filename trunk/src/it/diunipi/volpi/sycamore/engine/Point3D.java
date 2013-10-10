@@ -46,7 +46,7 @@ public class Point3D extends SycamoreAbstractPoint implements Comparable<Point3D
 	/**
 	 * Constructor. Creates a new point with data contained in passed vector
 	 * 
-	 * @param vector3f
+	 * @param vector3
 	 */
 	public Point3D(Vector3f vector3)
 	{

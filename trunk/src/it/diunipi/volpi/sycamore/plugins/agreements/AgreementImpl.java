@@ -10,10 +10,10 @@ import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 
 /**
- * A basic implementation of the <code>Agreement</code> interface. It implements some methods using
+ * A basic implementation of the {@link Agreement} interface. It implements some methods using
  * default values. While implementing a plugin, it is not recommended to start directly from the
- * <code>Agreement</code> interface, but it is suggested to extend the <code>AgreementImpl</code>
- * class instead. This class offers the ability of fixing the measure unit. When the measure unit is
+ * {@link Agreement} interface, but it is suggested to extend the <code>AgreementImpl</code> class
+ * instead. This class offers the ability of fixing the measure unit. When the measure unit is
  * fixed, all the scale factors, independently from which agreement is set, are equal to one.
  * 
  * @author Valerio Volpi - vale.v@me.com

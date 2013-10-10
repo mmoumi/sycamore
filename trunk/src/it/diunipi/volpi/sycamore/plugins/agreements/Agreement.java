@@ -3,14 +3,14 @@
  */
 package it.diunipi.volpi.sycamore.plugins.agreements;
 
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
-
 import it.diunipi.volpi.sycamore.engine.ComputablePoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.plugins.SycamoreTypedPlugin;
+
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 
 /**
  * This plugin represents the agreements on axes. It states that any point in robot's space can be
@@ -23,9 +23,9 @@ import it.diunipi.volpi.sycamore.plugins.SycamoreTypedPlugin;
  * outside. The methods that care about this feature are <code>getLocalTranslation()</code>,
  * <code>getLocalRotation()</code> and <code>getLocalScale()</code>. Finally, the plugin must care
  * about drawing its local coordinates axes in JME scene. The method called
- * <code>getAxesNode()</code> returns a <code>Node</code> object that is attached to the axes node
- * in the scene. While implementing a plugin, it is not recommended to start directly from the
- * <code>Agreement</code> interface, but it is suggested to extend the <code>AgreementImpl</code>
+ * <code>getAxesNode()</code> returns a {@link Node} object that is attached to the axes node in the
+ * scene. While implementing a plugin, it is not recommended to start directly from the
+ * <code>Agreement</code> interface, but it is suggested to extend the {@link AgreementImpl}
  * class instead.
  * 
  * @author Valerio Volpi - vale.v@me.com
@@ -66,7 +66,7 @@ public interface Agreement<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	public Vector3f getLocalTranslation();
 
 	/**
-	 * Returns a <code>Quaternion</code> object that describes the local rotation factors around x,
+	 * Returns a {@link Quaternion} object that describes the local rotation factors around x,
 	 * y, z axes. If the plugin has type 2D, the rotations around x and y should be zero, but they
 	 * are anyway ignored by the system.
 	 * 
@@ -83,7 +83,7 @@ public interface Agreement<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	public Vector3f getLocalScale();
 
 	/**
-	 * Return a JME <code>Node</code> object that represents the local coordinate system axes. This
+	 * Return a JME {@link Node} object that represents the local coordinate system axes. This
 	 * object is attached as-is to the JME scene.
 	 * 
 	 * @return

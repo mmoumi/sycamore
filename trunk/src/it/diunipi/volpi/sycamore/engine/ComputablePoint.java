@@ -12,35 +12,41 @@ package it.diunipi.volpi.sycamore.engine;
 public interface ComputablePoint<P extends SycamoreAbstractPoint>
 {
 	/**
-	 * Returns the dinstance from this point and passed point
+	 * Returns the distance from this point and passed point.
 	 * 
-	 * @param p
-	 * @return
+	 * @param point
+	 *            the point to which compute the distance.
+	 * @return the distance from this point and passed point.
 	 */
 	public float distanceTo(P point);
 
 	/**
-	 * Tells if ths and passed point are equal or if they deiffer for a quantity smaller than
-	 * epsilon
+	 * Tells if this and passed point are equal or if they differ for a quantity smaller than
+	 * epsilon. Formally: (this.distanceTo(point) < epsilon).
 	 * 
-	 * @param p
-	 * @return
+	 * @param point
+	 *            the point to check.
+	 * @return true iff (this.distanceTo(point) < epsilon).
 	 */
 	public boolean differsModuloEpsilon(P point);
 
 	/**
-	 * Sums p1 and p2 and returns the new resulting point
+	 * Sums the coordinates of this and passed point and returns the new resulting point.
 	 * 
-	 * @param p
-	 * @return
+	 * @param point
+	 *            the point to sum with this.
+	 * @return the point resulting from the sum of this point with passed one.
 	 */
 	public P sumWith(P point);
 
 	/**
-	 * Sums p1 and p2 and returns the new resulting point
+	 * Divides all the coordinates of this point for the passed value and returns the new resulting
+	 * point.
 	 * 
-	 * @param p
-	 * @return
+	 * @param value
+	 *            the vaue to divide this point for.
+	 * @return the point resulting from the division of the coordinates of this point for passed
+	 *         value.
 	 */
 	public P divideFor(float value);
 
@@ -51,8 +57,10 @@ public interface ComputablePoint<P extends SycamoreAbstractPoint>
 	 * point) and 1 (passed point).
 	 * 
 	 * @param point
+	 *            the point with wich to interpolate this
 	 * @param ratio
-	 * @return
+	 *            a float value between 0 and 1 that represents the interpolation ratio.
+	 * @return the point resulting from the interpolation of this with passed point at given ratio.
 	 */
 	public P interpolateWith(P point, float ratio);
 
@@ -61,7 +69,9 @@ public interface ComputablePoint<P extends SycamoreAbstractPoint>
 	 * to destination and the 3 axes vectors.
 	 * 
 	 * @param destination
-	 * @return
+	 *            the point used to build the vector angles
+	 * @return pitch, roll, yaw of the angle between the vector starting from this point and going
+	 *         to destination and the 3 axes vectors.
 	 */
 	public float[] getRotationAngles(P destination);
 }
