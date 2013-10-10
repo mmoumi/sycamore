@@ -215,6 +215,15 @@ public class AsynchronousSchedulerPriorityQueue<P extends SycamoreAbstractPoint 
 			}
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginShortDescription()
+	 */
+	@Override
+	public String getPluginShortDescription()
+	{
+		return "This is an implementation of the Asynchronous scheduler. It implements the ASYNCH or CORDA model using a priority queue.";
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -225,13 +234,13 @@ public class AsynchronousSchedulerPriorityQueue<P extends SycamoreAbstractPoint 
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "This is an implementation of the Asynchronous scheduler. It implements the ASYNCH or CORDA model of Mobile Robots theory. In ASYNCH, each robot is activated "
+		return "This is an implementation of the Asynchronous scheduler. It implements the ASYNCH or CORDA model of Mobile Robots theory.\nIn ASYNCH, each robot is activated "
 				+ "asynchronously and independently from the other robots. Furthermore, the duration of each LOOK, COMPUTE, MOVE and SLEEP as well as the time that passes between "
 				+ "successive activities in the same cycle is finite but otherwise unpredictable. As a result, computations can be made based on totally obsolete observations, taken "
-				+ "arbitrarily far in the past. Another consequence is that robots can be seen while moving, creating further inconsistencies in the robot's understanding of the universe. "
+				+ "arbitrarily far in the past. Another consequence is that robots can be seen while moving, creating further inconsistencies in the robot's understanding of the universe.\n"
 				+ "From a technical point of view, in each of its step this scheduler can activate any number of robots, and can execute any of the available operations on each of them. The "
 				+ "operations are always executed in the right order: LOOK-COMPUTE-MOVE-SLEEP, but each of them is executed by the scheduler in a different step, and there is no guarantee "
-				+ "about the time that passes between two calls. The selection of the robots to be activated is performed through the usage of a priority queue where just the not moving "
+				+ "about the time that passes between two calls.\nThe selection of the robots to be activated is performed through the usage of a priority queue where just the not moving "
 				+ "robots are stored. The weights associated to each robot are random, and they are decreased at each step of the scheduler. When the weight associated to a robot becomes zero, "
 				+ "the robot is dequeued and activated. This scheduler has also four funcions that can be activated by the user:\n"
 				+ "- RIGIDITY: If the scheduler is rigid, it makes a robot always perform a rigid movement, that is, it makes a robot always reach its destination point. If otherwise "

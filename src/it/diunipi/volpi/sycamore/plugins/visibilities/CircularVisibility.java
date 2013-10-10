@@ -26,17 +26,21 @@ import com.jme3.texture.Texture;
 import com.jme3.util.TangentBinormalGenerator;
 
 /**
- * @author Vale
+ * 2D Visibility with the shape of a circle. This visibility is modeled by a circle centered in the
+ * position of the robot and with a diameter equal to the visibility range. The border of the circle
+ * is included in the visible area. Any object whose radial distance from the robot is less than
+ * half the visibility range is considered visible.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class CircularVisibility extends VisibilityImpl<Point2D>
 {
-	private Geometry				cylinder		= null;
+	private Geometry				quad			= null;
 	private VisibilitySettingsPanel	settingPanel	= null;
 
 	/**
-	 * 
+	 * Default constructor.
 	 */
 	public CircularVisibility()
 	{
@@ -45,25 +49,30 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 			@Override
 			public Object call() throws Exception
 			{
+				// setup visibility range geometry
 				Material mat = new Material(SycamoreSystem.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 
+				// setup material parameters for transparency and face culling
 				mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 				mat.getAdditionalRenderState().setAlphaTest(true);
 				mat.getAdditionalRenderState().setAlphaFallOff(0);
 				mat.getAdditionalRenderState().setFaceCullMode(FaceCullMode.Off);
 
-				Texture skyTexture = SycamoreSystem.getAssetManager().loadTexture("it/diunipi/volpi/sycamore/resources/textures/circle.png");
-				mat.setTexture("ColorMap", skyTexture);
+				// setup the texture
+				Texture texture = SycamoreSystem.getAssetManager().loadTexture("it/diunipi/volpi/sycamore/resources/textures/circle.png");
+				mat.setTexture("ColorMap", texture);
 
-				cylinder = new Geometry("Cylinder", new Quad(1, 1));
-				cylinder.setLocalScale(getVisibilityRange());
-				cylinder.center();
-				cylinder.setModelBound(new BoundingBox());
-				cylinder.updateModelBound();
+				// prepare a new quad geometry
+				quad = new Geometry("Cylinder", new Quad(1, 1));
+				quad.setLocalScale(getVisibilityRange());
+				quad.center();
+				quad.setModelBound(new BoundingBox());
+				quad.updateModelBound();
 
-				TangentBinormalGenerator.generate(cylinder.getMesh(), true);
-				cylinder.setMaterial(mat);
-				cylinder.setQueueBucket(Bucket.Transparent);
+				// apply the texture to the quad and set the material as fully transparent.
+				TangentBinormalGenerator.generate(quad.getMesh(), true);
+				quad.setMaterial(mat);
+				quad.setQueueBucket(Bucket.Transparent);
 
 				return null;
 			}
@@ -88,11 +97,12 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 			@Override
 			public Object call() throws Exception
 			{
-				cylinder.setLocalScale(getVisibilityRange());
+				quad.setLocalScale(getVisibilityRange());
 
+				// translate the geometry to be centered in the robot's position again.
 				float translationFactor = getVisibilityRange() / 2;
-				cylinder.setLocalTranslation(-translationFactor, -translationFactor, 0.5f);
-				cylinder.updateGeometricState();
+				quad.setLocalTranslation(-translationFactor, -translationFactor, 0.5f);
+				quad.updateGeometricState();
 				return null;
 			}
 		});
@@ -122,7 +132,7 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 		// if the distance between the point and center is less than the radius, the point is
 		// inside the circle
 		float circleRadius = getVisibilityRange() / 2;
-		
+
 		Point2D center = robot.getLocalPosition();
 		if (center.distanceTo(point) < circleRadius)
 		{
@@ -143,7 +153,7 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 	public Point2D getPointInside()
 	{
 		Point2D center = robot.getLocalPosition();
-		
+
 		// get a random radius and a random angle
 		float radius = SycamoreUtil.getRandomFloat(0, (getVisibilityRange() / 2));
 		double angle = Math.random() * Math.PI * 2;
@@ -185,7 +195,7 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public Geometry getVisibilityRangeGeometry()
 	{
-		return cylinder;
+		return quad;
 	}
 
 	/*
@@ -211,7 +221,7 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Circular visibility";
+		return "2D Visibility with the shape of a circle.";
 	}
 
 	/*
@@ -222,7 +232,10 @@ public class CircularVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Visibility bounded by a 2D circle";
+		return "2D Visibility with the shape of a circle. This visibility is modeled by a circle centered in the "
+				+ "position of the robot and with a diameter equal to the visibility range. The border of the circle "
+				+ "is included in the visible area. Any object whose radial distance from the robot is less than half " 
+				+ "the visibility range is considered visible.";
 	}
 
 	/*

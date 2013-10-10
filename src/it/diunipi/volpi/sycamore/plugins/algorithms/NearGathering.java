@@ -34,7 +34,7 @@ import com.jme3.math.ColorRGBA;
 /**
  * Algorithm implementation for Near Gathering: "In this paper we study the Near-Gathering problem
  * for a set of asynchronous, anonymous, oblivious and autonomous mobile robots with limited
- * visibility moving in Look-Compute-Move (LCM) cy- cles: In this problem, the robots have to get
+ * visibility moving in Look-Compute-Move (LCM) cycles: In this problem, the robots have to get
  * close enough to each other, so that every robot can see all the others, without touching (i.e.,
  * colliding) with any other robot. The importance of this problem might not be clear at a first
  * sight: Solving the Near-Gathering problem, it is possible to overcome the limitations of having
@@ -168,9 +168,9 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 
 	/**
 	 * This class defines the contour: The Contour of a robot r at time t, denoted by CT(r,t), is
-	 * the boundary of the set U MS(s,t), where s ranges through all the robots in NW(r,t) ���
-	 * NE(r,t) ��� SE(r,t). We will call a peak of the contour any convex corner of CT (r); the
-	 * concave corners will be called valleys.
+	 * the boundary of the set U MS(s,t), where s ranges through all the robots in NW(r,t) U NE(r,t)
+	 * U SE(r,t). We will call a peak of the contour any convex corner of CT (r); the concave
+	 * corners will be called valleys.
 	 * 
 	 * @author Valerio Volpi - vale.v@me.com
 	 */
@@ -569,8 +569,10 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 		this.setPaperFilePath(SycamoreSystem.getPluginsResourcesDirectory().getAbsolutePath() + System.getProperty("file.separator") + this.getPluginName() + System.getProperty("file.separator")
 				+ "2012-SIROCCO.pdf");
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
 	 */
 	@Override
@@ -716,7 +718,7 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 						Line2D BA = new Line2D.Double(B.x, B.y, A.x, A.y);
 						Line2D Bdp = new Line2D.Double(B.x, B.y, dp.x, dp.y);
 
-						// beta varies from zero to PI/2 (90��)
+						// beta varies from zero to PI/2 (90 degrees)
 						beta = SycamoreUtil.angleBetween2Lines(BA, Bdp);
 					}
 
@@ -783,7 +785,7 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 						}
 						else
 						{
-							// case beta = 90��. Simply project vertically on lower border
+							// case beta = 90 degrees. Simply project vertically on lower border
 
 							float yBorder = (float) (quadrantSW.getY() - quadrantSW.getHeight());
 							Point2D lowerProjection = new Point2D(Br.x, yBorder);

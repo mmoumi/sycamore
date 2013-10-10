@@ -26,8 +26,12 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.util.TangentBinormalGenerator;
 
 /**
- * @author Vale
+ * 3D Visibility with the shape of a sphere. This visibility is modeled by a sphere centered in the
+ * position of the robot and with a diameter equal to the visibility range. The surface of the
+ * sphere is included in the visible area. Any object whose radial distance from the robot is less
+ * than half the visibility range is considered visible.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class SphericalVisibility extends VisibilityImpl<Point3D>
@@ -36,7 +40,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 	private VisibilitySettingsPanel	settingPanel	= null;
 
 	/**
-	 * 
+	 * Default constructor.
 	 */
 	public SphericalVisibility()
 	{
@@ -45,9 +49,11 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 			@Override
 			public Object call() throws Exception
 			{
+				// setup visibility range geometry
 				ColorRGBA color = new ColorRGBA(1.0f, 0.0f, 0.0f, 0.15f);
 				Material mat = new Material(SycamoreSystem.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
 
+				// setup material parameters for transparency and face culling
 				mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 				mat.getAdditionalRenderState().setAlphaTest(true);
 				mat.getAdditionalRenderState().setAlphaFallOff(0);
@@ -58,6 +64,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 				mat.setColor("Specular", ColorRGBA.White);
 				mat.setFloat("Shininess", 50);
 
+				// prepare a new sphere geormetry
 				sphere = new Geometry("Sphere", new Sphere(25, 25, 1));
 				sphere.setLocalScale(getVisibilityRange());
 				sphere.center();
@@ -65,6 +72,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 				sphere.setModelBound(new BoundingSphere());
 				sphere.updateModelBound();
 
+				// set the material to the sphere
 				TangentBinormalGenerator.generate(sphere.getMesh(), true);
 				sphere.setMaterial(mat);
 				sphere.setQueueBucket(Bucket.Transparent);
@@ -117,7 +125,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 	public Point3D getPointInside()
 	{
 		Point3D center = robot.getLocalPosition();
-		
+
 		// get a random radius and a random angle
 		float radius = SycamoreUtil.getRandomFloat(0, (getVisibilityRange() / 2));
 
@@ -189,7 +197,7 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Spherical visibility";
+		return "3D Visibility with the shape of a sphere.";
 	}
 
 	/*
@@ -200,7 +208,10 @@ public class SphericalVisibility extends VisibilityImpl<Point3D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Visibility bounded by a sphere";
+		return "3D Visibility with the shape of a sphere. This visibility is modeled by a sphere centered in the "
+				+ "position of the robot and with a diameter equal to the visibility range. The surface of the sphere "
+				+ "is included in the visible area. Any object whose radial distance from the robot is less than half " 
+				+ "the visibility range is considered visible.";
 	}
 
 	/*

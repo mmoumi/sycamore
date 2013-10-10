@@ -21,13 +21,14 @@ public abstract class SycamoreAbstractPoint implements Cloneable
 	 * Fills the fields in this point using data in passed Vector3f
 	 * 
 	 * @param vector3
+	 *            the vector containing the coordinates to give to this point.
 	 */
 	public abstract void fromVector3f(Vector3f vector3);
 
 	/**
 	 * Returns a Vector3f object corresponding to this point
 	 * 
-	 * @return
+	 * @return a Vector3f object corresponding to this point
 	 */
 	public abstract Vector3f toVector3f();
 
@@ -51,9 +52,11 @@ public abstract class SycamoreAbstractPoint implements Cloneable
 	 * Decode the fields in this Abstract point by taking them from passed XML element. TYPE
 	 * parameter is used to determine the type (2D or 3D) of the decoded object.
 	 * 
-	 * @param parentElem
+	 * @param element
+	 *            the XML element where to take the data
 	 * @param type
-	 * @return
+	 *            the type (2D or 3D) of the decoded object
+	 * @return true if the object is decoded successfully, false otherwise.
 	 */
 	public abstract boolean decode(Element element, TYPE type);
 }

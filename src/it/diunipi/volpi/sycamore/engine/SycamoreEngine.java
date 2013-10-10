@@ -144,7 +144,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	/**
 	 * Returns the default value of the animation speed multiplier
 	 * 
-	 * @return
+	 * @return the default value of the animation speed multiplier
 	 */
 	public static final int getDefaultAnimationSpeedMultiplier()
 	{
@@ -185,7 +185,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * @param selected
+	 * @param visible
 	 */
 	public void setRobotLightsVisible(boolean visible)
 	{
@@ -323,7 +323,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * all the robots in the engine. This memory will be applied also the newly created robots,
 	 * since this moment.
 	 * 
-	 * @param algorithm
+	 * @param memory
 	 * @throws InvocationTargetException
 	 * @throws IllegalArgumentException
 	 * @throws InstantiationException
@@ -442,10 +442,11 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * Returns a list of <code>Observation</code> objects, that contains informations about the
-	 * positions and the lights of every robot in the system, excluding the callee of the method.
+	 * Returns a list of {@link Observation} objects, that contains informations about the positions
+	 * and the lights of every robot in the system, excluding the callee of the method.
 	 * 
-	 * @return
+	 * @return a list of {@link Observation} objects, that contains informations about the positions
+	 *         and the lights of every robot in the system, excluding the callee of the method.
 	 * @throws TimelineNotAccessibleException
 	 *             if someone tries to access a timeline without permissions.
 	 */
@@ -504,8 +505,13 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
+	 * Removes a group of robots from the system. The passed index corresponds to the row of both
+	 * the robots matrix and the human pilot robots matrix to be deleted. The removed robots are
+	 * returned.
+	 * 
 	 * @param index
-	 * @return
+	 *            the row of both the robots matrix and the human pilot robots matrix to be deleted.
+	 * @return the removed robots
 	 */
 	public Vector<SycamoreRobot<P>> removeRobotListElement(int index)
 	{
@@ -523,27 +529,33 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	/**
 	 * Computes a starting point for a new robot
 	 * 
-	 * @param pointType
-	 * @return
+	 * @return a new starting point for a robot.
 	 */
 	protected abstract P computeStartingPoint();
 
 	/**
-	 * Creates a new robot with passed algorithm and color, and adds it to the index-th list.
+	 * Creates a new robot and inserts it inside the appropriate robots matrix. The robot is
+	 * inserted into the robots matrix or the human pilot robots matrix depending on the value if
+	 * the isHumanPilot field. The index parameter identifies the row of the matrix where to store
+	 * the robot, and the other three parameters are used to create it.
 	 * 
-	 * @param algorithm
-	 * @param color
+	 * @param isHumanPilot
 	 * @param index
-	 * @param speed 
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
+	 * @param color
+	 * @param numLights
+	 * @param speed
+	 * @return
 	 */
 	public abstract SycamoreRobot<P> createAndAddNewRobotInstance(boolean isHumanPilot, int index, ColorRGBA color, int numLights, float speed);
 
 	/**
-	 * Removes a robot (any) from the index-th list
+	 * Removes a robot (any) from the index-th list. The removed robot is returned and the list is
+	 * never deleted, even if it becomes empty.
 	 * 
 	 * @param index
+	 *            the index of the row of of both the robots matrix and the human pilot robots
+	 *            matrix where to remove a robot. The list is never deleted, even if it becomes
+	 *            empty.
 	 * @return
 	 */
 	public SycamoreRobot<P> removeRobot(boolean isHumanPilot, int index)
@@ -604,10 +616,11 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * visibility in passed robot. No other robot will be touched.
 	 * 
 	 * @param visibility
-	 * @throws InvocationTargetException
+	 * @param robot
 	 * @throws IllegalArgumentException
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
 	 */
 	public abstract void createAndSetNewVisibilityInstance(Visibility<P> visibility, SycamoreRobot<P> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
 			InvocationTargetException;
@@ -670,7 +683,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * Returns true if this engine is valid. An engine is valid if there is at least a robot, and if
 	 * its current scheduler is set (not null).
 	 * 
-	 * @return
+	 * @return true if this engine is valid, false otherwise.
 	 */
 	public boolean isValid()
 	{
@@ -710,7 +723,8 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * Call the <code>onSimulationStart()</code> method on all the measures registed in this engine.
+	 * Call the <code>onSimulationStart()</code> method on all the measures registered in this
+	 * engine.
 	 */
 	public void performMeasuresSimulationStart()
 	{
@@ -726,7 +740,8 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * Call the <code>onSimulationStep()</code> method on all the measures registed in this engine.
+	 * Call the <code>onSimulationStep()</code> method on all the measures registered in this
+	 * engine.
 	 */
 	public void performMeasuresSimulationStep()
 	{
@@ -742,7 +757,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
-	 * Call the <code>onSimulationEnd()</code> method on all the measures registed in this engine.
+	 * Call the <code>onSimulationEnd()</code> method on all the measures registered in this engine.
 	 */
 	public void performMeasuresSimulationEnd()
 	{
@@ -808,7 +823,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	/**
 	 * Returns the TYPE enum element corresponding to the type of this engine.
 	 * 
-	 * @return
+	 * @return the TYPE enum element corresponding to the type of this engine.
 	 */
 	public abstract TYPE getType();
 

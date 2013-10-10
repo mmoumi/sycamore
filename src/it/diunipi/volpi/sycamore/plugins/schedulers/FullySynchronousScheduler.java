@@ -55,7 +55,7 @@ public class FullySynchronousScheduler<P extends SycamoreAbstractPoint & Computa
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "This is an implementation of the fully synchronous scheduler. It implements the FSYNCH model of the Mobile Robots Theory. "
+		return "This is an implementation of the fully synchronous scheduler. It implements the FSYNCH model of the Mobile Robots Theory.\n"
 				+ "At each step of the scheduler, all the robots are activated, and all of them obtain a snapshot of the same instant in time. "
 				+ "Moreover, all of them start moving together, and the step of the scheduler ends just when all the robots reach their destination. "
 				+ "As a consequence, no robot will ever be observed while moving, and the understanding of the active robots is always consistent.";

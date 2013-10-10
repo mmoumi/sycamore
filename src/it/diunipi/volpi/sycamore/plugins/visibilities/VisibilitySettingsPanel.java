@@ -21,8 +21,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 /**
- * @author Vale
+ * The generic settings panel for visibility plugins
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 public class VisibilitySettingsPanel extends SycamorePanel
 {
@@ -65,7 +66,7 @@ public class VisibilitySettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return label_visibilityRange
 	 */
 	private JLabel getLabel_visibilityRange()
 	{
@@ -78,7 +79,7 @@ public class VisibilitySettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return slider_visibilityRange
 	 */
 	private JSlider getSlider_visibilityRange()
 	{
@@ -112,7 +113,7 @@ public class VisibilitySettingsPanel extends SycamorePanel
 	}
 
 	/**
-	 * @return
+	 * @return panel_size
 	 */
 	private JPanel getPanel_size()
 	{

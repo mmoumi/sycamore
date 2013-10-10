@@ -51,7 +51,7 @@ public class SemiSynchronousScheduler<P extends SycamoreAbstractPoint & Computab
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "This is an implementation of the Semi-Synchronous scheduler. It implements the model in theory that is called SSYNCH, SYm or ATOM. " +
+		return "This is an implementation of the Semi-Synchronous scheduler. It implements the model in theory that is called SSYNCH, SYm or ATOM.\n" +
 				"At each step of the scheduler, a subset of the robots are activated, and they obtain the same snapshot of the environment. " +
 				"The same subset of the robots executes the COMPUTE and MOVE operation synchronously, and the step of the scheduler ends just when " +
 				"all the robots reach their destination. As a consequence, no robot will ever be observed while moving, and the understanding of " +

@@ -57,9 +57,9 @@ import org.w3c.dom.NodeList;
 public abstract class SycamoreApp extends JFrame
 {
 	/**
-	 * Applicatio modes
+	 * Application modes
 	 * 
-	 * @author Vale
+	 * @author Valerio Volpi - vale.v@me.com
 	 */
 	public static enum APP_MODE
 	{

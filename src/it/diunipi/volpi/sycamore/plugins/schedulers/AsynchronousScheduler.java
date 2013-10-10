@@ -201,7 +201,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "This is an implementation of the Asynchronous scheduler. It implements the ASYNCH or CORDA model of Mobile Robots theory.";
+		return "This is an implementation of the Asynchronous scheduler. It implements the ASYNCH or CORDA model using random subsets.";
 	}
 
 	/* (non-Javadoc)
@@ -210,13 +210,13 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "This is an implementation of the Asynchronous scheduler. It implements the ASYNCH or CORDA model of Mobile Robots theory. In ASYNCH, each robot is activated "
+		return "This is an implementation of the Asynchronous scheduler. It implements the ASYNCH or CORDA model of Mobile Robots theory.\nIn ASYNCH, each robot is activated "
 				+ "asynchronously and independently from the other robots. Furthermore, the duration of each LOOK, COMPUTE, MOVE and SLEEP as well as the time that passes between "
 				+ "successive activities in the same cycle is finite but otherwise unpredictable. As a result, computations can be made based on totally obsolete observations, taken "
-				+ "arbitrarily far in the past. Another consequence is that robots can be seen while moving, creating further inconsistencies in the robot's understanding of the universe. "
-				+ "From a technical point of view, in each of its step this scheduler can activate any number of robots, and can execute any of the available operations on each of them. The "
+				+ "arbitrarily far in the past. Another consequence is that robots can be seen while moving, creating further inconsistencies in the robot's understanding of the universe.\n"
+				+ "From a technical point of view, in each of its step this scheduler can activate any number of robots, and it can execute any of the available operations on each of them. The "
 				+ "operations are always executed in the right order: LOOK-COMPUTE-MOVE-SLEEP, but each of them is executed by the scheduler in a different step, and there is no guarantee "
-				+ "about the time that passes between two calls. The selection of the robots to be activated is performed through a random subset of the not moving robots. To be more precise, "
+				+ "about the time that passes between two calls.\nThe selection of the robots to be activated is performed through a random subset of the not moving robots. To be more precise, "
 				+ "the scheduler in its step takes the list of all the robots that are not in MOVING state, computes a random subset of them, and activates them by calling one operation "
 				+ "on each of the selected robots. This scheduler has also four funcions that can be activated by the user:\n" 
 				+ "- RIGIDITY: If the scheduler is rigid, it makes a robot always perform a rigid movement, that is, it makes a robot always reach its destination point. If otherwise "

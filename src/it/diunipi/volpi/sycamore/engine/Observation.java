@@ -29,6 +29,8 @@ public class Observation<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	}
 
 	/**
+	 * Returns the position of the observed robot.
+	 * 
 	 * @return the robotPosition
 	 */
 	public P getRobotPosition()
@@ -37,7 +39,11 @@ public class Observation<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	}
 
 	/**
-	 * @return
+	 * Returns the {@link Iterator} object that gives access to all the lights of the observed
+	 * robot.
+	 * 
+	 * @return the {@link Iterator} object that gives access to all the lights of the observed
+	 *         robot.
 	 */
 	public Iterator<SycamoreRobotLight<P>> getLightsIterator()
 	{
@@ -45,7 +51,9 @@ public class Observation<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	}
 
 	/**
-	 * @return the humanPilot
+	 * Returns true if the observed robot is a Human Pilot, false otherwise.
+	 * 
+	 * @return true if the observed robot is a Human Pilot, false otherwise.
 	 */
 	public boolean isHumanPilot()
 	{

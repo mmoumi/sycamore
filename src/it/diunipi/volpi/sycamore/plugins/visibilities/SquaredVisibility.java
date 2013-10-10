@@ -27,8 +27,12 @@ import com.jme3.texture.Texture;
 import com.jme3.util.TangentBinormalGenerator;
 
 /**
- * @author Vale
+ * 2D Visibility with the shape of a square. This visibility is modeled by a square centered in the
+ * position of the robot and with a side equal to the visibility range. The border of the square is
+ * included in the visible area and any object that is inside the square's area is considered
+ * visible.
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
 public class SquaredVisibility extends VisibilityImpl<Point2D>
@@ -37,7 +41,7 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 	private VisibilitySettingsPanel	settingPanel	= null;
 
 	/**
-	 * 
+	 * Default constructor.
 	 */
 	public SquaredVisibility()
 	{
@@ -46,16 +50,20 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 			@Override
 			public Object call() throws Exception
 			{
+				// setup visibility range geometry
 				Material mat = new Material(SycamoreSystem.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 
+				// setup material parameters for transparency and face culling
 				mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 				mat.getAdditionalRenderState().setAlphaTest(true);
 				mat.getAdditionalRenderState().setAlphaFallOff(0);
 				mat.getAdditionalRenderState().setFaceCullMode(FaceCullMode.Off);
 
+				// setup the texture
 				Texture skyTexture = SycamoreSystem.getAssetManager().loadTexture("it/diunipi/volpi/sycamore/resources/textures/square.png");
 				mat.setTexture("ColorMap", skyTexture);
 
+				// prepare a new quad geometry
 				square = new Geometry("Square", new Quad(1, 1));
 				square.setLocalScale(getVisibilityRange());
 				square.center();
@@ -65,6 +73,7 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 				square.setModelBound(new BoundingBox());
 				square.updateModelBound();
 
+				// apply the texture to the quad and set the material as fully transparent.
 				TangentBinormalGenerator.generate(square.getMesh(), true);
 				square.setMaterial(mat);
 				square.setQueueBucket(Bucket.Transparent);
@@ -86,7 +95,7 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 	{
 		Point2D center = robot.getLocalPosition();
 		float visibilityRange = getVisibilityRange();
-		
+
 		// build a square around point1
 		float x = center.x - (visibilityRange / 2);
 		float y = center.y + (visibilityRange / 2);
@@ -101,16 +110,18 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 
 		return false;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.visibilities.Visibility#getPointInside()
 	 */
 	@Override
 	public Point2D getPointInside()
-	{	
+	{
 		Point2D center = robot.getLocalPosition();
 		float visibilityRange = getVisibilityRange();
-		
+
 		float startX = center.x - (visibilityRange / 2);
 		float endX = center.x + (visibilityRange / 2);
 		float startY = center.y - (visibilityRange / 2);
@@ -173,7 +184,7 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public String getPluginShortDescription()
 	{
-		return "Squared visibility";
+		return "2D Visibility with the shape of a square.";
 	}
 
 	/*
@@ -184,7 +195,9 @@ public class SquaredVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public String getPluginLongDescription()
 	{
-		return "Visibility bounded by a 2D square";
+		return "2D Visibility with the shape of a square. This visibility is modeled by a square centered in the "
+				+ "position of the robot and with a side equal to the visibility range. The border of the square is "
+				+ "included in the visible area and any object that is inside the square's area is considered visible.";
 	}
 
 	/*
