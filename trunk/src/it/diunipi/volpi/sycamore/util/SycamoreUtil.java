@@ -10,6 +10,7 @@ import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
@@ -751,6 +752,22 @@ public class SycamoreUtil
 		else
 		{
 			return (P) new Point3D();
+		}
+	}
+
+	/**
+	 * Tries to open a file with its editor. If it fails, tries to launch it in the browser.
+	 */
+	public static void editFile(File file)
+	{
+		Desktop desktop = Desktop.getDesktop();
+		try
+		{
+			desktop.open(file);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 }

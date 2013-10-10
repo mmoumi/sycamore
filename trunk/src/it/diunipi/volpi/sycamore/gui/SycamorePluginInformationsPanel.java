@@ -6,6 +6,7 @@ package it.diunipi.volpi.sycamore.gui;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.plugins.SycamorePlugin;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
+import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -14,6 +15,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -32,7 +34,7 @@ public class SycamorePluginInformationsPanel extends SycamorePanel
 	private static final long		serialVersionUID			= 1575372130256223294L;
 	private final SycamorePlugin	plugin;
 
-	private String					paperPath					= null;
+	private File					paperFile					= null;
 
 	private JLabel					label_pluginName			= null;
 	private JTextPane				textPane_longDescription	= null;
@@ -82,8 +84,8 @@ public class SycamorePluginInformationsPanel extends SycamorePanel
 				getLabel_pluginReferences().setText(references);
 
 				// fix the null paper case
-				paperPath = algorithm.getPaperFilePath();
-				if (paperPath == null)
+				paperFile = algorithm.getPaperFilePath();
+				if (paperFile == null)
 				{
 					getButton_viewArticle().setEnabled(false);
 				}
@@ -119,7 +121,7 @@ public class SycamorePluginInformationsPanel extends SycamorePanel
 						fireActionEvent(e);
 					}
 				});
-				
+
 				getPanel_settingsContainer().add(settingPanel, gbc_panel);
 			}
 			else
@@ -430,14 +432,19 @@ public class SycamorePluginInformationsPanel extends SycamorePanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					
+					if (plugin != null && plugin instanceof Algorithm)
+					{
+						SycamoreUtil.editFile(paperFile);
+					}
 				}
 			});
 		}
 		return button_viewArticle;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.gui.SycamorePanel#reset()
 	 */
 	@Override
