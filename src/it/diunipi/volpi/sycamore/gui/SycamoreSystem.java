@@ -297,6 +297,9 @@ public class SycamoreSystem
 	}
 
 	/**
+	 * Returns the epsilon value, that is the minimum moving value. If a robot computes a
+	 * destination closer to it than epsilon, it does not move.
+	 * 
 	 * @return the epsilon
 	 */
 	public static float getEpsilon()
