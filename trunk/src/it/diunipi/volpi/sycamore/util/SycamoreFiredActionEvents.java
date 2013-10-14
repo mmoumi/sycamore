@@ -34,7 +34,12 @@ public enum SycamoreFiredActionEvents
 	SELECTED_MEMORY_CHANGED("Selected memory changed"),
 	UPDATE_GUI("Update the GUI"), 
 	UPDATE_AGREEMENTS_GRAPHICS("Update the agreements graphics"), 
-	LOAD_PLUGIN("Load a new plugin"), 
+	LOAD_PLUGIN("Load a new plugin"),
+	ROBOT_DIRECTION_CHANGED("The robot direction is now changed"),
+	ROBOT_RATIO_CHANGED("The robot ratio is now changed"),
+	ROBOT_DID_LOOK("The robot did perform a look"),
+	ROBOT_DID_COMPUTE("The robot did perform a compute"),
+	ROBOT_DID_MOVE("The robot did perform a move"),
 	SWITCH_TOGGLE_SELECTED("Switch toggle selected");
 
 	private String	description	= null;
