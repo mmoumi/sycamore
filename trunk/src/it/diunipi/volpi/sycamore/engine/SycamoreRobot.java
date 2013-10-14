@@ -14,7 +14,10 @@ import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SubsetFairnessSupporter;
+import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -86,6 +89,8 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 
 	// intermedate operations data
 	private Vector<Observation<P>>				snapshot			= null;
+
+	private Vector<ActionListener>				listeners			= null;
 
 	/**
 	 * Default constructor.
@@ -167,6 +172,54 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	protected abstract SycamoreRobotLight<P> createNewLightInstance();
 
 	/**
+	 * Adds an <code>ActionListener</code> to the button.
+	 * 
+	 * @param listener
+	 *            the <code>ActionListener</code> to be added
+	 */
+	public void addActionListener(ActionListener listener)
+	{
+		if (this.listeners == null)
+		{
+			this.listeners = new Vector<ActionListener>();
+		}
+		this.listeners.add(listener);
+	}
+
+	/**
+	 * Removes an <code>ActionListener</code> from the button. If the listener is the currently set
+	 * <code>Action</code> for the button, then the <code>Action</code> is set to <code>null</code>.
+	 * 
+	 * @param listener
+	 *            the listener to be removed
+	 */
+	public void removeActionListener(ActionListener listener)
+	{
+		if (this.listeners == null)
+		{
+			this.listeners = new Vector<ActionListener>();
+		}
+		this.listeners.remove(listener);
+	}
+
+	/**
+	 * Fires passed ActionEvent to all registered listeners, by calling <code>ActionPerformed</code>
+	 * method on all of them.
+	 * 
+	 * @param e
+	 */
+	protected void fireActionEvent(ActionEvent e)
+	{
+		if (this.listeners != null)
+		{
+			for (ActionListener listener : this.listeners)
+			{
+				listener.actionPerformed(e);
+			}
+		}
+	}
+
+	/**
 	 * @return
 	 */
 	public P getGlobalPosition()
@@ -194,6 +247,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		{
 			updateDirectionGeometry();
 		}
+		fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.ROBOT_RATIO_CHANGED.name()));
 	}
 
 	/*
@@ -235,10 +289,13 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 				@Override
 				public Object call() throws Exception
 				{
-					directionGeometry.setLocalRotation(rotation);
+
+					robotNode.setLocalRotation(rotation);
 					return null;
 				}
 			});
+			
+			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.ROBOT_DIRECTION_CHANGED.name()));
 		}
 	}
 
@@ -577,6 +634,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			}
 
 			setCurrentState(ROBOT_STATE.READY_TO_COMPUTE);
+			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.ROBOT_DID_LOOK.name()));
 		}
 	}
 
@@ -631,6 +689,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			{
 				setCurrentState(ROBOT_STATE.READY_TO_MOVE);
 			}
+			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.ROBOT_DID_COMPUTE.name()));
 		}
 	}
 
@@ -647,6 +706,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			this.snapshot = null;
 
 			setCurrentState(ROBOT_STATE.MOVING);
+			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.ROBOT_DID_MOVE.name()));
 		}
 	}
 
