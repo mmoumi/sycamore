@@ -212,7 +212,10 @@ public class Point3D extends SycamoreAbstractPoint implements Comparable<Point3D
 		if (obj instanceof Point3D)
 		{
 			Point3D o = (Point3D) obj;
-			return this.x == o.x && this.y == o.y && this.z == o.z;
+
+			return (this.x >= (o.x - SycamoreSystem.getEpsilon()) && this.x <= (o.x + SycamoreSystem.getEpsilon()))
+					&& (this.y >= (o.y - SycamoreSystem.getEpsilon()) && this.y <= (o.y + SycamoreSystem.getEpsilon()))
+					&& (this.z >= (o.z - SycamoreSystem.getEpsilon()) && this.z <= (o.z + SycamoreSystem.getEpsilon()));
 		}
 
 		return false;
@@ -296,37 +299,43 @@ public class Point3D extends SycamoreAbstractPoint implements Comparable<Point3D
 
 		return ret;
 	}
-	
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#encode(javax.xml.parsers.DocumentBuilderFactory, javax.xml.parsers.DocumentBuilder, org.w3c.dom.Document)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#encode(javax.xml.parsers.
+	 * DocumentBuilderFactory, javax.xml.parsers.DocumentBuilder, org.w3c.dom.Document)
 	 */
 	@Override
 	public synchronized Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
 	{
 		// create element
 		Element element = document.createElement("Point3D");
-		
+
 		// children
-		
+
 		Element xElem = document.createElement("x");
 		xElem.appendChild(document.createTextNode(x + ""));
-		
+
 		Element yElem = document.createElement("y");
 		yElem.appendChild(document.createTextNode(y + ""));
-		
+
 		Element zElem = document.createElement("z");
 		zElem.appendChild(document.createTextNode(z + ""));
-		
+
 		// append children
 		element.appendChild(xElem);
 		element.appendChild(yElem);
 		element.appendChild(zElem);
-		
+
 		return element;
 	}
-	
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#decode(org.w3c.dom.Element, it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#decode(org.w3c.dom.Element,
+	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE)
 	 */
 	@Override
 	public synchronized boolean decode(Element element, TYPE type)
@@ -343,7 +352,7 @@ public class Point3D extends SycamoreAbstractPoint implements Comparable<Point3D
 				Element xElem = (Element) x.item(0);
 				this.x = Float.parseFloat(xElem.getTextContent());
 			}
-			
+
 			// y
 			NodeList y = element.getElementsByTagName("y");
 			if (y.getLength() > 0)
@@ -351,7 +360,7 @@ public class Point3D extends SycamoreAbstractPoint implements Comparable<Point3D
 				Element yElem = (Element) y.item(0);
 				this.y = Float.parseFloat(yElem.getTextContent());
 			}
-			
+
 			// z
 			NodeList z = element.getElementsByTagName("z");
 			if (z.getLength() > 0)
@@ -360,7 +369,7 @@ public class Point3D extends SycamoreAbstractPoint implements Comparable<Point3D
 				this.z = Float.parseFloat(zElem.getTextContent());
 			}
 		}
-		
+
 		return true;
 	}
 }

@@ -1,14 +1,14 @@
 package it.diunipi.volpi.sycamore.engine;
 
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
-import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 
 import com.jme3.math.Vector3f;
 
@@ -207,7 +207,9 @@ public class Point2D extends SycamoreAbstractPoint implements Comparable<Point2D
 		if (obj instanceof Point2D)
 		{
 			Point2D o = (Point2D) obj;
-			return this.x == o.x && this.y == o.y;
+			
+			return (this.x >= (o.x - SycamoreSystem.getEpsilon()) && this.x <= (o.x + SycamoreSystem.getEpsilon()))
+					&& (this.y >= (o.y - SycamoreSystem.getEpsilon()) && this.y <= (o.y + SycamoreSystem.getEpsilon()));
 		}
 
 		return false;
@@ -235,9 +237,9 @@ public class Point2D extends SycamoreAbstractPoint implements Comparable<Point2D
 	public float[] getRotationAngles(Point2D destination)
 	{
 		float[] ret = new float[3];
-		
+
 		float angle;
-		
+
 		Vector3f src = Vector3f.UNIT_X;
 		if (this.y < destination.y)
 		{
@@ -251,40 +253,46 @@ public class Point2D extends SycamoreAbstractPoint implements Comparable<Point2D
 			dest.normalizeLocal();
 			angle = (float) (src.angleBetween(dest) - Math.PI);
 		}
-		
+
 		ret[0] = 0;
 		ret[1] = 0;
 		ret[2] = angle;
-		
+
 		return ret;
 	}
-	
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#encode(javax.xml.parsers.DocumentBuilderFactory, javax.xml.parsers.DocumentBuilder, org.w3c.dom.Document)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#encode(javax.xml.parsers.
+	 * DocumentBuilderFactory, javax.xml.parsers.DocumentBuilder, org.w3c.dom.Document)
 	 */
 	@Override
 	public synchronized Element encode(DocumentBuilderFactory factory, DocumentBuilder builder, Document document)
 	{
 		// create element
 		Element element = document.createElement("Point2D");
-		
+
 		// children
-		
+
 		Element xElem = document.createElement("x");
 		xElem.appendChild(document.createTextNode(x + ""));
-		
+
 		Element yElem = document.createElement("y");
 		yElem.appendChild(document.createTextNode(y + ""));
-		
+
 		// append children
 		element.appendChild(xElem);
 		element.appendChild(yElem);
-		
+
 		return element;
 	}
-	
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#decode(org.w3c.dom.Element, it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint#decode(org.w3c.dom.Element,
+	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE)
 	 */
 	@Override
 	public synchronized boolean decode(Element element, TYPE type)
@@ -301,7 +309,7 @@ public class Point2D extends SycamoreAbstractPoint implements Comparable<Point2D
 				Element xElem = (Element) x.item(0);
 				this.x = Float.parseFloat(xElem.getTextContent());
 			}
-			
+
 			// y
 			NodeList y = element.getElementsByTagName("y");
 			if (y.getLength() > 0)
@@ -310,7 +318,7 @@ public class Point2D extends SycamoreAbstractPoint implements Comparable<Point2D
 				this.y = Float.parseFloat(yElem.getTextContent());
 			}
 		}
-		
+
 		return true;
 	}
 }
