@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 
@@ -242,12 +243,15 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	@Override
 	public synchronized void setCurrentRatio(float currentRatio)
 	{
-		super.setCurrentRatio(currentRatio);
-		if (currentRatio < 1)
+		if (currentRatio != this.getCurrentRatio())
 		{
-			updateDirectionGeometry();
+			super.setCurrentRatio(currentRatio);
+			if (currentRatio < 1)
+			{
+				updateDirectionGeometry();
+			}
+			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.ROBOT_RATIO_CHANGED.name()));
 		}
-		fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.ROBOT_RATIO_CHANGED.name()));
 	}
 
 	/*
@@ -281,21 +285,26 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		if (SycamoreSystem.isMovementDirectionsVisible() && getDirection() != null && this.sceneGeometry != null)
 		{
-			float[] angles = this.getLocalPosition().getRotationAngles(getDirection());
-			final Quaternion rotation = new Quaternion(angles);
+			P position = this.getLocalPosition();
+			P direction = getDirection();
 
-			SycamoreSystem.enqueueToJME(new Callable<Object>()
+			if (!position.equals(direction))
 			{
-				@Override
-				public Object call() throws Exception
-				{
+				float[] angles = this.getLocalPosition().getRotationAngles(getDirection());
+				final Quaternion rotation = new Quaternion(angles);
 
-					robotNode.setLocalRotation(rotation);
-					return null;
-				}
-			});
-			
-			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.ROBOT_DIRECTION_CHANGED.name()));
+				SycamoreSystem.enqueueToJME(new Callable<Object>()
+				{
+					@Override
+					public Object call() throws Exception
+					{
+						robotNode.setLocalRotation(rotation);
+						return null;
+					}
+				});
+
+				fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.ROBOT_DIRECTION_CHANGED.name()));
+			}
 		}
 	}
 
@@ -625,6 +634,9 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			setCurrentState(ROBOT_STATE.LOOKING);
 
 			this.snapshot = engine.getObservations(this);
+
+			// shuffle observations to change their oder
+			Collections.shuffle(this.snapshot);
 
 			// if there is a mmory set, save data
 			if (memory != null)
@@ -1205,5 +1217,13 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		}
 
 		return success;
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isHumanPilot()
+	{
+		return (algorithm != null && algorithm.isHumanPilot());
 	}
 }
