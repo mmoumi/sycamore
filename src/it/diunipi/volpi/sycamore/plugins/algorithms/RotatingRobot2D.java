@@ -52,7 +52,7 @@ public class RotatingRobot2D extends AlgorithmImpl<Point2D>
 		else
 		{
 			Point2D p = new Point2D(FastMath.cos(angle), FastMath.sin(angle));
-			angle -= 0.005f;
+			angle += 0.005f;
 
 			callee.setDirection(p);
 			
