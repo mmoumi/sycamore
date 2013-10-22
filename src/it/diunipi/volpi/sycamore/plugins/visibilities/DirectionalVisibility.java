@@ -8,6 +8,7 @@ import it.diunipi.volpi.sycamore.engine.Point2D;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.Vector;
 import java.util.concurrent.Callable;
@@ -18,6 +19,7 @@ import com.jme3.bounding.BoundingBox;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.material.RenderState.FaceCullMode;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
@@ -38,6 +40,7 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 {
 	protected Geometry				triangle		= null;
 	private VisibilitySettingsPanel	settingPanel	= null;
+	private int						angle			= 40;
 
 	/**
 	 * Default constructor.
@@ -64,7 +67,7 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 
 				// prepare a new quad geometry
 				triangle = new Geometry("Triangle", new Quad(1, 1));
-				triangle.setLocalScale(getVisibilityRange());
+				triangle.setLocalScale(2 * getVisibilityRange());
 				triangle.center();
 
 				Vector3f translation = triangle.getLocalTranslation();
@@ -92,7 +95,60 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public boolean isPointVisible(Point2D point)
 	{
-		return true;
+		// obtain the angle of rotation
+		Quaternion rotation = robot.getRobotNode().getLocalRotation();
+		float[] angles = rotation.toAngles(null);
+		// System.out.println(Arrays.toString(angles));
+
+		// theta is the rotation around z axis
+		double theta = 0;
+		if (angles[0] == 0 && angles[1] == 0)
+		{
+			theta = angles[2];
+			if (theta < 0)
+			{
+				theta = (2 * Math.PI) + theta;
+			}
+		}
+		else
+		{
+			theta = ((Math.PI / 2) - angles[2]) + (Math.PI / 2);
+			if (theta < 0)
+			{
+				theta = (Math.PI) - theta;
+			}
+		}
+
+		// compute alpha and beta by difference, since theta is the angle between the horizontal
+		// axis and the direction halfline. Alpha and beta are the angles respectively higher and
+		// lower of 20 degrees.
+		double eta = theta + Math.toRadians(angle / 2);
+		double delta = eta - Math.toRadians(angle);
+
+		// System.out.println("theta: " + theta + ", eta: " + eta + ", delta: " + delta);
+		if (!robot.isHumanPilot())
+		{
+			System.out.println("theta: " + Math.toDegrees(theta));
+		}
+
+		// one point of the triangle is the robot's position
+		Point2D position = robot.getLocalPosition();
+
+		// compute the others. There are 2 triangles whose vertices are points of the main triangle.
+		// the trigonometric formulas are
+		// c = a sin gamma
+		// b = a cos gamma
+		// where a is well-known and gamma is represented by eta and delta for the rectangles
+		float a = getVisibilityRange();
+
+		Point2D x = new Point2D(a * (float) Math.cos(eta), a * (float) Math.sin(eta));
+		Point2D y = new Point2D(a * (float) Math.cos(delta), a * (float) Math.sin(delta));
+
+		if (!robot.isHumanPilot())
+		{
+			System.out.println("Point: " + point + ", position: " + position + ", x: " + x + ", y: " + y);
+		}
+		return SycamoreUtil.isPointInsideTriangle(point, position, x, y);
 	}
 
 	/*
@@ -103,7 +159,25 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public Point2D getPointInside()
 	{
-		return null;
+		// take the segment between the robot and the direction
+		Point2D center = robot.getLocalPosition();
+		Point2D direction = robot.getDirection();
+
+		float distance = center.distanceTo(direction);
+
+		// compute a random length between 0 and visibility range
+		float length = SycamoreUtil.getRandomFloat(0, getVisibilityRange());
+
+		if (distance <= length)
+		{
+			return direction;
+		}
+		else
+		{
+			// return the point on the segment
+			float ratio = distance / length;
+			return new Point2D(direction.x / ratio, direction.y / ratio);
+		}
 	}
 
 	/*
@@ -114,7 +188,19 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public Vector<Observation<Point2D>> filter(Vector<Observation<Point2D>> observations)
 	{
-		return observations;
+		Vector<Observation<Point2D>> filtered = new Vector<Observation<Point2D>>();
+
+		// filter observations
+		for (Observation<Point2D> observation : observations)
+		{
+			Point2D robotPosition = observation.getRobotPosition();
+			if (isPointVisible(robotPosition))
+			{
+				filtered.add(observation);
+			}
+		}
+
+		return filtered;
 	}
 
 	/*
