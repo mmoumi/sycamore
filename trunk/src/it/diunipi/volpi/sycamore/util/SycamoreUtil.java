@@ -718,6 +718,34 @@ public class SycamoreUtil
 	}
 
 	/**
+	 * Returns true if passed point is inside the triangle composed of the three passed points,
+	 * false otherwise. Points on border are considered part of the triangle.
+	 * 
+	 * @param point
+	 * @param a
+	 * @param b
+	 * @param c
+	 * @return
+	 */
+	public static boolean isPointInsideTriangle(Point2D point, Point2D a, Point2D b, Point2D c)
+	{
+		float x1 = a.x, y1 = a.y;
+		float x2 = b.x, y2 = b.y;
+		float x3 = c.x, y3 = c.y;
+
+		// area of the triangle
+		double ABC = Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
+
+		// area of the 3 triangles with p and the 3 points
+		double ABP = Math.abs(x1 * (y2 - point.y) + x2 * (point.y - y1) + point.x * (y1 - y2));
+		double APC = Math.abs(x1 * (point.y - y3) + point.x * (y3 - y1) + x3 * (y1 - point.y));
+		double PBC = Math.abs(point.x * (y2 - y3) + x2 * (y3 - point.y) + x3 * (point.y - y2));
+
+		// if the areas are equal, p is inside the triangle
+		return ABP + APC + PBC == ABC;
+	}
+
+	/**
 	 * Returns a random boolean
 	 * 
 	 * @return
