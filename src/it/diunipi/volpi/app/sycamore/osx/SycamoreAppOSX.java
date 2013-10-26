@@ -69,7 +69,7 @@ public class SycamoreAppOSX extends SycamoreApp
 	}
 
 	/**
-	 * Returns the main menu bar
+	 * Returns the main menu bar.
 	 * 
 	 * @return
 	 */
