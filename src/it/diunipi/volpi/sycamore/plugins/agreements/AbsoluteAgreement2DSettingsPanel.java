@@ -24,7 +24,7 @@ import javax.swing.event.ChangeListener;
  * 
  * @author Valerio Volpi - vale.v@me.com
  */
-public class AbsoluteAgreement2DSettingPanel extends AgreementSettingsPanel
+public class AbsoluteAgreement2DSettingsPanel extends AgreementSettingsPanel
 {
 	private static final long	serialVersionUID		= 7587684962080577106L;
 	private JPanel				panel_settings			= null;
@@ -46,7 +46,7 @@ public class AbsoluteAgreement2DSettingPanel extends AgreementSettingsPanel
 	/**
 	 * Default constructor.
 	 */
-	public AbsoluteAgreement2DSettingPanel()
+	public AbsoluteAgreement2DSettingsPanel()
 	{
 		initialize();
 	}
@@ -172,7 +172,7 @@ public class AbsoluteAgreement2DSettingPanel extends AgreementSettingsPanel
 				public void stateChanged(ChangeEvent e)
 				{
 					AbsoluteAgreement2D.setTranslationX((Double) spinner_translation_x.getValue());
-					fireActionEvent(new ActionEvent(AbsoluteAgreement2DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					fireActionEvent(new ActionEvent(AbsoluteAgreement2DSettingsPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
@@ -198,7 +198,7 @@ public class AbsoluteAgreement2DSettingPanel extends AgreementSettingsPanel
 				public void stateChanged(ChangeEvent e)
 				{
 					AbsoluteAgreement2D.setTranslationY((Double) spinner_translation_y.getValue());
-					fireActionEvent(new ActionEvent(AbsoluteAgreement2DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					fireActionEvent(new ActionEvent(AbsoluteAgreement2DSettingsPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
@@ -249,7 +249,7 @@ public class AbsoluteAgreement2DSettingPanel extends AgreementSettingsPanel
 				public void stateChanged(ChangeEvent e)
 				{
 					AbsoluteAgreement2D.setScaleX((Double) spinner_scale_x.getValue());
-					fireActionEvent(new ActionEvent(AbsoluteAgreement2DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					fireActionEvent(new ActionEvent(AbsoluteAgreement2DSettingsPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
@@ -276,7 +276,7 @@ public class AbsoluteAgreement2DSettingPanel extends AgreementSettingsPanel
 				public void stateChanged(ChangeEvent e)
 				{
 					AbsoluteAgreement2D.setScaleY((Double) spinner_scale_y.getValue());
-					fireActionEvent(new ActionEvent(AbsoluteAgreement2DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					fireActionEvent(new ActionEvent(AbsoluteAgreement2DSettingsPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
@@ -314,7 +314,7 @@ public class AbsoluteAgreement2DSettingPanel extends AgreementSettingsPanel
 				public void stateChanged(ChangeEvent e)
 				{
 					AbsoluteAgreement2D.setRotation((Double) spinner_rotation.getValue());
-					fireActionEvent(new ActionEvent(AbsoluteAgreement2DSettingPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
+					fireActionEvent(new ActionEvent(AbsoluteAgreement2DSettingsPanel.this, 0, SycamoreFiredActionEvents.UPDATE_AGREEMENTS_GRAPHICS.name()));
 				}
 			});
 		}
