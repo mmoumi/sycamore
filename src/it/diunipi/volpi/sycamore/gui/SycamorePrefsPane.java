@@ -3,6 +3,7 @@
  */
 package it.diunipi.volpi.sycamore.gui;
 
+import it.diunipi.volpi.sycamore.gui.SycamoreSystem.TIMELINE_MODE;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 
@@ -10,6 +11,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -56,6 +59,11 @@ public class SycamorePrefsPane extends JPanel
 	private JLabel				label_fairnessCountDescription_2	= null;
 	private JLabel				label_epsilonDescription_1			= null;
 	private JLabel				label_epsilonDescription_2			= null;
+	private JLabel				label_liveMode						= null;
+	private SwitchToggle		switchToggle_liveMode				= null;
+	private JLabel				label_liveModeDescription_1			= null;
+	private JLabel				label_liveModeDescription_2			= null;
+	private JLabel				label_liveModeDescription_3			= null;
 
 	/**
 	 * Constructor.
@@ -70,7 +78,7 @@ public class SycamorePrefsPane extends JPanel
 	 */
 	private void initialize()
 	{
-		setPreferredSize(new Dimension(500, 440));
+		setPreferredSize(new Dimension(640, 480));
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]
@@ -113,9 +121,10 @@ public class SycamorePrefsPane extends JPanel
 			gbl_panel_system.columnWeights = new double[]
 			{ 1.0, Double.MIN_VALUE };
 			gbl_panel_system.rowWeights = new double[]
-			{ 0.0, Double.MIN_VALUE };
+			{ 1.0, Double.MIN_VALUE };
 			panel_system.setLayout(gbl_panel_system);
 			GridBagConstraints gbc_panel_components = new GridBagConstraints();
+			gbc_panel_components.fill = GridBagConstraints.HORIZONTAL;
 			gbc_panel_components.gridx = 0;
 			gbc_panel_components.gridy = 0;
 			panel_system.add(getPanel_components(), gbc_panel_components);
@@ -580,78 +589,111 @@ public class SycamorePrefsPane extends JPanel
 			panel_components.setBorder(BorderFactory.createEmptyBorder());
 			GridBagLayout gbl_panel_components = new GridBagLayout();
 			gbl_panel_components.columnWidths = new int[]
-			{ 177, 80, 0 };
+			{ 80, 80, 0 };
 			gbl_panel_components.rowHeights = new int[]
 			{ 27, 27, 0, 0, 28, 0, 0, 0, 0 };
 			gbl_panel_components.columnWeights = new double[]
-			{ 0.0, 0.0, Double.MIN_VALUE };
+			{ 0.0, 1.0, Double.MIN_VALUE };
 			gbl_panel_components.rowWeights = new double[]
 			{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 			panel_components.setLayout(gbl_panel_components);
 			GridBagConstraints gbc_label_defaultSpeed = new GridBagConstraints();
-			gbc_label_defaultSpeed.fill = GridBagConstraints.HORIZONTAL;
-			gbc_label_defaultSpeed.insets = new Insets(2, 2, 2, 2);
+			gbc_label_defaultSpeed.anchor = GridBagConstraints.EAST;
+			gbc_label_defaultSpeed.insets = new Insets(5, 5, 5, 5);
 			gbc_label_defaultSpeed.gridx = 0;
 			gbc_label_defaultSpeed.gridy = 0;
 			panel_components.add(getLabel_defaultSpeed(), gbc_label_defaultSpeed);
 			GridBagConstraints gbc_spinner_defaultSpeed = new GridBagConstraints();
 			gbc_spinner_defaultSpeed.anchor = GridBagConstraints.WEST;
-			gbc_spinner_defaultSpeed.insets = new Insets(2, 2, 2, 2);
+			gbc_spinner_defaultSpeed.insets = new Insets(5, 5, 5, 5);
 			gbc_spinner_defaultSpeed.gridx = 1;
 			gbc_spinner_defaultSpeed.gridy = 0;
 			panel_components.add(getSpinner_defaultSpeed(), gbc_spinner_defaultSpeed);
 			GridBagConstraints gbc_label_fairnessCount = new GridBagConstraints();
-			gbc_label_fairnessCount.fill = GridBagConstraints.HORIZONTAL;
-			gbc_label_fairnessCount.insets = new Insets(2, 2, 0, 2);
+			gbc_label_fairnessCount.anchor = GridBagConstraints.EAST;
+			gbc_label_fairnessCount.insets = new Insets(5, 5, 0, 5);
 			gbc_label_fairnessCount.gridx = 0;
 			gbc_label_fairnessCount.gridy = 1;
 			panel_components.add(getLabel_fairnessCount(), gbc_label_fairnessCount);
 			GridBagConstraints gbc_spinner_fairnessCount = new GridBagConstraints();
 			gbc_spinner_fairnessCount.anchor = GridBagConstraints.WEST;
-			gbc_spinner_fairnessCount.insets = new Insets(2, 2, 0, 2);
+			gbc_spinner_fairnessCount.insets = new Insets(5, 5, 0, 5);
 			gbc_spinner_fairnessCount.gridx = 1;
 			gbc_spinner_fairnessCount.gridy = 1;
 			panel_components.add(getSpinner_fairnessCount(), gbc_spinner_fairnessCount);
 			GridBagConstraints gbc_label_fairnessCountDescription_1 = new GridBagConstraints();
-			gbc_label_fairnessCountDescription_1.fill = GridBagConstraints.HORIZONTAL;
+			gbc_label_fairnessCountDescription_1.anchor = GridBagConstraints.WEST;
 			gbc_label_fairnessCountDescription_1.gridwidth = 2;
 			gbc_label_fairnessCountDescription_1.insets = new Insets(0, 2, 1, 2);
 			gbc_label_fairnessCountDescription_1.gridx = 0;
 			gbc_label_fairnessCountDescription_1.gridy = 2;
 			panel_components.add(getLabel_fairnessCountDescription_1(), gbc_label_fairnessCountDescription_1);
 			GridBagConstraints gbc_label_fairnessCountDescription_2 = new GridBagConstraints();
-			gbc_label_fairnessCountDescription_2.fill = GridBagConstraints.HORIZONTAL;
+			gbc_label_fairnessCountDescription_2.anchor = GridBagConstraints.WEST;
 			gbc_label_fairnessCountDescription_2.gridwidth = 2;
 			gbc_label_fairnessCountDescription_2.insets = new Insets(1, 2, 2, 2);
 			gbc_label_fairnessCountDescription_2.gridx = 0;
 			gbc_label_fairnessCountDescription_2.gridy = 3;
 			panel_components.add(getLabel_fairnessCountDescription_2(), gbc_label_fairnessCountDescription_2);
 			GridBagConstraints gbc_label_epsilon = new GridBagConstraints();
-			gbc_label_epsilon.fill = GridBagConstraints.HORIZONTAL;
-			gbc_label_epsilon.insets = new Insets(5, 2, 0, 2);
+			gbc_label_epsilon.anchor = GridBagConstraints.EAST;
+			gbc_label_epsilon.insets = new Insets(10, 5, 0, 5);
 			gbc_label_epsilon.gridx = 0;
 			gbc_label_epsilon.gridy = 4;
 			panel_components.add(getLabel_epsilon(), gbc_label_epsilon);
 			GridBagConstraints gbc_spinner_epsilon = new GridBagConstraints();
-			gbc_spinner_epsilon.insets = new Insets(5, 2, 0, 2);
 			gbc_spinner_epsilon.anchor = GridBagConstraints.WEST;
+			gbc_spinner_epsilon.insets = new Insets(10, 5, 0, 5);
 			gbc_spinner_epsilon.gridx = 1;
 			gbc_spinner_epsilon.gridy = 4;
 			panel_components.add(getSpinner_epsilon(), gbc_spinner_epsilon);
 			GridBagConstraints gbc_label_epsilonDescription_1 = new GridBagConstraints();
+			gbc_label_epsilonDescription_1.anchor = GridBagConstraints.WEST;
 			gbc_label_epsilonDescription_1.insets = new Insets(0, 2, 1, 2);
-			gbc_label_epsilonDescription_1.fill = GridBagConstraints.HORIZONTAL;
 			gbc_label_epsilonDescription_1.gridwidth = 2;
 			gbc_label_epsilonDescription_1.gridx = 0;
 			gbc_label_epsilonDescription_1.gridy = 5;
 			panel_components.add(getLabel_epsilonDescription_1(), gbc_label_epsilonDescription_1);
 			GridBagConstraints gbc_label_epsilonDescription_2 = new GridBagConstraints();
-			gbc_label_epsilonDescription_2.fill = GridBagConstraints.HORIZONTAL;
+			gbc_label_epsilonDescription_2.anchor = GridBagConstraints.WEST;
 			gbc_label_epsilonDescription_2.gridwidth = 2;
 			gbc_label_epsilonDescription_2.insets = new Insets(1, 2, 2, 2);
 			gbc_label_epsilonDescription_2.gridx = 0;
 			gbc_label_epsilonDescription_2.gridy = 6;
 			panel_components.add(getLabel_epsilonDescription_2(), gbc_label_epsilonDescription_2);
+			GridBagConstraints gbc_label_liveMode = new GridBagConstraints();
+			gbc_label_liveMode.anchor = GridBagConstraints.EAST;
+			gbc_label_liveMode.insets = new Insets(10, 5, 0, 5);
+			gbc_label_liveMode.gridx = 0;
+			gbc_label_liveMode.gridy = 7;
+			panel_components.add(getLabel_liveMode(), gbc_label_liveMode);
+			GridBagConstraints gbc_switchToggle_liveMode = new GridBagConstraints();
+			gbc_switchToggle_liveMode.anchor = GridBagConstraints.WEST;
+			gbc_switchToggle_liveMode.insets = new Insets(10, 5, 0, 5);
+			gbc_switchToggle_liveMode.gridx = 1;
+			gbc_switchToggle_liveMode.gridy = 7;
+			panel_components.add(getSwitchToggle_liveMode(), gbc_switchToggle_liveMode);
+			GridBagConstraints gbc_label_liveModeDescription_1 = new GridBagConstraints();
+			gbc_label_liveModeDescription_1.anchor = GridBagConstraints.WEST;
+			gbc_label_liveModeDescription_1.insets = new Insets(0, 2, 1, 2);
+			gbc_label_liveModeDescription_1.gridwidth = 2;
+			gbc_label_liveModeDescription_1.gridx = 0;
+			gbc_label_liveModeDescription_1.gridy = 8;
+			panel_components.add(getLabel_liveModeDescription_1(), gbc_label_liveModeDescription_1);
+			GridBagConstraints gbc_label_liveModeDescription_2 = new GridBagConstraints();
+			gbc_label_liveModeDescription_2.anchor = GridBagConstraints.WEST;
+			gbc_label_liveModeDescription_2.gridwidth = 2;
+			gbc_label_liveModeDescription_2.insets = new Insets(1, 2, 2, 2);
+			gbc_label_liveModeDescription_2.gridx = 0;
+			gbc_label_liveModeDescription_2.gridy = 9;
+			panel_components.add(getLabel_liveModeDescription_2(), gbc_label_liveModeDescription_2);
+			GridBagConstraints gbc_label_liveModeDescription_3 = new GridBagConstraints();
+			gbc_label_liveModeDescription_3.anchor = GridBagConstraints.WEST;
+			gbc_label_liveModeDescription_3.gridwidth = 2;
+			gbc_label_liveModeDescription_3.insets = new Insets(1, 2, 2, 2);
+			gbc_label_liveModeDescription_3.gridx = 0;
+			gbc_label_liveModeDescription_3.gridy = 10;
+			panel_components.add(getLabel_liveModeDescription_3(), gbc_label_liveModeDescription_3);
 		}
 		return panel_components;
 	}
@@ -667,7 +709,7 @@ public class SycamorePrefsPane extends JPanel
 			spinner_epsilon.setPreferredSize(new Dimension(120, 27));
 			spinner_epsilon.setMinimumSize(new Dimension(120, 27));
 			spinner_epsilon.setMaximumSize(new Dimension(120, 27));
-			
+
 			// define double values
 			spinner_epsilon.setModel(new SpinnerListModel(new Object[]
 			{ new Double(0.1), new Double(0.01), new Double(0.001), new Double(0.0001), new Double(0.00001), new Double(0.000001), new Double(0.0000001), new Double(0.00000001),
@@ -693,7 +735,7 @@ public class SycamorePrefsPane extends JPanel
 	{
 		if (label_fairnessCountDescription_1 == null)
 		{
-			label_fairnessCountDescription_1 = new JLabel("The fairness count is the maximum number of steps where");
+			label_fairnessCountDescription_1 = new JLabel("The fairness count is the maximum number of steps where a robot can stay still without being moved by a fair");
 			label_fairnessCountDescription_1.setFont(label_fairnessCountDescription_1.getFont().deriveFont(label_fairnessCountDescription_1.getFont().getSize() - 2f));
 		}
 		return label_fairnessCountDescription_1;
@@ -706,7 +748,7 @@ public class SycamorePrefsPane extends JPanel
 	{
 		if (label_fairnessCountDescription_2 == null)
 		{
-			label_fairnessCountDescription_2 = new JLabel("a robot can stay still without being moved by the fair scheduler.");
+			label_fairnessCountDescription_2 = new JLabel("scheduler. An unfair scheduler ignores this value.");
 			label_fairnessCountDescription_2.setFont(label_fairnessCountDescription_2.getFont().deriveFont(label_fairnessCountDescription_2.getFont().getSize() - 2f));
 		}
 		return label_fairnessCountDescription_2;
@@ -719,7 +761,7 @@ public class SycamorePrefsPane extends JPanel
 	{
 		if (label_epsilonDescription_1 == null)
 		{
-			label_epsilonDescription_1 = new JLabel("Epsilon is the minimum size of a robot step.");
+			label_epsilonDescription_1 = new JLabel("Epsilon is the minimum size of a robot step. A step smaller than epsilon is considered to be zero, and if a robot gets");
 			label_epsilonDescription_1.setFont(label_epsilonDescription_1.getFont().deriveFont(label_epsilonDescription_1.getFont().getSize() - 2f));
 		}
 		return label_epsilonDescription_1;
@@ -732,9 +774,87 @@ public class SycamorePrefsPane extends JPanel
 	{
 		if (label_epsilonDescription_2 == null)
 		{
-			label_epsilonDescription_2 = new JLabel("A step smaller than epsilon is considered to be zero.");
+			label_epsilonDescription_2 = new JLabel("closer that epsilon to its destination, it is supposed to have reached it.");
 			label_epsilonDescription_2.setFont(label_epsilonDescription_2.getFont().deriveFont(label_epsilonDescription_2.getFont().getSize() - 2f));
 		}
 		return label_epsilonDescription_2;
+	}
+
+	/**
+	 * @return the label_liveModeDescription_1
+	 */
+	private JLabel getLabel_liveModeDescription_1()
+	{
+		if (label_liveModeDescription_1 == null)
+		{
+			label_liveModeDescription_1 = new JLabel("Enable/Disable the Live Mode. In this mode the simulation is more fluent and robot's latencies are higly reduced,");
+			label_liveModeDescription_1.setFont(label_liveModeDescription_1.getFont().deriveFont(label_liveModeDescription_1.getFont().getSize() - 2f));
+		}
+		return label_liveModeDescription_1;
+	}
+
+	/**
+	 * @return the label_liveModeDescription_2
+	 */
+	private JLabel getLabel_liveModeDescription_2()
+	{
+		if (label_liveModeDescription_2 == null)
+		{
+			label_liveModeDescription_2 = new JLabel("but the project cannot be saved because teh timelines of the robots are cleare at each step.");
+			label_liveModeDescription_2.setFont(label_liveModeDescription_2.getFont().deriveFont(label_liveModeDescription_2.getFont().getSize() - 2f));
+		}
+		return label_liveModeDescription_2;
+	}
+	
+	/**
+	 * @return the label_liveModeDescription_3
+	 */
+	private JLabel getLabel_liveModeDescription_3()
+	{
+		if (label_liveModeDescription_3 == null)
+		{
+			label_liveModeDescription_3 = new JLabel("<html><b>WARNING!</b> Plugins are able to change this setting.</html>");
+			label_liveModeDescription_3.setFont(label_liveModeDescription_3.getFont().deriveFont(label_liveModeDescription_3.getFont().getSize() - 2f));
+		}
+		return label_liveModeDescription_3;
+	}
+
+	/**
+	 * @return
+	 */
+	private JLabel getLabel_liveMode()
+	{
+		if (label_liveMode == null)
+		{
+			label_liveMode = new JLabel("Live Mode:");
+			label_liveMode.setMaximumSize(new Dimension(67, 24));
+			label_liveMode.setMinimumSize(new Dimension(67, 24));
+			label_liveMode.setPreferredSize(new Dimension(67, 24));
+		}
+		return label_liveMode;
+	}
+
+	/**
+	 * @return
+	 */
+	private SwitchToggle getSwitchToggle_liveMode()
+	{
+		if (switchToggle_liveMode == null)
+		{
+			switchToggle_liveMode = new SwitchToggle();
+			switchToggle_liveMode.setMaximumSize(new Dimension(71, 25));
+			switchToggle_liveMode.setMinimumSize(new Dimension(71, 25));
+			switchToggle_liveMode.setPreferredSize(new Dimension(71, 25));
+			switchToggle_liveMode.setSelected(SycamoreSystem.getTimelineMode() == TIMELINE_MODE.LIVE);
+			switchToggle_liveMode.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					SycamoreSystem.setTimelineMode((getSwitchToggle_liveMode().isSelected() ? TIMELINE_MODE.LIVE : TIMELINE_MODE.FULL));
+				}
+			});
+		}
+		return switchToggle_liveMode;
 	}
 }
