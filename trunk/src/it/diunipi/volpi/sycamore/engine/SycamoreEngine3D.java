@@ -8,6 +8,7 @@ import it.diunipi.volpi.sycamore.plugins.agreements.AgreementImpl;
 import it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm;
 import it.diunipi.volpi.sycamore.plugins.algorithms.AlgorithmImpl;
 import it.diunipi.volpi.sycamore.plugins.initialconditions.InitialConditions;
+import it.diunipi.volpi.sycamore.plugins.measures.Measure;
 import it.diunipi.volpi.sycamore.plugins.memory.Memory;
 import it.diunipi.volpi.sycamore.plugins.memory.MemoryImpl;
 import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
@@ -206,6 +207,32 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 		robot.setMemory(null);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine#createAndAddNewMeasureInstance(it.diunipi
+	 * .volpi.sycamore.plugins.measures.Measure)
+	 */
+	@Override
+	public void createAndAddNewMeasureInstance(Measure measure) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
+	{
+		Constructor<?> constructor = null;
+
+		// create a new instance of the Measure
+		Class<? extends Measure> measureClass = measure.getClass();
+		constructor = measureClass.getConstructors()[0];
+
+		if (constructor != null)
+		{
+			Measure newInstance = (Measure) constructor.newInstance();
+			
+			newInstance.setEngine(this);
+			this.measures.add(newInstance);
+			return;
+		}
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

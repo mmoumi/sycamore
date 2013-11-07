@@ -1,6 +1,6 @@
 package it.diunipi.volpi.sycamore.plugins.measures;
 
-import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.plugins.SycamorePlugin;
 
 /**
@@ -18,12 +18,17 @@ import it.diunipi.volpi.sycamore.plugins.SycamorePlugin;
 public interface Measure extends SycamorePlugin
 {
 	/**
+	 * @param engine
+	 */
+	public void setEngine(SycamoreEngine engine);
+	
+	/**
 	 * Performs the initial setup for the measuring. It is called before the starting of the
 	 * simulation.
 	 * 
 	 * @param robot
 	 */
-	public void onSimulationStart(SycamoreRobot<?> robot);
+	public void onSimulationStart();
 
 	/**
 	 * Counts the cost of one step of the simulation. It is called after the end of a step of the
@@ -31,20 +36,12 @@ public interface Measure extends SycamorePlugin
 	 * 
 	 * @param robot
 	 */
-	public void onSimulationStep(SycamoreRobot<?> robot);
+	public void onSimulationStep();
 
 	/**
 	 * Performs the final setup for the measuring. It is called after the ending of the simulation.
 	 * 
 	 * @param robot
 	 */
-	public void onSimulationEnd(SycamoreRobot<?> robot);
-
-	/**
-	 * Returns the measured cost. It is expected to return the total cost, measured from the
-	 * beginning of the simulation until the moment when this method is called.
-	 * 
-	 * @return
-	 */
-	public Object getMeasuredCost();
+	public void onSimulationEnd();
 }
