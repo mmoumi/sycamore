@@ -489,7 +489,7 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 		{
 			return keyframes.firstElement().getPosition();
 		}
-		
+
 		// extend the ratio to match duration
 		float time = ratio * duration;
 
@@ -557,10 +557,30 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	/**
 	 * Reset this timelne, by removing all keyframes
 	 */
-	public synchronized void reset()
+	public synchronized void clear()
 	{
 		this.keyframes.removeAllElements();
 		duration = 0;
+	}
+
+	/**
+	 * 
+	 */
+	public synchronized void clearIntermediate()
+	{
+		if (keyframes.size() > 3)
+		{
+			Keyframe<P> first = this.keyframes.firstElement();
+			Keyframe<P> secondToLast = this.keyframes.get(this.keyframes.size() - 2);
+			Keyframe<P> last = this.keyframes.lastElement();
+
+			this.clear();
+
+			this.keyframes.add(first);
+			this.keyframes.add(secondToLast);
+			this.keyframes.add(last);
+			this.duration = last.getTime();
+		}
 	}
 
 	/**
@@ -613,21 +633,21 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 			{
 				this.keyframes.removeAllElements();
 				Element keyframesElem = (Element) keyframes.item(0);
-				
+
 				// single keyframes
 				NodeList singleKeyframes = keyframesElem.getElementsByTagName("keyframe");
 				for (int i = 0; i < singleKeyframes.getLength(); i++)
 				{
 					Element keyframeElem = (Element) singleKeyframes.item(i);
 					Keyframe<P> newKeyframe = new Keyframe<P>((P) SycamoreUtil.getNewPoint(type), 0);
-					
+
 					if (newKeyframe.decode(keyframeElem, type))
 					{
 						this.keyframes.add(newKeyframe);
 					}
 				}
 			}
-			
+
 			// duration
 			NodeList duration = element.getElementsByTagName("duration");
 			if (duration.getLength() > 0)
