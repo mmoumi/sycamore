@@ -10,6 +10,8 @@ import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
+import java.awt.Polygon;
+import java.awt.geom.Rectangle2D;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 
@@ -38,9 +40,10 @@ import com.jme3.util.TangentBinormalGenerator;
 @PluginImplementation
 public class DirectionalVisibility extends VisibilityImpl<Point2D>
 {
+	private final int				angle			= 40;
 	protected Geometry				triangle		= null;
 	private VisibilitySettingsPanel	settingPanel	= null;
-	private int						angle			= 40;
+	private Point2D					center			= null;
 
 	/**
 	 * Default constructor.
@@ -67,7 +70,7 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 
 				// prepare a new quad geometry
 				triangle = new Geometry("Triangle", new Quad(1, 1));
-				triangle.setLocalScale(2 * getVisibilityRange());
+				triangle.setLocalScale(getVisibilityRange());
 				triangle.center();
 
 				Vector3f translation = triangle.getLocalTranslation();
@@ -98,57 +101,91 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 		// obtain the angle of rotation
 		Quaternion rotation = robot.getRobotNode().getLocalRotation();
 		float[] angles = rotation.toAngles(null);
-		// System.out.println(Arrays.toString(angles));
+
+		// one point of the triangle is the robot's position
+		Point2D position = robot.getLocalPosition();
+		Point2D x = null;
+		Point2D y = null;
+
+		double eta;
+		double delta;
 
 		// theta is the rotation around z axis
-		double theta = 0;
+		// JME Quaternion returns angles in a strange format, so here are normalized
+		double theta = angles[2];
+
+		// if rotation around x and y axes is zero, we are in the 1st or 4th quadrant
 		if (angles[0] == 0 && angles[1] == 0)
 		{
-			theta = angles[2];
-			if (theta < 0)
+			if (theta >= 0)
 			{
-				theta = (2 * Math.PI) + theta;
+				// from 0 to PI/2 (90 degrees) the angles are returned well by Quaternion
+				eta = theta + Math.toRadians(angle / 2);
+				delta = eta - Math.toRadians(angle);
+				float a = getVisibilityRange();
+
+				x = new Point2D(position.x + (a * (float) Math.cos(eta)), position.y + (a * (float) Math.sin(eta)));
+				y = new Point2D(position.x + (a * (float) Math.cos(delta)), position.y + (a * (float) Math.sin(delta)));
+			}
+			else
+			{
+				// from 4/3PI (270 degrees) to 2PI (360 degrees), Quaternion returns values between
+				// - PI/2 and zero.
+				theta = -theta;
+
+				eta = theta + Math.toRadians(angle / 2);
+				delta = eta - Math.toRadians(angle);
+				float a = getVisibilityRange();
+
+				// this time I subtract from position the computed x and the computed y
+				y = new Point2D(position.x + (a * (float) Math.cos(eta)), position.y - (a * (float) Math.sin(eta)));
+				x = new Point2D(position.x + (a * (float) Math.cos(delta)), position.y - (a * (float) Math.sin(delta)));
 			}
 		}
 		else
 		{
-			theta = ((Math.PI / 2) - angles[2]) + (Math.PI / 2);
-			if (theta < 0)
+			// if rotation around x and y axes is not zero, we are in the 2nd or 3rd quadrant
+
+			if (theta >= 0)
 			{
-				theta = (Math.PI) - theta;
+				// from PI/2 (90 degrees) to PI (180 degrees), Quaternion returns values between
+				// PI/2 and zero, so they are considered specular with the case of first quadrant
+
+				eta = theta + Math.toRadians(angle / 2);
+				delta = eta - Math.toRadians(angle);
+				float a = getVisibilityRange();
+
+				// this time I subtract from position the computed x, but sum the y values
+				y = new Point2D(position.x - (a * (float) Math.cos(eta)), position.y + (a * (float) Math.sin(eta)));
+				x = new Point2D(position.x - (a * (float) Math.cos(delta)), position.y + (a * (float) Math.sin(delta)));
+			}
+			else
+			{
+				// from PI (180 degrees) to 4/3PI (270 degrees), Quaternion returns values between
+				// zero and -PI/2, but the angles around x and y are not zero.
+				theta = -theta;
+
+				eta = theta + Math.toRadians(angle / 2);
+				delta = eta - Math.toRadians(angle);
+				float a = getVisibilityRange();
+
+				// this time I subtract from position the computed x and the computed y
+				x = new Point2D(position.x - (a * (float) Math.cos(eta)), position.y - (a * (float) Math.sin(eta)));
+				y = new Point2D(position.x - (a * (float) Math.cos(delta)), position.y - (a * (float) Math.sin(delta)));
 			}
 		}
 
-		// compute alpha and beta by difference, since theta is the angle between the horizontal
-		// axis and the direction halfline. Alpha and beta are the angles respectively higher and
-		// lower of 20 degrees.
-		double eta = theta + Math.toRadians(angle / 2);
-		double delta = eta - Math.toRadians(angle);
+		Polygon triangle = new Polygon();
 
-		// System.out.println("theta: " + theta + ", eta: " + eta + ", delta: " + delta);
-		if (!robot.isHumanPilot())
-		{
-			System.out.println("theta: " + Math.toDegrees(theta));
-		}
+		triangle.addPoint((int) position.x, (int) position.y);
+		triangle.addPoint((int) x.x, (int) x.y);
+		triangle.addPoint((int) y.x, (int) y.y);
 
-		// one point of the triangle is the robot's position
-		Point2D position = robot.getLocalPosition();
-
-		// compute the others. There are 2 triangles whose vertices are points of the main triangle.
-		// the trigonometric formulas are
-		// c = a sin gamma
-		// b = a cos gamma
-		// where a is well-known and gamma is represented by eta and delta for the rectangles
-		float a = getVisibilityRange();
-
-		Point2D x = new Point2D(a * (float) Math.cos(eta), a * (float) Math.sin(eta));
-		Point2D y = new Point2D(a * (float) Math.cos(delta), a * (float) Math.sin(delta));
-
-		if (!robot.isHumanPilot())
-		{
-			System.out.println("Point: " + point + ", position: " + position + ", x: " + x + ", y: " + y);
-		}
-		return SycamoreUtil.isPointInsideTriangle(point, position, x, y);
+		boolean visible = triangle.contains(SycamoreUtil.convertPoint2D(point));
+		Rectangle2D bounds = triangle.getBounds2D();
+		this.center = new Point2D((float) bounds.getCenterX(), (float) bounds.getCenterY());
+		
+		return visible;
 	}
 
 	/*
@@ -293,14 +330,22 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 			@Override
 			public Object call() throws Exception
 			{
-				triangle.setLocalScale(2 * getVisibilityRange());
+				triangle.setLocalScale(getVisibilityRange());
 
 				// translate the geometry to be centered in the robot's position again.
-				float translationFactor = getVisibilityRange();
+				float translationFactor = getVisibilityRange() / 2;
 				triangle.setLocalTranslation(-translationFactor, -translationFactor, 0.5f);
 				triangle.updateGeometricState();
 				return null;
 			}
 		});
+	}
+
+	/**
+	 * @return
+	 */
+	public Point2D getCenter()
+	{
+		return center;
 	}
 }
