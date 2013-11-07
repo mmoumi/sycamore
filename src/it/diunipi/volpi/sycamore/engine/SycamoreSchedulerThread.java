@@ -143,6 +143,7 @@ public class SycamoreSchedulerThread extends Thread
 			if (state == SCHEDULER_STATE.INTERRUPTED)
 			{
 				System.out.println("Scheduler returning...");
+				manageSimulationFinished();
 				return;
 			}
 
