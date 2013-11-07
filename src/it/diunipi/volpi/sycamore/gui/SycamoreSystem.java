@@ -33,6 +33,25 @@ import com.jme3.system.JmeContext;
  */
 public class SycamoreSystem
 {
+	/**
+	 * Timeline modes
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
+	public static enum TIMELINE_MODE
+	{
+		/**
+		 * Timeline saves all keyframes and offers all its functionalities, but robots could have
+		 * performance decreases if timeline is big.
+		 */
+		FULL,
+
+		/**
+		 * Timeline is kept just with the 3 keyframes that are necessary for it to work.
+		 */
+		LIVE;
+	}
+
 	private static final Object							schedulerGuiSynchronizer	= new Object();
 	public static float									schedulerFrequency			= 1.0f / 640.0f;
 
@@ -45,6 +64,7 @@ public class SycamoreSystem
 	private static SycamoreVisualizerThread				visualizerThread			= null;
 	private static SycamoreJMEScene						jmeSceneManager				= null;
 	private static JFrame								mainFrame					= null;
+	private static TIMELINE_MODE						timelineMode				= TIMELINE_MODE.FULL;
 
 	/**
 	 * Initialize the system
@@ -88,10 +108,12 @@ public class SycamoreSystem
 		String pluginsPath = workSpacePath + System.getProperty("file.separator") + "Plugins";
 		String projectsPath = workSpacePath + System.getProperty("file.separator") + "Projects";
 		String scriptsPath = workSpacePath + System.getProperty("file.separator") + "Scripts";
+		String reportsPath = workSpacePath + System.getProperty("file.separator") + "Reports";
 
 		new File(pluginsPath).mkdir();
 		new File(projectsPath).mkdir();
 		new File(scriptsPath).mkdir();
+		new File(reportsPath).mkdir();
 
 		return workspace;
 	}
@@ -120,6 +142,22 @@ public class SycamoreSystem
 	public static void setEngine(SycamoreEngine engine)
 	{
 		SycamoreSystem.engine = engine;
+	}
+	
+	/**
+	 * @return the timelineMode
+	 */
+	public static TIMELINE_MODE getTimelineMode()
+	{
+		return timelineMode;
+	}
+	
+	/**
+	 * @param timelineMode the timelineMode to set
+	 */
+	public static void setTimelineMode(TIMELINE_MODE timelineMode)
+	{
+		SycamoreSystem.timelineMode = timelineMode;
 	}
 
 	/**
