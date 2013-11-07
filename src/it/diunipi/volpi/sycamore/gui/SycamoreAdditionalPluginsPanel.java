@@ -22,6 +22,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
@@ -29,6 +30,8 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
@@ -215,28 +218,28 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 		gbc_message_wrongMemory.gridx = 0;
 		gbc_message_wrongMemory.gridy = 13;
 		add(getMessage_wrongMemory(), gbc_message_wrongMemory);
-		
+
 		GridBagConstraints gbc_label_nKnown = new GridBagConstraints();
 		gbc_label_nKnown.insets = new Insets(2, 2, 2, 2);
 		gbc_label_nKnown.anchor = GridBagConstraints.WEST;
 		gbc_label_nKnown.gridx = 0;
 		gbc_label_nKnown.gridy = 14;
 		add(getLabel_nKnown(), gbc_label_nKnown);
-		
+
 		GridBagConstraints gbc_onOffButton_nKnown = new GridBagConstraints();
 		gbc_onOffButton_nKnown.anchor = GridBagConstraints.WEST;
 		gbc_onOffButton_nKnown.insets = new Insets(2, 30, 2, 2);
 		gbc_onOffButton_nKnown.gridx = 1;
 		gbc_onOffButton_nKnown.gridy = 14;
 		add(getSwitchToggle_nKnown(), gbc_onOffButton_nKnown);
-		
+
 		GridBagConstraints gbc_label_multiplictyDetection = new GridBagConstraints();
 		gbc_label_multiplictyDetection.anchor = GridBagConstraints.WEST;
 		gbc_label_multiplictyDetection.insets = new Insets(2, 2, 2, 2);
 		gbc_label_multiplictyDetection.gridx = 0;
 		gbc_label_multiplictyDetection.gridy = 15;
 		add(getLabel_multiplictyDetection(), gbc_label_multiplictyDetection);
-		
+
 		GridBagConstraints gbc_onOffButton_multiplicityDetection = new GridBagConstraints();
 		gbc_onOffButton_multiplicityDetection.anchor = GridBagConstraints.WEST;
 		gbc_onOffButton_multiplicityDetection.insets = new Insets(2, 30, 2, 2);
@@ -286,6 +289,35 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 
 			table_measures.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			table_measures.addHighlighter(HighlighterFactory.createAlternateStriping());
+
+			ListSelectionModel selectionModel = table_measures.getSelectionModel();
+			selectionModel.addListSelectionListener(new ListSelectionListener()
+			{
+				@Override
+				public void valueChanged(ListSelectionEvent e)
+				{
+					if (appEngine != null)
+					{
+						Vector<Measure> measures = appEngine.getCurrentMeasures();
+						measures.removeAllElements();
+
+						int[] selected = table_measures.getSelectedRows();
+						for (int i : selected)
+						{
+							Measure measure = (Measure) table_measures.getValueAt(i, 0);
+							try
+							{
+								appEngine.createAndAddNewMeasureInstance(measure);
+							}
+							catch (Exception e1)
+							{
+								e1.printStackTrace();
+							}
+
+						}
+					}
+				}
+			});
 		}
 		return table_measures;
 	}
@@ -332,7 +364,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 							boolean typesOK = true;
 							TYPE engineType = TYPE.TYPE_2D;
 							TYPE pluginType = TYPE.TYPE_2D;
-							
+
 							// check types, if any
 							if (visibility != null)
 							{
@@ -352,7 +384,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 								// show error message
 								updateWrongVisibilityText(engineType, pluginType);
 								getMessage_wrongVisibility().setVisible(true);
-								
+
 								// visibility is null
 								visibility = null;
 							}
@@ -419,7 +451,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 							boolean typesOK = true;
 							TYPE engineType = TYPE.TYPE_2D;
 							TYPE pluginType = TYPE.TYPE_2D;
-							
+
 							// check types, if any
 							if (agreement != null)
 							{
@@ -439,11 +471,11 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 								// show error message
 								updateWrongAgreementyText(engineType, pluginType);
 								getMessage_wrongAgreement().setVisible(true);
-								
+
 								// agreement is null
 								agreement = null;
 							}
-							
+
 							// set in engine
 							try
 							{
@@ -673,7 +705,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 							boolean typesOK = true;
 							TYPE engineType = TYPE.TYPE_2D;
 							TYPE pluginType = TYPE.TYPE_2D;
-							
+
 							// check types, if any
 							if (initialCondition != null)
 							{
@@ -693,7 +725,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 								// show error message
 								updateWrongInitialConditionsText(engineType, pluginType);
 								getMessage_wrongInitialConditions().setVisible(true);
-								
+
 								// initialCondition is null
 								initialCondition = null;
 							}
@@ -760,7 +792,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 							boolean typesOK = true;
 							TYPE engineType = TYPE.TYPE_2D;
 							TYPE pluginType = TYPE.TYPE_2D;
-							
+
 							// check types, if any
 							if (memory != null)
 							{
@@ -780,7 +812,7 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 								// show error message
 								updateWrongMemoryText(engineType, pluginType);
 								getMessage_wrongMemory().setVisible(true);
-								
+
 								// memory is null
 								memory = null;
 							}
@@ -955,9 +987,9 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 			switchToggle_multiplicityDetection.setMaximumSize(new Dimension(71, 25));
 			switchToggle_multiplicityDetection.setMinimumSize(new Dimension(71, 25));
 			switchToggle_multiplicityDetection.setPreferredSize(new Dimension(71, 25));
-			switchToggle_multiplicityDetection.setSelected(false);
+			switchToggle_multiplicityDetection.setSelected(true);
 			switchToggle_multiplicityDetection.setEnabled(false);
-			switchToggle_multiplicityDetection.setToolTipText("Coming soon...");
+			switchToggle_multiplicityDetection.setToolTipText("Multiplicity detection is always on. Option is coming soon...");
 		}
 		return switchToggle_multiplicityDetection;
 	}
@@ -971,17 +1003,19 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	public void reset()
 	{
 		changeLock = true;
-		
+
+		getTable_measures().clearSelection();
+
 		getComboBox_visibility().setSelectedIndex(-1);
 		getComboBox_agreement().setSelectedIndex(-1);
 		getComboBox_initialConditions().setSelectedIndex(-1);
 		getComboBox_memory().setSelectedIndex(-1);
-		
+
 		getMessage_wrongVisibility().setVisible(false);
 		getMessage_wrongAgreement().setVisible(false);
 		getMessage_wrongInitialConditions().setVisible(false);
 		getMessage_wrongMemory().setVisible(false);
-		
+
 		changeLock = false;
 	}
 
@@ -1023,6 +1057,16 @@ public class SycamoreAdditionalPluginsPanel extends SycamorePanel
 	{
 		try
 		{
+			// set measures
+			newEngine.getCurrentMeasures().removeAllElements();
+			int[] rows = getTable_measures().getSelectedRows();
+			for (int i = 0; i < rows.length; i++)
+			{
+				int row = rows[i];
+				Measure measure = (Measure) getTable_measures().getValueAt(row, 0);
+				newEngine.createAndAddNewMeasureInstance(measure);
+			}
+
 			// prepare the new visibility
 			PluginSelectionComboboxModel<Visibility> visibilityModel = (PluginSelectionComboboxModel<Visibility>) getComboBox_visibility().getModel();
 			Visibility visibility = (Visibility) visibilityModel.getSelectedItem();
