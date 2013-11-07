@@ -144,8 +144,9 @@ public class SycamoreWorkspaceSelectionPanel extends JPanel
 	{
 		if (textField_workspaceDir == null)
 		{
-			textField_workspaceDir = new JTextField();
 			String path = ApplicationProperties.WORKSPACE_DIR.getDefaultValue();
+			
+			textField_workspaceDir = new JTextField();
 			textField_workspaceDir.setText(path);
 
 			PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR, path);
