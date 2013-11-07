@@ -6,6 +6,7 @@ import it.diunipi.volpi.sycamore.gui.ProgressBarWindow;
 import it.diunipi.volpi.sycamore.gui.SycamoreMainPanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSplashScreen;
 import it.diunipi.volpi.sycamore.gui.SycamoreSplashScreen.SPLASH_STATES;
+import it.diunipi.volpi.sycamore.gui.SycamoreSystem.TIMELINE_MODE;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.gui.SycamoreWorkspaceSelectionPanel;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
@@ -410,24 +411,27 @@ public abstract class SycamoreApp extends JFrame
 	 */
 	private void checkDirtyFlagAndSave()
 	{
-		boolean dirtyFlag = checkDirtyFlag();
-
-		if (dirtyFlag)
+		if (SycamoreSystem.getTimelineMode() == TIMELINE_MODE.FULL)
 		{
-			String pt1 = "<html><body><p>Do you want to save the current project?<br>";
-			String pt2 = "All unsaved data will be lost.</p></body></html>";
-			String s = pt1 + pt2;
+			boolean dirtyFlag = checkDirtyFlag();
 
-			int retVal = JOptionPane.showOptionDialog(null, s, "Save project?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
-			if (retVal == JOptionPane.YES_OPTION)
+			if (dirtyFlag)
 			{
-				if (loadedProject == null)
+				String pt1 = "<html><body><p>Do you want to save the current project?<br>";
+				String pt2 = "All unsaved data will be lost.</p></body></html>";
+				String s = pt1 + pt2;
+
+				int retVal = JOptionPane.showOptionDialog(null, s, "Save project?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+				if (retVal == JOptionPane.YES_OPTION)
 				{
-					saveProject();
-				}
-				else
-				{
-					saveProject(loadedProject);
+					if (loadedProject == null)
+					{
+						saveProject();
+					}
+					else
+					{
+						saveProject(loadedProject);
+					}
 				}
 			}
 		}
@@ -708,7 +712,7 @@ public abstract class SycamoreApp extends JFrame
 
 						// create engine
 						SycamoreEngine engine = getSycamoreMainPanel().initEngine(type);
-						
+
 						// decode engine
 						if (!engine.decode(doc.getDocumentElement(), type))
 						{

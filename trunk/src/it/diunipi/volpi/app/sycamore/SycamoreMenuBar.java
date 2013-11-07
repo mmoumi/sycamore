@@ -7,6 +7,7 @@ import it.diunipi.volpi.sycamore.gui.SycamoreInfoPanel;
 import it.diunipi.volpi.sycamore.gui.SycamorePluginsExportingPanel;
 import it.diunipi.volpi.sycamore.gui.SycamorePrefsPane;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.gui.SycamoreSystem.TIMELINE_MODE;
 import it.diunipi.volpi.sycamore.plugins.SycamorePluginExporter;
 import it.diunipi.volpi.sycamore.plugins.SycamorePluginExporter.EXPORT_MODE;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
@@ -331,14 +332,25 @@ public abstract class SycamoreMenuBar extends JMenuBar
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					File loadedProject = application.getLoadedProject();
-					if (loadedProject == null)
+					if (SycamoreSystem.getTimelineMode() == TIMELINE_MODE.LIVE)
 					{
-						application.saveProject();
+						JOptionPane
+								.showMessageDialog(
+										null,
+										"Attention! The Live Mode is currently enabled.\nLive Mode deletes all any simulation data after the drawing of a robot,\nso there is no simulation to save.\nNo project file has been wrtten.",
+										"Attention", JOptionPane.WARNING_MESSAGE);
 					}
 					else
 					{
-						application.saveProject(loadedProject);
+						File loadedProject = application.getLoadedProject();
+						if (loadedProject == null)
+						{
+							application.saveProject();
+						}
+						else
+						{
+							application.saveProject(loadedProject);
+						}
 					}
 				}
 			});
@@ -361,7 +373,18 @@ public abstract class SycamoreMenuBar extends JMenuBar
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					application.saveProject();
+					if (SycamoreSystem.getTimelineMode() == TIMELINE_MODE.LIVE)
+					{
+						JOptionPane
+								.showMessageDialog(
+										null,
+										"Attention! The Live Mode is currently enabled.\nLive Mode deletes all any simulation data after the drawing of a robot,\nso there is no simulation to save.\nNo project file has been wrtten.",
+										"Attention", JOptionPane.WARNING_MESSAGE);
+					}
+					else
+					{
+						application.saveProject();
+					}
 				}
 			});
 		}
