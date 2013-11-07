@@ -4,6 +4,7 @@ import it.diunipi.volpi.sycamore.animation.SycamoreAnimatedObject;
 import it.diunipi.volpi.sycamore.animation.Timeline;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.gui.SycamoreSystem.TIMELINE_MODE;
 import it.diunipi.volpi.sycamore.jmescene.SycamoreJMEScene;
 import it.diunipi.volpi.sycamore.plugins.SycamorePluginManager;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
@@ -246,10 +247,6 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		if (currentRatio != this.getCurrentRatio())
 		{
 			super.setCurrentRatio(currentRatio);
-			if (currentRatio < 1)
-			{
-				updateDirectionGeometry();
-			}
 			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.ROBOT_RATIO_CHANGED.name()));
 		}
 	}
@@ -283,7 +280,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	 */
 	private void updateDirectionGeometry()
 	{
-		if (SycamoreSystem.isMovementDirectionsVisible() && getDirection() != null && this.sceneGeometry != null)
+		if (getDirection() != null && this.sceneGeometry != null)
 		{
 			P position = this.getLocalPosition();
 			P direction = getDirection();
@@ -679,6 +676,10 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 				if (distance > 0)
 				{
 					this.timeline.addKeyframe(destination, (distance / this.getSpeed()));
+					if (SycamoreSystem.getTimelineMode() == TIMELINE_MODE.LIVE)
+					{
+						this.timeline.clearIntermediate();
+					}
 
 					int keyframes = this.timeline.getNumKeyframes();
 					if (keyframes == 1 || keyframes == 2)
@@ -777,7 +778,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			algorithm.reset();
 		}
 
-		timeline.reset();
+		timeline.clear();
 		systemMemory.reset();
 
 		timeline = new Timeline<P>();
