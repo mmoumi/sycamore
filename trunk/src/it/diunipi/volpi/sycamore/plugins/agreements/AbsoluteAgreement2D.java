@@ -88,7 +88,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	// node is static because it is the same for all the robots
 	private static Node						axesNode		= new Node("Axes node");
 
-	private AbsoluteAgreement2DSettingPanel	panel_settings	= null;
+	private AbsoluteAgreement2DSettingsPanel	panel_settings	= null;
 
 	/**
 	 * Default constructor
@@ -384,7 +384,7 @@ public class AbsoluteAgreement2D extends AgreementImpl<Point2D>
 	{
 		if (panel_settings == null)
 		{
-			panel_settings = new AbsoluteAgreement2DSettingPanel();
+			panel_settings = new AbsoluteAgreement2DSettingsPanel();
 		}
 		return panel_settings;
 	}

@@ -90,7 +90,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	// node is static because it is the same for all the robots
 	private static Node						axesNode		= new Node("Axes node");
 	
-	private AbsoluteAgreement3DSettingPanel	panel_settings	= null;
+	private AbsoluteAgreement3DSettingsPanel	panel_settings	= null;
 
 	/**
 	 * Default constructor
@@ -446,7 +446,7 @@ public class AbsoluteAgreement3D extends AgreementImpl<Point3D>
 	{
 		if (panel_settings == null)
 		{
-			panel_settings = new AbsoluteAgreement3DSettingPanel();
+			panel_settings = new AbsoluteAgreement3DSettingsPanel();
 		}
 		return panel_settings;
 	}
