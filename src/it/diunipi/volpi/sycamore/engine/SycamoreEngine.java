@@ -79,8 +79,8 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 
 	// plugins
 	protected InitialConditions<P>				initialConditions			= null;
+	protected Vector<Measure>					measures					= null;
 	private Scheduler<P>						scheduler					= null;
-	private Vector<Measure>						measures					= null;
 	private HumanPilotScheduler<P>				humanPilotScheduler			= null;
 
 	// auxiliary data
@@ -599,6 +599,18 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	}
 
 	/**
+	 * Creates a new Measure instance using passed interface, and adds such instance in the vector
+	 * of the current measures in this engine.
+	 * 
+	 * @param measure
+	 * @throws IllegalArgumentException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	public abstract void createAndAddNewMeasureInstance(Measure measure) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
+
+	/**
 	 * Creates a new initial conditions instance using passed interface, and sets such instance as
 	 * the current initial conditions in this engine.
 	 * 
@@ -730,12 +742,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	{
 		for (Measure measure : this.measures)
 		{
-			Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
-			while (iterator.hasNext())
-			{
-				SycamoreRobot<P> robot = iterator.next();
-				measure.onSimulationStart(robot);
-			}
+			measure.onSimulationStart();
 		}
 	}
 
@@ -747,12 +754,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	{
 		for (Measure measure : this.measures)
 		{
-			Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
-			while (iterator.hasNext())
-			{
-				SycamoreRobot<P> robot = iterator.next();
-				measure.onSimulationStep(robot);
-			}
+			measure.onSimulationStep();
 		}
 	}
 
@@ -763,12 +765,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	{
 		for (Measure measure : this.measures)
 		{
-			Iterator<SycamoreRobot<P>> iterator = this.robots.iterator();
-			while (iterator.hasNext())
-			{
-				SycamoreRobot<P> robot = iterator.next();
-				measure.onSimulationEnd(robot);
-			}
+			measure.onSimulationEnd();
 		}
 	}
 

@@ -3,7 +3,6 @@
  */
 package it.diunipi.volpi.sycamore.plugins.measures;
 
-import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 
 import java.text.DateFormat;
@@ -33,8 +32,10 @@ public class ElapsedTime extends MeasureImpl
 	 * .SycamoreRobot)
 	 */
 	@Override
-	public void onSimulationStart(SycamoreRobot<?> robot)
+	public void onSimulationStart()
 	{
+		System.out.println("START - " + this.getPluginName());
+		
 		elapsed = 0;
 		startingMillis = System.currentTimeMillis();
 	}
@@ -47,7 +48,7 @@ public class ElapsedTime extends MeasureImpl
 	 * .SycamoreRobot)
 	 */
 	@Override
-	public void onSimulationStep(SycamoreRobot<?> robot)
+	public void onSimulationStep()
 	{
 
 	}
@@ -60,27 +61,18 @@ public class ElapsedTime extends MeasureImpl
 	 * .SycamoreRobot)
 	 */
 	@Override
-	public void onSimulationEnd(SycamoreRobot<?> robot)
+	public void onSimulationEnd()
 	{
-		elapsed = elapsed + (System.currentTimeMillis() - startingMillis);
-		startingMillis = 0;
+		System.out.println("STOP - " + this.getPluginName());
+		
+		elapsed = (System.currentTimeMillis() - startingMillis);
+		startingMillis = System.currentTimeMillis();
 
 		Date date = new Date(elapsed);
-		DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
+		DateFormat formatter = new SimpleDateFormat("mm:ss:SSS");
 		String dateFormatted = formatter.format(date);
 
 		System.out.println("Elapsed time: " + dateFormatted);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see it.diunipi.volpi.sycamore.plugins.Measure#getMeasuredCost()
-	 */
-	@Override
-	public Object getMeasuredCost()
-	{
-		return elapsed;
 	}
 
 	/*
@@ -115,17 +107,6 @@ public class ElapsedTime extends MeasureImpl
 	public SycamorePanel getPanel_settings()
 	{
 		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPluginName()
-	 */
-	@Override
-	public String getPluginName()
-	{
-		return "ElapsedTime";
 	}
 
 	/*
