@@ -246,12 +246,12 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 		{
 			if (this.appMode == APP_MODE.SIMULATOR)
 			{
-				sycamoreAnimationControlPanel = new SycamoreAnimationControlPanel();
+				sycamoreAnimationControlPanel = new SycamoreAnimationControlPanel(appMode);
 				sycamoreAnimationControlPanel.addActionListener(this);
 			}
 			else
 			{
-				sycamoreAnimationControlPanel = new SycamoreVisualizerAnimationControlPanel();
+				sycamoreAnimationControlPanel = new SycamoreVisualizerAnimationControlPanel(appMode);
 				sycamoreAnimationControlPanel.addActionListener(this);
 			}
 		}

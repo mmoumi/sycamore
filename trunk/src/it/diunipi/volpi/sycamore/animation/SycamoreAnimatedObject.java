@@ -60,7 +60,7 @@ public abstract class SycamoreAnimatedObject<P extends SycamoreAbstractPoint & C
 		{
 			// set the ratio
 			this.currentRatio = currentRatio;
-			
+
 			// eventually compute the direction
 			if (currentRatio < 1)
 			{
@@ -130,7 +130,7 @@ public abstract class SycamoreAnimatedObject<P extends SycamoreAbstractPoint & C
 			return startingPosition;
 		}
 	}
-	
+
 	/**
 	 * Encode this object to XML format. The encoded Element will contain all data necessary to
 	 * re-create and object that is equal to this one.
@@ -141,26 +141,29 @@ public abstract class SycamoreAnimatedObject<P extends SycamoreAbstractPoint & C
 	{
 		// create element
 		Element element = document.createElement("SycamoreAnimatedObject");
-		
+
 		// children
 		Element startingPositionElem = document.createElement("startingPosition");
 		startingPositionElem.appendChild(startingPosition.encode(factory, builder, document));
-		
+
 		Element timelineElem = document.createElement("timeline");
 		timelineElem.appendChild(timeline.encode(factory, builder, document));
-		
+
 		Element currentRatioElem = document.createElement("currentRatio");
 		currentRatioElem.appendChild(document.createTextNode(currentRatio + ""));
-		
-		Element directionElem = document.createElement("direction");
-		directionElem.appendChild(direction.encode(factory, builder, document));
-		
+
+		if (direction != null)
+		{
+			Element directionElem = document.createElement("direction");
+			directionElem.appendChild(direction.encode(factory, builder, document));
+			element.appendChild(directionElem);
+		}
+
 		// append children
 		element.appendChild(startingPositionElem);
 		element.appendChild(timelineElem);
 		element.appendChild(currentRatioElem);
-		element.appendChild(directionElem);
-		
+
 		return element;
 	}
 
@@ -184,22 +187,22 @@ public abstract class SycamoreAnimatedObject<P extends SycamoreAbstractPoint & C
 				Element startingPositionElem = (Element) startingPosition.item(0);
 				success = success && this.startingPosition.decode(startingPositionElem, type);
 			}
-			
+
 			// timeline
 			NodeList timeline = element.getElementsByTagName("timeline");
 			if (timeline.getLength() > 0)
 			{
 				Element timelineElem = (Element) timeline.item(0);
-				success = success &&  this.timeline.decode(timelineElem, type);
+				success = success && this.timeline.decode(timelineElem, type);
 			}
-			
+
 			// currentRatio
 			NodeList currentRatio = element.getElementsByTagName("currentRatio");
 			if (currentRatio.getLength() > 0)
 			{
 				Element currentRatioElem = (Element) currentRatio.item(0);
 				float ratio = Float.parseFloat(currentRatioElem.getTextContent());
-				
+
 				this.setCurrentRatio(ratio);
 			}
 		}
