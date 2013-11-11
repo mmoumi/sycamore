@@ -115,7 +115,7 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 	 * it.diunipi.volpi.sycamore.model.Observation)
 	 */
 	@Override
-	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> callee)
+	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> caller)
 	{
 		if (count < ROUNDS)
 		{
@@ -128,7 +128,7 @@ public class DummyAlgorithm2D extends AlgorithmImpl<Point2D>
 		{
 			try
 			{
-				callee.turnLightOn(ColorRGBA.Yellow);
+				caller.turnLightOn(ColorRGBA.Yellow);
 			}
 			catch (TooManyLightsException e)
 			{

@@ -120,7 +120,7 @@ public class DummyAlgorithm3D extends AlgorithmImpl<Point3D>
 	 * it.diunipi.volpi.sycamore.model.Observation)
 	 */
 	@Override
-	public Point3D compute(Vector<Observation<Point3D>> observations, SycamoreObservedRobot<Point3D> callee)
+	public Point3D compute(Vector<Observation<Point3D>> observations, SycamoreObservedRobot<Point3D> caller)
 	{
 		if (count < ROUNDS)
 		{
@@ -133,7 +133,7 @@ public class DummyAlgorithm3D extends AlgorithmImpl<Point3D>
 		{
 			try
 			{
-				callee.turnLightOn(ColorRGBA.Yellow);
+				caller.turnLightOn(ColorRGBA.Yellow);
 			}
 			catch (TooManyLightsException e)
 			{

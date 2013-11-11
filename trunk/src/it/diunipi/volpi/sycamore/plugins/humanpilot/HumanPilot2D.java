@@ -51,7 +51,7 @@ public class HumanPilot2D extends AlgorithmImpl<Point2D>
 	 * it.diunipi.volpi.sycamore.model.Observation)
 	 */
 	@Override
-	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> callee)
+	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> caller)
 	{
 		int minX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_X);
 		int maxX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_X);

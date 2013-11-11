@@ -406,14 +406,14 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * @return The positions of all the robots in the system
 	 * @throws TimelineNotAccessibleException
 	 */
-	public Observation<P> getObservation(SycamoreRobot<P> robot, SycamoreRobot<P> callee)
+	public Observation<P> getObservation(SycamoreRobot<P> robot, SycamoreRobot<P> caller)
 	{
 		P position = robot.getGlobalPosition();
 
-		// translate position to callee's local coords
-		if (callee.getAgreement() != null)
+		// translate position to caller's local coords
+		if (caller.getAgreement() != null)
 		{
-			position = callee.getAgreement().toLocalCoordinates(position);
+			position = caller.getAgreement().toLocalCoordinates(position);
 		}
 
 		return new Observation<P>(position, robot.getLights(), robot.getAlgorithm().isHumanPilot());
@@ -443,14 +443,14 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 
 	/**
 	 * Returns a list of {@link Observation} objects, that contains informations about the positions
-	 * and the lights of every robot in the system, excluding the callee of the method.
+	 * and the lights of every robot in the system, excluding the caller of the method.
 	 * 
 	 * @return a list of {@link Observation} objects, that contains informations about the positions
-	 *         and the lights of every robot in the system, excluding the callee of the method.
+	 *         and the lights of every robot in the system, excluding the caller of the method.
 	 * @throws TimelineNotAccessibleException
 	 *             if someone tries to access a timeline without permissions.
 	 */
-	public Vector<Observation<P>> getObservations(SycamoreRobot<P> callee)
+	public Vector<Observation<P>> getObservations(SycamoreRobot<P> caller)
 	{
 		Vector<Observation<P>> observations = new Vector<Observation<P>>();
 
@@ -459,10 +459,10 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 		{
 			SycamoreRobot<P> robot = iterator.next();
 
-			if (robot != callee)
+			if (robot != caller)
 			{
 				// ask the robot for the obsevation.
-				Observation<P> observation = this.getObservation(robot, callee);
+				Observation<P> observation = this.getObservation(robot, caller);
 
 				if (observation != null)
 				{
@@ -472,7 +472,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 		}
 
 		// get visibility and filter
-		Visibility<P> visibility = callee.getVisibility();
+		Visibility<P> visibility = caller.getVisibility();
 
 		if (visibility == null)
 		{

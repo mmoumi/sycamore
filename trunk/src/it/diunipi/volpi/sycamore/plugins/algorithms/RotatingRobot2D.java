@@ -42,7 +42,7 @@ public class RotatingRobot2D extends AlgorithmImpl<Point2D>
 	 * it.diunipi.volpi.sycamore.model.SycamoreObservedRobot)
 	 */
 	@Override
-	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> callee)
+	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> caller)
 	{
 		if (beginning)
 		{
@@ -54,9 +54,9 @@ public class RotatingRobot2D extends AlgorithmImpl<Point2D>
 			Point2D p = new Point2D(FastMath.cos(angle), FastMath.sin(angle));
 			angle += 0.005f;
 
-			callee.setDirection(p);
+			caller.setDirection(p);
 			
-			return callee.getLocalPosition();
+			return caller.getLocalPosition();
 		}
 	}
 
