@@ -37,7 +37,7 @@ public class FollowTheLeader3D extends AlgorithmImpl<Point3D>
 	 * it.diunipi.volpi.sycamore.model.Observation)
 	 */
 	@Override
-	public Point3D compute(Vector<Observation<Point3D>> observations, SycamoreObservedRobot<Point3D> callee)
+	public Point3D compute(Vector<Observation<Point3D>> observations, SycamoreObservedRobot<Point3D> caller)
 	{
 		try
 		{
@@ -47,10 +47,10 @@ public class FollowTheLeader3D extends AlgorithmImpl<Point3D>
 				if (observation.isHumanPilot())
 				{
 					Point3D dest = observation.getRobotPosition();
-					Point3D pos = callee.getLocalPosition();
+					Point3D pos = caller.getLocalPosition();
 					if (dest.compareTo(pos) == 0)
 					{
-						callee.turnLightOn(ColorRGBA.Yellow);
+						caller.turnLightOn(ColorRGBA.Yellow);
 						System.out.println("Leader catch!");
 					}
 					

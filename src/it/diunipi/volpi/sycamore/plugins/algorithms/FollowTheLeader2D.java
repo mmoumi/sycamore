@@ -35,7 +35,7 @@ public class FollowTheLeader2D extends AlgorithmImpl<Point2D>
 	 * it.diunipi.volpi.sycamore.model.Observation)
 	 */
 	@Override
-	public Point2D compute(Vector<Observation<Point2D>> snapshot, SycamoreObservedRobot<Point2D> callee)
+	public Point2D compute(Vector<Observation<Point2D>> snapshot, SycamoreObservedRobot<Point2D> caller)
 	{
 		// look for a HumanPilot executing robot
 		for (Observation<Point2D> observation : snapshot)

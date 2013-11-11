@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 
 /**
  * This class exports installed plugins into jar files saved in a directory of the file system
- * chosen by the callee.
+ * chosen by the caller.
  * 
  * @author Valerio Volpi - vale.v@me.com
  */

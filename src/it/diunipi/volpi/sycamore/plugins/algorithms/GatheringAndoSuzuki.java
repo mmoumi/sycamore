@@ -192,9 +192,9 @@ public class GatheringAndoSuzuki extends AlgorithmImpl<Point2D>
 	 * it.diunipi.volpi.sycamore.model.SycamoreObservedRobot)
 	 */
 	@Override
-	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> callee)
+	public Point2D compute(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> caller)
 	{
-		Point2D executingRobotPosition = callee.getLocalPosition();
+		Point2D executingRobotPosition = caller.getLocalPosition();
 
 		// no observations
 		if (observations.isEmpty())

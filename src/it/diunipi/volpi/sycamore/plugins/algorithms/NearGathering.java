@@ -63,7 +63,7 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 {
 	/**
 	 * A comparator for points. Sorts the points by their Y value. If the Y values are equal, sorts
-	 * the points by the X value (eventually flipped, if requested by the callee).
+	 * the points by the X value (eventually flipped, if requested by the caller).
 	 * 
 	 * @author Valerio Volpi - vale.v@me.com
 	 */
@@ -117,7 +117,7 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 
 	/**
 	 * A comparator for points. Sorts the points by their X value. If the X values are equal, sorts
-	 * the points by the Y value (eventually flipped, if requested by the callee).
+	 * the points by the Y value (eventually flipped, if requested by the caller).
 	 * 
 	 * @author Valerio Volpi - vale.v@me.com
 	 */
@@ -606,10 +606,10 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 	 * it.diunipi.volpi.sycamore.model.SycamoreObservedRobot)
 	 */
 	@Override
-	public Point2D compute(Vector<Observation<Point2D>> snapshot, SycamoreObservedRobot<Point2D> callee)
+	public Point2D compute(Vector<Observation<Point2D>> snapshot, SycamoreObservedRobot<Point2D> caller)
 	{
 		// fill quadrants
-		fillQuadrants(snapshot, callee);
+		fillQuadrants(snapshot, caller);
 
 		try
 		{
@@ -620,10 +620,10 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 
 				// if i see n-1 robots i'm done
 				setFinished(true);
-				callee.turnLightOn(ColorRGBA.Yellow);
+				caller.turnLightOn(ColorRGBA.Yellow);
 
 				clearQuadrants();
-				return callee.getLocalPosition();
+				return caller.getLocalPosition();
 			}
 			else
 			{
@@ -635,7 +635,7 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 				if (isNeClear() && isNwClear() && isSeClear())
 				{
 					// if I don't see robots in NW, NE, SE, no move
-					dp = callee.getLocalPosition();
+					dp = caller.getLocalPosition();
 				}
 				else
 				{
@@ -644,9 +644,9 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 						// if I see robots only in NW SW Then
 						// l = Half-line from me going North;
 
-						Point2D lPoint = new Point2D(callee.getLocalPosition().x, (float) quadrantNE.getY());
+						Point2D lPoint = new Point2D(caller.getLocalPosition().x, (float) quadrantNE.getY());
 
-						java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(callee.getLocalPosition());
+						java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(caller.getLocalPosition());
 						java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(lPoint);
 
 						dp = contour.intersectWith(new Line2D.Double(start, end));
@@ -656,9 +656,9 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 						// If I see robots only in SE SW Then
 						// l = Half-line from me going East;
 
-						Point2D lPoint = new Point2D((float) (quadrantSE.getX() + quadrantSE.getWidth()), callee.getLocalPosition().y);
+						Point2D lPoint = new Point2D((float) (quadrantSE.getX() + quadrantSE.getWidth()), caller.getLocalPosition().y);
 
-						java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(callee.getLocalPosition());
+						java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(caller.getLocalPosition());
 						java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(lPoint);
 
 						dp = contour.intersectWith(new Line2D.Double(start, end));
@@ -675,7 +675,7 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 							float minDinstance = Float.MAX_VALUE;
 							for (Point2D point : robotsNE)
 							{
-								float dinstance = point.distanceTo(callee.getLocalPosition());
+								float dinstance = point.distanceTo(caller.getLocalPosition());
 								if (dinstance < minDinstance)
 								{
 									closest = point;
@@ -683,7 +683,7 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 							}
 
 							// now i have the closest robot in NE.
-							java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(callee.getLocalPosition());
+							java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(caller.getLocalPosition());
 							java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(closest);
 
 							dp = contour.intersectWith(new Line2D.Double(start, end));
@@ -695,7 +695,7 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 						else
 						{
 							// l = Half-line from me to the only valley of CT in NE;
-							dp = contour.getClosestNEValley(callee.getLocalPosition());
+							dp = contour.getClosestNEValley(caller.getLocalPosition());
 						}
 					}
 
@@ -706,11 +706,11 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 					// B ************ A
 
 					// B is the current position
-					Point2D B = callee.getLocalPosition();
+					Point2D B = caller.getLocalPosition();
 
 					// A is the intersection between the horizontal axis and the contour
-					Point2D lPoint = new Point2D((float) (quadrantSE.getX() + quadrantSE.getWidth()), callee.getLocalPosition().y);
-					java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(callee.getLocalPosition());
+					Point2D lPoint = new Point2D((float) (quadrantSE.getX() + quadrantSE.getWidth()), caller.getLocalPosition().y);
+					java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(caller.getLocalPosition());
 					java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(lPoint);
 					Point2D A = contour.intersectWith(new Line2D.Double(start, end));
 
@@ -812,7 +812,7 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 					// - distance between position and computed dp
 					// - just computed "distance"
 
-					double posDpDinst = callee.getLocalPosition().distanceTo(dp);
+					double posDpDinst = caller.getLocalPosition().distanceTo(dp);
 					double minDinstance = Math.min(posDpDinst, distance);
 					double finalDinstance = minDinstance / 2;
 
@@ -838,15 +838,15 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 					double b = finalDinstance * sinBeta;
 
 					// the new dp coordinates will be:
-					float dpX = callee.getLocalPosition().x + (float) c;
-					float dpY = callee.getLocalPosition().y + (float) b;
+					float dpX = caller.getLocalPosition().x + (float) c;
+					float dpY = caller.getLocalPosition().y + (float) b;
 
 					dp = new Point2D(dpX, dpY);
 
 					// if dp is too close to the current position, bring it back
-					if (!dp.differsModuloEpsilon(callee.getLocalPosition()))
+					if (!dp.differsModuloEpsilon(caller.getLocalPosition()))
 					{
-						dp = callee.getLocalPosition();
+						dp = caller.getLocalPosition();
 					}
 				}
 
@@ -877,13 +877,13 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 	/**
 	 * Fill NW, NE, SE, SO quadrants by placing each robot into the right quadrant
 	 */
-	private void fillQuadrants(Vector<Observation<Point2D>> snapshot, SycamoreObservedRobot<Point2D> callee)
+	private void fillQuadrants(Vector<Observation<Point2D>> snapshot, SycamoreObservedRobot<Point2D> caller)
 	{
-		Point2D calleePosition = callee.getLocalPosition();
+		Point2D callerPosition = caller.getLocalPosition();
 		float visibilityRange = VisibilityImpl.getVisibilityRange();
 
-		float x = calleePosition.x - (visibilityRange / 2);
-		float y = calleePosition.y + (visibilityRange / 2);
+		float x = callerPosition.x - (visibilityRange / 2);
+		float y = callerPosition.y + (visibilityRange / 2);
 
 		// compute quadrants
 		this.quadrantNW = new Rectangle2D.Float(x, y, (visibilityRange / 2), (visibilityRange / 2));

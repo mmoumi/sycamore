@@ -37,14 +37,14 @@ public interface Algorithm<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	/**
 	 * The computation method. At each call of the <code>compute()</code> method, the system obtains
 	 * a new destination point that will be reached by the robot during move phase. The compute is
-	 * called by the system, and the obseravtion that is given to it is obtained by the robot in the
+	 * called by the system, and the observation that is given to it is obtained by the robot in the
 	 * look phase.
 	 * 
 	 * @param observations
-	 * @param calleeInformations
+	 * @param caller
 	 * @return
 	 */
-	public P compute(Vector<Observation<P>> observations, SycamoreObservedRobot<P> callee);
+	public P compute(Vector<Observation<P>> observations, SycamoreObservedRobot<P> caller);
 
 	/**
 	 * Returns the path of the file where the original paper is stored
