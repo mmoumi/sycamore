@@ -144,12 +144,18 @@ public class SycamoreWorkspaceSelectionPanel extends JPanel
 	{
 		if (textField_workspaceDir == null)
 		{
-			String path = ApplicationProperties.WORKSPACE_DIR.getDefaultValue();
+			final String path = ApplicationProperties.WORKSPACE_DIR.getDefaultValue();
 			
 			textField_workspaceDir = new JTextField();
 			textField_workspaceDir.setText(path);
-
-			PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR, path);
+			textField_workspaceDir.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR, path);
+				}
+			});
 		}
 		return textField_workspaceDir;
 	}
