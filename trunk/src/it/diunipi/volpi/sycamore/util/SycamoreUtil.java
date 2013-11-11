@@ -784,4 +784,28 @@ public class SycamoreUtil
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * @param color
+	 * @param green
+	 * @return
+	 */
+	public static boolean areColorsEqual(ColorRGBA color1, ColorRGBA color2)
+	{
+		if (color1.r == color2.r)
+		{
+			if (color1.g == color2.g)
+			{
+				if (color1.b == color2.b)
+				{
+					if (color1.a == color2.a)
+					{
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
 }
