@@ -55,6 +55,11 @@ public interface SycamoreObservedRobot<P extends SycamoreAbstractPoint & Computa
 	 * @param color
 	 */
 	public void turnLightOn(ColorRGBA color) throws TooManyLightsException;
+	
+	/**
+	 * Tuns off the last light that was turned on.
+	 */
+	public void turnLightOff();
 
 	/**
 	 * Returns the memory of this robot.
@@ -78,4 +83,9 @@ public interface SycamoreObservedRobot<P extends SycamoreAbstractPoint & Computa
 	 * @throws NNotKnownException
 	 */
 	public int getN() throws NNotKnownException;
+
+	/**
+	 * @return
+	 */
+	public P getDirection();
 }
