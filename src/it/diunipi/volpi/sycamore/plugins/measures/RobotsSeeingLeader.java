@@ -8,7 +8,9 @@ import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.plugins.measures.FileExportingSettingsPanel.FileExportingProperties;
 import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
+import it.diunipi.volpi.sycamore.util.PropertyManager;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -26,10 +28,11 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 @PluginImplementation
 public class RobotsSeeingLeader extends MeasureImpl
 {
-	private long		startingMillis	= 0;
-	private int			stepCounter		= 0;
-	private File		file			= null;
-	private PrintWriter	printWriter		= null;
+	private long						startingMillis	= 0;
+	private int							stepCounter		= 0;
+	private File						file			= null;
+	private PrintWriter					printWriter		= null;
+	private FileExportingSettingsPanel	panel_settings	= null;
 
 	/*
 	 * (non-Javadoc)
@@ -46,7 +49,7 @@ public class RobotsSeeingLeader extends MeasureImpl
 		// Open the file
 		try
 		{
-			this.file = new File("/Users/Vale/Desktop/robotsLeader.dat");
+			this.file = new File(PropertyManager.getSharedInstance().getProperty(FileExportingProperties.OUTPUT_FILE_PATH) + System.getProperty("file.separator") + this.getPluginName() + ".dat");
 			this.printWriter = new PrintWriter(file);
 		}
 		catch (Exception e)
@@ -82,7 +85,7 @@ public class RobotsSeeingLeader extends MeasureImpl
 			{
 				SycamoreRobot<Point2D> robot = robotsIterator.next();
 				Visibility<Point2D> visibility = robot.getVisibility();
-				
+
 				if (visibility.isPointVisible(humanPilotPos))
 				{
 					count++;
@@ -90,7 +93,7 @@ public class RobotsSeeingLeader extends MeasureImpl
 			}
 
 			long elapsedMillis = (System.currentTimeMillis() - startingMillis);
-			long elapsedSeconds = (elapsedMillis / 1000);
+			double elapsedSeconds = ((double)elapsedMillis / 1000.0);
 
 			float target = 10.0f; // i want 10 updates per second
 			float frequency = 1.0f / SycamoreSystem.getSchedulerFrequency();
@@ -145,12 +148,16 @@ public class RobotsSeeingLeader extends MeasureImpl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getSettings()
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPanel_settings()
 	 */
 	@Override
 	public SycamorePanel getPanel_settings()
 	{
-		return null;
+		if (panel_settings == null)
+		{
+			panel_settings = new FileExportingSettingsPanel();
+		}
+		return panel_settings;
 	}
 
 	/*
