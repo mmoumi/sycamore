@@ -11,7 +11,6 @@ import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.awt.Polygon;
-import java.awt.geom.Rectangle2D;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 
@@ -41,9 +40,10 @@ import com.jme3.util.TangentBinormalGenerator;
 public class DirectionalVisibility extends VisibilityImpl<Point2D>
 {
 	private final int				angle			= 40;
-	protected Geometry				triangle		= null;
+	protected Geometry				geometry		= null;
 	private VisibilitySettingsPanel	settingPanel	= null;
-	private Point2D					center			= null;
+	private Polygon					triangle		= null;
+	private Point2D					centroid		= null;
 
 	/**
 	 * Default constructor.
@@ -69,19 +69,19 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 				mat.setTexture("ColorMap", skyTexture);
 
 				// prepare a new quad geometry
-				triangle = new Geometry("Triangle", new Quad(1, 1));
-				triangle.setLocalScale(getVisibilityRange());
-				triangle.center();
+				geometry = new Geometry("Triangle", new Quad(1, 1));
+				geometry.setLocalScale(2 * getVisibilityRange());
+				geometry.center();
 
-				Vector3f translation = triangle.getLocalTranslation();
-				triangle.setLocalTranslation(translation.x, translation.y, translation.z - 0.5f);
-				triangle.setModelBound(new BoundingBox());
-				triangle.updateModelBound();
+				Vector3f translation = geometry.getLocalTranslation();
+				geometry.setLocalTranslation(translation.x, translation.y, translation.z - 0.5f);
+				geometry.setModelBound(new BoundingBox());
+				geometry.updateModelBound();
 
 				// apply the texture to the quad and set the material as fully transparent.
-				TangentBinormalGenerator.generate(triangle.getMesh(), true);
-				triangle.setMaterial(mat);
-				triangle.setQueueBucket(Bucket.Transparent);
+				TangentBinormalGenerator.generate(geometry.getMesh(), true);
+				geometry.setMaterial(mat);
+				geometry.setQueueBucket(Bucket.Transparent);
 
 				return null;
 			}
@@ -175,16 +175,20 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 			}
 		}
 
-		Polygon triangle = new Polygon();
+		this.triangle = new Polygon();
 
-		triangle.addPoint((int) position.x, (int) position.y);
-		triangle.addPoint((int) x.x, (int) x.y);
-		triangle.addPoint((int) y.x, (int) y.y);
+		Point2D a = new Point2D(position.x, position.y);
+		Point2D b = new Point2D(x.x, x.y);
+		Point2D c = new Point2D(y.x, y.y);
+		
+		
+		triangle.addPoint((int) a.x, (int) a.y);
+		triangle.addPoint((int) b.x, (int) b.y);
+		triangle.addPoint((int) c.x, (int) c.y);
+		
+		this.centroid = new Point2D((a.x + b.x + c.x) / 3, (a.y + b.y + c.y) / 3);
 
 		boolean visible = triangle.contains(SycamoreUtil.convertPoint2D(point));
-		Rectangle2D bounds = triangle.getBounds2D();
-		this.center = new Point2D((float) bounds.getCenterX(), (float) bounds.getCenterY());
-		
 		return visible;
 	}
 
@@ -248,7 +252,7 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 	@Override
 	public Geometry getVisibilityRangeGeometry()
 	{
-		return triangle;
+		return geometry;
 	}
 
 	/*
@@ -330,22 +334,30 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 			@Override
 			public Object call() throws Exception
 			{
-				triangle.setLocalScale(getVisibilityRange());
+				geometry.setLocalScale(2 * getVisibilityRange());
 
 				// translate the geometry to be centered in the robot's position again.
-				float translationFactor = getVisibilityRange() / 2;
-				triangle.setLocalTranslation(-translationFactor, -translationFactor, 0.5f);
-				triangle.updateGeometricState();
+				float translationFactor = getVisibilityRange();
+				geometry.setLocalTranslation(-translationFactor, -translationFactor, 0.5f);
+				geometry.updateGeometricState();
 				return null;
 			}
 		});
 	}
 
 	/**
-	 * @return
+	 * @return the triangle
 	 */
-	public Point2D getCenter()
+	public Polygon getTriangle()
 	{
-		return center;
+		return triangle;
+	}
+	
+	/**
+	 * @return the centroid
+	 */
+	public Point2D getCentroid()
+	{
+		return centroid;
 	}
 }
