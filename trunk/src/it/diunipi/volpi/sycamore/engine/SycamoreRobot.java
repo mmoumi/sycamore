@@ -620,6 +620,22 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.model.SycamoreObservedRobot#addLight(com.jme3.math.ColorRGBA)
+	 */
+	@Override
+	public synchronized void turnLightOff()
+	{
+		if (currentLights > 0)
+		{
+			currentLights--;
+			SycamoreRobotLight light = lights.elementAt(currentLights);
+			light.setColor(glassColor);
+		}
+	}
+
 	/**
 	 * Performs a look. Stores the vector of observations of the other robots in the system inside
 	 * the robots temporary storage, and changes the robot state properly.
