@@ -7,6 +7,7 @@ import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
+import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -25,11 +26,55 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 /**
- * @author Vale
  * 
+ * @author Valerio Volpi - vale.v@me.com
  */
-public class AverageDistanceSettingsPanel extends SycamorePanel
+public class FileExportingSettingsPanel extends SycamorePanel
 {
+	/**
+	 * Properties related to the file exporting plugins
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
+	public static enum FileExportingProperties implements SycamoreProperty
+	{
+		OUTPUT_FILE_PATH("Output file path", ApplicationProperties.WORKSPACE_DIR.getDefaultValue() + System.getProperty("file.separator") + "Reports");
+
+		private String	description		= null;
+		private String	defaultValue	= null;
+
+		/**
+		 * Constructor.
+		 */
+		FileExportingProperties(String description, String defaultValue)
+		{
+			this.description = description;
+			this.defaultValue = defaultValue;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
+		 */
+		@Override
+		public String getDescription()
+		{
+			return description;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDefaultValue()
+		 */
+		@Override
+		public String getDefaultValue()
+		{
+			return defaultValue;
+		}
+	}
+	
 	private static final long	serialVersionUID		= -8159817537321449729L;
 	private JPanel				panel_settings			= null;
 	private JLabel				label_outputPath		= null;
@@ -39,7 +84,7 @@ public class AverageDistanceSettingsPanel extends SycamorePanel
 	/**
 	 * Default constructor.
 	 */
-	public AverageDistanceSettingsPanel()
+	public FileExportingSettingsPanel()
 	{
 		initialize();
 	}
@@ -157,10 +202,18 @@ public class AverageDistanceSettingsPanel extends SycamorePanel
 	{
 		if (textField_outputPath == null)
 		{
+			final String path = FileExportingProperties.OUTPUT_FILE_PATH.getDefaultValue();
+			
 			textField_outputPath = new JTextField();
-
-			String path = ApplicationProperties.WORKSPACE_DIR.getDefaultValue() + System.getProperty("file.separator") + "Reports";
 			textField_outputPath.setText(path);
+			textField_outputPath.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					PropertyManager.getSharedInstance().putProperty(FileExportingProperties.OUTPUT_FILE_PATH, path);
+				}
+			});
 		}
 		return textField_outputPath;
 	}
@@ -185,7 +238,7 @@ public class AverageDistanceSettingsPanel extends SycamorePanel
 					JFileChooser fileChoser = new JFileChooser();
 					fileChoser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-					int returnVal = fileChoser.showOpenDialog(AverageDistanceSettingsPanel.this);
+					int returnVal = fileChoser.showOpenDialog(FileExportingSettingsPanel.this);
 
 					// set the workspace
 					if (returnVal == JFileChooser.APPROVE_OPTION)
@@ -195,7 +248,7 @@ public class AverageDistanceSettingsPanel extends SycamorePanel
 
 						getTextField_outputPath().setText(path);
 
-						PropertyManager.getSharedInstance().putProperty(ApplicationProperties.WORKSPACE_DIR, path);
+						PropertyManager.getSharedInstance().putProperty(FileExportingProperties.OUTPUT_FILE_PATH, path);
 					}
 				}
 			});

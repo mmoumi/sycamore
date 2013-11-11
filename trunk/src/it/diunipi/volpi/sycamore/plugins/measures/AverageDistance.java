@@ -8,9 +8,8 @@ import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreRobotMatrix;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.util.ApplicationProperties;
+import it.diunipi.volpi.sycamore.plugins.measures.FileExportingSettingsPanel.FileExportingProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
-import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -28,55 +27,11 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 @PluginImplementation
 public class AverageDistance extends MeasureImpl
 {
-	/**
-	 * Properties related to the average distance plugin
-	 * 
-	 * @author Valerio Volpi - vale.v@me.com
-	 */
-	private enum AverageDistanceProperties implements SycamoreProperty
-	{
-		OUTPUT_FILE_PATH("Output file path", ApplicationProperties.WORKSPACE_DIR.getDefaultValue() + System.getProperty("file.separator") + "Reports");
-
-		private String	description		= null;
-		private String	defaultValue	= null;
-
-		/**
-		 * Constructor.
-		 */
-		AverageDistanceProperties(String description, String defaultValue)
-		{
-			this.description = description;
-			this.defaultValue = defaultValue;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
-		 */
-		@Override
-		public String getDescription()
-		{
-			return description;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDefaultValue()
-		 */
-		@Override
-		public String getDefaultValue()
-		{
-			return defaultValue;
-		}
-	}
-	
-	private long							startingMillis	= 0;
-	private int								stepCounter		= 0;
-	private File							file			= null;
-	private PrintWriter						printWriter		= null;
-	private AverageDistanceSettingsPanel	panel_settings	= null;
+	private long						startingMillis	= 0;
+	private int							stepCounter		= 0;
+	private File						file			= null;
+	private PrintWriter					printWriter		= null;
+	private FileExportingSettingsPanel	panel_settings	= null;
 
 	/*
 	 * (non-Javadoc)
@@ -93,7 +48,7 @@ public class AverageDistance extends MeasureImpl
 		// Open the file
 		try
 		{
-			this.file = new File(PropertyManager.getSharedInstance().getProperty(AverageDistanceProperties.OUTPUT_FILE_PATH));
+			this.file = new File(PropertyManager.getSharedInstance().getProperty(FileExportingProperties.OUTPUT_FILE_PATH) + System.getProperty("file.separator") + this.getPluginName() + ".dat");
 			this.printWriter = new PrintWriter(file);
 		}
 		catch (Exception e)
@@ -138,7 +93,7 @@ public class AverageDistance extends MeasureImpl
 			float average = sum / num;
 
 			long elapsedMillis = (System.currentTimeMillis() - startingMillis);
-			long elapsedSeconds = (elapsedMillis / 1000);
+			double elapsedSeconds = ((double) elapsedMillis / 1000.0);
 
 			float target = 10.0f; // i want 10 updates per second
 			float frequency = 1.0f / SycamoreSystem.getSchedulerFrequency();
@@ -189,7 +144,7 @@ public class AverageDistance extends MeasureImpl
 	{
 		return "This plugin measures the average distance between robots and the leader. It counts 10 steps per second and writes a line in a GnuPlot-supported file that contains the time (in seconds) on the x axis and the average on y axis. Only one leader is supposed to be in the scene.";
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -200,7 +155,7 @@ public class AverageDistance extends MeasureImpl
 	{
 		if (panel_settings == null)
 		{
-			panel_settings = new AverageDistanceSettingsPanel();
+			panel_settings = new FileExportingSettingsPanel();
 		}
 		return panel_settings;
 	}
