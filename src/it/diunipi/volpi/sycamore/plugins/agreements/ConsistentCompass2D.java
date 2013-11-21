@@ -235,17 +235,17 @@ public class ConsistentCompass2D extends AgreementImpl<Point2D>
 	}
 
 	/**
-	 * @return the signum of the scale on x axis
+	 * @return the sign of the scale on x axis
 	 */
-	private int getSignumX()
+	private int getSignX()
 	{
 		return (isFlipX() ? -1 : 1);
 	}
 
 	/**
-	 * @return the signum of the scale on y axis
+	 * @return the sign of the scale on y axis
 	 */
-	private int getSignumY()
+	private int getSignY()
 	{
 		return (isFlipY() ? -1 : 1);
 	}
@@ -257,11 +257,11 @@ public class ConsistentCompass2D extends AgreementImpl<Point2D>
 	{
 		if (AgreementImpl.isFixMeasureUnit())
 		{
-			return getSignumX();
+			return getSignX();
 		}
 		else
 		{
-			return scaleFactor * (getSignumX());
+			return scaleFactor * (getSignX());
 		}
 	}
 
@@ -272,11 +272,11 @@ public class ConsistentCompass2D extends AgreementImpl<Point2D>
 	{
 		if (AgreementImpl.isFixMeasureUnit())
 		{
-			return getSignumY();
+			return getSignY();
 		}
 		else
 		{
-			return scaleFactor * (getSignumY());
+			return scaleFactor * (getSignY());
 		}
 	}
 

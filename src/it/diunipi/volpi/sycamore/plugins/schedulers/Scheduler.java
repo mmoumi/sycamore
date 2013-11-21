@@ -53,15 +53,15 @@ public interface Scheduler<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	public void runLoopIteration();
 
 	/**
-	 * Updates the timelines of the robots. This method could just move the robots by updating their
-	 * ratio ({@link Timeline}), or it could actually change the timelines in order to modify the
-	 * destination point of the robot or increase or decrease its speed.
-	 */
-	public void updateTimelines();
-
-	/**
 	 * Performs all the operations that are successive to the simulation. It is supposed to be
 	 * called by the scheduler thread after the ending of the simulation.
 	 */
 	public void runLoop_post();
+	
+	/**
+	 * Updates the timelines of the robots. This method could just move the robots by updating their
+	 * ratio ({@link Timeline}), or it could actually change the timelines in order to modify the
+	 * destination point of the robot or increase or decrease its speed.
+	 */
+	public void moveRobots();
 }

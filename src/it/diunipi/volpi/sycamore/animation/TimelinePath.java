@@ -13,7 +13,7 @@ import java.util.Vector;
  *            the type of point on which this engine and all the contained objects (robots,
  *            plugins...) are build.
  */
-public class SycamoreTimelinePath<P extends SycamoreAbstractPoint>
+public class TimelinePath<P extends SycamoreAbstractPoint>
 {
 	private Vector<P>	points;
 
@@ -21,7 +21,7 @@ public class SycamoreTimelinePath<P extends SycamoreAbstractPoint>
 	 * Default constructor.
 	 * @param points
 	 */
-	public SycamoreTimelinePath(Vector<P> points)
+	public TimelinePath(Vector<P> points)
 	{
 		this.points = points;
 	}

@@ -218,7 +218,7 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	 * 
 	 * @return
 	 */
-	public synchronized SycamoreTimelinePath<P> getFullPath()
+	public synchronized TimelinePath<P> getFullPath()
 	{
 		Vector<P> points = new Vector<P>();
 
@@ -228,7 +228,7 @@ public class Timeline<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 			points.add(this.keyframes.get(i).getPosition());
 		}
 
-		return new SycamoreTimelinePath<P>(points);
+		return new TimelinePath<P>(points);
 	}
 
 	/**

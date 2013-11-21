@@ -31,7 +31,6 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	private JXMultiSplitPane				multiSplitPane					= null;
 	private SycamorePluginsListPanel		pluginsPanel					= null;
 	private SycamoreSimulationSettingsPanel	simulationSettingsPanel			= null;
-	private SycamoreReportPanel				reportPanel						= null;
 	private SycamoreSimulationViewPanel		simulationViewPanel				= null;
 	private SycamoreAnimationControlPanel	sycamoreAnimationControlPanel	= null;
 	private SycamoreEngine					appEngine						= null;
@@ -110,13 +109,12 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 		if (multiSplitPane == null)
 		{
 			multiSplitPane = new JXMultiSplitPane();
-			String layoutDef = "(ROW (COLUMN (LEAF name=top weight=0.2) (LEAF name=middle weight=0.3) (LEAF name=bottom weight=0.5)) (LEAF name=left))";
+			String layoutDef = "(ROW (COLUMN (LEAF name=top weight=0.6) (LEAF name=bottom weight=0)) (LEAF name=left))";
 			MultiSplitLayout.Node modelRoot = MultiSplitLayout.parseModel(layoutDef);
 
 			multiSplitPane.setModel(modelRoot);
 			multiSplitPane.add(getPluginsPanel(), "top");
-			multiSplitPane.add(getSimulationSettingsPanel(), "middle");
-			multiSplitPane.add(getReportPanel(), "bottom");
+			multiSplitPane.add(getSimulationSettingsPanel(), "bottom");
 			multiSplitPane.add(getSimulationViewPanel(), "left");
 		}
 		return multiSplitPane;
@@ -199,18 +197,6 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	}
 
 	/**
-	 * @return the reportPanel
-	 */
-	private SycamoreReportPanel getReportPanel()
-	{
-		if (reportPanel == null)
-		{
-			reportPanel = new SycamoreReportPanel();
-		}
-		return reportPanel;
-	}
-
-	/**
 	 * @return the simulationViewPanel
 	 */
 	private SycamoreSimulationViewPanel getSimulationViewPanel()
@@ -290,7 +276,6 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 		// forward the new engine to every panel
 		getPluginsPanel().setAppEngine(appEngine);
 		getSimulationSettingsPanel().setAppEngine(appEngine);
-		getReportPanel().setAppEngine(appEngine);
 		getSimulationViewPanel().setAppEngine(appEngine);
 		getSycamoreAnimationControlPanel().setAppEngine(appEngine);
 
@@ -312,7 +297,6 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 
 		getPluginsPanel().setEnabled(enabled);
 		getSimulationSettingsPanel().setEnabled(enabled);
-		getReportPanel().setEnabled(enabled);
 		getSycamoreAnimationControlPanel().setEnabled(enabled);
 		getSimulationViewPanel().setEnabled(enabled);
 	}
@@ -327,7 +311,6 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 	{
 		getPluginsPanel().updateGui();
 		getSimulationSettingsPanel().updateGui();
-		getReportPanel().updateGui();
 		getSimulationViewPanel().updateGui();
 		getSycamoreAnimationControlPanel().updateGui();
 	}
@@ -544,7 +527,6 @@ public class SycamoreMainPanel extends SycamorePanel implements ActionListener
 
 		getPluginsPanel().setEnabled(true);
 		getSimulationSettingsPanel().setEnabled(true);
-		getReportPanel().setEnabled(true);
 
 		updateGui();
 	}

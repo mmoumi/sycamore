@@ -14,9 +14,7 @@ import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 public interface SycamoreTypedPlugin extends SycamorePlugin
 {
 	/**
-	 * Returns the class object that describes the type of the algorithm (2D or 3D), for instance it
-	 * can return a Point2D.class to tell that the scheduler is 2D, or a Point3D.class to tell that
-	 * the scheduler is 3D
+	 * Returns the TYPE object that describes the type of the plugin (2D or 3D).
 	 * 
 	 * @return
 	 */

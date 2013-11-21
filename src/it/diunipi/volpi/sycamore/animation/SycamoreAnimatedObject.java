@@ -108,7 +108,7 @@ public abstract class SycamoreAnimatedObject<P extends SycamoreAbstractPoint & C
 	 * @param ratio
 	 * @return
 	 */
-	public SycamoreTimelinePath<P> getPath()
+	public TimelinePath<P> getPath()
 	{
 		return this.timeline.getFullPath();
 	}
