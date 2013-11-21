@@ -321,7 +321,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 	 * @see it.diunipi.volpi.sycamore.plugins.schedulers.SchedulerImpl#updateTimelines()
 	 */
 	@Override
-	public void updateTimelines()
+	public void moveRobots()
 	{
 		// modify the robots timelines
 		Iterator<SycamoreRobot<P>> iterator = appEngine.getRobots().robotsIterator();
@@ -344,7 +344,7 @@ public class AsynchronousScheduler<P extends SycamoreAbstractPoint & ComputableP
 		}
 
 		// continue as usual
-		super.updateTimelines();
+		super.moveRobots();
 	}
 
 	/**

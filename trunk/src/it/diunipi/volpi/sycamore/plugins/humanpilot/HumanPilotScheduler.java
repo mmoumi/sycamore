@@ -94,7 +94,7 @@ public class HumanPilotScheduler<P extends SycamoreAbstractPoint & ComputablePoi
 		// then calls next operation
 		for (SycamoreRobot<P> robot : notMovingRobots)
 		{
-			robot.doLook();
+			robot.setCurrentState(ROBOT_STATE.READY_TO_COMPUTE);
 			robot.doCompute();
 			robot.doMove();
 		}
@@ -140,7 +140,7 @@ public class HumanPilotScheduler<P extends SycamoreAbstractPoint & ComputablePoi
 	 * @see it.diunipi.volpi.sycamore.plugins.schedulers.Scheduler#updateTimelines()
 	 */
 	@Override
-	public void updateTimelines()
+	public void moveRobots()
 	{
 		Iterator<SycamoreRobot<P>> iterator = appEngine.getRobots().humanPilotsIterator();
 

@@ -165,13 +165,13 @@ public class SycamoreSchedulerThread extends Thread
 					{
 						// manage the runloop start
 						schedulerImpl.runLoop_pre();
-						schedulerImpl.updateTimelines();
+						schedulerImpl.moveRobots();
 						engine.performMeasuresSimulationStart();
 					}
 
 					// runloop iteration
 					schedulerImpl.runLoopIteration();
-					schedulerImpl.updateTimelines();
+					schedulerImpl.moveRobots();
 
 					engine.performMeasuresSimulationStep();
 
@@ -202,7 +202,7 @@ public class SycamoreSchedulerThread extends Thread
 			if (schedulerImpl != null)
 			{
 				schedulerImpl.runLoop_post();
-				schedulerImpl.updateTimelines();
+				schedulerImpl.moveRobots();
 			}
 
 			engine.performMeasuresSimulationEnd();

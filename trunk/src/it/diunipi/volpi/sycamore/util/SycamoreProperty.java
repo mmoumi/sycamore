@@ -13,11 +13,15 @@ import java.io.Serializable;
 public interface SycamoreProperty extends Serializable
 {
 	/**
+	 * Returns a description of the property
+	 * 
 	 * @return the description
 	 */
 	public String getDescription();
 	
 	/**
+	 * Returns the default value of the property
+	 * 
 	 * @return
 	 */
 	public String getDefaultValue();

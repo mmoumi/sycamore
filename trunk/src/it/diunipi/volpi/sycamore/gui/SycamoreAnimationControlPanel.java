@@ -438,8 +438,11 @@ public class SycamoreAnimationControlPanel extends SycamorePanel
 	{
 		if (label_Sycamore == null)
 		{
-			label_Sycamore = new JLabel("Sycamore");
-			label_Sycamore.setFont(new Font("Lucida Grande", Font.BOLD, 26));
+			label_Sycamore = new JLabel();
+			
+			URL url = getClass().getResource("/it/diunipi/volpi/sycamore/resources/title.png");
+			label_Sycamore.setIcon(new ImageIcon(url));
+			// label_Sycamore.setFont(new Font("Lucida Grande", Font.BOLD, 26));
 		}
 		return label_Sycamore;
 	}

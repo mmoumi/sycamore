@@ -41,7 +41,7 @@ public class SycamoreHumanPilotSchedulerThread extends SycamoreSchedulerThread
 				HumanPilotScheduler humanPilotScheduler = engine.getHumanPilotScheduler();
 
 				humanPilotScheduler.runLoopIteration();
-				humanPilotScheduler.updateTimelines();
+				humanPilotScheduler.moveRobots();
 
 				// sleep to have fixed frequency
 				try

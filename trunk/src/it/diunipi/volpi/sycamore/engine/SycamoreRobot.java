@@ -731,8 +731,11 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		if (this.currentState == ROBOT_STATE.READY_TO_MOVE)
 		{
-			this.snapshot.clear();
-			this.snapshot = null;
+			if (this.snapshot != null)
+			{
+				this.snapshot.clear();
+				this.snapshot = null;
+			}
 
 			setCurrentState(ROBOT_STATE.MOVING);
 			fireActionEvent(new ActionEvent(this, 0, SycamoreFiredActionEvents.ROBOT_DID_MOVE.name()));

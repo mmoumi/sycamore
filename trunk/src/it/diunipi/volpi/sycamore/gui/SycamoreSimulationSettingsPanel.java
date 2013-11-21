@@ -59,10 +59,10 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 	 */
 	private void initialize()
 	{
-		setMinimumSize(new Dimension(310, 225));
-		setMaximumSize(new Dimension(310, 225));
-		setPreferredSize(new Dimension(310, 225));
-		setSize(new Dimension(310, 225));
+		setMinimumSize(new Dimension(310, 240));
+		setMaximumSize(new Dimension(310, 240));
+		setPreferredSize(new Dimension(310, 240));
+		setSize(new Dimension(310, 240));
 
 		getLabel_title().setText("Simulation settings");
 

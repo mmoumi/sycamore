@@ -32,9 +32,9 @@ import com.jme3.math.FastMath;
 @PluginImplementation
 public class Following extends AlgorithmImpl<Point2D>
 {
-	private static final boolean	MOVE		= true;
+	private static final boolean	MOVE		= false;
 	private static final boolean	ROTATE		= true;
-	private static final boolean	USE_LIGHTS	= true;
+	private static final boolean	USE_LIGHTS	= false;
 	private float					angle		= 0;
 
 	/*

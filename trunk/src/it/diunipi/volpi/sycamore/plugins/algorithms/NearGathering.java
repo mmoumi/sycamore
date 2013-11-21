@@ -11,6 +11,8 @@ import it.diunipi.volpi.sycamore.engine.TooManyLightsException;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
+import it.diunipi.volpi.sycamore.plugins.visibilities.SquaredVisibility;
+import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
 import it.diunipi.volpi.sycamore.plugins.visibilities.VisibilityImpl;
 import it.diunipi.volpi.sycamore.util.SortedList;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
@@ -608,156 +610,224 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 	@Override
 	public Point2D compute(Vector<Observation<Point2D>> snapshot, SycamoreObservedRobot<Point2D> caller)
 	{
-		// fill quadrants
-		fillQuadrants(snapshot, caller);
-
-		try
+		Visibility<Point2D> visibility = caller.getVisibility();
+		if (visibility != null && visibility instanceof SquaredVisibility)
 		{
-			if (snapshot.isEmpty() || snapshot.size() + 1 == SycamoreSystem.getN())
+
+			// fill quadrants
+			fillQuadrants(snapshot, caller);
+
+			try
 			{
-				System.out.println("Num: " + (snapshot.size() + 1) + ", n: " + SycamoreSystem.getN());
-				System.out.println("Finished!");
-
-				// if i see n-1 robots i'm done
-				setFinished(true);
-				caller.turnLightOn(ColorRGBA.Yellow);
-
-				clearQuadrants();
-				return caller.getLocalPosition();
-			}
-			else
-			{
-				// compute the contour
-				Contour contour = new Contour(quadrantNW, quadrantNE, quadrantSE, robotsNW, robotsNE, robotsSE);
-
-				Point2D dp = null; // destination point
-
-				if (isNeClear() && isNwClear() && isSeClear())
+				if (snapshot.isEmpty() || snapshot.size() + 1 == SycamoreSystem.getN())
 				{
-					// if I don't see robots in NW, NE, SE, no move
-					dp = caller.getLocalPosition();
+					System.out.println("Num: " + (snapshot.size() + 1) + ", n: " + SycamoreSystem.getN());
+					System.out.println("Finished!");
+
+					// if i see n-1 robots i'm done
+					setFinished(true);
+					caller.turnLightOn(ColorRGBA.Yellow);
+
+					clearQuadrants();
+					return caller.getLocalPosition();
 				}
 				else
 				{
-					if (isNeClear() && isSeClear())
+					// compute the contour
+					Contour contour = new Contour(quadrantNW, quadrantNE, quadrantSE, robotsNW, robotsNE, robotsSE);
+
+					Point2D dp = null; // destination point
+
+					if (isNeClear() && isNwClear() && isSeClear())
 					{
-						// if I see robots only in NW SW Then
-						// l = Half-line from me going North;
-
-						Point2D lPoint = new Point2D(caller.getLocalPosition().x, (float) quadrantNE.getY());
-
-						java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(caller.getLocalPosition());
-						java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(lPoint);
-
-						dp = contour.intersectWith(new Line2D.Double(start, end));
-					}
-					else if (isNwClear() && isNeClear())
-					{
-						// If I see robots only in SE SW Then
-						// l = Half-line from me going East;
-
-						Point2D lPoint = new Point2D((float) (quadrantSE.getX() + quadrantSE.getWidth()), caller.getLocalPosition().y);
-
-						java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(caller.getLocalPosition());
-						java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(lPoint);
-
-						dp = contour.intersectWith(new Line2D.Double(start, end));
+						// if I don't see robots in NW, NE, SE, no move
+						dp = caller.getLocalPosition();
 					}
 					else
 					{
-						if (!isNeClear())
+						if (isNeClear() && isSeClear())
 						{
-							// If There is at least one robot in NE Then
-							// l = Half-line from me to the closest robot in NE;
+							// if I see robots only in NW SW Then
+							// l = Half-line from me going North;
 
-							// find the closest
-							Point2D closest = null;
-							float minDinstance = Float.MAX_VALUE;
-							for (Point2D point : robotsNE)
-							{
-								float dinstance = point.distanceTo(caller.getLocalPosition());
-								if (dinstance < minDinstance)
-								{
-									closest = point;
-								}
-							}
+							Point2D lPoint = new Point2D(caller.getLocalPosition().x, (float) quadrantNE.getY());
 
-							// now i have the closest robot in NE.
 							java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(caller.getLocalPosition());
-							java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(closest);
+							java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(lPoint);
 
 							dp = contour.intersectWith(new Line2D.Double(start, end));
-							if (dp == null)
-							{
-								dp = closest;
-							}
+						}
+						else if (isNwClear() && isNeClear())
+						{
+							// If I see robots only in SE SW Then
+							// l = Half-line from me going East;
+
+							Point2D lPoint = new Point2D((float) (quadrantSE.getX() + quadrantSE.getWidth()), caller.getLocalPosition().y);
+
+							java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(caller.getLocalPosition());
+							java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(lPoint);
+
+							dp = contour.intersectWith(new Line2D.Double(start, end));
 						}
 						else
 						{
-							// l = Half-line from me to the only valley of CT in NE;
-							dp = contour.getClosestNEValley(caller.getLocalPosition());
+							if (!isNeClear())
+							{
+								// If There is at least one robot in NE Then
+								// l = Half-line from me to the closest robot in NE;
+
+								// find the closest
+								Point2D closest = null;
+								float minDinstance = Float.MAX_VALUE;
+								for (Point2D point : robotsNE)
+								{
+									float dinstance = point.distanceTo(caller.getLocalPosition());
+									if (dinstance < minDinstance)
+									{
+										closest = point;
+									}
+								}
+
+								// now i have the closest robot in NE.
+								java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(caller.getLocalPosition());
+								java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(closest);
+
+								dp = contour.intersectWith(new Line2D.Double(start, end));
+								if (dp == null)
+								{
+									dp = closest;
+								}
+							}
+							else
+							{
+								// l = Half-line from me to the only valley of CT in NE;
+								dp = contour.getClosestNEValley(caller.getLocalPosition());
+							}
 						}
-					}
 
-					// consider the triangle:
-					// dp
-					// ****
-					// ********
-					// B ************ A
-
-					// B is the current position
-					Point2D B = caller.getLocalPosition();
-
-					// A is the intersection between the horizontal axis and the contour
-					Point2D lPoint = new Point2D((float) (quadrantSE.getX() + quadrantSE.getWidth()), caller.getLocalPosition().y);
-					java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(caller.getLocalPosition());
-					java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(lPoint);
-					Point2D A = contour.intersectWith(new Line2D.Double(start, end));
-
-					if (A == null)
-					{
-						// if there is no intersection between l and the contour,
-						// consider the intersection with border
-						A = SycamoreUtil.convertPoint2D(end);
-					}
-
-					double beta = 0;
-					if (!B.equals(dp))
-					{
-						// beta is the angle between (B-A) and (B-dp)
-						Line2D BA = new Line2D.Double(B.x, B.y, A.x, A.y);
-						Line2D Bdp = new Line2D.Double(B.x, B.y, dp.x, dp.y);
-
-						// beta varies from zero to PI/2 (90 degrees)
-						beta = SycamoreUtil.angleBetween2Lines(BA, Bdp);
-					}
-
-					// now consider the parallel to l that intersects the observed points
-					// and compute the distance between each point and the border of the visibility
-					// area
-					// consider only the smallest
-					double distance = Double.MAX_VALUE;
-					for (Observation<Point2D> observation : snapshot)
-					{
-						double pointDistance;
 						// consider the triangle:
+						// dp
+						// ****
+						// ********
+						// B ************ A
 
-						// Ar -------- Br
-						// | ********
-						// | ***
-						// Cr
+						// B is the current position
+						Point2D B = caller.getLocalPosition();
 
-						// Br is the observed robot position
-						Point2D Br = observation.getRobotPosition();
+						// A is the intersection between the horizontal axis and the contour
+						Point2D lPoint = new Point2D((float) (quadrantSE.getX() + quadrantSE.getWidth()), caller.getLocalPosition().y);
+						java.awt.geom.Point2D start = SycamoreUtil.convertPoint2D(caller.getLocalPosition());
+						java.awt.geom.Point2D end = SycamoreUtil.convertPoint2D(lPoint);
+						Point2D A = contour.intersectWith(new Line2D.Double(start, end));
 
-						// Ar is the projection on the left border of Br
-						Point2D Ar = new Point2D((float) quadrantSW.getX(), Br.y);
+						if (A == null)
+						{
+							// if there is no intersection between l and the contour,
+							// consider the intersection with border
+							A = SycamoreUtil.convertPoint2D(end);
+						}
 
-						// beta is the same
-						// I want the dinstance Br-Cr (a = c / cos (beta))
+						double beta = 0;
+						if (!B.equals(dp))
+						{
+							// beta is the angle between (B-A) and (B-dp)
+							Line2D BA = new Line2D.Double(B.x, B.y, A.x, A.y);
+							Line2D Bdp = new Line2D.Double(B.x, B.y, dp.x, dp.y);
 
-						// the measure c is the dinstance Ar-Br
-						double c = Ar.distanceTo(Br);
+							// beta varies from zero to PI/2 (90 degrees)
+							beta = SycamoreUtil.angleBetween2Lines(BA, Bdp);
+						}
+
+						// now consider the parallel to l that intersects the observed points
+						// and compute the distance between each point and the border of the
+						// visibility
+						// area
+						// consider only the smallest
+						double distance = Double.MAX_VALUE;
+						for (Observation<Point2D> observation : snapshot)
+						{
+							double pointDistance;
+							// consider the triangle:
+
+							// Ar -------- Br
+							// | ********
+							// | ***
+							// Cr
+
+							// Br is the observed robot position
+							Point2D Br = observation.getRobotPosition();
+
+							// Ar is the projection on the left border of Br
+							Point2D Ar = new Point2D((float) quadrantSW.getX(), Br.y);
+
+							// beta is the same
+							// I want the dinstance Br-Cr (a = c / cos (beta))
+
+							// the measure c is the dinstance Ar-Br
+							double c = Ar.distanceTo(Br);
+
+							double cosBeta = Math.cos(beta);
+
+							// approx cosBeta to th 3rd decimal cypher
+							long y = (long) (cosBeta * 1000);
+							cosBeta = (double) y / 1000;
+
+							if (cosBeta != 0)
+							{
+								double a = c / cosBeta;
+
+								// b is the other side of the triangle (Ar-Cr)
+								double b = a * Math.sin(beta);
+
+								Point2D Cr = new Point2D(Ar.x, (float) (Ar.y - b));
+
+								// Cr can be either on the border or outside the visible area
+								float yBorder = (float) (quadrantSW.getY() - quadrantSW.getHeight());
+
+								if (Cr.y >= yBorder)
+								{
+									// Cr is on border
+									pointDistance = a;
+								}
+								else
+								{
+									// pointDistance is the clamping of a on the border
+									Line2D aLine = new Line2D.Double(Br.x, Br.y, Cr.x, Cr.y);
+									Line2D border = new Line2D.Double(quadrantSW.getX(), yBorder, quadrantSE.getX(), yBorder);
+									java.awt.geom.Point2D intersection = SycamoreUtil.getIntersection(aLine, border);
+
+									Point2D borderPont = SycamoreUtil.convertPoint2D(intersection);
+									pointDistance = Br.distanceTo(borderPont);
+								}
+							}
+							else
+							{
+								// case beta = 90 degrees. Simply project vertically on lower border
+
+								float yBorder = (float) (quadrantSW.getY() - quadrantSW.getHeight());
+								Point2D lowerProjection = new Point2D(Br.x, yBorder);
+								pointDistance = Br.distanceTo(lowerProjection);
+							}
+
+							if (pointDistance < distance)
+							{
+								distance = pointDistance;
+							}
+						}
+
+						// now consider the smallest between:
+						// - distance between position and computed dp
+						// - just computed "distance"
+
+						double posDpDinst = caller.getLocalPosition().distanceTo(dp);
+						double minDinstance = Math.min(posDpDinst, distance);
+						double finalDinstance = minDinstance / 2;
+
+						// final computation of dp: starting from currentposition, follow l for
+						// a distance of finalDistance
+						// compute the projection of this point on x axis
+						// c = a cos (beta)
+						// b = a sin (beta)
 
 						double cosBeta = Math.cos(beta);
 
@@ -765,113 +835,52 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 						long y = (long) (cosBeta * 1000);
 						cosBeta = (double) y / 1000;
 
-						if (cosBeta != 0)
+						double sinBeta = Math.sin(beta);
+
+						// approx sinBeta to th 3rd decimal cyher
+						long z = (long) (sinBeta * 1000);
+						sinBeta = (double) z / 1000;
+
+						double c = finalDinstance * cosBeta;
+						double b = finalDinstance * sinBeta;
+
+						// the new dp coordinates will be:
+						float dpX = caller.getLocalPosition().x + (float) c;
+						float dpY = caller.getLocalPosition().y + (float) b;
+
+						dp = new Point2D(dpX, dpY);
+
+						// if dp is too close to the current position, bring it back
+						if (!dp.differsModuloEpsilon(caller.getLocalPosition()))
 						{
-							double a = c / cosBeta;
-
-							// b is the other side of the triangle (Ar-Cr)
-							double b = a * Math.sin(beta);
-
-							Point2D Cr = new Point2D(Ar.x, (float) (Ar.y - b));
-
-							// Cr can be either on the border or outside the visible area
-							float yBorder = (float) (quadrantSW.getY() - quadrantSW.getHeight());
-
-							if (Cr.y >= yBorder)
-							{
-								// Cr is on border
-								pointDistance = a;
-							}
-							else
-							{
-								// pointDistance is the clamping of a on the border
-								Line2D aLine = new Line2D.Double(Br.x, Br.y, Cr.x, Cr.y);
-								Line2D border = new Line2D.Double(quadrantSW.getX(), yBorder, quadrantSE.getX(), yBorder);
-								java.awt.geom.Point2D intersection = SycamoreUtil.getIntersection(aLine, border);
-
-								Point2D borderPont = SycamoreUtil.convertPoint2D(intersection);
-								pointDistance = Br.distanceTo(borderPont);
-							}
-						}
-						else
-						{
-							// case beta = 90 degrees. Simply project vertically on lower border
-
-							float yBorder = (float) (quadrantSW.getY() - quadrantSW.getHeight());
-							Point2D lowerProjection = new Point2D(Br.x, yBorder);
-							pointDistance = Br.distanceTo(lowerProjection);
-						}
-
-						if (pointDistance < distance)
-						{
-							distance = pointDistance;
+							dp = caller.getLocalPosition();
 						}
 					}
 
-					// now consider the smallest between:
-					// - distance between position and computed dp
-					// - just computed "distance"
-
-					double posDpDinst = caller.getLocalPosition().distanceTo(dp);
-					double minDinstance = Math.min(posDpDinst, distance);
-					double finalDinstance = minDinstance / 2;
-
-					// final computation of dp: starting from currentposition, follow l for
-					// a distance of finalDistance
-					// compute the projection of this point on x axis
-					// c = a cos (beta)
-					// b = a sin (beta)
-
-					double cosBeta = Math.cos(beta);
-
-					// approx cosBeta to th 3rd decimal cyher
-					long y = (long) (cosBeta * 1000);
-					cosBeta = (double) y / 1000;
-
-					double sinBeta = Math.sin(beta);
-
-					// approx sinBeta to th 3rd decimal cyher
-					long z = (long) (sinBeta * 1000);
-					sinBeta = (double) z / 1000;
-
-					double c = finalDinstance * cosBeta;
-					double b = finalDinstance * sinBeta;
-
-					// the new dp coordinates will be:
-					float dpX = caller.getLocalPosition().x + (float) c;
-					float dpY = caller.getLocalPosition().y + (float) b;
-
-					dp = new Point2D(dpX, dpY);
-
-					// if dp is too close to the current position, bring it back
-					if (!dp.differsModuloEpsilon(caller.getLocalPosition()))
-					{
-						dp = caller.getLocalPosition();
-					}
+					clearQuadrants();
+					return dp;
 				}
+			}
+			catch (NNotKnownException e)
+			{
+				e.printStackTrace();
+
+				setFinished(true);
 
 				clearQuadrants();
-				return dp;
+				return null;
+			}
+			catch (TooManyLightsException e)
+			{
+				e.printStackTrace();
+
+				setFinished(true);
+
+				clearQuadrants();
+				return null;
 			}
 		}
-		catch (NNotKnownException e)
-		{
-			e.printStackTrace();
-
-			setFinished(true);
-
-			clearQuadrants();
-			return null;
-		}
-		catch (TooManyLightsException e)
-		{
-			e.printStackTrace();
-
-			setFinished(true);
-
-			clearQuadrants();
-			return null;
-		}
+		return caller.getLocalPosition();
 	}
 
 	/**
