@@ -22,7 +22,7 @@ import com.jme3.scene.Geometry;
  * 
  * @author Valerio Volpi - vale.v@me.com
  */
-public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & ComputablePoint<P>>
+public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & ComputablePoint<P>> implements SycamoreObservedLight
 {
 	protected ColorRGBA		color;
 	protected final Geometry	lightGeometry;
@@ -44,8 +44,8 @@ public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & Compu
 	 */
 	public abstract void setColor(final ColorRGBA color);
 
-	/**
-	 * @return the color
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreObservedLight#getColor()
 	 */
 	public ColorRGBA getColor()
 	{
