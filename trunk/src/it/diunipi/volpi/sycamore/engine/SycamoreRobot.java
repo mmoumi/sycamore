@@ -433,9 +433,15 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	 * @see it.diunipi.volpi.sycamore.model.SycamoreObservedRobot#getLights()
 	 */
 	@Override
-	public Vector<SycamoreRobotLight<P>> getLights()
+	public Vector<SycamoreObservedLight> getLights()
 	{
-		return lights;
+		Vector<SycamoreObservedLight> obsLights = new Vector<SycamoreObservedLight>();
+		for (SycamoreRobotLight<P> light : this.lights)
+		{
+			obsLights.add(light);
+		}
+		
+		return obsLights;
 	}
 
 	/**

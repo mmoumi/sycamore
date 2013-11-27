@@ -11,7 +11,7 @@ import java.util.Vector;
 public class Observation<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 {
 	private final P								robotPosition;
-	private final Vector<SycamoreRobotLight<P>>	robotLights;
+	private final Vector<SycamoreObservedLight>	robotLights;
 	private final boolean						humanPilot;
 
 	/**
@@ -21,7 +21,7 @@ public class Observation<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	 * @param p_types
 	 * @param p_light
 	 */
-	public Observation(final P robotPosition, final Vector<SycamoreRobotLight<P>> robotLights, final boolean humanPilot)
+	public Observation(final P robotPosition, final Vector<SycamoreObservedLight> robotLights, final boolean humanPilot)
 	{
 		this.robotPosition = robotPosition;
 		this.robotLights = robotLights;
@@ -45,7 +45,7 @@ public class Observation<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	 * @return the {@link Iterator} object that gives access to all the lights of the observed
 	 *         robot.
 	 */
-	public Iterator<SycamoreRobotLight<P>> getLightsIterator()
+	public Iterator<SycamoreObservedLight> getLightsIterator()
 	{
 		return robotLights.iterator();
 	}
