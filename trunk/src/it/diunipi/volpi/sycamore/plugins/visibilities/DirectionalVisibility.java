@@ -111,7 +111,7 @@ public class DirectionalVisibility extends VisibilityImpl<Point2D>
 		double delta;
 
 		// theta is the rotation around z axis
-		// JME Quaternion returns angles in a strange format, so here are normalized
+		// JME Quaternion returns angles in a particular format, so here are normalized
 		double theta = angles[2];
 
 		// if rotation around x and y axes is zero, we are in the 1st or 4th quadrant

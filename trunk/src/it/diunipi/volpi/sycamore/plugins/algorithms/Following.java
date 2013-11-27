@@ -3,14 +3,15 @@ package it.diunipi.volpi.sycamore.plugins.algorithms;
 import it.diunipi.volpi.sycamore.engine.Observation;
 import it.diunipi.volpi.sycamore.engine.Point2D;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.engine.SycamoreObservedLight;
 import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
-import it.diunipi.volpi.sycamore.engine.SycamoreRobotLight;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem.TIMELINE_MODE;
 import it.diunipi.volpi.sycamore.plugins.visibilities.DirectionalVisibility;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
+import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.Iterator;
@@ -32,10 +33,52 @@ import com.jme3.math.FastMath;
 @PluginImplementation
 public class Following extends AlgorithmImpl<Point2D>
 {
-	private static final boolean	MOVE		= false;
-	private static final boolean	ROTATE		= true;
-	private static final boolean	USE_LIGHTS	= false;
-	private float					angle		= 0;
+	/**
+	 * Properties related to Following algorithm
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
+	private enum FollowingProperties implements SycamoreProperty
+	{
+		FOLLOWING_MOVE("Move", "" + false), FOLLOWING_ROTATE("Rotate", "" + false), FOLLOWING_USE_LIGHT("Use Lights", "" + false);
+
+		private String	description		= null;
+		private String	defaultValue	= null;
+
+		/**
+		 * Constructor.
+		 */
+		FollowingProperties(String description, String defaultValue)
+		{
+			this.description = description;
+			this.defaultValue = defaultValue;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
+		 */
+		@Override
+		public String getDescription()
+		{
+			return description;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDefaultValue()
+		 */
+		@Override
+		public String getDefaultValue()
+		{
+			return defaultValue;
+		}
+	}
+
+	private float					angle			= 0;
+	private FollowingSettingsPanel	panel_settings	= null;
 
 	/*
 	 * (non-Javadoc)
@@ -59,7 +102,7 @@ public class Following extends AlgorithmImpl<Point2D>
 	{
 		// eventually used destination point
 		Point2D dest = null;
-		
+
 		// look for a HumanPilot executing robot
 		for (Observation<Point2D> observation : snapshot)
 		{
@@ -68,10 +111,11 @@ public class Following extends AlgorithmImpl<Point2D>
 				// get robot and leader positions
 				Point2D robotPosition = caller.getLocalPosition();
 				Point2D observationPosition = observation.getRobotPosition();
-				
-				if (USE_LIGHTS)
+
+				if (isUseLights())
 				{
-					// if lights are used, turn on the green light to indicate that the leader has been observed
+					// if lights are used, turn on the green light to indicate that the leader has
+					// been observed
 					try
 					{
 						caller.turnLightOn(ColorRGBA.Green);
@@ -101,15 +145,15 @@ public class Following extends AlgorithmImpl<Point2D>
 					return observationPosition;
 				}
 			}
-			else if (USE_LIGHTS)
+			else if (isUseLights())
 			{
 				// if lights are used and observation does not refer to a human pilot,
 				// look for a green light
-				Iterator<SycamoreRobotLight<Point2D>> lights = observation.getLightsIterator();
+				Iterator<SycamoreObservedLight> lights = observation.getLightsIterator();
 				if (lights.hasNext())
 				{
-					SycamoreRobotLight<Point2D> light = lights.next();
-					
+					SycamoreObservedLight light = lights.next();
+
 					if (SycamoreUtil.areColorsEqual(light.getColor(), ColorRGBA.Green))
 					{
 						dest = observation.getRobotPosition();
@@ -117,15 +161,16 @@ public class Following extends AlgorithmImpl<Point2D>
 				}
 			}
 		}
-		
+
 		// here no leader has been found.
-		
-		if (USE_LIGHTS)
+
+		if (isUseLights())
 		{
 			// clear lights
 			caller.turnLightOff();
-			
-			// if lights are used and no leader has been found, look if some green light has been observed
+
+			// if lights are used and no leader has been found, look if some green light has been
+			// observed
 			// in that case dest contains the robot with the light
 			if (dest != null)
 			{
@@ -133,17 +178,17 @@ public class Following extends AlgorithmImpl<Point2D>
 				return caller.getLocalPosition().interpolateWith(dest, 0.3f);
 			}
 		}
-		
-		if (ROTATE)
+
+		if (isRotate())
 		{
 			// eventually rotate the direction. If is paired with MOVE, rotation is faster
 			Point2D p = new Point2D(caller.getLocalPosition().x + FastMath.cos(angle), caller.getLocalPosition().y + FastMath.sin(angle));
-			angle += (MOVE ? 0.1f : 0.005f);
+			angle += (isMove() ? 0.1f : 0.005f);
 
 			caller.setDirection(p);
 		}
 
-		if (MOVE)
+		if (isMove())
 		{
 			// move randomly, like the human pilot
 			Point2D position = caller.getLocalPosition();
@@ -164,6 +209,54 @@ public class Following extends AlgorithmImpl<Point2D>
 		{
 			return null;
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	public static boolean isMove()
+	{
+		return PropertyManager.getSharedInstance().getBooleanProperty(FollowingProperties.FOLLOWING_MOVE);
+	}
+
+	/**
+	 * @param move
+	 */
+	public static void setMove(Boolean move)
+	{
+		PropertyManager.getSharedInstance().putProperty(FollowingProperties.FOLLOWING_MOVE, move);
+	}
+
+	/**
+	 * @return
+	 */
+	public static boolean isRotate()
+	{
+		return PropertyManager.getSharedInstance().getBooleanProperty(FollowingProperties.FOLLOWING_ROTATE);
+	}
+
+	/**
+	 * @param rotate
+	 */
+	public static void setRotate(Boolean rotate)
+	{
+		PropertyManager.getSharedInstance().putProperty(FollowingProperties.FOLLOWING_ROTATE, rotate);
+	}
+
+	/**
+	 * @return
+	 */
+	public static boolean isUseLights()
+	{
+		return PropertyManager.getSharedInstance().getBooleanProperty(FollowingProperties.FOLLOWING_USE_LIGHT);
+	}
+
+	/**
+	 * @param rotate
+	 */
+	public static void setUseLights(Boolean useLights)
+	{
+		PropertyManager.getSharedInstance().putProperty(FollowingProperties.FOLLOWING_USE_LIGHT, useLights);
 	}
 
 	/*
@@ -220,7 +313,11 @@ public class Following extends AlgorithmImpl<Point2D>
 	@Override
 	public SycamorePanel getPanel_settings()
 	{
-		return null;
+		if (panel_settings == null)
+		{
+			panel_settings = new FollowingSettingsPanel();
+		}
+		return panel_settings;
 	}
 
 	/*
