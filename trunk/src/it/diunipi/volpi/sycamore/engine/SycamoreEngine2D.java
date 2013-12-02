@@ -37,6 +37,51 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine#getObservation(it.diunipi.volpi.sycamore.
+	 * engine.SycamoreRobot, it.diunipi.volpi.sycamore.engine.SycamoreRobot)
+	 */
+	@Override
+	public Observation<Point2D> getObservation(SycamoreRobot<Point2D> robot, SycamoreRobot<Point2D> caller)
+	{
+		Point2D position = robot.getGlobalPosition();
+
+		// translate position to caller's local coords
+		if (caller.getAgreement() != null)
+		{
+			position = caller.getAgreement().toLocalCoordinates(position);
+		}
+
+		// update intensity of lights
+		Vector<SycamoreObservedLight> lights = robot.getLights();
+		for (int i = 0; i < lights.size(); i++)
+		{
+			SycamoreObservedLight light = lights.elementAt(i);
+			if (light.getIntensity() != -1.0f)
+			{
+				ColorRGBA color = light.getColor();
+
+				// compute the distance between the robots
+				float distance = caller.getGlobalPosition().distanceTo(robot.getGlobalPosition());
+				float intensity = light.getIntensity();
+
+				if (distance != 0)
+				{
+					// intensity degrades with the squared of the distance
+					intensity = (float) (light.getIntensity() / (Math.pow(distance, 2)));
+				}
+
+				SycamoreRobotLight2D newLight = new SycamoreRobotLight2D(color, null, intensity);
+				lights.set(i, newLight);
+			}
+		}
+
+		return new Observation<Point2D>(position, lights, robot.getAlgorithm().isHumanPilot());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.engine.SycamoreEngine#createAndAddNewRobotInstance(int,
 	 * java.lang.Class)
 	 */
@@ -226,7 +271,7 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 		if (constructor != null)
 		{
 			Measure newInstance = (Measure) constructor.newInstance();
-			
+
 			newInstance.setEngine(this);
 			this.measures.add(newInstance);
 			return;

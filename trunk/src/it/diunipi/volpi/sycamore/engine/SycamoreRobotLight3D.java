@@ -23,9 +23,27 @@ public class SycamoreRobotLight3D extends SycamoreRobotLight<Point3D>
 	 * @param color
 	 * @param lightGeometry
 	 */
+	public SycamoreRobotLight3D(ColorRGBA color, Geometry lightGeometry, float intensity)
+	{
+		super(color, lightGeometry, intensity);
+	}
+	
+	/**
+	 * @param color
+	 * @param lightGeometry
+	 */
 	public SycamoreRobotLight3D(ColorRGBA color, Geometry lightGeometry)
 	{
 		super(color, lightGeometry);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		return new SycamoreRobotLight3D(getColor(), getLightGeometry(), getIntensity());
 	}
 
 	/**

@@ -34,6 +34,47 @@ import com.jme3.math.ColorRGBA;
  */
 public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 {
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreEngine#getObservation(it.diunipi.volpi.sycamore.engine.SycamoreRobot, it.diunipi.volpi.sycamore.engine.SycamoreRobot)
+	 */
+	@Override
+	public Observation<Point3D> getObservation(SycamoreRobot<Point3D> robot, SycamoreRobot<Point3D> caller)
+	{
+		Point3D position = robot.getGlobalPosition();
+
+		// translate position to caller's local coords
+		if (caller.getAgreement() != null)
+		{
+			position = caller.getAgreement().toLocalCoordinates(position);
+		}
+		
+		// update intensity of lights
+		Vector<SycamoreObservedLight> lights = robot.getLights();
+		for (int i = 0; i < lights.size(); i++)
+		{
+			SycamoreObservedLight light = lights.elementAt(i);
+			if (light.getIntensity() != -1.0f)
+			{
+				ColorRGBA color = light.getColor();
+				
+				// compute the distance between the robots
+				float distance = caller.getGlobalPosition().distanceTo(robot.getGlobalPosition());
+				float intensity = light.getIntensity();
+
+				if (distance != 0)
+				{
+					// intensity degrades with the squared of the distance
+					intensity = (float) (light.getIntensity() / (Math.pow(distance, 2)));
+				}
+				
+				SycamoreRobotLight3D newLight = new SycamoreRobotLight3D(color, null, intensity);
+				lights.set(i, newLight);
+			}
+		}
+
+		return new Observation<Point3D>(position, lights, robot.getAlgorithm().isHumanPilot());
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

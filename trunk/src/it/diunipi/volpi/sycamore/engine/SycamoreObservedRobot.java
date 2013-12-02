@@ -55,11 +55,24 @@ public interface SycamoreObservedRobot<P extends SycamoreAbstractPoint & Computa
 	 * @param color
 	 */
 	public void turnLightOn(ColorRGBA color) throws TooManyLightsException;
-	
+
+	/**
+	 * Turns on a light using passed color and passed intensity. If all the lights of the robot are
+	 * already on, a TooManyLightsException is thrown.
+	 * 
+	 * @param color
+	 */
+	public void turnLightOn(ColorRGBA color, float intensity) throws TooManyLightsException;
+
 	/**
 	 * Tuns off the last light that was turned on.
 	 */
 	public void turnLightOff();
+
+	/**
+	 * Changes the intensity of the last light that was turned on.
+	 */
+	public void setLightIntensity(float intensity);
 
 	/**
 	 * Returns the memory of this robot.
@@ -74,7 +87,7 @@ public interface SycamoreObservedRobot<P extends SycamoreAbstractPoint & Computa
 	 * @param p
 	 */
 	public void setDirection(P p);
-	
+
 	/**
 	 * Returns the number of robots in the system, if this value is available. If not available,
 	 * throws a <code>NNotKnownException</code>

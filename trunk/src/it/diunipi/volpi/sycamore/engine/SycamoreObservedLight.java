@@ -15,4 +15,9 @@ public interface SycamoreObservedLight
 	 * @return the color
 	 */
 	public ColorRGBA getColor();
+	
+	/**
+	 * @return the intensity
+	 */
+	public float getIntensity();
 }
