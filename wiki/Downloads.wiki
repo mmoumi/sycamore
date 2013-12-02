@@ -7,7 +7,7 @@
 
 = Plugins Downloads =
 
-|| Plugins SDK || A zip file containing all the necessary JAR files that have to be included in the build path while building a new plugin. They offer all the necessary resources and libraries to build complete plugins, defying also their settings panel, their JME Geometry objects and all that is necessary for it to behave correctly. || <a href="https://www.dropbox.com/s/wn91rygolvehjdj/SycamorePluginSDK.zip">download</a> ||
+|| Plugins SDK || A zip file containing all the necessary JAR files that have to be included in the build path while building a new plugin. They offer all the necessary resources and libraries to build complete plugins, defying also their settings panel, their JME Geometry objects and all that is necessary for it to behave correctly. || <a href="https://www.dropbox.com/s/xxk58ot5uxlzts6/SycamorePluginsSDK.zip">download</a> ||
 || Plugins KIT || A set with all the 46 available plugins for Sycamore. The plugins of each type that are contained in this package can also be downloaded singularly by downloading the single kits.|| <a href="https://www.dropbox.com/s/xzxorri2xtrjtc7/PluginsKIT.zip">download</a> ||
 || Algorithms KIT || A zip file containing 9 Algorithm plugins. It contains: Following, NearGathering, HumanPilot (2D, 3D), RotatingRobot, FollowTheLeader (2D, 3D), PseudoHumanPilot (2D, 3D) || <a href="https://www.dropbox.com/s/o1a0dqx2unnzi27/Algorithms.zip">download</a> ||
 || Schedulers KIT || A zip file containing 4 Scheduler plugins. It contains: FullySynchronousScheduler, SemiSynchronousScheduler, AsynchronousScheduler, ASynchronousSchedulerPriorityQueue || <a href="https://www.dropbox.com/s/15zrv7i6rdrzf0p/Schedulers.zip">download</a> ||
@@ -21,7 +21,7 @@
 Here there are all the files produced during my research on Following with directional limited visibility problem
 
 || Following KIT || A zip file containing 4 plugins used to analyze Following with directional limited visibility problem. It contains: Following, DirectionalVisibility, AverageDistance, RobotsSeeingLeader || <a href="https://www.dropbox.com/s/3102w4csi1yh9ne/FollowingDirectional.zip">download</a> ||
-|| Simulation reports || A zip file containing the results of all the reports of the simulations performed during my experiments on Following with directional limited visibility problem. They are divided by technique (None, Move, Rotate) and repeated both with or without lights. All the averages and comparisons are included.|| <a href="https://www.dropbox.com/s/0k1l2norscznlay/Sycamore.zip">download</a> ||
+|| Simulation reports || A zip file containing the results of all the reports of the simulations performed during my experiments on Following with directional limited visibility problem. They are divided by technique (None, Move, Rotate) and repeated both with or without lights. All the averages and comparisons are included.|| <a href="https://www.dropbox.com/s/9jzrvdal9q65q0p/Reports.zip">download</a> ||
 
 = Thesis =
 
