@@ -1,4 +1,4 @@
-#labels Downloadpage
+#labels Download,Page
 = Sycamore Downloads =
 
 || Mac OS X Binaries || A DMG package containing the Mac OS X app file. Copy the application on your hard drive and double click to launch it.|| <a href="https://www.dropbox.com/s/mrc3y8g9izh6nar/Sycamore.dmg">download</a> ||
