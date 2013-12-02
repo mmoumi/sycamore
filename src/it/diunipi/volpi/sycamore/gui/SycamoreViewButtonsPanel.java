@@ -302,12 +302,12 @@ public class SycamoreViewButtonsPanel extends SycamorePanel
 		getButton_axes().setEnabled(enabled);
 		getButton_grid().setEnabled(enabled);
 		getButton_range().setEnabled(enabled);
-		getButton_graph().setEnabled(enabled);
+		getButton_graph().setEnabled(false);
 		getButton_dirs().setEnabled(enabled);
 		getButton_coords().setEnabled(enabled);
 		getButton_baricentrum().setEnabled(enabled);
 		getButton_lights().setEnabled(enabled);
-		getButton_visuals().setEnabled(enabled);
+		getButton_visuals().setEnabled(false);
 	}
 
 	/*
