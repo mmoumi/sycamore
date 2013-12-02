@@ -9,7 +9,7 @@
 
 || Mac OS X Binaries || A DMG package containing the Mac OS X app file for Visualizer. Copy the application on your hard drive and double click to launch it.|| <a href="https://www.dropbox.com/s/3y4n2uhayf96b77/Visualizer.dmg">download</a> ||
 || Windows Binaries || A zip file containing the Visualizer application as an exe file. Simply double click on it to launch it.|| <a href="https://www.dropbox.com/s/0k1l2norscznlay/Sycamore.zip">download</a> ||
-|| Executable JAR File || A Java jar package containing the whole Visualizer application. It is completely cross-platform; double click to launch it. || <a href="https://www.dropbox.com/s/rilmygeecuovwrz/SycamoreVisualizer.jar">download</a> ||
+|| Executable JAR File || A Java jar package containing the whole Visualizer application. It is completely cross-platform; launch it from the command line and pass as argument to it the string "VISUALIZER", or otherwise the normal Sycamore will start. || <a href="https://www.dropbox.com/s/rilmygeecuovwrz/SycamoreVisualizer.jar">download</a> ||
 
 = Plugins Downloads =
 
