@@ -23,9 +23,27 @@ public class SycamoreRobotLight2D extends SycamoreRobotLight<Point2D>
 	 * @param color
 	 * @param lightGeometry
 	 */
+	public SycamoreRobotLight2D(ColorRGBA color, Geometry lightGeometry, float intensity)
+	{
+		super(color, lightGeometry, intensity);
+	}
+	
+	/**
+	 * @param color
+	 * @param lightGeometry
+	 */
 	public SycamoreRobotLight2D(ColorRGBA color, Geometry lightGeometry)
 	{
 		super(color, lightGeometry);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		return new SycamoreRobotLight2D(getColor(), getLightGeometry(), getIntensity());
 	}
 
 	/**

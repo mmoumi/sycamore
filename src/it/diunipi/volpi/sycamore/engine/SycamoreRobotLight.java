@@ -22,18 +22,65 @@ import com.jme3.scene.Geometry;
  * 
  * @author Valerio Volpi - vale.v@me.com
  */
-public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & ComputablePoint<P>> implements SycamoreObservedLight
+public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & ComputablePoint<P>> implements Cloneable, SycamoreObservedLight
 {
-	protected ColorRGBA		color;
+	protected ColorRGBA			color;
 	protected final Geometry	lightGeometry;
+	protected float				intensity;
+
+	/**
+	 * Default constructor.
+	 */
+	public SycamoreRobotLight(ColorRGBA color, Geometry lightGeometry, float intensity)
+	{
+		this.intensity = intensity;
+		this.lightGeometry = lightGeometry;
+		setColor(color);
+	}
 
 	/**
 	 * Default constructor.
 	 */
 	public SycamoreRobotLight(ColorRGBA color, Geometry lightGeometry)
 	{
-		this.lightGeometry = lightGeometry;
-		setColor(color);
+		this(color, lightGeometry, -1.0f);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public abstract Object clone() throws CloneNotSupportedException;
+
+	/**
+	 * @param intensity
+	 *            the intensity to set
+	 */
+	public void setIntensity(float intensity)
+	{
+		// clamp intensity.
+		// -1 is the only value allowed being outside the range
+		if (intensity < 0.0f && intensity != -1.0f)
+		{
+			intensity = 0.0f;
+		}
+		if (intensity > 1.0f)
+		{
+			intensity = 1.0f;
+		}
+
+		this.intensity = intensity;
+	}
+
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreObservedLight#getIntensity()
+	 */
+	@Override
+	public float getIntensity()
+	{
+		return intensity;
 	}
 
 	/**
@@ -44,9 +91,12 @@ public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & Compu
 	 */
 	public abstract void setColor(final ColorRGBA color);
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.engine.SycamoreObservedLight#getColor()
 	 */
+	@Override
 	public ColorRGBA getColor()
 	{
 		return color;
@@ -59,7 +109,7 @@ public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & Compu
 	{
 		return lightGeometry;
 	}
-	
+
 	/**
 	 * Encode this object to XML format. The encoded Element will contain all data necessary to
 	 * re-create and object that is equal to this one.
@@ -70,14 +120,17 @@ public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & Compu
 	{
 		// create element
 		Element element = document.createElement("SycamoreRobotLight");
-		
+
 		// children
 		Element colorElem = document.createElement("lightColor");
 		colorElem.appendChild(SycamoreJMEScene.encodeColorRGBA(color, factory, builder, document));
-		
+
+		Element currentRatioElem = document.createElement("intensity");
+		currentRatioElem.appendChild(document.createTextNode(intensity + ""));
+
 		// append children
 		element.appendChild(colorElem);
-		
+
 		return element;
 	}
 
@@ -101,6 +154,16 @@ public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & Compu
 			{
 				Element lightColorElem = (Element) lightColor.item(0);
 				setColor(SycamoreJMEScene.decodeColorRGBA(lightColorElem));
+			}
+
+			// intensity
+			NodeList intensity = element.getElementsByTagName("intensity");
+			if (intensity.getLength() > 0)
+			{
+				Element intensityElem = (Element) intensity.item(0);
+				float intensityValue = Float.parseFloat(intensityElem.getTextContent());
+
+				this.setIntensity(intensityValue);
 			}
 		}
 

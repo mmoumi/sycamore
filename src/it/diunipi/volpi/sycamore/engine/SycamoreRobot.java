@@ -438,7 +438,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		Vector<SycamoreObservedLight> obsLights = new Vector<SycamoreObservedLight>();
 		for (SycamoreRobotLight<P> light : this.lights)
 		{
-			obsLights.add(light);
+				obsLights.add(light);
 		}
 		
 		return obsLights;
@@ -614,6 +614,15 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	@Override
 	public synchronized void turnLightOn(ColorRGBA color) throws TooManyLightsException
 	{
+		turnLightOn(color, -1.0f);
+	}
+	
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot#turnLightOn(com.jme3.math.ColorRGBA, float)
+	 */
+	@Override
+	public void turnLightOn(ColorRGBA color, float intensity) throws TooManyLightsException
+	{
 		if (currentLights == maxLights)
 		{
 			throw new TooManyLightsException("The number of lights added to robots exceed the defined maximum.");
@@ -622,6 +631,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		{
 			SycamoreRobotLight light = lights.elementAt(currentLights);
 			light.setColor(color);
+			light.setIntensity(intensity);
 			currentLights++;
 		}
 	}
@@ -640,6 +650,15 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			SycamoreRobotLight light = lights.elementAt(currentLights);
 			light.setColor(glassColor);
 		}
+	}
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot#setLightIntensity(float)
+	 */
+	@Override
+	public void setLightIntensity(float intensity)
+	{
+		SycamoreRobotLight light = lights.elementAt(currentLights);
+		light.setIntensity(intensity);
 	}
 
 	/**

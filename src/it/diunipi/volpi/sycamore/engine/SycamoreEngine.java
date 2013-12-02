@@ -406,18 +406,7 @@ public abstract class SycamoreEngine<P extends SycamoreAbstractPoint & Computabl
 	 * @return The positions of all the robots in the system
 	 * @throws TimelineNotAccessibleException
 	 */
-	public Observation<P> getObservation(SycamoreRobot<P> robot, SycamoreRobot<P> caller)
-	{
-		P position = robot.getGlobalPosition();
-
-		// translate position to caller's local coords
-		if (caller.getAgreement() != null)
-		{
-			position = caller.getAgreement().toLocalCoordinates(position);
-		}
-
-		return new Observation<P>(position, robot.getLights(), robot.getAlgorithm().isHumanPilot());
-	}
+	public abstract Observation<P> getObservation(SycamoreRobot<P> robot, SycamoreRobot<P> caller);
 
 	/**
 	 * @return true if the simulation is finished, false otherwise. The simulation is finished if
