@@ -21,7 +21,17 @@ public class SycamoreAppWindows extends SycamoreApp
 	 */
 	public static void main(String[] args)
 	{
-		new SycamoreAppWindows(APP_MODE.valueOf(args[0]));
+		APP_MODE mode;
+		
+		try
+		{
+			mode = APP_MODE.valueOf(args[0]);
+		}
+		catch (Exception e)
+		{
+			mode = APP_MODE.SIMULATOR;
+		}
+		new SycamoreAppWindows(mode);
 	}
 
 	/**

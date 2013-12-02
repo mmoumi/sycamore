@@ -27,7 +27,18 @@ public class SycamoreAppOSX extends SycamoreApp
 	 */
 	public static void main(String[] args)
 	{
-		new SycamoreAppOSX(APP_MODE.valueOf(args[0]));
+		APP_MODE mode;
+		
+		try
+		{
+			mode = APP_MODE.valueOf(args[0]);
+		}
+		catch (Exception e)
+		{
+			mode = APP_MODE.SIMULATOR;
+		}
+		
+		new SycamoreAppOSX(mode);
 	}
 
 	/**
