@@ -65,10 +65,14 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 				float distance = caller.getGlobalPosition().distanceTo(robot.getGlobalPosition());
 				float intensity = light.getIntensity();
 
-				if (distance != 0)
+				if (distance >= 1)
 				{
 					// intensity degrades with the squared of the distance
 					intensity = (float) (light.getIntensity() / (Math.pow(distance, 2)));
+				}
+				else
+				{
+					intensity = light.getIntensity();
 				}
 
 				SycamoreRobotLight2D newLight = new SycamoreRobotLight2D(color, null, intensity);
@@ -76,7 +80,7 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 			}
 		}
 
-		return new Observation<Point2D>(position, lights, robot.getAlgorithm().isHumanPilot());
+		return new ObservationExt<Point2D>(position, lights, robot.getAlgorithm());
 	}
 
 	/*
@@ -183,7 +187,7 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 		Constructor<?> constructor = algorithmClass.getConstructors()[0];
 
 		AlgorithmImpl<Point2D> newInstance = (AlgorithmImpl<Point2D>) constructor.newInstance();
-		newInstance.init();
+		newInstance.init(robot);
 		robot.setAlgorithm(newInstance);
 	}
 
