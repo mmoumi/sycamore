@@ -438,9 +438,9 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		Vector<SycamoreObservedLight> obsLights = new Vector<SycamoreObservedLight>();
 		for (SycamoreRobotLight<P> light : this.lights)
 		{
-				obsLights.add(light);
+			obsLights.add(light);
 		}
-		
+
 		return obsLights;
 	}
 
@@ -502,7 +502,7 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			public Object call() throws Exception
 			{
 
-				if (SycamoreSystem.isVisibilityRangesVisible() && visibilitytoSet != null)
+				if (SycamoreSystem.isVisibilityRangesVisible() && visibilitytoSet != null && visibilitytoSet.getVisibilityRangeGeometry() != null)
 				{
 					robotNode.attachChild(visibilitytoSet.getVisibilityRangeGeometry());
 				}
@@ -616,9 +616,13 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 	{
 		turnLightOn(color, -1.0f);
 	}
-	
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot#turnLightOn(com.jme3.math.ColorRGBA, float)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot#turnLightOn(com.jme3.math.ColorRGBA,
+	 * float)
 	 */
 	@Override
 	public void turnLightOn(ColorRGBA color, float intensity) throws TooManyLightsException
@@ -651,7 +655,10 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			light.setColor(glassColor);
 		}
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot#setLightIntensity(float)
 	 */
 	@Override
@@ -895,13 +902,16 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			{
 				if (engine != null && visibility != null)
 				{
-					if (SycamoreSystem.isVisibilityRangesVisible())
+					if (visibility.getVisibilityRangeGeometry() != null)
 					{
-						robotNode.attachChild(visibility.getVisibilityRangeGeometry());
-					}
-					else
-					{
-						robotNode.detachChild(visibility.getVisibilityRangeGeometry());
+						if (SycamoreSystem.isVisibilityRangesVisible())
+						{
+							robotNode.attachChild(visibility.getVisibilityRangeGeometry());
+						}
+						else
+						{
+							robotNode.detachChild(visibility.getVisibilityRangeGeometry());
+						}
 					}
 				}
 				return null;
