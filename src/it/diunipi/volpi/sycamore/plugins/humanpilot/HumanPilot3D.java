@@ -1,8 +1,8 @@
 package it.diunipi.volpi.sycamore.plugins.humanpilot;
 import it.diunipi.volpi.sycamore.engine.Observation;
 import it.diunipi.volpi.sycamore.engine.Point3D;
-import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
+import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.plugins.algorithms.AlgorithmImpl;
 import it.diunipi.volpi.sycamore.util.ApplicationProperties;
@@ -27,7 +27,7 @@ public class HumanPilot3D extends AlgorithmImpl<Point3D>
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
 	 */
 	@Override
-	public void init()
+	public void init(SycamoreObservedRobot<Point3D> robot)
 	{
 		// Nothing to do
 	}

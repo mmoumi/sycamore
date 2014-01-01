@@ -30,7 +30,7 @@ public class RotatingRobot2D extends AlgorithmImpl<Point2D>
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
 	 */
 	@Override
-	public void init()
+	public void init(SycamoreObservedRobot<Point2D> robot)
 	{
 		// Nothing to do
 	}

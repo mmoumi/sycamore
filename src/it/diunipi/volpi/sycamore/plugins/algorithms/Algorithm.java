@@ -24,8 +24,9 @@ public interface Algorithm<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 {
 	/**
 	 * Initializes this algorithm
+	 * @param robot 
 	 */
-	public void init();
+	public void init(SycamoreObservedRobot<P> robot);
 	
 	/**
 	 * Returns true if the execution of the algorithm is finished, false otherwise.
@@ -71,5 +72,4 @@ public interface Algorithm<P extends SycamoreAbstractPoint & ComputablePoint<P>>
 	 * @return
 	 */
 	public boolean isHumanPilot();
-
 }

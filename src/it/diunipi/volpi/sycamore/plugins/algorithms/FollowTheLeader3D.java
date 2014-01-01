@@ -1,9 +1,9 @@
 package it.diunipi.volpi.sycamore.plugins.algorithms;
 import it.diunipi.volpi.sycamore.engine.Observation;
 import it.diunipi.volpi.sycamore.engine.Point3D;
+import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
 import it.diunipi.volpi.sycamore.engine.TooManyLightsException;
-import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 
 import java.util.Vector;
@@ -25,7 +25,7 @@ public class FollowTheLeader3D extends AlgorithmImpl<Point3D>
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
 	 */
 	@Override
-	public void init()
+	public void init(SycamoreObservedRobot<Point3D> robot)
 	{
 		// Nothing to do
 	}
