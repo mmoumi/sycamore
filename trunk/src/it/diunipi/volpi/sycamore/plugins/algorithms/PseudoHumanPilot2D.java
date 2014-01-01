@@ -26,7 +26,9 @@ public class PseudoHumanPilot2D extends AlgorithmImpl<Point2D>
 {
 	private int	count	= 0;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.AlgorithmImpl#isHumanPilot()
 	 */
 	@Override
@@ -34,14 +36,14 @@ public class PseudoHumanPilot2D extends AlgorithmImpl<Point2D>
 	{
 		return true;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
 	 */
 	@Override
-	public void init()
+	public void init(SycamoreObservedRobot<Point2D> robot)
 	{
 		// Nothing to do
 	}
@@ -67,13 +69,12 @@ public class PseudoHumanPilot2D extends AlgorithmImpl<Point2D>
 			}
 			count++;
 		}
-		
-		
+
 		int minX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_X);
 		int maxX = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_X);
 		int minY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MIN_Y);
 		int maxY = PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.INITIAL_POSITION_MAX_Y);
-		
+
 		return SycamoreUtil.getRandomPoint2D(minX, maxX, minY, maxY);
 	}
 

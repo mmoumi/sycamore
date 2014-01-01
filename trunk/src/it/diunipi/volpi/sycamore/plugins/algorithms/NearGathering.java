@@ -588,7 +588,7 @@ public class NearGathering extends AlgorithmImpl<Point2D>
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.Algorithm#init()
 	 */
 	@Override
-	public void init()
+	public void init(SycamoreObservedRobot<Point2D> robot)
 	{
 		// try to check if n is known
 		try
