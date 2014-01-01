@@ -66,10 +66,6 @@ public abstract class SycamoreRobotLight<P extends SycamoreAbstractPoint & Compu
 		{
 			intensity = 0.0f;
 		}
-		if (intensity > 1.0f)
-		{
-			intensity = 1.0f;
-		}
 
 		this.intensity = intensity;
 	}
