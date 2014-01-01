@@ -34,8 +34,12 @@ import com.jme3.math.ColorRGBA;
  */
 public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 {
-	/* (non-Javadoc)
-	 * @see it.diunipi.volpi.sycamore.engine.SycamoreEngine#getObservation(it.diunipi.volpi.sycamore.engine.SycamoreRobot, it.diunipi.volpi.sycamore.engine.SycamoreRobot)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.diunipi.volpi.sycamore.engine.SycamoreEngine#getObservation(it.diunipi.volpi.sycamore.
+	 * engine.SycamoreRobot, it.diunipi.volpi.sycamore.engine.SycamoreRobot)
 	 */
 	@Override
 	public Observation<Point3D> getObservation(SycamoreRobot<Point3D> robot, SycamoreRobot<Point3D> caller)
@@ -47,7 +51,7 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 		{
 			position = caller.getAgreement().toLocalCoordinates(position);
 		}
-		
+
 		// update intensity of lights
 		Vector<SycamoreObservedLight> lights = robot.getLights();
 		for (int i = 0; i < lights.size(); i++)
@@ -56,25 +60,29 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 			if (light.getIntensity() != -1.0f)
 			{
 				ColorRGBA color = light.getColor();
-				
+
 				// compute the distance between the robots
 				float distance = caller.getGlobalPosition().distanceTo(robot.getGlobalPosition());
 				float intensity = light.getIntensity();
 
-				if (distance != 0)
+				if (distance >= 1)
 				{
 					// intensity degrades with the squared of the distance
 					intensity = (float) (light.getIntensity() / (Math.pow(distance, 2)));
 				}
-				
+				else
+				{
+					intensity = light.getIntensity();
+				}
+
 				SycamoreRobotLight3D newLight = new SycamoreRobotLight3D(color, null, intensity);
 				lights.set(i, newLight);
 			}
 		}
 
-		return new Observation<Point3D>(position, lights, robot.getAlgorithm().isHumanPilot());
+		return new ObservationExt<Point3D>(position, lights, robot.getAlgorithm());
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -179,7 +187,7 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 		Constructor<?> constructor = algorithmClass.getConstructors()[0];
 
 		AlgorithmImpl<Point3D> newInstance = (AlgorithmImpl<Point3D>) constructor.newInstance();
-		newInstance.init();
+		newInstance.init(robot);
 		robot.setAlgorithm(newInstance);
 	}
 
@@ -206,7 +214,7 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 			{
 				// assign visibilty to each robot
 				VisibilityImpl<Point3D> newInstance = (VisibilityImpl<Point3D>) constructor.newInstance();
-				
+
 				newInstance.setRobot(robot);
 				robot.setVisibility(newInstance);
 				return;
@@ -243,7 +251,7 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 				return;
 			}
 		}
-		
+
 		// If no Memory is set, set null
 		robot.setMemory(null);
 	}
@@ -267,13 +275,13 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 		if (constructor != null)
 		{
 			Measure newInstance = (Measure) constructor.newInstance();
-			
+
 			newInstance.setEngine(this);
 			this.measures.add(newInstance);
 			return;
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
