@@ -36,7 +36,7 @@ import com.jme3.util.TangentBinormalGenerator;
 @PluginImplementation
 public class CircularVisibility extends VisibilityImpl<Point2D>
 {
-	private Geometry				quad			= null;
+	protected Geometry				quad			= null;
 	private VisibilitySettingsPanel	settingPanel	= null;
 
 	/**
