@@ -5,11 +5,11 @@
 
 	<target name="BuildSchedulers" depends="AsynchronousScheduler, AsynchronousSchedulerPriorityQueue, FullySynchronousScheduler, SemiSynchronousScheduler" />
 
-	<target name="BuildMeasures" depends="ElapsedTime, AverageDistance, RobotsSeeingLeader" />
+	<target name="BuildMeasures" depends="ElapsedTime, AverageDistance, RobotsSeeingLeader, Trace2D" />
 
-	<target name="BuildAlgorithms" depends="HumanPilot2D, HumanPilot3D, DummyAlgorithm2D, DummyAlgorithm3D, PseudoHumanPilot2D, PseudoHumanPilot3D, FollowTheLeader2D, FollowTheLeader3D, NearGathering, RotatingRobot2D, Following" />
+	<target name="BuildAlgorithms" depends="ZombieProtocol, HumanProtocol, HumanPilot2D, HumanPilot3D, PseudoHumanPilot2D, PseudoHumanPilot3D, FollowTheLeader2D, FollowTheLeader3D, NearGathering, RotatingRobot2D, Following" />
 
-	<target name="BuildVisibilities" depends="CircularVisibility, SphericalVisibility, SquaredVisibility, SquaredDividedVisibility, CubicVisibility, DirectionalVisibility" />
+	<target name="BuildVisibilities" depends="CircularVisibility, ZombieVisibility, SphericalVisibility, SquaredVisibility, SquaredDividedVisibility, CubicVisibility, DirectionalVisibility" />
 
 	<target name="BuildAgreements" depends="AbsoluteAgreement2D, AbsoluteAgreement3D, ConsistentCompass2D, ConsistentCompass3D, OneAxis2D, PartialAgreement2D, OneAxis3D, TwoAxes3D, Chirality2D, Chirality3D, Disorientation2D, Disorientation3D" />
 
@@ -62,9 +62,27 @@
 		<jar destfile="/Users/Vale/Documents/Sycamore/Plugins/RobotsSeeingLeader.jar" basedir="./bin" includes="it/diunipi/volpi/sycamore/plugins/measures/RobotsSeeingLeader.class" indexMetaInf="true">
 		</jar>
 	</target>
+	
+	<target name="Trace2D">
+		<delete file="/Users/Vale/Documents/Sycamore/Plugins/Trace2D.jar" />
+		<jar destfile="/Users/Vale/Documents/Sycamore/Plugins/Trace2D.jar" basedir="./bin" includes="it/diunipi/volpi/sycamore/plugins/measures/Trace2D.class" indexMetaInf="true">
+		</jar>
+	</target>
 
 	<!-- Algorithms -->
 
+	<target name="ZombieProtocol">
+		<delete file="/Users/Vale/Documents/Sycamore/Plugins/ZombieProtocol.jar" />
+		<jar destfile="/Users/Vale/Documents/Sycamore/Plugins/ZombieProtocol.jar" basedir="./bin" includes="it/diunipi/volpi/sycamore/plugins/algorithms/ZombieProtocol.class" indexMetaInf="true">
+		</jar>
+	</target>
+	
+	<target name="HumanProtocol">
+		<delete file="/Users/Vale/Documents/Sycamore/Plugins/HumanProtocol.jar" />
+		<jar destfile="/Users/Vale/Documents/Sycamore/Plugins/HumanProtocol.jar" basedir="./bin" includes="it/diunipi/volpi/sycamore/plugins/algorithms/HumanProtocol.class" indexMetaInf="true">
+		</jar>
+	</target>
+	
 	<target name="HumanPilot2D">
 		<delete file="/Users/Vale/Documents/Sycamore/Plugins/HumanPilot2D.jar" />
 		<jar destfile="/Users/Vale/Documents/Sycamore/Plugins/HumanPilot2D.jar" basedir="./bin" includes="it/diunipi/volpi/sycamore/plugins/humanpilot/HumanPilot2D.class" indexMetaInf="true">
@@ -136,6 +154,12 @@
 	<target name="CircularVisibility">
 		<delete file="/Users/Vale/Documents/Sycamore/Plugins/CircularVisibility.jar" />
 		<jar destfile="/Users/Vale/Documents/Sycamore/Plugins/CircularVisibility.jar" basedir="./bin" includes="it/diunipi/volpi/sycamore/plugins/visibilities/CircularVisibility.class" indexMetaInf="true">
+		</jar>
+	</target>
+	
+	<target name="ZombieVisibility">
+		<delete file="/Users/Vale/Documents/Sycamore/Plugins/ZombieVisibility.jar" />
+		<jar destfile="/Users/Vale/Documents/Sycamore/Plugins/ZombieVisibility.jar" basedir="./bin" includes="it/diunipi/volpi/sycamore/plugins/visibilities/ZombieVisibility.class" indexMetaInf="true">
 		</jar>
 	</target>
 
