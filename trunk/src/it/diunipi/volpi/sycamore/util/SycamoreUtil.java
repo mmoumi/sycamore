@@ -78,21 +78,14 @@ public class SycamoreUtil
 		}
 
 		/**
-		 * Check if the element with passed ID has been returned within last n steps
+		 * Returns the number of steps when the passed id has not been returned
 		 * 
 		 * @param id
 		 * @return
 		 */
-		public boolean checkFairness(Long id)
+		public int getFairnessCount(Long id)
 		{
-			Integer count = this.counter.get(id);
-			if (count != null && count == PropertyManager.getSharedInstance().getIntegerProperty(ApplicationProperties.FAIRNESS_COUNT))
-			{
-				this.counter.remove(id);
-				return true;
-			}
-			else
-				return false;
+			return this.counter.get(id);
 		}
 	}
 
@@ -206,24 +199,21 @@ public class SycamoreUtil
 	 */
 	public static <O extends Object> Vector<O> randomSubset(Vector<O> objects)
 	{
-		Random random = new Random();
 		Vector<O> ret = new Vector<O>();
 
 		if (objects.size() > 0)
 		{
 			// generate the number of objects to be selected
-			int number = random.nextInt(objects.size() + 1);
+			double ro = Math.random();
+			double probability = ro * (1.0 - (1.0 / 2.0));
 
-			// randomly select number objects
-			for (int i = 0; i < number; i++)
+			for (O obj : objects)
 			{
-				int index = random.nextInt(objects.size());
-				O object = objects.elementAt(index);
-
-				// add object if not present
-				if (!ret.contains(object))
+				// compute the value for obj and eventually add it
+				double value = Math.random();
+				if (value < probability)
 				{
-					ret.add(object);
+					ret.add(obj);
 				}
 			}
 		}
@@ -242,44 +232,29 @@ public class SycamoreUtil
 	public static <O extends SubsetFairnessSupporter> Vector<O> randomFairSubset(Vector<O> objects)
 	{
 		Vector<O> ret = new Vector<O>();
-		Random random = new Random();
 
 		if (objects.size() > 0)
 		{
 			// generate the number of objects to be selected
-			int number = random.nextInt(objects.size() + 1);
+			double ro = Math.random();
 
-			// randomly select number objects
-			for (int i = 0; i < number; i++)
-			{
-				int index = random.nextInt(objects.size());
-				O object = objects.elementAt(index);
-
-				// add object if not present
-				if (!ret.contains(object))
-				{
-					ret.add(object);
-				}
-			}
-
-			// store skipped elements
 			for (O obj : objects)
 			{
-				if (!ret.contains(obj))
+				RandomFairnessmanager farnFairnessmanager = getFairnessManager();
+				Long id = obj.getID();
+				
+				double n = farnFairnessmanager.getFairnessCount(id);
+				double probability = ro * (1.0 - (1.0 / n));
+				
+				// compute the value for obj and eventually add it
+				double value = Math.random();
+				if (value < probability)
 				{
-					getFairnessManager().storeElement(obj.getID());
+					ret.add(obj);
 				}
-			}
-
-			// eventually check if there are more elements to add
-			for (O obj : objects)
-			{
-				if (getFairnessManager().checkFairness(obj.getID()))
+				else
 				{
-					if (!ret.contains(obj))
-					{
-						ret.add(obj);
-					}
+					farnFairnessmanager.storeElement(id);
 				}
 			}
 		}
@@ -723,11 +698,11 @@ public class SycamoreUtil
 	public static boolean isPointInsideTriangle(Point2D point, Point2D a, Point2D b, Point2D c)
 	{
 		Polygon triangle = new Polygon();
-		
+
 		triangle.addPoint((int) a.x, (int) a.y);
 		triangle.addPoint((int) b.x, (int) b.y);
 		triangle.addPoint((int) c.x, (int) c.y);
-		
+
 		return triangle.contains(SycamoreUtil.convertPoint2D(point));
 	}
 
@@ -805,7 +780,7 @@ public class SycamoreUtil
 				}
 			}
 		}
-		
+
 		return false;
 	}
 }
