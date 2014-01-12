@@ -68,7 +68,7 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 				if (distance >= 1)
 				{
 					// intensity degrades with the squared of the distance
-					intensity = (float) (light.getIntensity() / (Math.pow(distance, 2)));
+					intensity = (float) (light.getIntensity() / (distance * distance));
 				}
 				else
 				{
