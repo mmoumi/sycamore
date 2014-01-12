@@ -11,6 +11,7 @@ import it.diunipi.volpi.sycamore.engine.SycamoreRobot;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.plugins.algorithms.HumanProtocol;
+import it.diunipi.volpi.sycamore.plugins.algorithms.ZombieProtocol;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.Iterator;
@@ -33,14 +34,14 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
  * @author Valerio Volpi - vale.v@me.com
  */
 @PluginImplementation
-public class ZombieVisibility extends CircularVisibility
+public class HumanZombieVisibility extends CircularVisibility
 {
 	private float	attackRange;
 
 	/**
 	 * Constructor.
 	 */
-	public ZombieVisibility()
+	public HumanZombieVisibility()
 	{
 		super();
 		setAttackRange(2.0f);
@@ -182,33 +183,40 @@ public class ZombieVisibility extends CircularVisibility
 	@Override
 	public Vector<Observation<Point2D>> filter(Vector<Observation<Point2D>> observations)
 	{
-		Vector<Observation<Point2D>> filtered = new Vector<Observation<Point2D>>();
-
-		// filter observations
-		for (Observation<Point2D> observation : observations)
+		if (!(robot.getAlgorithm() instanceof ZombieProtocol))
 		{
-			Point2D robotPosition = observation.getRobotPosition();
-			if (isPointVisible(robotPosition))
+			return observations;
+		}
+		else
+		{
+			Vector<Observation<Point2D>> filtered = new Vector<Observation<Point2D>>();
+
+			// filter observations
+			for (Observation<Point2D> observation : observations)
 			{
-				filtered.add(observation);
-			}
-			else
-			{
-				// if the robot has light with intensity, add its direction
-				Iterator<SycamoreObservedLight> lights = observation.getLightsIterator();
-				while (lights.hasNext())
+				Point2D robotPosition = observation.getRobotPosition();
+				if (isPointVisible(robotPosition))
 				{
-					SycamoreObservedLight light = lights.next();
-					if (light.getIntensity() != -1.0f)
+					filtered.add(observation);
+				}
+				else
+				{
+					// if the robot has light with intensity, add its direction
+					Iterator<SycamoreObservedLight> lights = observation.getLightsIterator();
+					while (lights.hasNext())
 					{
-						filtered.add(getUpdatedObservation(observation));
-						break;
+						SycamoreObservedLight light = lights.next();
+						if (light.getIntensity() != -1.0f)
+						{
+							filtered.add(getUpdatedObservation(observation));
+							break;
+						}
 					}
 				}
 			}
-		}
 
-		return filtered;
+			return filtered;
+		}
 	}
 
 	/**
