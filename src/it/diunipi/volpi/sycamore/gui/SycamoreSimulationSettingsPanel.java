@@ -421,8 +421,8 @@ public class SycamoreSimulationSettingsPanel extends SycamoreTitledRoundedBorder
 					newEngine.createAndSetNewSchedulerInstance(scheduler);
 				}
 
-				getSycamoreRobotsConfigurationPanel().updateEngine(newEngine);
 				getAdditionalPluginsPanel().updateEngine(newEngine);
+				getSycamoreRobotsConfigurationPanel().updateEngine(newEngine);
 			}
 			catch (Exception e)
 			{
