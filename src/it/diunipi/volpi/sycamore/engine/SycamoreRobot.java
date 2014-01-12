@@ -265,10 +265,10 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 		updateDirectionGeometry();
 	}
 
-	/**
-	 * @param speed
-	 *            the speed to set
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot#setSpeed(float)
 	 */
+	@Override
 	public void setSpeed(float speed)
 	{
 		this.speed = speed;
@@ -551,9 +551,11 @@ public abstract class SycamoreRobot<P extends SycamoreAbstractPoint & Computable
 			return true;
 	}
 
-	/**
-	 * @return speed
+
+	/* (non-Javadoc)
+	 * @see it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot#getSpeed()
 	 */
+	@Override
 	public float getSpeed()
 	{
 		return speed;

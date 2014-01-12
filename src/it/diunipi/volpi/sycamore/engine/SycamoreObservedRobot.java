@@ -101,4 +101,15 @@ public interface SycamoreObservedRobot<P extends SycamoreAbstractPoint & Computa
 	 * @return
 	 */
 	public P getDirection();
+
+	/**
+	 * @return speed
+	 */
+	public float getSpeed();
+
+	/**
+	 * @param speed
+	 *            the speed to set
+	 */
+	public void setSpeed(float speed);
 }
