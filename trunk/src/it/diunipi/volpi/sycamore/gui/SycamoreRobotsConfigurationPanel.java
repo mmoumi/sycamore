@@ -916,7 +916,6 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 								{
 									e1.printStackTrace();
 								}
-
 							}
 						}
 						else
