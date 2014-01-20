@@ -34,4 +34,20 @@ public class ObservationExt<P extends SycamoreAbstractPoint & ComputablePoint<P>
 		return algorithm;
 	}
 
+	/**
+	 * @param observations
+	 * @return
+	 */
+	public static <P extends SycamoreAbstractPoint & ComputablePoint<P>> Vector<P> getPositions(Vector<Observation<P>> observations)
+	{
+		Vector<P> ret = new Vector<P>();
+		
+		for (Observation<P> observation : observations)
+		{
+			ret.add(observation.getRobotPosition());
+		}
+		
+		return ret;
+	}
+
 }
