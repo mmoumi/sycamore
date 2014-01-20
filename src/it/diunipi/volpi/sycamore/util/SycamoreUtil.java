@@ -743,6 +743,44 @@ public class SycamoreUtil
 			return (P) new Point3D();
 		}
 	}
+	
+	/**
+	 * @param positions
+	 * @return
+	 */
+	public static Point2D getCentroid2D(Vector<Point2D> points)
+	{
+		float sumX = 0;
+		float sumY = 0;
+		
+		for (Point2D point : points)
+		{
+			sumX += point.x;
+			sumY += point.y;
+		}
+		
+		return new Point2D(sumX / points.size(), sumY / points.size());
+	}
+	
+	/**
+	 * @param positions
+	 * @return
+	 */
+	public static Point3D getCentroid3D(Vector<Point3D> points)
+	{
+		float sumX = 0;
+		float sumY = 0;
+		float sumZ = 0;
+		
+		for (Point3D point : points)
+		{
+			sumX += point.x;
+			sumY += point.y;
+			sumZ += point.z;
+		}
+		
+		return new Point3D(sumX / points.size(), sumY / points.size(), sumZ / points.size());
+	}
 
 	/**
 	 * Tries to open a file with its editor. If it fails, tries to launch it in the browser.
