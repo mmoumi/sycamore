@@ -906,16 +906,6 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 
 								// eventually create robots in engine
 								updateRobotsInEngine(0, appEngine);
-
-								try
-								{
-									// set algorithm in all robots in engine
-									appEngine.createAndSetNewAlgorithmInstance(algorithm, 0);
-								}
-								catch (Exception e1)
-								{
-									e1.printStackTrace();
-								}
 							}
 						}
 						else
@@ -1190,16 +1180,6 @@ public class SycamoreRobotsConfigurationPanel extends SycamorePanel
 								
 								// eventually create robots in engine
 								updateRobotsInEngine(index, appEngine);
-
-								try
-								{
-									// set algorithm in all robots in engine
-									appEngine.createAndSetNewAlgorithmInstance(algorithm, index);
-								}
-								catch (Exception e1)
-								{
-									e1.printStackTrace();
-								}
 							}
 						}
 					}
