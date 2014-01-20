@@ -11,10 +11,8 @@ import it.diunipi.volpi.sycamore.engine.SycamoreObservedLight;
 import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
 import it.diunipi.volpi.sycamore.engine.TooManyLightsException;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
-import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.gui.SycamoreSystem.TIMELINE_MODE;
+import it.diunipi.volpi.sycamore.plugins.visibilities.HumanZombieVisibility;
 import it.diunipi.volpi.sycamore.plugins.visibilities.Visibility;
-import it.diunipi.volpi.sycamore.plugins.visibilities.ZombieVisibility;
 import it.diunipi.volpi.sycamore.util.PropertyManager;
 import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 
@@ -120,7 +118,7 @@ public class ZombieProtocol extends AlgorithmImpl<Point2D>
 	@Override
 	public void init(SycamoreObservedRobot<Point2D> robot)
 	{
-		SycamoreSystem.setTimelineMode(TIMELINE_MODE.LIVE);
+
 	}
 
 	/*
@@ -153,7 +151,7 @@ public class ZombieProtocol extends AlgorithmImpl<Point2D>
 		}
 
 		Visibility<Point2D> visibility = caller.getVisibility();
-		if (visibility != null && visibility instanceof ZombieVisibility)
+		if (visibility != null && visibility instanceof HumanZombieVisibility)
 		{
 			for (Observation<Point2D> observation : observations)
 			{
@@ -180,6 +178,7 @@ public class ZombieProtocol extends AlgorithmImpl<Point2D>
 								HumanProtocol humanProtocol = (HumanProtocol) algorithm;
 								humanProtocol.biteHuman();
 							}
+
 						}
 						else if (lights.hasNext())
 						{
@@ -217,10 +216,11 @@ public class ZombieProtocol extends AlgorithmImpl<Point2D>
 			}
 
 			// Adjust attack range properly
-			ZombieVisibility zombieVisibility = (ZombieVisibility) visibility;
+			HumanZombieVisibility zombieVisibility = (HumanZombieVisibility) visibility;
 			if (newActivityLevel > activityLevel)
 			{
 				zombieVisibility.setAttackRange(newActivityLevel);
+				caller.setSpeed(newActivityLevel / 100.0f);
 			}
 			else
 			{
@@ -229,17 +229,21 @@ public class ZombieProtocol extends AlgorithmImpl<Point2D>
 				if (attackRange > getMinActivity())
 				{
 					zombieVisibility.setAttackRange(attackRange);
+					caller.setSpeed(attackRange / 100.0f);
 				}
 				else
 				{
 					zombieVisibility.setAttackRange(getMinActivity());
+					caller.setSpeed(getMinActivity() / 100.0f);
 				}
 			}
 		}
 
 		if (destination != null)
 		{
-			return new Point2D(destination);
+			Point2D dest = new Point2D(destination);
+			dest = caller.getLocalPosition().interpolateWith(dest, (1.0f / (float) observations.size()));
+			return dest;
 		}
 		else
 		{
@@ -255,7 +259,6 @@ public class ZombieProtocol extends AlgorithmImpl<Point2D>
 	 */
 	private Vector3f adjustDirection(Point2D currentPosition, Vector3f direction, Point2D robotPosition, float intensity)
 	{
-		System.out.println("intensity from " + robotPosition + ":" + intensity);
 		Vector3f vector = null;
 
 		// compute the vector
@@ -365,15 +368,17 @@ public class ZombieProtocol extends AlgorithmImpl<Point2D>
 		}
 		return panel_settings;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.AlgorithmImpl#reset()
 	 */
 	@Override
 	public synchronized void reset()
 	{
 		super.reset();
-		
+
 		activityLevel = getMinActivity();
 	}
 }

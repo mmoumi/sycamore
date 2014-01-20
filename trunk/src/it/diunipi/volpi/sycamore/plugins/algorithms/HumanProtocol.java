@@ -10,9 +10,6 @@ import it.diunipi.volpi.sycamore.engine.SycamoreObservedLight;
 import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
 import it.diunipi.volpi.sycamore.engine.TooManyLightsException;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
-import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
-import it.diunipi.volpi.sycamore.gui.SycamoreSystem.TIMELINE_MODE;
-import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.Vector;
 
@@ -27,8 +24,15 @@ import com.jme3.math.ColorRGBA;
 @PluginImplementation
 public class HumanProtocol extends AlgorithmImpl<Point2D>
 {
-	private int		count	= 0;
-	private boolean	bitten	= false;
+	private boolean			bitten		= false;
+	private int				robotID		= 0;
+	protected float			radius		= 15.0f;
+
+	protected final Point2D	center		= new Point2D();
+	protected final boolean	move		= true;
+	protected final int		totRobots	= 6;
+
+	protected static int	numRobots	= 0;
 
 	/*
 	 * (non-Javadoc)
@@ -40,7 +44,16 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 	@Override
 	public void init(SycamoreObservedRobot<Point2D> robot)
 	{
-		SycamoreSystem.setTimelineMode(TIMELINE_MODE.LIVE);
+		System.out.println("A ¤ " + totRobots);
+		System.out.println("A ¤ " + numRobots);
+		System.out.println("A ¤ " + robotID);
+		
+		this.robotID = numRobots;
+		numRobots++;
+		
+		System.out.println("B ¤ " + totRobots);
+		System.out.println("B ¤ " + numRobots);
+		System.out.println("B ¤ " + robotID);
 	}
 
 	/*
@@ -82,6 +95,7 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 				try
 				{
 					caller.turnLightOn(ColorRGBA.Red);
+					caller.turnLightOn(ColorRGBA.Yellow, 200.0f);
 				}
 				catch (TooManyLightsException e)
 				{
@@ -89,39 +103,75 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 				}
 			}
 
-			if (count % 2000 == 0)
-			{
-				Runnable runnable = new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						try
-						{
-							caller.turnLightOn(ColorRGBA.Yellow, 200.0f);
-							Thread.sleep(SycamoreUtil.getRandomInt(100, 2000));
-							if (!bitten)
-							{
-								caller.turnLightOff();
-							}
-						}
-						catch (Exception e)
-						{
-							e.printStackTrace();
-						}
-						return;
-					}
-				};
+			checkTermination(observations, caller);
 
-				new Thread(runnable).start();
+			if (move && checkZombiesCloseness(observations, caller))
+			{
+				radius = radius + 15;
+				return getPosition(center);
 			}
 
-			count++;
 			return null;
 		}
 		else
 		{
 			return null;
+		}
+	}
+
+	/**
+	 * @param observations
+	 * @param caller
+	 * @return
+	 */
+	private boolean checkZombiesCloseness(Vector<Observation<Point2D>> observations, SycamoreObservedRobot<Point2D> caller)
+	{
+		for (Observation<Point2D> observation : observations)
+		{
+			Point2D position = observation.getRobotPosition();
+			if (caller.getLocalPosition().distanceTo(position) < (radius / 2))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * 
+	 */
+	protected void checkTermination(Vector<Observation<Point2D>> observations, final SycamoreObservedRobot<Point2D> caller)
+	{
+		boolean terminated = true;
+		float bound = 2.0f * (ZombieProtocol.getMinActivity() / 2);
+
+		for (Observation<Point2D> x : observations)
+		{
+			for (Observation<Point2D> y : observations)
+			{
+				if (x != y && x.getRobotPosition().distanceTo(y.getRobotPosition()) <= bound)
+				{
+					terminated = false;
+				}
+			}
+		}
+
+		if (terminated)
+		{
+			try
+			{
+				caller.turnLightOff();
+				caller.turnLightOff();
+				caller.turnLightOn(ColorRGBA.Green);
+				caller.turnLightOn(ColorRGBA.Green);
+
+				setFinished(true);
+			}
+			catch (TooManyLightsException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -206,8 +256,27 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 	{
 		return bitten;
 	}
-	
-	/* (non-Javadoc)
+
+	/**
+	 * 
+	 */
+	protected Point2D getPosition(Point2D center)
+	{
+		System.out.println("C ¤ " + totRobots);
+		System.out.println("C ¤ " + numRobots);
+		System.out.println("C ¤ " + robotID);
+		
+		double angle = 6.2831853071795862D / (double) totRobots;
+
+		float xPoint = (float) (center.x + (radius * Math.cos(robotID * angle)));
+		float yPoint = (float) (center.y - (radius * Math.sin(robotID * angle)));
+
+		return new Point2D(xPoint, yPoint);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.diunipi.volpi.sycamore.plugins.algorithms.AlgorithmImpl#reset()
 	 */
 	@Override
@@ -215,5 +284,7 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 	{
 		super.reset();
 		bitten = false;
+		
+		numRobots--;
 	}
 }
