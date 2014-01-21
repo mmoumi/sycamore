@@ -182,6 +182,11 @@ public class SycamoreEngine2D extends SycamoreEngine<Point2D>
 	public void createAndSetNewAlgorithmInstance(Algorithm<Point2D> algorithm, SycamoreRobot<Point2D> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
 			InvocationTargetException
 	{
+		if (robot.getAlgorithm() != null)
+		{
+			robot.getAlgorithm().reset();
+		}
+		
 		// create a new instance of the algorithm
 		Class<? extends Algorithm> algorithmClass = algorithm.getClass();
 		Constructor<?> constructor = algorithmClass.getConstructors()[0];
