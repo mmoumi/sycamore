@@ -4,6 +4,7 @@
 package it.diunipi.volpi.sycamore.plugins.algorithms;
 
 import it.diunipi.volpi.sycamore.engine.Observation;
+import it.diunipi.volpi.sycamore.engine.ObservationExt;
 import it.diunipi.volpi.sycamore.engine.Point2D;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
 import it.diunipi.volpi.sycamore.engine.SycamoreObservedLight;
@@ -24,15 +25,22 @@ import com.jme3.math.ColorRGBA;
 @PluginImplementation
 public class HumanProtocol extends AlgorithmImpl<Point2D>
 {
-	private boolean			bitten		= false;
-	private int				robotID		= 0;
-	protected float			radius		= 15.0f;
+	private enum Behaviors
+	{
+		STILL, ONE, CIRCLE;
+	}
 
-	protected final Point2D	center		= new Point2D();
-	protected final boolean	move		= true;
-	protected final int		totRobots	= 6;
+	private boolean			bitten			= false;
+	private boolean			useMinDistance	= true;
+	private int				robotID			= 0;
+	protected float			radius			= 15.0f;
 
-	protected static int	numRobots	= 0;
+	protected final Point2D	center			= new Point2D();
+	protected Behaviors		behaviors		= Behaviors.CIRCLE;
+	protected final int		totRobots		= 6;
+	protected final float	bound			= 7.0f;
+
+	protected static int	numRobots		= 0;
 
 	/*
 	 * (non-Javadoc)
@@ -44,16 +52,8 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 	@Override
 	public void init(SycamoreObservedRobot<Point2D> robot)
 	{
-		System.out.println("A ¤ " + totRobots);
-		System.out.println("A ¤ " + numRobots);
-		System.out.println("A ¤ " + robotID);
-		
 		this.robotID = numRobots;
 		numRobots++;
-		
-		System.out.println("B ¤ " + totRobots);
-		System.out.println("B ¤ " + numRobots);
-		System.out.println("B ¤ " + robotID);
 	}
 
 	/*
@@ -88,6 +88,22 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 		// if not bitten act
 		if (!this.isBitten())
 		{
+			if (behaviors == Behaviors.CIRCLE)
+			{
+				for (Observation<Point2D> observation : observations)
+				{
+					ObservationExt<Point2D> observationExt = (ObservationExt<Point2D>) observation;
+					if (observationExt.getAlgorithm() instanceof HumanProtocol)
+					{
+						float distance = observationExt.getRobotPosition().distanceTo(center);
+						if (distance > radius)
+						{
+							radius = distance;
+							return getPosition(center);
+						}
+					}
+				}
+			}
 
 			// if that light is not red, turn it on
 			if (!firstLight.getColor().equals(ColorRGBA.Red))
@@ -105,9 +121,9 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 
 			checkTermination(observations, caller);
 
-			if (move && checkZombiesCloseness(observations, caller))
+			if (behaviors != Behaviors.STILL && checkZombiesCloseness(observations, caller))
 			{
-				radius = radius + 15;
+				radius = radius + bound;
 				return getPosition(center);
 			}
 
@@ -129,7 +145,7 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 		for (Observation<Point2D> observation : observations)
 		{
 			Point2D position = observation.getRobotPosition();
-			if (caller.getLocalPosition().distanceTo(position) < (radius / 2))
+			if (caller.getLocalPosition().distanceTo(position) < bound)
 			{
 				return true;
 			}
@@ -143,19 +159,7 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 	 */
 	protected void checkTermination(Vector<Observation<Point2D>> observations, final SycamoreObservedRobot<Point2D> caller)
 	{
-		boolean terminated = true;
-		float bound = 2.0f * (ZombieProtocol.getMinActivity() / 2);
-
-		for (Observation<Point2D> x : observations)
-		{
-			for (Observation<Point2D> y : observations)
-			{
-				if (x != y && x.getRobotPosition().distanceTo(y.getRobotPosition()) <= bound)
-				{
-					terminated = false;
-				}
-			}
-		}
+		boolean terminated = useMinDistance ? checkMinDistance(observations) : checkMaxDistance(observations);
 
 		if (terminated)
 		{
@@ -173,6 +177,59 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/**
+	 * @param observations
+	 * @return
+	 */
+	private boolean checkMaxDistance(Vector<Observation<Point2D>> observations)
+	{
+		float bound = 5.0f * ZombieProtocol.getMaxActivity();
+
+		float maxDistance = 0;
+
+		for (Observation<Point2D> x : observations)
+		{
+			ObservationExt<Point2D> xExt = (ObservationExt<Point2D>) x;
+			for (Observation<Point2D> y : observations)
+			{
+				ObservationExt<Point2D> yExt = (ObservationExt<Point2D>) y;
+				if (x != y && xExt.getAlgorithm() instanceof ZombieProtocol && yExt.getAlgorithm() instanceof ZombieProtocol)
+				{
+					float distance = x.getRobotPosition().distanceTo(y.getRobotPosition());
+					if (distance > maxDistance)
+					{
+						maxDistance = distance;
+					}
+				}
+			}
+		}
+
+		return maxDistance > bound;
+	}
+
+	/**
+	 * @param observations
+	 * @return
+	 */
+	private boolean checkMinDistance(Vector<Observation<Point2D>> observations)
+	{
+		boolean terminated = true;
+		float bound = 2.0f * (ZombieProtocol.getMinActivity() / 2);
+
+		for (Observation<Point2D> x : observations)
+		{
+			for (Observation<Point2D> y : observations)
+			{
+				if (x != y && x.getRobotPosition().distanceTo(y.getRobotPosition()) <= bound)
+				{
+					terminated = false;
+				}
+			}
+		}
+
+		return terminated;
 	}
 
 	/*
@@ -265,7 +322,7 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 		System.out.println("C ¤ " + totRobots);
 		System.out.println("C ¤ " + numRobots);
 		System.out.println("C ¤ " + robotID);
-		
+
 		double angle = 6.2831853071795862D / (double) totRobots;
 
 		float xPoint = (float) (center.x + (radius * Math.cos(robotID * angle)));
@@ -284,7 +341,7 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 	{
 		super.reset();
 		bitten = false;
-		
+
 		numRobots--;
 	}
 }
