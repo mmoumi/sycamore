@@ -29,7 +29,7 @@ public class SingleHumanProtocol extends HumanProtocol
 	protected Vector<Point2D>	points			= new Vector<Point2D>();
 
 	protected final int			radius			= 15;
-	protected final int			sides			= 50;
+	protected final int			sides			= 48;
 	protected boolean			aroundCentroid	= false;
 
 	protected int				currentPoint	= 0;
