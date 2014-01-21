@@ -161,7 +161,7 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 	 */
 	@Override
 	public void createAndSetNewAlgorithmInstance(Algorithm<Point3D> algorithm, int index) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException
-	{
+	{		
 		boolean isHumanPilot = algorithm.isHumanPilot();
 		Vector<SycamoreRobot<Point3D>> robotList = isHumanPilot ? robots.getHumanPilotRow(index) : this.robots.getRobotRow(index);
 
@@ -182,6 +182,11 @@ public class SycamoreEngine3D extends SycamoreEngine<Point3D>
 	public void createAndSetNewAlgorithmInstance(Algorithm<Point3D> algorithm, SycamoreRobot<Point3D> robot) throws IllegalArgumentException, InstantiationException, IllegalAccessException,
 			InvocationTargetException
 	{
+		if (robot.getAlgorithm() != null)
+		{
+			robot.getAlgorithm().reset();
+		}
+		
 		// create a new instance of the algorithm
 		Class<? extends Algorithm> algorithmClass = algorithm.getClass();
 		Constructor<?> constructor = algorithmClass.getConstructors()[0];
