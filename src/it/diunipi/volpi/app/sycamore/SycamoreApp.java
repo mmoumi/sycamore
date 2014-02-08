@@ -510,7 +510,7 @@ public abstract class SycamoreApp extends JFrame
 	 */
 	public static String getVersion()
 	{
-		return "2.0 beta 3";
+		return "2.0 beta 4";
 	}
 
 	/**
@@ -520,7 +520,7 @@ public abstract class SycamoreApp extends JFrame
 	 */
 	public static String getBuildNumber()
 	{
-		return "20131202";
+		return "20140208";
 	}
 
 	/**
@@ -533,7 +533,7 @@ public abstract class SycamoreApp extends JFrame
 		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
 		try
 		{
-			return format.parse("02/12/2013");
+			return format.parse("08/02/2014");
 		}
 		catch (ParseException e)
 		{
