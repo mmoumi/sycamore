@@ -36,7 +36,7 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 	protected float			radius			= 15.0f;
 
 	protected final Point2D	center			= new Point2D();
-	protected Behaviors		behaviors		= Behaviors.CIRCLE;
+	protected Behaviors		behaviors		= Behaviors.ONE;
 	protected final int		totRobots		= 6;
 	protected final float	bound			= 7.0f;
 
@@ -123,7 +123,7 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 
 			if (behaviors != Behaviors.STILL && checkZombiesCloseness(observations, caller))
 			{
-				radius = radius + bound;
+				radius = radius + (bound / 3);
 				return getPosition(center);
 			}
 
