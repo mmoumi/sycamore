@@ -29,6 +29,13 @@ Here there are all the files produced during my research on Following with direc
 || Following KIT || A zip file containing 4 plugins used to analyze Following with directional limited visibility problem. It contains: Following, DirectionalVisibility, AverageDistance, RobotsSeeingLeader || <a href="https://www.dropbox.com/s/3102w4csi1yh9ne/FollowingDirectional.zip">download</a> ||
 || Simulation reports || A zip file containing the results of all the reports of the simulations performed during my experiments on Following with directional limited visibility problem. They are divided by technique (None, Move, Rotate) and repeated both with or without lights. All the averages and comparisons are included.|| <a href="https://www.dropbox.com/s/9jzrvdal9q65q0p/Reports.zip">download</a> ||
 
+= Humans and zombies Downloads =
+Here there are all the files produced during my research on Following with directional limited visibility problem
+
+|| Humans vs Zombies KIT || A zip file containing all the plugins (protocols, visibilities, measures) used to analyze Humans vs Zombies problem. || <a href="https://www.dropbox.com/s/6g6oonile0tn7rj/ZombiesKIT.zip">download</a> ||
+|| Simulation reports || A zip file containing the results of all the reports of the simulations performed during my experiments on Humans vs Zombies problem. All the averages and comparisons are included.|| <a href="https://www.dropbox.com/s/uk11mywl8ot2717/ZombiesReports.zip">download</a> ||
+
 = Thesis =
 
 || Thesis PDF file || The PDF file of my graduation thesis on Sycamore || <a href="https://www.dropbox.com/s/7ea48gnyveq5bem/Sycamore%20Thesis.pdf">download</a> ||
+|| Thesis presentation slides || The slides of the presentation of my thesis work on Sycamore || <a href="https://www.dropbox.com/s/61p6pgwqir5193s/Thesis%20Presentation.pdf">download</a> ||
