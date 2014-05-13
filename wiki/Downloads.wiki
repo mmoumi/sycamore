@@ -37,5 +37,5 @@ Here there are all the files produced during my research on Following with direc
 
 = Thesis =
 
-|| Thesis PDF file || The PDF file of my graduation thesis on Sycamore || <a href="https://www.dropbox.com/s/7ea48gnyveq5bem/Sycamore%20Thesis.pdf">download</a> ||
-|| Thesis presentation slides || The slides of the presentation of my thesis work on Sycamore || <a href="https://www.dropbox.com/s/61p6pgwqir5193s/Thesis%20Presentation.pdf">download</a> ||
+|| Thesis PDF file || The PDF file of my graduation thesis on Sycamore || <a href="http://sbrinz.di.unipi.it/peppe/Sycamore/">download</a> ||
+|| Thesis presentation slides || The slides of the presentation of my thesis work on Sycamore || <a href="http://sbrinz.di.unipi.it/peppe/Sycamore/">download</a> ||
