@@ -9,6 +9,7 @@ import it.diunipi.volpi.sycamore.engine.Point2D;
 import it.diunipi.volpi.sycamore.engine.SycamoreObservedLight;
 import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
 import it.diunipi.volpi.sycamore.engine.TooManyLightsException;
+import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem.TIMELINE_MODE;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
@@ -26,13 +27,49 @@ import com.jme3.math.ColorRGBA;
 @PluginImplementation
 public class SingleHumanProtocol extends HumanProtocol
 {
-	protected Vector<Point2D>	points			= new Vector<Point2D>();
+	protected Vector<Point2D>			points			= new Vector<Point2D>();
 
-	protected final int			radius			= 15;
-	protected final int			sides			= 48;
-	protected boolean			aroundCentroid	= false;
+	protected static int				radius			= 15;
+	protected static int				sides			= 48;
+	protected boolean					aroundCentroid	= false;
 
-	protected int				currentPoint	= 0;
+	protected int						currentPoint	= 0;
+
+	private SingleHumanProtocolSettingsPanel	panel_settings	= null;
+
+	/**
+	 * @param radius
+	 *            the radius to set
+	 */
+	public static void setRadius(int radius)
+	{
+		SingleHumanProtocol.radius = radius;
+	}
+
+	/**
+	 * @return the radius
+	 */
+	public static int getRadius()
+	{
+		return radius;
+	}
+
+	/**
+	 * @param sides
+	 *            the sides to set
+	 */
+	public static void setSides(int sides)
+	{
+		SingleHumanProtocol.sides = sides;
+	}
+
+	/**
+	 * @return the sides
+	 */
+	public static int getSides()
+	{
+		return sides;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -46,6 +83,21 @@ public class SingleHumanProtocol extends HumanProtocol
 	{
 		SycamoreSystem.setTimelineMode(TIMELINE_MODE.LIVE);
 		computePolygon(new Point2D());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.diunipi.volpi.sycamore.plugins.SycamorePlugin#getPanel_settings()
+	 */
+	@Override
+	public SycamorePanel getPanel_settings()
+	{
+		if (panel_settings == null)
+		{
+			panel_settings = new SingleHumanProtocolSettingsPanel();
+		}
+		return panel_settings;
 	}
 
 	/*
