@@ -12,6 +12,8 @@ import it.diunipi.volpi.sycamore.engine.TooManyLightsException;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.gui.SycamoreSystem.TIMELINE_MODE;
+import it.diunipi.volpi.sycamore.util.PropertyManager;
+import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
 
 import java.util.Vector;
@@ -27,12 +29,53 @@ import com.jme3.math.ColorRGBA;
 @PluginImplementation
 public class SingleHumanProtocol extends HumanProtocol
 {
+	/**
+	 * Properties related to Zombie protocol
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
+	private enum SingleHumanProtocolProperties implements SycamoreProperty
+	{
+		SINGLE_HUMAN_PROTOCOL_RADIUS("Polygon radius:", "" + 15), 
+		SINGLE_HUMAN_PROTOCOL_SIDES("Sides of the polygon", "" + 48),
+		SINGLE_HUMAN_PROTOCOL_AROUND_CENTROID("Rotate around centroid", "" + true);
+
+		private String	description		= null;
+		private String	defaultValue	= null;
+
+		/**
+		 * Constructor.
+		 */
+		SingleHumanProtocolProperties(String description, String defaultValue)
+		{
+			this.description = description;
+			this.defaultValue = defaultValue;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
+		 */
+		@Override
+		public String getDescription()
+		{
+			return description;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDefaultValue()
+		 */
+		@Override
+		public String getDefaultValue()
+		{
+			return defaultValue;
+		}
+	}
+	
 	protected Vector<Point2D>			points			= new Vector<Point2D>();
-
-	protected static int				radius			= 15;
-	protected static int				sides			= 48;
-	protected boolean					aroundCentroid	= false;
-
 	protected int						currentPoint	= 0;
 
 	private SingleHumanProtocolSettingsPanel	panel_settings	= null;
@@ -43,7 +86,7 @@ public class SingleHumanProtocol extends HumanProtocol
 	 */
 	public static void setRadius(int radius)
 	{
-		SingleHumanProtocol.radius = radius;
+		PropertyManager.getSharedInstance().putProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_RADIUS , radius);
 	}
 
 	/**
@@ -51,7 +94,7 @@ public class SingleHumanProtocol extends HumanProtocol
 	 */
 	public static int getRadius()
 	{
-		return radius;
+		return PropertyManager.getSharedInstance().getIntegerProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_RADIUS);
 	}
 
 	/**
@@ -60,17 +103,34 @@ public class SingleHumanProtocol extends HumanProtocol
 	 */
 	public static void setSides(int sides)
 	{
-		SingleHumanProtocol.sides = sides;
+		PropertyManager.getSharedInstance().putProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_SIDES , sides);
 	}
-
+	
 	/**
 	 * @return the sides
 	 */
 	public static int getSides()
 	{
-		return sides;
+		return PropertyManager.getSharedInstance().getIntegerProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_SIDES);
 	}
 
+	/**
+	 * @param aroundCentroid
+	 *            the aroundCentroid to set
+	 */
+	public static void setAroundCentroid(boolean aroundCentroid)
+	{
+		PropertyManager.getSharedInstance().putProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_AROUND_CENTROID , aroundCentroid);
+	}
+	
+	/**
+	 * @return the aroundCentroid
+	 */
+	public static boolean isAroundCentroid()
+	{
+		return PropertyManager.getSharedInstance().getBooleanProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_AROUND_CENTROID);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -135,7 +195,7 @@ public class SingleHumanProtocol extends HumanProtocol
 			if (!this.isBitten())
 			{
 				// compute centroid
-				if (aroundCentroid)
+				if (isAroundCentroid())
 				{
 					Vector<Point2D> positions = ObservationExt.getPositions(observations);
 					Point2D centroid = SycamoreUtil.getCentroid2D(positions);
@@ -177,9 +237,9 @@ public class SingleHumanProtocol extends HumanProtocol
 	 */
 	protected void computePolygon(Point2D center)
 	{
-		double angle = 6.2831853071795862D / (double) sides;
+		double angle = 6.2831853071795862D / (double) getSides();
 
-		for (int i = 0; i < sides; i++)
+		for (int i = 0; i < getSides(); i++)
 		{
 			float xPoint = (float) (center.x + (radius * Math.cos(i * angle)));
 			float yPoint = (float) (center.y - (radius * Math.sin(i * angle)));
