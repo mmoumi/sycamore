@@ -11,6 +11,8 @@ import it.diunipi.volpi.sycamore.engine.SycamoreObservedLight;
 import it.diunipi.volpi.sycamore.engine.SycamoreObservedRobot;
 import it.diunipi.volpi.sycamore.engine.TooManyLightsException;
 import it.diunipi.volpi.sycamore.gui.SycamorePanel;
+import it.diunipi.volpi.sycamore.util.PropertyManager;
+import it.diunipi.volpi.sycamore.util.SycamoreProperty;
 
 import java.util.Vector;
 
@@ -25,6 +27,52 @@ import com.jme3.math.ColorRGBA;
 @PluginImplementation
 public class HumanProtocol extends AlgorithmImpl<Point2D>
 {
+	/**
+	 * Properties related to Zombie protocol
+	 * 
+	 * @author Valerio Volpi - vale.v@me.com
+	 */
+	private enum HumanProtocolProperties implements SycamoreProperty
+	{
+		SINGLE_HUMAN_PROTOCOL_RADIUS("Polygon radius:", "" + 15), 
+		SINGLE_HUMAN_PROTOCOL_SIDES("Sides of the polygon", "" + 48),
+		SINGLE_HUMAN_PROTOCOL_AROUND_CENTROID("Rotate around centroid", "" + true);
+
+		private String	description		= null;
+		private String	defaultValue	= null;
+
+		/**
+		 * Constructor.
+		 */
+		HumanProtocolProperties(String description, String defaultValue)
+		{
+			this.description = description;
+			this.defaultValue = defaultValue;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
+		 */
+		@Override
+		public String getDescription()
+		{
+			return description;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDefaultValue()
+		 */
+		@Override
+		public String getDefaultValue()
+		{
+			return defaultValue;
+		}
+	}
+	
 	private enum Behaviors
 	{
 		STILL, ONE, CIRCLE;
@@ -33,7 +81,6 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 	private boolean			bitten			= false;
 	private boolean			useMinDistance	= true;
 	private int				robotID			= 0;
-	protected float			radius			= 15.0f;
 
 	protected final Point2D	center			= new Point2D();
 	protected Behaviors		behaviors		= Behaviors.ONE;
@@ -42,6 +89,57 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 
 	protected static int	numRobots		= 0;
 
+	/**
+	 * @param radius
+	 *            the radius to set
+	 */
+	public static void setRadius(int radius)
+	{
+		PropertyManager.getSharedInstance().putProperty(HumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_RADIUS , radius);
+	}
+
+	/**
+	 * @return the radius
+	 */
+	public static int getRadius()
+	{
+		return PropertyManager.getSharedInstance().getIntegerProperty(HumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_RADIUS);
+	}
+
+	/**
+	 * @param sides
+	 *            the sides to set
+	 */
+	public static void setSides(int sides)
+	{
+		PropertyManager.getSharedInstance().putProperty(HumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_SIDES , sides);
+	}
+	
+	/**
+	 * @return the sides
+	 */
+	public static int getSides()
+	{
+		return PropertyManager.getSharedInstance().getIntegerProperty(HumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_SIDES);
+	}
+
+	/**
+	 * @param aroundCentroid
+	 *            the aroundCentroid to set
+	 */
+	public static void setAroundCentroid(boolean aroundCentroid)
+	{
+		PropertyManager.getSharedInstance().putProperty(HumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_AROUND_CENTROID , aroundCentroid);
+	}
+	
+	/**
+	 * @return the aroundCentroid
+	 */
+	public static boolean isAroundCentroid()
+	{
+		return PropertyManager.getSharedInstance().getBooleanProperty(HumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_AROUND_CENTROID);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -96,9 +194,9 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 					if (observationExt.getAlgorithm() instanceof HumanProtocol)
 					{
 						float distance = observationExt.getRobotPosition().distanceTo(center);
-						if (distance > radius)
+						if (distance > getRadius())
 						{
-							radius = distance;
+							setRadius((int) distance);
 							return getPosition(center);
 						}
 					}
@@ -123,7 +221,7 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 
 			if (behaviors != Behaviors.STILL && checkZombiesCloseness(observations, caller))
 			{
-				radius = radius + (bound / 3);
+				setRadius((int) (getRadius() + (bound / 3)));
 				return getPosition(center);
 			}
 
@@ -319,14 +417,10 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 	 */
 	protected Point2D getPosition(Point2D center)
 	{
-		System.out.println("C � " + totRobots);
-		System.out.println("C � " + numRobots);
-		System.out.println("C � " + robotID);
-
 		double angle = 6.2831853071795862D / (double) totRobots;
 
-		float xPoint = (float) (center.x + (radius * Math.cos(robotID * angle)));
-		float yPoint = (float) (center.y - (radius * Math.sin(robotID * angle)));
+		float xPoint = (float) (center.x + (getRadius() * Math.cos(robotID * angle)));
+		float yPoint = (float) (center.y - (getRadius() * Math.sin(robotID * angle)));
 
 		return new Point2D(xPoint, yPoint);
 	}
