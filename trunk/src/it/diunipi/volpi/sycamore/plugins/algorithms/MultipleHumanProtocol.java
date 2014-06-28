@@ -42,9 +42,9 @@ public class MultipleHumanProtocol extends SingleHumanProtocol
 	@Override
 	protected void computePolygon(Point2D center)
 	{
-		double angle = 6.2831853071795862D / (double) sides;
+		double angle = 6.2831853071795862D / (double) getSides();
 
-		for (int i = (numRobots * (sides / totRobots)); i < (sides + (numRobots * (sides / totRobots))); i++)
+		for (int i = (numRobots * (getSides() / totRobots)); i < (getSides() + (numRobots * (getSides() / totRobots))); i++)
 		{
 			float xPoint = (float) (center.x + (radius * Math.cos(i * angle)));
 			float yPoint = (float) (center.y - (radius * Math.sin(i * angle)));
