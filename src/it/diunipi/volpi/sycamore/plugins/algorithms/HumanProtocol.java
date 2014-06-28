@@ -319,9 +319,9 @@ public class HumanProtocol extends AlgorithmImpl<Point2D>
 	 */
 	protected Point2D getPosition(Point2D center)
 	{
-		System.out.println("C ¤ " + totRobots);
-		System.out.println("C ¤ " + numRobots);
-		System.out.println("C ¤ " + robotID);
+		System.out.println("C ï¿½ " + totRobots);
+		System.out.println("C ï¿½ " + numRobots);
+		System.out.println("C ï¿½ " + robotID);
 
 		double angle = 6.2831853071795862D / (double) totRobots;
 
