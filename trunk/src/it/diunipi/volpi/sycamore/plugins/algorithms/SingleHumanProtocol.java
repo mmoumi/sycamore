@@ -29,107 +29,12 @@ import com.jme3.math.ColorRGBA;
 @PluginImplementation
 public class SingleHumanProtocol extends HumanProtocol
 {
-	/**
-	 * Properties related to Zombie protocol
-	 * 
-	 * @author Valerio Volpi - vale.v@me.com
-	 */
-	private enum SingleHumanProtocolProperties implements SycamoreProperty
-	{
-		SINGLE_HUMAN_PROTOCOL_RADIUS("Polygon radius:", "" + 15), 
-		SINGLE_HUMAN_PROTOCOL_SIDES("Sides of the polygon", "" + 48),
-		SINGLE_HUMAN_PROTOCOL_AROUND_CENTROID("Rotate around centroid", "" + true);
 
-		private String	description		= null;
-		private String	defaultValue	= null;
-
-		/**
-		 * Constructor.
-		 */
-		SingleHumanProtocolProperties(String description, String defaultValue)
-		{
-			this.description = description;
-			this.defaultValue = defaultValue;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDescription()
-		 */
-		@Override
-		public String getDescription()
-		{
-			return description;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see it.diunipi.volpi.sycamore.util.SycamoreProperty#getDefaultValue()
-		 */
-		@Override
-		public String getDefaultValue()
-		{
-			return defaultValue;
-		}
-	}
 	
 	protected Vector<Point2D>			points			= new Vector<Point2D>();
 	protected int						currentPoint	= 0;
 
 	private SingleHumanProtocolSettingsPanel	panel_settings	= null;
-
-	/**
-	 * @param radius
-	 *            the radius to set
-	 */
-	public static void setRadius(int radius)
-	{
-		PropertyManager.getSharedInstance().putProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_RADIUS , radius);
-	}
-
-	/**
-	 * @return the radius
-	 */
-	public static int getRadius()
-	{
-		return PropertyManager.getSharedInstance().getIntegerProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_RADIUS);
-	}
-
-	/**
-	 * @param sides
-	 *            the sides to set
-	 */
-	public static void setSides(int sides)
-	{
-		PropertyManager.getSharedInstance().putProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_SIDES , sides);
-	}
-	
-	/**
-	 * @return the sides
-	 */
-	public static int getSides()
-	{
-		return PropertyManager.getSharedInstance().getIntegerProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_SIDES);
-	}
-
-	/**
-	 * @param aroundCentroid
-	 *            the aroundCentroid to set
-	 */
-	public static void setAroundCentroid(boolean aroundCentroid)
-	{
-		PropertyManager.getSharedInstance().putProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_AROUND_CENTROID , aroundCentroid);
-	}
-	
-	/**
-	 * @return the aroundCentroid
-	 */
-	public static boolean isAroundCentroid()
-	{
-		return PropertyManager.getSharedInstance().getBooleanProperty(SingleHumanProtocolProperties.SINGLE_HUMAN_PROTOCOL_AROUND_CENTROID);
-	}
 	
 	/*
 	 * (non-Javadoc)
@@ -241,8 +146,8 @@ public class SingleHumanProtocol extends HumanProtocol
 
 		for (int i = 0; i < getSides(); i++)
 		{
-			float xPoint = (float) (center.x + (radius * Math.cos(i * angle)));
-			float yPoint = (float) (center.y - (radius * Math.sin(i * angle)));
+			float xPoint = (float) (center.x + (getRadius() * Math.cos(i * angle)));
+			float yPoint = (float) (center.y - (getRadius() * Math.sin(i * angle)));
 
 			points.add(new Point2D(xPoint, yPoint));
 		}

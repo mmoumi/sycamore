@@ -46,8 +46,8 @@ public class MultipleHumanProtocol extends SingleHumanProtocol
 
 		for (int i = (numRobots * (getSides() / totRobots)); i < (getSides() + (numRobots * (getSides() / totRobots))); i++)
 		{
-			float xPoint = (float) (center.x + (radius * Math.cos(i * angle)));
-			float yPoint = (float) (center.y - (radius * Math.sin(i * angle)));
+			float xPoint = (float) (center.x + (getRadius() * Math.cos(i * angle)));
+			float yPoint = (float) (center.y - (getRadius() * Math.sin(i * angle)));
 
 			points.add(new Point2D(xPoint, yPoint));
 		}
