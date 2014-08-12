@@ -372,4 +372,10 @@ public class Point3D extends SycamoreAbstractPoint implements Comparable<Point3D
 
 		return true;
 	}
+
+	@Override
+	public boolean isPoint2D() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

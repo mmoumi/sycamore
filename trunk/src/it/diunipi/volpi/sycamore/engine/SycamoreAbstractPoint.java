@@ -23,6 +23,15 @@ public abstract class SycamoreAbstractPoint implements Cloneable
 	 * @param vector3
 	 *            the vector containing the coordinates to give to this point.
 	 */
+	
+	/**
+	 * Returns true if this is a Point2D, false otherwise 
+	 * 
+	 * @return true if this is a Point2D, false otherwise
+	 */
+	public abstract boolean isPoint2D();
+	
+	
 	public abstract void fromVector3f(Vector3f vector3);
 
 	/**

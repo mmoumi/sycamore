@@ -754,4 +754,22 @@ public abstract class SycamoreApp extends JFrame
 			new Thread(task).start();
 		}
 	}
+	
+	/**
+	 * 
+	 * Static class to get the operating system we are working with
+	 */
+	public static final class OsUtils
+	{
+	   private static String OS = null;
+	   public static String getOsName()
+	   {
+	      if(OS == null) { OS = System.getProperty("os.name"); }
+	      return OS;
+	   }
+	   public static boolean isWindows()
+	   {
+	      return getOsName().startsWith("Windows");
+	   }
+	}
 }
