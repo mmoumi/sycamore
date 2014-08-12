@@ -1,6 +1,8 @@
 package it.diunipi.volpi.sycamore.jmescene;
 
+import it.diunipi.volpi.app.sycamore.SycamoreApp.OsUtils;
 import it.diunipi.volpi.sycamore.engine.Point2D;
+import it.diunipi.volpi.sycamore.engine.Point3D;
 import it.diunipi.volpi.sycamore.engine.SycamoreAbstractPoint;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine;
 import it.diunipi.volpi.sycamore.engine.SycamoreEngine.TYPE;
@@ -9,6 +11,7 @@ import it.diunipi.volpi.sycamore.gui.SycamoreSystem;
 import it.diunipi.volpi.sycamore.plugins.agreements.Agreement;
 import it.diunipi.volpi.sycamore.util.SycamoreFiredActionEvents;
 import it.diunipi.volpi.sycamore.util.SycamoreUtil;
+import it.diunipi.volpi.sycamore.virca.vircaDeviceImpl;
 
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
@@ -117,6 +120,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 
 	private HashMap<String, String>					caps				= null;
 	private Vector<java.awt.event.ActionListener>	listeners			= null;
+	private vircaDeviceImpl							vircaDevice			= null;
 
 	/**
 	 * Default constructor.
@@ -125,8 +129,10 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 	{
 		this.listeners = new Vector<java.awt.event.ActionListener>();
 		SycamoreSystem.setJmeSceneManager(this);
-
+		if (OsUtils.isWindows()) vircaDevice = new vircaDeviceImpl();
 		setupSystemCaps();
+		
+		
 	}
 
 	/**
@@ -780,6 +786,10 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		robotNode.updateGeometricState();
 
 		allRobots.add(robot.getGlobalPosition());
+		
+		
+		if(OsUtils.isWindows()) sendPositionToVirca(robot);
+		
 	}
 
 	/**
@@ -1052,5 +1062,24 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 		}
 
 		return new ColorRGBA(red, green, blue, alpha);
+	}
+	
+	protected void sendPositionToVirca(SycamoreRobot robot){
+		if(robot.getAlgorithm()!=null)
+			if(!robot.getAlgorithm().isFinished()){
+				//System.out.println(robot.getGlobalPosition() + " -- ID: " + robot.getID());
+				if (robot.getGlobalPosition().isPoint2D()){
+					Point3D p = new Point3D(((Point2D) robot.getGlobalPosition()).x, ((Point2D) robot.getGlobalPosition()).y, 10);
+					if (robot.isHumanPilot())
+						vircaDevice.setRobotPosition("H"+String.valueOf(robot.getID()),p);
+					else
+						vircaDevice.setRobotPosition(String.valueOf(robot.getID()),p);
+				}
+				else
+					if (robot.isHumanPilot())
+						vircaDevice.setRobotPosition("H"+String.valueOf(robot.getID()),(Point3D) robot.getGlobalPosition());
+					else
+						vircaDevice.setRobotPosition(String.valueOf(robot.getID()),(Point3D) robot.getGlobalPosition());
+			}
 	}
 }

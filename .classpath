@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="it/diunipi/volpi/app/sycamore/osx/SycamoreAppOSX.java|it/diunipi/volpi/app/sycamore/osx/SycamoreMenuBarOSX.java" kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/jME3-core.jar"/>
+	<classpathentry kind="lib" path="lib/jME3-desktop.jar"/>
+	<classpathentry kind="lib" path="lib/jME3-lwjgl-natives.jar"/>
+	<classpathentry kind="lib" path="lib/jME3-lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/jME3-plugins.jar"/>
+	<classpathentry kind="lib" path="lib/jspf.core-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/swingx-all-1.6.4.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_11_32"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
