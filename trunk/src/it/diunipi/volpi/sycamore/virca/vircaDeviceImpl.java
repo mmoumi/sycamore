@@ -3,9 +3,10 @@ package it.diunipi.volpi.sycamore.virca;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import hu.sztaki.virca.api.Vector3;
+import hu.sztaki.virca.api.VirCADevice;
 import it.diunipi.volpi.sycamore.engine.Point3D;
 
-import org.virca.api.*;
 
 public class vircaDeviceImpl extends VirCADevice{
 
@@ -14,12 +15,17 @@ public class vircaDeviceImpl extends VirCADevice{
 	}
 	HashMap<String,Point3D> robots = new HashMap<String,Point3D>();
 	HashSet<String> alreadyThere = new HashSet<String>();
+	public static Point3D cameraPosition = new Point3D();
 	public boolean onActivated(){
 
 		return true;
 	}
 	
 	public boolean onExecute(){
+		
+		synchronized (this) {
+			Vector3 v = getCameraPosition();
+			cameraPosition = new Point3D(v.getX() / 10.0f,v.getY()/10-10,v.getZ()/10f);
 		for (String id : robots.keySet())
 		{
 			if (!alreadyThere.contains(id))
@@ -31,12 +37,13 @@ public class vircaDeviceImpl extends VirCADevice{
 				alreadyThere.add(id);
 			}
 			Point3D point = robots.get(id);
-			setCyberDevicePosition(id, point.x*10, point.y*10+100, point.z*10);	
+			setCyberDevicePosition(id, new Vector3(point.x*10, point.y*10+100, point.z*10));	
+		}
 		}
 		return true;
 	}
 	
-	public void setRobotPosition(String id, Point3D p){
+	public synchronized void setRobotPosition(String id, Point3D p){
 		robots.put(id, p);
 	}
 }
