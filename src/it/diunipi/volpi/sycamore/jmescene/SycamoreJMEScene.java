@@ -1080,6 +1080,7 @@ public class SycamoreJMEScene extends SimpleApplication implements ActionListene
 						vircaDevice.setRobotPosition("H"+String.valueOf(robot.getID()),(Point3D) robot.getGlobalPosition());
 					else
 						vircaDevice.setRobotPosition(String.valueOf(robot.getID()),(Point3D) robot.getGlobalPosition());
+
 			}
 	}
 }
