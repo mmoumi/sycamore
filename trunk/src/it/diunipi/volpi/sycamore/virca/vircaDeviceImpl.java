@@ -37,7 +37,8 @@ public class vircaDeviceImpl extends VirCADevice{
 				alreadyThere.add(id);
 			}
 			Point3D point = robots.get(id);
-			setCyberDevicePosition(id, new Vector3(point.x*10, point.y*10+100, point.z*10));	
+			setCyberDevicePosition(id, new Vector3(point.x*10, point.y*10+100, point.z*10));
+			getCyberDevicePosition(id);
 		}
 		}
 		return true;
